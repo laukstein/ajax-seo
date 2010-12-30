@@ -1,4 +1,4 @@
-# jQuery Address JSON with PHP/MySQL/RewriteRule
+# jQuery Address JSON
 SEO HTML5 pushState and fallback hash with JSON data.
 
     $.getJSON(event.path.substr(1)+'.json',function(data){
