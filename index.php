@@ -6,7 +6,7 @@ while($row=mysql_fetch_array($result,MYSQL_ASSOC)){
     $title=$row['title'];
     $content=$row['content'];
 }
-$path='/jquery/address/samples/json';
+$path='/address-json'; // Path to Address JSON
 ?>
 <html>
 <head>
@@ -37,7 +37,7 @@ $.address.init(function(){
 </head>
 <body>
 <header>
-<h1>jQuery Address JSON</h1>
+<h1><span>jQuery</span> Address JSON</h1>
 <nav><ul>
 <?php
 $result=mysql_query("SELECT * FROM $dbtable ORDER BY orderid ASC");
