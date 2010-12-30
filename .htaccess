@@ -1,5 +1,7 @@
+php_value short_open_tag On
+
 <IfModule mod_rewrite.c>
-RewriteEngine on
+RewriteEngine On
 
 RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /(.*)index\.php(.*)\ HTTP/ [NC]
 RewriteRule ^index\.php(.*)$ http://%{HTTP_HOST}/%1 [R=301,L]
