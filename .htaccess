@@ -1,3 +1,4 @@
+php_value error_log error_log.txt
 php_value short_open_tag On
 
 <IfModule mod_rewrite.c>
