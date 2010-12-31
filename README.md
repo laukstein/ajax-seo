@@ -8,9 +8,12 @@ SEO HTML5 pushState and fallback hash with PHP/MySQL/RewriteRule.
 
 Known bugs:
 
+* JSON Ajax Caching does not work. Maybe could help `$.getJSON()` resetting to `$.ajax()`
+
 * Cyrillic and Semitic `$.getJSON` requests somehow does not work on IE
 
 * Besides of displaying `#!/контакты` IE in address bar has `#!/%D7%A6%D7%95%D7%A8-%D7%A7%D7%A9%D7%A8` 
+
 
 
 jQuery Address Plugin based on [https://github.com/asual/jquery-address](https://github.com/asual/jquery-address)
