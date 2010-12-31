@@ -1,7 +1,7 @@
 <?php
 include('connect.php');
 $result=mysql_query("SELECT * FROM $dbtable WHERE url='$url'");
-while($row=mysql_fetch_array($result,MYSQL_ASSOC)){
+while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $row[]=array('row'=>array_map('htmlspecialchars',$row));
     $title=$row['title'];
     $content=$row['content'];
@@ -41,7 +41,7 @@ $.address.init(function(){
 <nav><ul>
 <?php
 $result=mysql_query("SELECT * FROM $dbtable ORDER BY orderid ASC");
-while($row=mysql_fetch_array($result, MYSQL_ASSOC)){
+while($row=@mysql_fetch_array($result, MYSQL_ASSOC)){
     $row[]=array('row'=>array_map('htmlspecialchars',$row));
     $url=$row['url'];
     $title=$row['title'];
