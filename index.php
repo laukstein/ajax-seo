@@ -14,7 +14,7 @@ $path='/address-json'; // Path to Address JSON
 <title><?=$title;?></title>
 <link type="text/css" href="<?=$path;?>/styles.css" rel="stylesheet">
 <script src="<?=$path;?>/jquery-1.4.4.min.js"></script>
-<script src="<?=$path;?>/jquery.address-1.3.2.min.js?crawlable=true&state=<?=$path;?>"></script>
+<script src="<?=$path;?>/jquery.address-1.3.2.js?crawlable=true&state=<?=$path;?>"></script>
 <script>
 var el=['header','nav','article'];for(var i=el.length-1;i>=0;i--){document.createElement(el[i]);}
 $.address.init(function(){
