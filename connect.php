@@ -6,7 +6,7 @@ $dbpass='';
 $dbname='test';
 $dbtable='address'; // Database table set by address.sql
 
-$conn=@mysql_connect($dbhost,$dbuser,$dbpass) or die('Not reachable database.');
+$conn=@mysql_connect($dbhost,$dbuser,$dbpass) or die('Not reachable database.'); // mysql_error()
 mysql_select_db($dbname,$conn)or die();
 mysql_query("SET NAMES 'utf8'");
 
