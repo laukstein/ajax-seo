@@ -768,4 +768,4 @@
         return this;
     };
     
-}(jQuery));
+})(jQuery);
