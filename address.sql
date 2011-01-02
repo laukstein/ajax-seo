@@ -8,9 +8,9 @@ CREATE TABLE IF NOT EXISTS `address` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1;
 
 INSERT INTO `address` VALUES
-  (52338, 1, '', 'Home', 'Home content.'),
-  (70104, 2, 'about', 'About', 'About content.'),
-  (27034, 3, 'portfolio', 'Portfolio', 'Portfolio  content.'),
-  (39111, 4, 'contact', 'Contact', 'Contact  content.'),
-  (05128, 5, 'контакты', 'Контакты', 'Содержание для контактам.'),
-  (74224, 6, 'צור-קשר', 'צור קשר', 'תוכן לצור קשר.');
+  (52338, 1, '', 'Home', 'Home content'),
+  (70104, 2, 'about', 'About', 'About content'),
+  (27034, 3, 'portfolio', 'Portfolio', 'Portfolio  content'),
+  (39111, 4, 'contact', 'Contact', 'Contact  content'),
+  (50128, 5, 'контакты', 'Контакты', 'Содержание контактом'),
+  (74224, 6, 'צור-קשר', 'צור קשר', 'תוכן לצור קשר');
