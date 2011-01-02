@@ -18,7 +18,7 @@ SEO HTML5 pushState and fallback hash with PHP/MySQL/RewriteRule.
     
 Known bugs:
 
-* IE address bar displays `#!/%D7%A6%D7%95%D7%A8-%D7%A7%D7%A9%D7%A8` besides of  `#!/контакты`
+* IE address bar displays [`#!/%D7%A6%D7%95%D7%A8-%D7%A7%D7%A9%D7%A8`](http://lab.laukstein.com/address-json/%D0%BA%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D1%8B) besides of  [`#!/контакты`](http://lab.laukstein.com/address-json/контакты)
 
 * Firefox 3.6.13 on [page](http://lab.laukstein.com/address-json/#!/contact) refresh <i>jumps</i> page from [/](http://lab.laukstein.com/address-json/) to [/#!/contact](http://lab.laukstein.com/address-json/#!/contact) page content
 
