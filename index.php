@@ -27,10 +27,19 @@ $.address.init(function(){
             $(this).parent('li').removeClass('selected');
         }
     });
-    $.ajaxSetup({cache:true,scriptCharset:'utf-8',contentType:'application/json; charset=UTF-8'}); // Cyrillic and Semitic $.getJSON requests somehow does not work on IE. Besides of displaying #!/контакты IE in address bar has #!/%D7%A6%D7%95%D7%A8-%D7%A7%D7%A9%D7%A8 
-    $.getJSON(event.path.substr(1)+'.json',function(data){
-        document.title=data.title; // Faster then $('title').html(data.title); http://jsperf.com/rename-title
-        $('#content').html(data.content);
+    $.ajax({ // Faster then $.getJSON() http://jsperf.com/getjson-vs-ajax-json
+        type:"GET",
+        url:encodeURIComponent(event.path.substr(1))+'.json',
+        dataType:'json',
+        //cache:false,
+        async:false,
+        success:function(data){
+            document.title=data.title; // Faster then $('title').html(data.title); http://jsperf.com/rename-title
+            $('#content').html(data.content);
+        },
+        error:function(request,status,error){
+            $('#content').html('The request failed. Try to refresh page.');
+        }
     });
 });
 </script>
