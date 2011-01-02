@@ -20,7 +20,7 @@ Known bugs:
 
 * IE address bar displays `#!/%D7%A6%D7%95%D7%A8-%D7%A7%D7%A9%D7%A8` besides of  `#!/контакты`
 
-* Firefox 3.6.13 on [page](http://lab.laukstein.com/address-json/#!/contact) refresh <i>jumps</i> page from [/](http://lab.laukstein.com) to [/#!/contact](http://lab.laukstein.com/address-json/#!/contact) page content
+* Firefox 3.6.13 on [page](http://lab.laukstein.com/address-json/#!/contact) refresh <i>jumps</i> page from [/](http://lab.laukstein.com/address-json/) to [/#!/contact](http://lab.laukstein.com/address-json/#!/contact) page content
 
 
 jQuery Address Plugin based on [https://github.com/asual/jquery-address](https://github.com/asual/jquery-address)
