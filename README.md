@@ -1,14 +1,14 @@
 # jQuery [Address JSON](http://lab.laukstein.com/address-json/)
 SEO HTML5 pushState and fallback hash with PHP/MySQL/RewriteRule.
-
-    $.ajax({ // Faster then $.getJSON() http://jsperf.com/getjson-vs-ajax-json
+    
+    $.ajax({
         type:"GET",
         url:encodeURIComponent(event.path.substr(1))+'.json',
         dataType:'json',
         //cache:false,
         async:false,
         success:function(data){
-            document.title=data.title; // Faster then $('title').html(data.title); http://jsperf.com/rename-title
+            document.title=data.title;
             $('#content').html(data.content);
         },
         error:function(request,status,error){
@@ -18,9 +18,20 @@ SEO HTML5 pushState and fallback hash with PHP/MySQL/RewriteRule.
     
 Known bugs:
 
-* IE address bar displays [`#!/%D7%A6%D7%95%D7%A8-%D7%A7%D7%A9%D7%A8`](http://lab.laukstein.com/address-json/%D0%BA%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D1%8B) besides of  [`#!/контакты`](http://lab.laukstein.com/address-json/контакты)
+* Ajax bug for browsers that does not support `pushState` (IE, Firefox 3.6.13, Opera 11) and does redirecting to hash address `#/` or `#!/`. If you try to refresh [page](http://lab.laukstein.com/address-json/#!/contact), DOM refresh-<i>jumps</i> content from [/](http://lab.laukstein.com/address-json/) to [/#!/contact](http://lab.laukstein.com/address-json/#!/contact). You can see it better in browser title bar.
 
-* Firefox 3.6.13 on [page](http://lab.laukstein.com/address-json/#!/contact) refresh <i>jumps</i> page from [/](http://lab.laukstein.com/address-json/) to [/#!/contact](http://lab.laukstein.com/address-json/#!/contact) page content
+* IE7 browser refresh [#!/контакты](http://lab.laukstein.com/address-json/#!/контакты) auto-changes to [#!/ÐºÐ¾Ð½ÑÐ°ÐºÑÑ](http://alab.laukstein.com/address-json/#!/ÐºÐ¾Ð½ÑÐ°ÐºÑÑ) and [#!/ÃÂºÃÂ¾ÃÂ½ÃÂÃÂ°ÃÂºÃÂÃÂ](http://alab.laukstein.com/address-json/#!/ÃÂºÃÂ¾ÃÂ½ÃÂÃÂ°ÃÂºÃÂÃÂ) etc.
 
 
-jQuery Address Plugin based on [https://github.com/asual/jquery-address](https://github.com/asual/jquery-address)
+Speed Performance:
+
+* `$.ajax() json` [<s>$.getJSON()</s>](http://jsperf.com/getjson-vs-ajax-json)
+
+* `document.title=data.title` [<s>$('title').html(data.title);</s>](http://jsperf.com/rename-title)
+
+* `encodeURIComponent()` [<s>encodeURI()</s>](http://jsperf.com/encodeuri-vs-encodeuricomponent)
+
+* `decodeURI()` [<s>decodeURIComponent()</s>](http://jsperf.com/decodeuri-vs-decodeuricomponent)
+
+
+<i>jQuery Address Plugin based on [https://github.com/asual/jquery-address](https://github.com/asual/jquery-address)</i>
