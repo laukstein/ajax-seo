@@ -19,10 +19,10 @@ h1{
     color:#fff;
 }
 a{
-    text-decoration:underline;
+    text-decoration:none;
     color:#fff;
 }
-a:hover{text-decoration:none;}
+a:hover{text-decoration:underline;}
 a:focus{outline:none;}
 ul{
     height:20px;
@@ -47,9 +47,13 @@ li a{
     display:block;
     padding:0 4px;
     line-height:20px;
+    text-decoration:underline;
 }
-li a:hover{background:#5db0e6;}
-li.selected{
+li a:hover{
+    text-decoration:none;
+    background:#5db0e6;
+}
+li.selected a{
     text-decoration:none;
     background:#176092;
 }
