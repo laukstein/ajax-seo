@@ -54,7 +54,7 @@ while($row=@mysql_fetch_array($result, MYSQL_ASSOC)){
     $row[]=array('row'=>array_map('htmlspecialchars',$row));
     $url=$row['url'];
     $title=$row['title'];
-    echo $nav='      <li';if($_GET['url']==$url){echo ' class="selected"';}echo "><a href=\"$path/$url\">$title</a></li>\n";
+    echo $nav='      <li';if($_GET['url']==$url){echo ' class="selected"';}echo "><a href=\"$path/$url\" title=\"$title\">$title</a></li>\n";
 }
 ?>
 </ul></nav>
