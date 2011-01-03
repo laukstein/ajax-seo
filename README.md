@@ -27,10 +27,10 @@ SEO HTML5 pushState and fallback hash with PHP/MySQL/RewriteRule.
 
 ### Speed Performance:
 
- - `$.ajax() json` <s>[$.getJSON()](http://jsperf.com/getjson-vs-ajax-json)</s>
- - `document.title=data.title` <s>[$('title').html(data.title);](http://jsperf.com/rename-title)</s>
- - `encodeURIComponent()` <s>[encodeURI()](http://jsperf.com/encodeuri-vs-encodeuricomponent)</s>
- - `decodeURI()` <s>[decodeURIComponent()](http://jsperf.com/decodeuri-vs-decodeuricomponent)</s>
+ - `$.ajax() json` vs <strike>[$.getJSON()](http://jsperf.com/getjson-vs-ajax-json)</strike>
+ - `document.title=data.title` vs <strike>[$('title').html(data.title);](http://jsperf.com/rename-title)</strike>
+ - `encodeURIComponent()` vs <strike>[encodeURI()](http://jsperf.com/encodeuri-vs-encodeuricomponent)</strike>
+ - `decodeURI()` vs <strike>[decodeURIComponent()](http://jsperf.com/decodeuri-vs-decodeuricomponent)</strike>
 
 
 > jQuery Address Plugin based on [https://github.com/asual/jquery-address](https://github.com/asual/jquery-address)
