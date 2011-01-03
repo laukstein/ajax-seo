@@ -27,14 +27,14 @@ $.address.init(function(){
             $(this).parent('li').removeClass('selected');
         }
     });
-    $.ajax({ // Faster then $.getJSON() http://jsperf.com/getjson-vs-ajax-json
+    $.ajax({
         type:"GET",
         url:encodeURIComponent(event.path.substr(1))+'.json',
         dataType:'json',
         //cache:false,
         async:false,
         success:function(data){
-            document.title=data.title; // Faster then $('title').html(data.title); http://jsperf.com/rename-title
+            document.title=data.title;
             $('#content').html(data.content);
         },
         error:function(request,status,error){
