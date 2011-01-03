@@ -59,6 +59,7 @@ while($row=@mysql_fetch_array($result, MYSQL_ASSOC)){
 ?>
 </ul></nav>
 <article id="content"><?php echo $content; mysql_close($conn);?></article>
+<p><a href="https://github.com/laukstein/address-json" title="GitHub repository for Address JSON">Latest Address JSON in GitHub</a> | <a href="https://github.com/laukstein/address-json/issues" title="Report a bug or issue for Address JSON">Report a bug or issue</a></p>
 </header>
 </body>
 </html>
