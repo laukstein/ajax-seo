@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `address` (
+CREATE TABLE IF NOT EXISTS `jsonp_ajax_seo` (
   `id` mediumint(8) unsigned NOT NULL auto_increment,
   `orderid` mediumint(8) unsigned NOT NULL,
   `url` varchar(70) collate utf8_unicode_ci NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS `address` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1;
 
-INSERT INTO `address` VALUES
+INSERT INTO `jsonp_ajax_seo` VALUES
   (52338, 1, '', 'Home', 'Home content'),
   (70104, 2, 'about', 'About', 'About content'),
   (27034, 3, 'portfolio', 'Portfolio', 'Portfolio  content'),
