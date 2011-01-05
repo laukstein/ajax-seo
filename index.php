@@ -6,7 +6,7 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $title=$row['title'];
     $content=$row['content'];
 }
-$path='/address-json'; // Path to Address JSON
+$path='/jsonp-ajax-seo'; // Path to JSONP Ajax SEO
 ?>
 <html>
 <head>
@@ -29,24 +29,30 @@ $.address.init(function(){
     });
     $.ajax({
         type:"GET",
-        url:encodeURIComponent(event.path.substr(1))+'.json',
-        dataType:'json',
+        url:encodeURIComponent(event.path.substr(1))+'.json',//'http://other.domain.here/'+encodeURIComponent(event.path.substr(1))+'.json',
+        dataType:'jsonp',
+        //jsonp:'callback',
         //cache:false,
-        async:false,
+        //async:false,
+        jsonpCallback:'a',
+        //timeout:5000,
+        //beforeSend:function(data){
+        //  $('#content').html('Loading...');
+        //},
         success:function(data){
             document.title=data.title;
             $('#content').html(data.content);
-        },
-        error:function(request,status,error){
-            $('#content').html('The request failed. Try to refresh page.');
-        }
+        }//,
+        //error:function(request,status,error){
+        //    $('#content').html('The request failed. Try to refresh page.');
+        //}
     });
 });
 </script>
 </head>
 <body>
 <header>
-<h1><span>jQuery</span> Address JSON</h1>
+<h1>JSONP SEO</h1>
 <nav><ul>
 <?php
 $result=mysql_query("SELECT * FROM $dbtable ORDER BY orderid ASC");
@@ -59,7 +65,7 @@ while($row=@mysql_fetch_array($result, MYSQL_ASSOC)){
 ?>
 </ul></nav>
 <article id="content"><?php echo $content; mysql_close($conn);?></article>
-<p><a href="https://github.com/laukstein/address-json" title="GitHub repository for Address JSON">Latest Address JSON in GitHub</a> | <a href="https://github.com/laukstein/address-json/issues" title="Report a bug or issue for Address JSON">Report a bug or issue</a></p>
+<p><a href="https://github.com/laukstein/jsonp-ajax-seo" title="GitHub repository for JSONP Ajax SEO">Latest JSONP Ajax SEO in GitHub</a> | <a href="https://github.com/laukstein/jsonp-ajax-seo/issues" title="Report a bug or issue for JSONP Ajax SEO">Report a bug or issue</a></p>
 </header>
 </body>
 </html>
