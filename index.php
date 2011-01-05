@@ -6,7 +6,7 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $title=$row['title'];
     $content=$row['content'];
 }
-$path='/jsonp-ajax-seo'; // Path to JSONP Ajax SEO
+$path='/jsonp-ajax-seo'; // Path to JSONP Ajax SEO; if you use root dir, leave it empty.
 ?>
 <html>
 <head>
