@@ -1,4 +1,4 @@
-# [JSONP Ajax SEO](http://lab.laukstein.com/jsonp-ajax-seo/) maximized performance - speed, availability, user-friendly
+# [JSONP Ajax SEO maximized performance](http://lab.laukstein.com/jsonp-ajax-seo/) - speed, availability, user-friendly
 JSONP Ajax SEO is based on Latest Web Technology (HTML5, JSONP, jQuery, CSS3); Web server requirements: PHP, MySQL, Apache.
     
     $.ajax({
@@ -38,7 +38,7 @@ JSONP Ajax SEO is based on Latest Web Technology (HTML5, JSONP, jQuery, CSS3); W
 
 ### Installation
 
- -  Change your server $path in `index.php`
+ -  Change your server `$path` in `index.php`
  -  Add your MySQL settings in `connect.php`
  -  Run `jsonp_ajax_seo.sql` SQL queries on your database (through phpMyAdmin)
 
