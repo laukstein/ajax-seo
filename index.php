@@ -52,7 +52,7 @@ $.address.init(function(){
 </head>
 <body>
 <header>
-<h1>JSONP SEO</h1>
+<h1>JSONP Ajax SEO</h1>
 <nav><ul>
 <?php
 $result=mysql_query("SELECT * FROM $dbtable ORDER BY orderid ASC");
