@@ -1,5 +1,5 @@
-# [JSONP Ajax SEO maximized performance](http://lab.laukstein.com/jsonp-ajax-seo/) - speed, availability, user-friendly
-JSONP Ajax SEO is based on latest Web Technology (HTML5, JSONP, jQuery, CSS3). Web server requirements: PHP, MySQL, Apache.
+# [Ajax SEO maximized performance - speed, availability, user-friendly](http://lab.laukstein.com/jsonp-ajax-seo/)
+Ajax SEO is based on latest Web Technology (HTML5, JSONP, jQuery, CSS3). Web server requirements: PHP, MySQL, Apache.
     
     $.ajax({
         type:"GET",
@@ -31,8 +31,8 @@ JSONP Ajax SEO is based on latest Web Technology (HTML5, JSONP, jQuery, CSS3). W
 
 ### Known bugs
 
- -  For browsers that does not support `pushState` (IE, >Firefox 4, Opera) if you'll try to refresh [page](http://lab.laukstein.com/jsonp-ajax-seo/#!/contact), you'll notice *jumping* content from 'Home' to 'Contact' in browser title and in page content
- -  IE7 browser refresh address changes from [#!/контакты](http://lab.laukstein.com/jsonp-ajax-seo/#!/контакты) to `#!/ÐºÐ¾Ð½ÑÐ°ÐºÑÑ` and `#!/ÃÂºÃÂ¾ÃÂ½ÃÂÃÂ°ÃÂºÃÂÃÂ`
+ -  For browsers that does not support `pushState` (IE, >Firefox 4, Opera) if you'll try to refresh [page](http://lab.laukstein.com/ajax-seo/#!/contact), you'll notice *jumping* content from 'Home' to 'Contact' in browser title and in page content
+ -  IE7 browser refresh address changes from [#!/контакты](http://lab.laukstein.com/ajax-seo/#!/контакты) to `#!/ÐºÐ¾Ð½ÑÐ°ÐºÑÑ` and `#!/ÃÂºÃÂ¾ÃÂ½ÃÂÃÂ°ÃÂºÃÂÃÂ`
  -  Crome 8.0.552.224 links like `/#/url` or `/#!/url` *jumps* from `/` to `/url`
 
 
@@ -40,7 +40,7 @@ JSONP Ajax SEO is based on latest Web Technology (HTML5, JSONP, jQuery, CSS3). W
 
  -  Change your server `$path` in index.php
  -  Add your MySQL settings in connect.php
- -  Run jsonp_ajax_seo.sql SQL queries on your database (through phpMyAdmin)
+ -  Run ajax_seo.sql SQL queries on your database (through phpMyAdmin)
 
 
 > jQuery Address Plugin based on <https://github.com/asual/jquery-address>

@@ -1,13 +1,12 @@
-Options +FollowSymLinks
+Options -Indexes +FollowSymLinks -MultiViews
 
 php_value error_log error_log.txt
 php_value short_open_tag On
 php_flag magic_quotes_gpc Off
+php_flag register_globals Off
 php_value output_handler ob_gzhandler
 
-<FilesMatch "\.(php|css|js|json|txt)$">
-    AddDefaultCharset utf-8
-</FilesMatch>
+AddDefaultCharset utf-8
 <ifModule mod_deflate.c>
     <FilesMatch "\.(php|css|js|json|txt)$">
         SetOutputFilter DEFLATE
@@ -18,10 +17,11 @@ php_value output_handler ob_gzhandler
     ExpiresDefault "access plus 1 month"
     ExpiresByType text/css "access plus 6 months"
     ExpiresByType text/plain "access plus 1 hour"
-    ExpiresByType application/x-httpd-php "access plus 1 second"
+    ExpiresByType text/cache-manifest "access plus 0 seconds"
+    ExpiresByType application/x-httpd-php "access plus 0 second"
     ExpiresByType application/x-javascript "access plus 6 months"
     ExpiresByType application/javascript "access plus 6 months"
-    ExpiresByType application/json "access plus 1 second"
+    ExpiresByType application/json "access plus 0 second"
 </ifModule>
 <ifModule mod_headers.c>
     <filesMatch "\.(css|js|json|txt)$">
@@ -33,7 +33,14 @@ php_value output_handler ob_gzhandler
     FileETag None
     Header unset ETag
     Header unset Last-Modified
+    Header append Vary User-Agent
 </ifModule>
+<IfModule mod_setenvif.c>
+    <IfModule mod_headers.c>
+        BrowserMatch MSIE ie
+        Header set X-UA-Compatible "IE=Edge,chrome=1" env=ie
+    </IfModule>
+</IfModule>
 <IfModule mod_gzip.c>
     mod_gzip_on Yes
     mod_gzip_can_negotiate Yes
@@ -55,8 +62,8 @@ php_value output_handler ob_gzhandler
     mod_gzip_item_include mime ^text/css$
     mod_gzip_item_include mime ^text/.*
     mod_gzip_item_include mime ^application/json$
-    mod_gzip_item_include mime ^application/x-httpd-php$
     mod_gzip_item_include mime ^application/javascript$
+    mod_gzip_item_include mime ^application/x-httpd-php$
     mod_gzip_item_include mime ^application/x-javascript$
     mod_gzip_item_include mime ^httpd/unix-directory$
     mod_gzip_item_exclude rspheader Content-Type:image/*
