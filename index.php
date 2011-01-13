@@ -29,6 +29,7 @@ $.address.init(function(){
             $(this).parent('li').removeClass('selected');
         }
     });
+    $('#content').ajaxStart(function(){$(this).html('Loading...');}); //solution for `beforeSend`
     $.ajax({
         type:"GET",
         url:/*'http://sub.domain.com/'+*/encodeURIComponent(event.path.substr(1))+'.json',
@@ -37,10 +38,7 @@ $.address.init(function(){
         //cache:false,
         //async:false,
         jsonpCallback:'a',
-        timeout:5000,
-        //beforeSend:function(data){
-        //  $('#content').html('Loading...');
-        //},
+        //timeout:5000,
         success:function(data){
             document.title=data.title;
             $('#content').html(data.content);
