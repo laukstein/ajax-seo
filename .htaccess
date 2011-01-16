@@ -78,7 +78,7 @@ AddDefaultCharset utf-8
     
     # Ajax SEO /?_escaped_fragment_=friendly-url redirect to /friendly-url
     RewriteCond %{QUERY_STRING} ^_escaped_fragment_=(.*)$
-    RewriteRule ^$ %{REQUEST_URI}%1? [R=301,L]
+    RewriteRule ^.*$ %{REQUEST_URI}%1? [R=301,L]
     
     # Remove multiple trailing slashes
     RewriteCond %{THE_REQUEST} ^[A-Z]+\s//+(.*)\sHTTP/[0-9.]+$
