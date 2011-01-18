@@ -1,6 +1,7 @@
 <?php
 include_once('connect.php');
 header('Content-type:application/json; charset=UTF-8');
+header('Access-Control-Allow-Origin: *');
 
 $result=mysql_query("SELECT * FROM $dbtable WHERE url='$url'");
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
