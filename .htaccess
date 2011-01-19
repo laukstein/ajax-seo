@@ -71,20 +71,22 @@ AddDefaultCharset utf-8
 </IfModule>
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    
+
     # Remove index.php
     RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /(.*)index\.php(.*)\ HTTP/ [NC]
     RewriteRule ^(([^/]+/)*)index\.php$ http://%{HTTP_HOST}/%1 [R=301,L]
     
     # Ajax SEO /?_escaped_fragment_=friendly-url redirect to /friendly-url
     RewriteCond %{QUERY_STRING} ^_escaped_fragment_=(.*)$
-    RewriteRule ^.*$ %{REQUEST_URI}%1? [R=301,L]
+    RewriteRule .*$ %{REQUEST_URI}%1? [R=301,L]
     
-    # Remove multiple trailing slashes
+    # Trailing slashes issues
     RewriteCond %{THE_REQUEST} ^[A-Z]+\s//+(.*)\sHTTP/[0-9.]+$
     RewriteRule . http://%{HTTP_HOST}/%1 [R=301,L]
     RewriteCond %{REQUEST_URI} ^(.*)//(.*)$
     RewriteRule . %1/%2 [R=301,L]
+    # Change or remove '/ajax-seo' basing on your server path
+    RewriteRule ^(.+)/$ /ajax-seo/$1 [R=301,L]
     
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
