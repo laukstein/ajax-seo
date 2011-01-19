@@ -18,7 +18,7 @@ Ajax SEO is based on latest Web Technology (HTML5, JSONP, jQuery, CSS3). Web ser
  -  HTML5 tags, `pushState` with crawlable fallback
  -  [Ajax crawling](http://code.google.com/web/ajaxcrawling/docs/getting-started.html) with `?_escaped_fragment_=/friendly-url` 301 redirect to `friendly-url`
  -  Trailing slashes issues
- -  No index.php
+ -  Remove .php extension
 
 
 ### Speed Performance

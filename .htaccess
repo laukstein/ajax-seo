@@ -72,9 +72,9 @@ AddDefaultCharset utf-8
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Remove index.php
-    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /(.*)index\.php(.*)\ HTTP/ [NC]
-    RewriteRule ^(([^/]+/)*)index\.php$ http://%{HTTP_HOST}/%1 [R=301,L]
+    # Remove .php extension
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^/]+/)*[^.]+\.php(\?[^\ ]*)?\ HTTP/ [NC]
+    RewriteRule ^(([^/]+/)*[^.]+)\.php$ http://%{HTTP_HOST}/%1$1 [R=301,L]
     
     # Ajax SEO /?_escaped_fragment_=friendly-url redirect to /friendly-url
     RewriteCond %{QUERY_STRING} ^_escaped_fragment_=(.*)$
