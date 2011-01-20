@@ -39,7 +39,6 @@ Ajax SEO is based on latest Web Technology (HTML5, JSONP, jQuery, CSS3). Web ser
 ### Installation
 
  -  Change or remove `/ajax-seo` from .htaccess basing on your server path
- -  Change your server `$path` in index.php
  -  Add your MySQL settings in connect.php
  -  Run ajax_seo.sql SQL queries on your database (through phpMyAdmin)
 

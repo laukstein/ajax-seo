@@ -1,7 +1,4 @@
 <?php
-
-$path='/ajax-seo'; // Server path to Ajax SEO. If you use root dir, leave it empty.
-
 include('connect.php');
 $result=mysql_query("SELECT * FROM $dbtable WHERE url='$url'");
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
@@ -9,14 +6,19 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $title=$row['title'];
     $content=$row['content'];
 }
+if(str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME))!='/'){
+    $path=str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME)).'/';
+}else{
+    $path=str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME));
+}
 ?>
 <html>
 <head>
 <meta charset=utf-8>
 <title><?=$title;?></title>
-<link rel=stylesheet href="<?=$path;?>/styles.css">
-<script src="<?=$path;?>/jquery-1.4.4.min.js"></script>
-<script src="<?=$path;?>/jquery.address.js?crawlable=true&state=<?=$path;?>"></script>
+<link rel=stylesheet href="<?=$path;?>styles.css">
+<script src="<?=$path;?>jquery-1.4.4.min.js"></script>
+<script src="<?=$path;?>jquery.address.js?crawlable=true&state=<?=substr($path,0,-1);?>"></script>
 <script>
 var el=['header','nav','article'];for(var i=el.length-1;i>=0;i--){document.createElement(el[i]);} // Add HTML5 tag support for old browsers
 $.address.init(function(){
@@ -65,9 +67,7 @@ $.address.init(function(){
 $result=mysql_query("SELECT * FROM $dbtable ORDER BY orderid ASC");
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $row[]=array('row'=>array_map('htmlspecialchars',$row));
-    $url=$row['url'];
-    $title=$row['title'];
-    echo $nav='      <li';if($_GET['url']==$url){echo ' class=selected';}echo "><a href=\"$path/$url\" title=\"$title\">$title</a></li>\n";
+    echo $nav='      <li';if($_GET['url']==$row['url']){echo ' class=selected';}echo "><a href=\"$path{$row['url']}\" title=\"{$row['title']}\">{$row['title']}</a></li>\n";
 }
 ?>
 </ul>
