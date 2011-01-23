@@ -18,6 +18,7 @@ Ajax SEO is based on latest Web Technology (HTML5, JSONP, jQuery, CSS3). Web ser
  -  HTML5 tags, `pushState` with crawlable fallback
  -  [Ajax crawling](http://code.google.com/web/ajaxcrawling/docs/getting-started.html) with `?_escaped_fragment_=/friendly-url` 301 redirect to `friendly-url`
  -  Trailing slashes issues
+ -  Rewrite uppercase letter URL to lowercase
  -  Remove .php extension
 
 
@@ -38,7 +39,6 @@ Ajax SEO is based on latest Web Technology (HTML5, JSONP, jQuery, CSS3). Web ser
 
 ### Installation
 
- -  Change or remove `/ajax-seo` from .htaccess basing on your server path
  -  Add your MySQL settings in connect.php
  -  Run ajax_seo.sql SQL queries on your database (through phpMyAdmin)
 
