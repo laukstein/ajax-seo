@@ -6,8 +6,8 @@ $dbpass='';
 $dbname='test';
 $dbtable='ajax_seo'; // Database table set by ajax_seo.sql
 
-$conn=@mysql_connect($dbhost,$dbuser,$dbpass)or die("Not reachable database.\nFollow installation instructions in README.md."); // mysql_error()
-mysql_select_db($dbname,$conn)or die();
+$con=@mysql_connect($dbhost,$dbuser,$dbpass)or die("Not reachable database.\nFollow installation instructions in README.md."); // mysql_error()
+mysql_select_db($dbname,$con)or die();
 mysql_query("SET NAMES 'utf8'");
 
 array_map('trim',$_GET);
