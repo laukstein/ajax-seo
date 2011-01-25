@@ -3,7 +3,7 @@ include_once('connect.php');
 header('Content-type:application/json; charset=UTF-8');
 header('Access-Control-Allow-Origin: *');
 
-$result=mysql_query("SELECT * FROM $dbtable WHERE url='$url'");
+$result=mysql_query("SELECT url,title,content FROM $dbtable WHERE url='$url'");
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $row[]=array('row'=>array_map('htmlspecialchars',$row));
     $array=array('url'=>$row['url'],'title'=>$row['title'],'content'=>$row['content']);
@@ -14,5 +14,5 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     	echo $json;                        // JSON
     }
 }
-mysql_close($conn);
+mysql_close($con);
 ?>
