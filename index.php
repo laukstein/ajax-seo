@@ -46,7 +46,7 @@ $.address.init(function(){
         //jsonp:'callback',
         //cache:false,
         //async:false,
-        jsonpCallback:'a',
+        //jsonpCallback:'a',
         success:function(data){
             window.clearTimeout(timer);
             document.title=data.title;
