@@ -1,0 +1,20 @@
+﻿# This is robots.txt file for Search Engine Optimizing
+
+# Every bot that might possibly read and respect this file
+User-agent: *
+Allow: /
+Disallow: /*?
+Disallow: /*.json$
+Disallow: /*.css$
+Disallow: /*.js$
+Disallow: /*.sql$
+Disallow: /*.conf$
+#Sitemap: http://domain.com/sitemap.xml
+
+# Disable Chinese Baidu crawl
+User-agent: Baiduspider
+Disallow: /
+
+# Removing Documents From the Wayback Machine archive.org
+User-agent: ia_archiver
+Disallow: /
