@@ -93,41 +93,84 @@ AddDefaultCharset utf-8
     RewriteCond %{REQUEST_URI} .+
     RewriteRule ^[^A-Z]*[A-Z] ${lc:%0} [R=301,L]
     
-#   # Solution for shared hostings that does not support RewriteMap
-#   # Rewrite uppercase letter URL to lowercase
-#   # Skip this entire section if no uppercase letters in requested URL
-#   RewriteRule ![A-Z] - [S=28]
-#   # Else rewrite one of each uppercase letter to lowercase
-#   RewriteRule ^([^A]*)A(.*)$ $1a$2
-#   RewriteRule ^([^B]*)B(.*)$ $1b$2
-#   RewriteRule ^([^C]*)C(.*)$ $1c$2
-#   RewriteRule ^([^D]*)D(.*)$ $1d$2
-#   RewriteRule ^([^E]*)E(.*)$ $1e$2
-#   RewriteRule ^([^F]*)F(.*)$ $1f$2
-#   RewriteRule ^([^G]*)G(.*)$ $1g$2
-#   RewriteRule ^([^H]*)H(.*)$ $1h$2
-#   RewriteRule ^([^I]*)I(.*)$ $1i$2
-#   RewriteRule ^([^J]*)J(.*)$ $1j$2
-#   RewriteRule ^([^K]*)K(.*)$ $1k$2
-#   RewriteRule ^([^L]*)L(.*)$ $1l$2
-#   RewriteRule ^([^M]*)M(.*)$ $1m$2
-#   RewriteRule ^([^N]*)N(.*)$ $1n$2
-#   RewriteRule ^([^O]*)O(.*)$ $1o$2
-#   RewriteRule ^([^P]*)P(.*)$ $1p$2
-#   RewriteRule ^([^Q]*)Q(.*)$ $1q$2
-#   RewriteRule ^([^R]*)R(.*)$ $1r$2
-#   RewriteRule ^([^S]*)S(.*)$ $1s$2
-#   RewriteRule ^([^T]*)T(.*)$ $1t$2
-#   RewriteRule ^([^U]*)U(.*)$ $1u$2
-#   RewriteRule ^([^V]*)V(.*)$ $1v$2
-#   RewriteRule ^([^W]*)W(.*)$ $1w$2
-#   RewriteRule ^([^X]*)X(.*)$ $1x$2
-#   RewriteRule ^([^Y]*)Y(.*)$ $1y$2
-#   RewriteRule ^([^Z]*)Z(.*)$ $1z$2
-#   # If more uppercase letters remain, re-invoke .htaccess and start over
-#   RewriteRule [A-Z] - [N]
-#   # Else do a 301 redirect to the all-lowercase URL
-#   RewriteRule (.*) /$1 [R=301,L]
+#    # Solution for shared hostings that does not support RewriteMap
+#    # Rewrite uppercase letter URL to lowercase
+#    # Skip next two rules if lowercasing in progress (Remove this rule if case-conversion plug-in below is removed)
+#    RewriteCond %{ENV:qLow} ^yes$ [NC]
+#    RewriteRule . - [S=2]
+#    # Prevent recursion and over-writing of myURI and myQS
+#    RewriteCond %{ENV:qRed} ^yes$ [NC]
+#    RewriteRule .? - [L]
+#    # Get the client-requested full URI and full query string
+#    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ (/[^?]*)(\?[^\ ]*)?\ HTTP/
+#    RewriteRule .? - [E=myURI:%1,E=myQS:%2]
+#    # Uppercase to lowercase conversion plug-in (This section, along with the first noted rule above, may be removed if not needed or wanted) Skip next 28 rules if no uppercase letters in URL
+#    RewriteCond %{ENV:myURI} ![A-Z]
+#    RewriteRule .? - [S=28]
+#    # Else swap them out, one at a time
+#    RewriteCond %{ENV:myURI} ^([^A]*)A(.*)$
+#    RewriteRule . - [E=myURI:%1a%2]
+#    RewriteCond %{ENV:myURI} ^([^B]*)B(.*)$
+#    RewriteRule . - [E=myURI:%1b%2]
+#    RewriteCond %{ENV:myURI} ^([^C]*)C(.*)$
+#    RewriteRule . - [E=myURI:%1c%2]
+#    RewriteCond %{ENV:myURI} ^([^D]*)D(.*)$
+#    RewriteRule . - [E=myURI:%1d%2]
+#    RewriteCond %{ENV:myURI} ^([^E]*)E(.*)$
+#    RewriteRule . - [E=myURI:%1e%2]
+#    RewriteCond %{ENV:myURI} ^([^F]*)F(.*)$
+#    RewriteRule . - [E=myURI:%1f%2]
+#    RewriteCond %{ENV:myURI} ^([^G]*)G(.*)$
+#    RewriteRule . - [E=myURI:%1g%2]
+#    RewriteCond %{ENV:myURI} ^([^H]*)H(.*)$
+#    RewriteRule . - [E=myURI:%1h%2]
+#    RewriteCond %{ENV:myURI} ^([^I]*)I(.*)$
+#    RewriteRule . - [E=myURI:%1i%2]
+#    RewriteCond %{ENV:myURI} ^([^J]*)J(.*)$
+#    RewriteRule . - [E=myURI:%1j%2]
+#    RewriteCond %{ENV:myURI} ^([^K]*)K(.*)$
+#    RewriteRule . - [E=myURI:%1k%2]
+#    RewriteCond %{ENV:myURI} ^([^L]*)L(.*)$
+#    RewriteRule . - [E=myURI:%1l%2]
+#    RewriteCond %{ENV:myURI} ^([^M]*)M(.*)$
+#    RewriteRule . - [E=myURI:%1m%2]
+#    RewriteCond %{ENV:myURI} ^([^N]*)N(.*)$
+#    RewriteRule . - [E=myURI:%1n%2]
+#    RewriteCond %{ENV:myURI} ^([^O]*)O(.*)$
+#    RewriteRule . - [E=myURI:%1o%2]
+#    RewriteCond %{ENV:myURI} ^([^P]*)P(.*)$
+#    RewriteRule . - [E=myURI:%1p%2]
+#    RewriteCond %{ENV:myURI} ^([^Q]*)Q(.*)$
+#    RewriteRule . - [E=myURI:%1q%2]
+#    RewriteCond %{ENV:myURI} ^([^R]*)R(.*)$
+#    RewriteRule . - [E=myURI:%1r%2]
+#    RewriteCond %{ENV:myURI} ^([^S]*)S(.*)$
+#    RewriteRule . - [E=myURI:%1s%2]
+#    RewriteCond %{ENV:myURI} ^([^T]*)T(.*)$
+#    RewriteRule . - [E=myURI:%1t%2]
+#    RewriteCond %{ENV:myURI} ^([^U]*)U(.*)$
+#    RewriteRule . - [E=myURI:%1u%2]
+#    RewriteCond %{ENV:myURI} ^([^V]*)V(.*)$
+#    RewriteRule . - [E=myURI:%1v%2] 
+#    RewriteCond %{ENV:myURI} ^([^W]*)W(.*)$
+#    RewriteRule . - [E=myURI:%1w%2]
+#    RewriteCond %{ENV:myURI} ^([^X]*)X(.*)$
+#    RewriteRule . - [E=myURI:%1x%2]
+#    RewriteCond %{ENV:myURI} ^([^Y]*)Y(.*)$
+#    RewriteRule . - [E=myURI:%1y%2]
+#    RewriteCond %{ENV:myURI} ^([^Z]*)Z(.*)$
+#    RewriteRule . - [E=myURI:%1z%2]
+#    # Set lowercasing-in-progress flag
+#    RewriteRule . - [E=qLow:yes]
+#    # If any uppercase characters remain, re-start mod_rewrite processing from the beginning
+#    RewriteCond %{ENV:myURI} [A-Z]
+#    RewriteRule . - [N]
+#    # If any characters were lowercased, set redirect required flag and reset lowercasing-in-progress flag (S=28 from above lands here)
+#    RewriteCond %{ENV:qLow} ^yes$ [NC]
+#    RewriteRule . - [E=qRed:yes,E=qLow:done]
+#    # End Uppercase to lowercase conversion plug-in
+#    RewriteCond %{ENV:qRed} ^yes$ [NC]
+#    RewriteRule .? http://%{HTTP_HOST}%{ENV:myURI}%{ENV:myQS} [R=301,L]
 
     # Remove .php extension
     RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^/]+/)*[^.]+\.php(\?[^\ ]*)?\ HTTP/ [NC]
