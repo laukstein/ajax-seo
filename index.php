@@ -1,6 +1,6 @@
 <?php
 include('connect.php');
-$result=mysql_query("SELECT * FROM $dbtable WHERE url='$url'");
+$result=mysql_query("SELECT title,content FROM $dbtable WHERE url='$url'");
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $row[]=array('row'=>array_map('htmlspecialchars',$row));
     $title=$row['title'];
@@ -16,9 +16,11 @@ if(str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME))!='/'
 <head>
 <meta charset=utf-8>
 <title><?=$title;?></title>
-<link rel=stylesheet href="<?=$path;?>styles.css">
-<script src="<?=$path;?>jquery-1.4.4.min.js"></script>
-<script src="<?=$path;?>jquery.address.js?crawlable=true&state=<?=substr($path,0,-1);?>"></script>
+<link rel=stylesheet href=<?=$path;?>styles.css>
+<meta name=description content="Ajax SEO maximized performance - speed, availability, user-friendly">
+<meta name=keywords content=ajax,seo,crawl,perform,speed,availability>
+<script src=<?=$path;?>jquery-1.4.4.min.js></script>
+<script src=<?=$path;?>jquery.address.js?crawlable=true&state=<?=substr($path,0,-1);?>></script>
 <script>
 var el=['header','nav','article'];for(var i=el.length-1;i>=0;i--){document.createElement(el[i]);} // Add HTML5 tag support for old browsers
 $.address.init(function(){
@@ -57,6 +59,7 @@ $.address.init(function(){
     });
 });
 </script>
+<script src=<?=$path;?>jquery.lint.js></script>
 </head>
 <body>
 <header>
@@ -64,7 +67,7 @@ $.address.init(function(){
 <nav>
 <ul>
 <?php
-$result=mysql_query("SELECT * FROM $dbtable ORDER BY orderid ASC");
+$result=mysql_query("SELECT url,title FROM $dbtable ORDER BY orderid ASC");
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $row[]=array('row'=>array_map('htmlspecialchars',$row));
     echo $nav='      <li';if($_GET['url']==$row['url']){echo ' class=selected';}echo "><a href=\"$path{$row['url']}\" title=\"{$row['title']}\">{$row['title']}</a></li>\n";
@@ -72,8 +75,8 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
 ?>
 </ul>
 </nav>
-<article id=content><?php echo $content; echo $error; mysql_close($conn);?></article>
-<p><a href=//github.com/laukstein/ajax-seo title="GitHub repository for Ajax SEO">Latest Ajax SEO in GitHub</a> | <a href=//github.com/laukstein/ajax-seo/issues title="Report an issue">Report an issue</a></p>
+<article id=content><?php echo $content; echo $error; mysql_close($con);?></article>
+<p><a href=//github.com/laukstein/ajax-seo title="GitHub repository for Ajax SEO">Latest Ajax SEO in GitHub</a> | <a href=//github.com/laukstein/ajax-seo/zipball/master title="Download latest Ajax SEO from GitHub">Download</a> | <a href=//github.com/laukstein/ajax-seo/issues title="Report an issue">Report an issue</a></p>
 </header>
 </body>
 </html>
