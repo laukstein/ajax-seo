@@ -1,5 +1,6 @@
 Options -Indexes +FollowSymLinks -MultiViews
 
+ServerSignature Off
 php_value error_log error_log.txt
 php_value short_open_tag On
 php_flag magic_quotes_gpc Off
@@ -91,6 +92,42 @@ AddDefaultCharset utf-8
     # Rewrite uppercase letter URL to lowercase
     RewriteCond %{REQUEST_URI} .+
     RewriteRule ^[^A-Z]*[A-Z] ${lc:%0} [R=301,L]
+    
+#   # Solution for shared hostings that does not support RewriteMap
+#   # Rewrite uppercase letter URL to lowercase
+#   # Skip this entire section if no uppercase letters in requested URL
+#   RewriteRule ![A-Z] - [S=28]
+#   # Else rewrite one of each uppercase letter to lowercase
+#   RewriteRule ^([^A]*)A(.*)$ $1a$2
+#   RewriteRule ^([^B]*)B(.*)$ $1b$2
+#   RewriteRule ^([^C]*)C(.*)$ $1c$2
+#   RewriteRule ^([^D]*)D(.*)$ $1d$2
+#   RewriteRule ^([^E]*)E(.*)$ $1e$2
+#   RewriteRule ^([^F]*)F(.*)$ $1f$2
+#   RewriteRule ^([^G]*)G(.*)$ $1g$2
+#   RewriteRule ^([^H]*)H(.*)$ $1h$2
+#   RewriteRule ^([^I]*)I(.*)$ $1i$2
+#   RewriteRule ^([^J]*)J(.*)$ $1j$2
+#   RewriteRule ^([^K]*)K(.*)$ $1k$2
+#   RewriteRule ^([^L]*)L(.*)$ $1l$2
+#   RewriteRule ^([^M]*)M(.*)$ $1m$2
+#   RewriteRule ^([^N]*)N(.*)$ $1n$2
+#   RewriteRule ^([^O]*)O(.*)$ $1o$2
+#   RewriteRule ^([^P]*)P(.*)$ $1p$2
+#   RewriteRule ^([^Q]*)Q(.*)$ $1q$2
+#   RewriteRule ^([^R]*)R(.*)$ $1r$2
+#   RewriteRule ^([^S]*)S(.*)$ $1s$2
+#   RewriteRule ^([^T]*)T(.*)$ $1t$2
+#   RewriteRule ^([^U]*)U(.*)$ $1u$2
+#   RewriteRule ^([^V]*)V(.*)$ $1v$2
+#   RewriteRule ^([^W]*)W(.*)$ $1w$2
+#   RewriteRule ^([^X]*)X(.*)$ $1x$2
+#   RewriteRule ^([^Y]*)Y(.*)$ $1y$2
+#   RewriteRule ^([^Z]*)Z(.*)$ $1z$2
+#   # If more uppercase letters remain, re-invoke .htaccess and start over
+#   RewriteRule [A-Z] - [N]
+#   # Else do a 301 redirect to the all-lowercase URL
+#   RewriteRule (.*) /$1 [R=301,L]
 
     # Remove .php extension
     RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^/]+/)*[^.]+\.php(\?[^\ ]*)?\ HTTP/ [NC]
