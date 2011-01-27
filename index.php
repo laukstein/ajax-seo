@@ -21,14 +21,16 @@ if(str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME))!='/'
 <meta name=keywords content=ajax,seo,crawl,perform,speed,availability>
 <script src=//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js></script>
 <script>!window.jQuery&&document.write(unescape('%3Cscript src=<?=$path;?>jquery-1.4.4.min.js%3E%3C/script%3E'))</script>
-<script src=<?=$path;?>jquery.address.js?crawlable=true&state=<?=substr($path,0,-1);?>></script>
+<script src=<?=$path;?>jquery.address.js?crawlable=1&state=<?if(strlen(utf8_decode($path))>1){echo substr($path,0,-1);}else{echo $path;}?>></script>
 <script>
-var el=['header','nav','article'];for(var i=el.length-1;i>=0;i--){document.createElement(el[i]);} // Add HTML5 tag support for old browsers
+var el=['header','nav','article'];for(var i=el.length-1;i>=0;i--){document.createElement(el[i]);}   // Add HTML5 tag support for old browsers
+var _gaq=[['_setAccount','UA-XXXXXXXX-X'],['_trackPageview']];(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;g.src='//www.google-analytics.com/ga.js';s.parentNode.insertBefore(g,s)}(document,'script'))
 $.address.init(function(){
     $('li a').address();
 }).change(function(event){
+    $.address.tracker();
     $('li a').each(function(){
-        if($(this).attr('href')==($.address.state()+event.path)){
+        if($(this).attr('href')==(($.address.state()+event.path).replace(/\/\//,'/'))){
             $(this).parent('li').addClass('selected').focus();
         }else{
             $(this).parent('li').removeClass();
@@ -47,7 +49,7 @@ $.address.init(function(){
         //jsonp:'callback',
         //cache:false,
         //async:false,
-        //jsonpCallback:'a',
+        jsonpCallback:'i',                  // Enable JSONP cache
         success:function(data){
             window.clearTimeout(timer);
             document.title=data.title;
@@ -79,6 +81,5 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
 <article id=content><?php echo $content; echo $error; mysql_close($con);?></article>
 <p><a href=//github.com/laukstein/ajax-seo title="GitHub repository for Ajax SEO">Latest Ajax SEO in GitHub</a> | <a href=//github.com/laukstein/ajax-seo/zipball/master title="Download latest Ajax SEO from GitHub">Download</a> | <a href=//github.com/laukstein/ajax-seo/issues title="Report an issue">Report an issue</a></p>
 </header>
-<script>var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;g.src='//www.google-analytics.com/ga.js';s.parentNode.insertBefore(g,s)}(document,'script'))</script>
 </body>
 </html>
