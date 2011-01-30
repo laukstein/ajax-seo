@@ -36,7 +36,6 @@ Ajax SEO is based on latest Web Technology (HTML5, JSONP, jQuery, CSS3). Web ser
  -  For browsers that does not support `pushState` (IE, >Firefox 4, Opera) must be redirect from /#/url to /#!/url
  -  IE7 browser refresh changes address from [#!/контакты](http://lab.laukstein.com/ajax-seo/#!/контакты) to `#!/ÐºÐ¾Ð½ÑÐ°ÐºÑÑ` and `#!/ÃÂºÃÂ¾ÃÂ½ÃÂÃÂ°ÃÂºÃÂÃÂ`
  -  Crome 8.0.552.224 links like `/#/url` or `/#!/url` *jumps* from `/` to `/url`
- -  Firebug Console warnings on checking jQuery syntax with jQuery Lint
 
 
 ### Installation
