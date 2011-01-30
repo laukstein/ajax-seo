@@ -28,7 +28,6 @@ var _gaq=[['_setAccount','UA-XXXXXXXX-X'],['_trackPageview']];(function(d,t){var
 $.address.init(function(){
     $('li a').address();
 }).change(function(event){
-    $.address.tracker();
     $('li a').each(function(){
         if($(this).attr('href')==(($.address.state()+event.path).replace(/\/\//,'/'))){
             $(this).parent('li').addClass('selected').focus();
@@ -62,7 +61,6 @@ $.address.init(function(){
     });
 });
 </script>
-<script src=<?=$path;?>jquery.lint.js></script>
 </head>
 <body>
 <header>
