@@ -73,21 +73,42 @@ AddDefaultCharset utf-8
 <IfModule mod_rewrite.c>
     RewriteEngine On
     
-    # Ajax SEO /?_escaped_fragment_=friendly-url redirect to /friendly-url
+    # Ajax SEO crawl /?_escaped_fragment_=url redirect to /url
     RewriteCond %{QUERY_STRING} ^_escaped_fragment_=(.*)$
     RewriteRule .*$ %{REQUEST_URI}%1? [R=301,L]
     
     # Remove multiple trailing slashes after domain
-    RewriteCond %{THE_REQUEST} ^[A-Z]+\s//+(.*)\sHTTP/[0-9.]+$
-    RewriteRule . http://%{HTTP_HOST}/%1 [R=301,L]
+    RewriteCond %{THE_REQUEST} ^[A-Z]+\s//+(.*)\sHTTP/[0-9.]+$ [OR]
+    RewriteCond %{THE_REQUEST} ^[A-Z]+\s(.*/)/+\sHTTP/[0-9.]+$
+    RewriteRule .* http://%{HTTP_HOST}/%1 [R=301,L]
     
     # Remove multiple trailing slashes in the URL
     RewriteCond %{REQUEST_URI} ^(.*)//(.*)$
     RewriteRule . %1/%2 [R=301,L]
     
-    # Removes trailing slash from URL end
+    # Remove trailing slash from URL end
     RewriteCond %{REQUEST_URI} ^(.+)/$
     RewriteRule ^.+/$ %1 [R=301,L]
+    
+    # Rewrite space with dash
+    RewriteCond %{REQUEST_URI} ^([^\ ]*)\ (.*)$
+    RewriteRule .* %1-%2 [R=301,L]
+    
+    # Rewrite underscore with dash
+    RewriteCond %{REQUEST_URI} ^(.+)_(.+)$
+    RewriteRule ^.+_.+$ %1-%2 [L,R=301]
+    
+    # Remove dot before slash
+    RewriteCond %{REQUEST_URI} ^(.*)\./(.*)$
+    RewriteRule ^(.*)\./(.*)$  %1/%2
+    
+    # Remove dot after slash
+    RewriteCond %{REQUEST_URI} ^(.*)/\.(.*)$
+    RewriteRule ^(.*)/\.(.*)$ %1/%2
+    
+    # Remove .php extension
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^/]+/)*[^.]+\.php(\?[^\ ]*)?\ HTTP/ [NC]
+    RewriteRule ^(([^/]+/)*[^.]+)\.php$ http://%{HTTP_HOST}/%1$1 [R=301,L]
     
     # Rewrite uppercase letter URL to lowercase
     RewriteCond %{REQUEST_URI} .+
@@ -171,10 +192,6 @@ AddDefaultCharset utf-8
 #    # End Uppercase to lowercase conversion plug-in
 #    RewriteCond %{ENV:qRed} ^yes$ [NC]
 #    RewriteRule .? http://%{HTTP_HOST}%{ENV:myURI}%{ENV:myQS} [R=301,L]
-
-    # Remove .php extension
-    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^/]+/)*[^.]+\.php(\?[^\ ]*)?\ HTTP/ [NC]
-    RewriteRule ^(([^/]+/)*[^.]+)\.php$ http://%{HTTP_HOST}/%1$1 [R=301,L]
 
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
