@@ -22,8 +22,8 @@ if(str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME))!='/'
 <link rel=stylesheet href=<?=$path;?>styles.css>
 <meta name=description content="Ajax SEO maximized performance - speed, availability, user-friendly">
 <meta name=keywords content=ajax,seo,crawl,performance,speed,availability,user-friendly>
-<script src=//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js></script>
-<script>!window.jQuery&&document.write(unescape('%3Cscript src=<?=$path;?>jquery-1.4.4.min.js%3E%3C/script%3E'))</script>
+<script src=//code.jquery.com/jquery-1.5.min.js></script>
+<script>!window.jQuery&&document.write(unescape('%3Cscript src=<?=$path;?>jquery-1.5.min.js%3E%3C/script%3E'))</script>
 <script src=<?=$path;?>jquery.address.js?crawlable=1&state=<?if(strlen(utf8_decode($path))>1){echo substr($path,0,-1);}else{echo $path;}?>></script>
 <script>
 var el=['header','nav','article'];for(var i=el.length-1;i>=0;i--){document.createElement(el[i]);}   // Add HTML5 tag support for old browsers
