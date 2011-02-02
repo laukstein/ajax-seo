@@ -6,6 +6,9 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $title=$row['title'];
     $content=$row['content'];
 }
+$title=(isset($title) ? $title : NULL);
+$content=(isset($content) ? $content : NULL);
+
 if(str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME))!='/'){
     $path=str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME)).'/';
 }else{
@@ -24,7 +27,6 @@ if(str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME))!='/'
 <script src=<?=$path;?>jquery.address.js?crawlable=1&state=<?if(strlen(utf8_decode($path))>1){echo substr($path,0,-1);}else{echo $path;}?>></script>
 <script>
 var el=['header','nav','article'];for(var i=el.length-1;i>=0;i--){document.createElement(el[i]);}   // Add HTML5 tag support for old browsers
-var _gaq=[['_setAccount','UA-XXXXXXXX-X'],['_trackPageview']];(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;g.src='//www.google-analytics.com/ga.js';s.parentNode.insertBefore(g,s)}(document,'script'))
 $.address.init(function(){
     $('li a').address();
 }).change(function(event){
@@ -71,13 +73,14 @@ $.address.init(function(){
 $result=mysql_query("SELECT url,title FROM $dbtable ORDER BY orderid ASC");
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $row[]=array('row'=>array_map('htmlspecialchars',$row));
-    echo $nav='      <li';if($_GET['url']==$row['url']){echo ' class=selected';}echo "><a href=\"$path{$row['url']}\" title=\"{$row['title']}\">{$row['title']}</a></li>\n";
+    echo $nav='      <li';if($url==$row['url']){echo ' class=selected';}echo "><a href=\"$path{$row['url']}\" title=\"{$row['title']}\">{$row['title']}</a></li>\n";
 }
 ?>
 </ul>
 </nav>
-<article id=content><?php echo $content; echo $error; mysql_close($con);?></article>
+<article id=content><?php echo $content; mysql_close($con);?></article>
 <p><a href=//github.com/laukstein/ajax-seo title="GitHub repository for Ajax SEO">Latest Ajax SEO in GitHub</a> | <a href=//github.com/laukstein/ajax-seo/zipball/master title="Download latest Ajax SEO from GitHub">Download</a> | <a href=//github.com/laukstein/ajax-seo/issues title="Report an issue">Report an issue</a></p>
 </header>
+<script>var _gaq=[['_setAccount','UA-XXXXXXXX-X'],['_trackPageview']];(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;g.src='//www.google-analytics.com/ga.js';s.parentNode.insertBefore(g,s)}(document,'script'))</script>
 </body>
 </html>
