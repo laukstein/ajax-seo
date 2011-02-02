@@ -18,10 +18,10 @@ if(str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME))!='/'
 <html>
 <head>
 <meta charset=utf-8>
-<title><?=$title;?></title>
+<title><?=$title;?> - Ajax SEO</title>
 <link rel=stylesheet href=<?=$path;?>styles.css>
 <meta name=description content="Ajax SEO maximized performance - speed, availability, user-friendly">
-<meta name=keywords content=ajax,seo,crawl,perform,speed,availability>
+<meta name=keywords content=ajax,seo,crawl,performance,speed,availability,user-friendly>
 <script src=//ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js></script>
 <script>!window.jQuery&&document.write(unescape('%3Cscript src=<?=$path;?>jquery-1.4.4.min.js%3E%3C/script%3E'))</script>
 <script src=<?=$path;?>jquery.address.js?crawlable=1&state=<?if(strlen(utf8_decode($path))>1){echo substr($path,0,-1);}else{echo $path;}?>></script>
@@ -54,7 +54,7 @@ $.address.init(function(){
         success:function(data){
             window.clearTimeout(timer);
             document.title=data.title;
-            $('#content').html(data.content);
+            $('#content').html('<h1>'+data.title+'</h1>\n'+data.content);
         },
         error:function(){
             window.clearTimeout(timer);
@@ -66,7 +66,7 @@ $.address.init(function(){
 </head>
 <body>
 <header>
-<h1>Ajax SEO</h1>
+<span id=logo><a href=<?=$path?> title="Ajax SEO maximized performance" rel=home>Ajax SEO</a></span>
 <nav>
 <ul>
 <?php
@@ -78,7 +78,7 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
 ?>
 </ul>
 </nav>
-<article id=content><?php echo $content; mysql_close($con);?></article>
+<article id=content><?php echo "<h1>$title</h1>\n$content"; mysql_close($con);?></article>
 <p><a href=//github.com/laukstein/ajax-seo title="GitHub repository for Ajax SEO">Latest Ajax SEO in GitHub</a> | <a href=//github.com/laukstein/ajax-seo/zipball/master title="Download latest Ajax SEO from GitHub">Download</a> | <a href=//github.com/laukstein/ajax-seo/issues title="Report an issue">Report an issue</a></p>
 </header>
 <script>var _gaq=[['_setAccount','UA-XXXXXXXX-X'],['_trackPageview']];(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;g.src='//www.google-analytics.com/ga.js';s.parentNode.insertBefore(g,s)}(document,'script'))</script>
