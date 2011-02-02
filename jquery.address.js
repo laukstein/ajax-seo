@@ -662,7 +662,7 @@
                                 }
                             } else if (_value != _href()) {
                                 if (_opts.history) {
-                                    _l.hash = '#' + _crawl(decodeURI(_value), TRUE);
+                                    _l.hash = '#' + _crawl(this.decode(_strict(_value)), TRUE);
                                 } else {
                                     _l.replace('#' + _crawl(_value, TRUE));
                                 }
