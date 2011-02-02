@@ -12,5 +12,5 @@ mysql_query("SET NAMES 'utf8'");
 
 array_map('trim',$_GET);
 array_map('mysql_real_escape_string',$_GET);
-$url=mysql_real_escape_string($_GET['url']);
+$url=(isset($_GET['url']) ? mysql_real_escape_string($_GET['url']) : NULL);
 ?>
