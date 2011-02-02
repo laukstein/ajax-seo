@@ -90,21 +90,29 @@ AddDefaultCharset utf-8
     RewriteCond %{REQUEST_URI} ^(.+)/$
     RewriteRule ^.+/$ %1 [R=301,L]
     
+    # Rewrite backslash with slash
+    RewriteCond %{REQUEST_URI} (.*)\\(.*)
+    RewriteRule .* %1/%2 [R=301,L]
+    
     # Rewrite space with dash
     RewriteCond %{REQUEST_URI} ^([^\ ]*)\ (.*)$
     RewriteRule .* %1-%2 [R=301,L]
     
     # Rewrite underscore with dash
-    RewriteCond %{REQUEST_URI} ^(.+)_(.+)$
-    RewriteRule ^.+_.+$ %1-%2 [L,R=301]
+    RewriteCond %{REQUEST_URI} ^([^\_]*)\_(.*)$
+    RewriteRule .* %1-%2 [R=301,L]
+    
+    # Remove comma
+    RewriteCond %{REQUEST_URI} ^([^\,]*)\,(.*)$
+    RewriteRule .* %1%2 [R=301,L]
     
     # Remove dot before slash
     RewriteCond %{REQUEST_URI} ^(.*)\./(.*)$
-    RewriteRule ^(.*)\./(.*)$  %1/%2
+    RewriteRule ^(.*)\./(.*)$  %1/%2 [R=301,L]
     
     # Remove dot after slash
     RewriteCond %{REQUEST_URI} ^(.*)/\.(.*)$
-    RewriteRule ^(.*)/\.(.*)$ %1/%2
+    RewriteRule ^(.*)/\.(.*)$ %1/%2 [R=301,L]
     
     # Remove .php extension
     RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^/]+/)*[^.]+\.php(\?[^\ ]*)?\ HTTP/ [NC]
