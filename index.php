@@ -53,8 +53,8 @@ $.address.init(function(){
         jsonpCallback:'i',                  // Enable JSONP cache
         success:function(data){
             window.clearTimeout(timer);
-            document.title=data.title;
-            $('#content').html('<h1>'+data.title+'</h1>\n'+data.content);
+            document.title=data.title+' - Ajax SEO';
+            $('#content').html(data.content);
         },
         error:function(){
             window.clearTimeout(timer);
@@ -78,7 +78,9 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
 ?>
 </ul>
 </nav>
-<article id=content><?php echo "<h1>$title</h1>\n$content"; mysql_close($con);?></article>
+<article id=content>
+<?php echo "<h1>$title</h1>\n$content\n"; mysql_close($con);?>
+</article>
 <p><a href=//github.com/laukstein/ajax-seo title="GitHub repository for Ajax SEO">Latest Ajax SEO in GitHub</a> | <a href=//github.com/laukstein/ajax-seo/zipball/master title="Download latest Ajax SEO from GitHub">Download</a> | <a href=//github.com/laukstein/ajax-seo/issues title="Report an issue">Report an issue</a></p>
 </header>
 <script>var _gaq=[['_setAccount','UA-XXXXXXXX-X'],['_trackPageview']];(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;g.src='//www.google-analytics.com/ga.js';s.parentNode.insertBefore(g,s)}(document,'script'))</script>
