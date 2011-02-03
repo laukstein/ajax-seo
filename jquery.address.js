@@ -104,7 +104,7 @@
                             _l.reload();
                         } else {
                             if (_msie && _version < 8 && _opts.history) {
-                                _st(decodeURI(_html), 50);
+                                _st(_html, 50);
                             }
                             _value = hash;
                             _update(FALSE);
@@ -137,7 +137,7 @@
             _html = function() {
                 var src = _js() + ':' + FALSE + ';document.open();document.writeln(\'<html><head><title>' + 
                     _d.title.replace('\'', '\\\'') + '</title><script>var ' + ID + ' = "' + encodeURIComponent(_href()) + 
-                    (_d.domain != _l.host ? '";document.domain="' + _d.domain : '') + 
+                    (_d.domain != _l.hostname ? '";document.domain="' + _d.domain : '') + 
                     '";</' + 'script></head></html>\');document.close();';
                 if (_version < 7) {
                     _frame.src = src;
@@ -211,7 +211,7 @@
                         _st(function() {
                             $(_frame).bind('load', function() {
                                 var win = _frame.contentWindow;
-                                _value = win[ID] !== UNDEFINED ? win[ID] : '';
+                                this.decode(_strict(_value)) = win[ID] !== UNDEFINED ? win[ID] : '';
                                 if (_value != _href()) {
                                     _update(FALSE);
                                     _l.hash = _crawl(_value, TRUE);
@@ -668,7 +668,7 @@
                                 }
                             }
                             if ((_msie && _version < 8) && _opts.history) {
-                                _st(decodeURI(_html), 50);
+                                _st(_html, 50);
                             }
                             if (_webkit) {
                                 _st(function(){ _silent = FALSE; }, 1);
