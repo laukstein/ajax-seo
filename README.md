@@ -3,9 +3,8 @@ Ajax SEO is based on latest Web Technology (HTML5, JSONP, jQuery, CSS3). Web ser
     
     $.ajax({
         type:"GET",
-        url:encodeURIComponent(event.path.substr(1))+'.json',
+        url:event.path+'.json',
         dataType:'jsonp',
-        jsonpCallback:'a',
         success:function(data){
             document.title=data.title;
             $('#content').html(data.content);
@@ -16,10 +15,12 @@ Ajax SEO is based on latest Web Technology (HTML5, JSONP, jQuery, CSS3). Web ser
 ### Search engine optimization
 
  -  HTML5 tags, `pushState` with crawlable fallback
- -  [Ajax crawling](http://code.google.com/web/ajaxcrawling/docs/getting-started.html) with `?_escaped_fragment_=/friendly-url` 301 redirect to `friendly-url`
+ -  [Ajax crawling](http://code.google.com/web/ajaxcrawling/docs/getting-started.html) with `?_escaped_fragment_=/url` 301 redirect to `url`
  -  Trailing slashes issues
  -  Rewrite uppercase letter URL to lowercase
+ -  Rewrite space and underscore with dash
  -  Remove .php extension
+ -  Remove comma
 
 
 ### Speed Performance
