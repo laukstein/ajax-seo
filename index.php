@@ -40,7 +40,7 @@ if(str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME))!='/'
 <html>
 <head>
 <title><?=$title;?> - Ajax SEO</title>
-<link rel=stylesheet href=<?=$path;?>styles.css>
+<link rel=stylesheet href=<?=$path;?>style.css>
 <link rel=author href=humans.txt type=text/plain>
 <meta name=description content="Ajax SEO maximized performance - speed, availability, user-friendly">
 <meta name=keywords content=ajax,seo,crawl,performance,speed,availability,user-friendly>
