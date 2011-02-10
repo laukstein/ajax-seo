@@ -1,0 +1,14 @@
+/* Ajax SEO */
+	Author:    Binyamin Laukstein
+	Website:   laukstein.com
+	Doctype:   HTML5, CSS3, JavaScript
+	Tools:     PHP, MySQL
+    
+/* jQuery Address */
+	Author:    Rostislav Hristov
+	Website:   asual.com
+	Doctype:   JavaScript
+    
+/* jQuery */
+	Website:   jquery.com
+	Doctype:   JavaScript
