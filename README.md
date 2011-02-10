@@ -1,42 +1,60 @@
-# [Ajax SEO maximized performance - speed, availability, user-friendly](http://lab.laukstein.com/jsonp-ajax-seo/)
-Ajax SEO is based on latest Web Technology (HTML5, JSONP, jQuery, CSS3). Web server requirements: PHP, MySQL, Apache.
+# [Ajax SEO maximized performance - speed, availability, user-friendly](//lab.laukstein.com/jsonp-ajax-seo/)
+Ajax SEO is based on latest Web Technology (HTML5, JSONP, jQuery, CSS3). Web server requirements: PHP 5, MySQL 5, Apache 2.
     
+    
+    var timer=window.setTimeout(function(){
+        $('#content').fadeTo(110,1).html('Loading seems to be taking a while.');
+    },3800);
     $.ajax({
         type:"GET",
-        url:event.path+'.json',
+        url:encodeURIComponent(event.path.substr(1))+'.json',
         dataType:'jsonp',
+        cache:true,
+        jsonpCallback:'i',
+        beforeSend:function(){
+            $('#content').html('Loading...');
+        },
         success:function(data){
+            window.clearTimeout(timer);
             document.title=data.title;
             $('#content').html(data.content);
+        },
+        error:function(){
+            window.clearTimeout(timer);
+            $('#content').html('The request failed.');
         }
     });
     
-
+    
 ### Search engine optimization
 
- -  HTML5 tags, `pushState` with crawlable fallback
- -  [Ajax crawling](http://code.google.com/web/ajaxcrawling/docs/getting-started.html) with `?_escaped_fragment_=/url` 301 redirect to `url`
- -  Trailing slashes issues
+ -  HTML5, `pushState` with crawlable fallback
+ -  [Ajax crawling](//code.google.com/web/ajaxcrawling/docs/getting-started.html) with `?_escaped_fragment_=/$` 301 redirect to `/$`
+ -  Slash and backslash issues
  -  Rewrite uppercase letter URL to lowercase
  -  Rewrite space and underscore with dash
  -  Remove .php extension
  -  Remove comma
+ -  404 error page
 
 
 ### Speed Performance
 
- -  `$.ajax() json` vs `$.getJSON()` <http://jsperf.com/getjson-vs-ajax-json>
- -  `document.title=data.title` vs `$('title').html(data.title)` <http://jsperf.com/rename-title>
- -  `encodeURIComponent()` vs `encodeURI()` <http://jsperf.com/encodeuri-vs-encodeuricomponent>
- -  `decodeURI()` vs `decodeURIComponent()` <http://jsperf.com/decodeuri-vs-decodeuricomponent>
+ -  `$.ajax() json` vs `$.getJSON()` <//jsperf.com/getjson-vs-ajax-json>
+ -  `document.title=data.title` vs `$('title').html(data.title)` <//jsperf.com/rename-title>
+ -  `encodeURIComponent()` vs `encodeURI()` <//jsperf.com/encodeuri-vs-encodeuricomponent>
+ -  `decodeURI()` vs `decodeURIComponent()` <//jsperf.com/decodeuri-vs-decodeuricomponent>
 
 
 ### Known bugs
 
- -  For browsers that does not support `pushState` (IE, Firefox > 4, Opera) if you'll try to refresh [page](http://lab.laukstein.com/ajax-seo/#!/contact), you'll notice *jumping* content from 'Home' to 'Contact' in the title and content
- -  Crome 8.0.552.237 `/#/url` and `/#!/url` *jumps* from `/` to `/url`
- -  Apache rewrite /контакты// redirect to /%2525d0%2525ba%2525d0%2525be%2525d0%2525bd%2525d1%252582%2525d0%2525b0%2525d0%2525ba%2525d1%252582%2525d1%25258b
- -  Browsers that does not support `pushState` must have redirect from /#/url to /#!/url
+ -  jQuery Address - on browsers that does not support `pushState` (IE, FF > 4, Opera) if you'll try to refresh [page](//lab.laukstein.com/ajax-seo/#!/contact), you'll notice *jumping* content from 'Home' to 'Contact' in the title and content
+ -  jQuery Address - on browsers that supports `pushState` (Crome, Safari. FF 4) `/#/$` and `/#!/$` *jumps* from `/` to `/$`
+ -  jQuery Address - browsers that does not support `pushState` must have redirect from /#/url to /#!/url
+ -  jQuery Address - still has some IE bugs, including urldecode bug
+ -  jQuery Address - W3C validator error on `=` in jquery.address.js?crawlable=1&amp;state=/
+ -  Apache and IE - domain.com//контакты rewrited to urlencode domain.com/%D0%BA%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D1%8B
+
 
 ### Installation
 
@@ -44,4 +62,4 @@ Ajax SEO is based on latest Web Technology (HTML5, JSONP, jQuery, CSS3). Web ser
  -  Run ajax_seo.sql SQL queries on your database (through phpMyAdmin)
 
 
-> jQuery Address Plugin based on <https://github.com/asual/jquery-address>
+> jQuery Address Plugin based on <//github.com/asual/jquery-address>
