@@ -1,45 +1,34 @@
 Options -Indexes +FollowSymLinks -MultiViews
 
 ServerSignature Off
+
+php_flag display_errors 0
+php_flag log_errors 1
 php_value error_log error_log.txt
-php_value short_open_tag On
-php_flag magic_quotes_gpc Off
-php_flag register_globals Off
+php_flag allow_url_fopen 1
+php_value short_open_tag 1
+php_flag magic_quotes_gpc 0
+php_flag register_globals 0
+php_flag expose_php 0
 php_value output_handler ob_gzhandler
 
+AddType text/javascript .js
+AddType application/json .json
+AddType image/x-icon .ico
+
 AddDefaultCharset utf-8
-<ifModule mod_deflate.c>
-    <FilesMatch "\.(php|css|js|json|txt)$">
-        SetOutputFilter DEFLATE
-    </FilesMatch>
-</ifModule>
-<ifModule mod_expires.c>
-    ExpiresActive On
-    ExpiresDefault "access plus 1 month"
-    ExpiresByType text/css "access plus 6 months"
-    ExpiresByType text/plain "access plus 1 hour"
-    ExpiresByType text/cache-manifest "access plus 0 seconds"
-    ExpiresByType application/x-httpd-php "access plus 0 second"
-    ExpiresByType application/x-javascript "access plus 6 months"
-    ExpiresByType application/javascript "access plus 6 months"
-    ExpiresByType application/json "access plus 0 second"
-</ifModule>
-<ifModule mod_headers.c>
-    <filesMatch "\.(css|js|json|txt)$">
-        Header set Cache-Control "max-age=31536000, public"
-    </filesMatch>
-    <filesMatch "\.(php)$">
-        Header set Cache-Control "max-age=600, private, must-revalidate"
-    </filesMatch>
-    FileETag None
-    Header unset ETag
-    Header unset Last-Modified
-    Header append Vary User-Agent
-</ifModule>
-<IfModule mod_setenvif.c>
-    <IfModule mod_headers.c>
-        BrowserMatch MSIE ie
-        Header set X-UA-Compatible "IE=Edge,chrome=1" env=ie
+AddCharset utf-8 .json .css .js .txt
+
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE application/x-httpd-php application/json text/html text/plain text/css text/javascript image/svg+xml image/x-icon
+    <IfModule mod_setenvif.c>
+        BrowserMatch ^Mozilla/4 gzip-only-text/html
+        BrowserMatch ^Mozilla/4\.0[678] no-gzip
+        BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+        <IfModule mod_headers.c>
+            BrowserMatch MSIE ie
+            Header set X-UA-Compatible "IE=Edge,chrome=1" env=ie
+        </IfModule>
     </IfModule>
 </IfModule>
 <IfModule mod_gzip.c>
@@ -49,27 +38,63 @@ AddDefaultCharset utf-8
     AddEncoding gzip .gz
     mod_gzip_update_static No
     mod_gzip_keep_workfiles No
-    mod_gzip_minimum_file_size 512
-    mod_gzip_maximum_file_size 1048576
-    mod_gzip_maximum_inmem_size 60000
+    mod_gzip_minimum_file_size 500
+    mod_gzip_maximum_file_size 5000000
     mod_gzip_maximum_inmem_size 60000
     mod_gzip_min_http 1000
+    mod_gzip_dechunk Yes
     mod_gzip_handle_methods GET POST
-    mod_gzip_dechunk No
-    mod_gzip_item_exclude reqheader \"User-agent: Mozilla/4.0[678]\"\
-    mod_gzip_item_include file \.(php|css|js|txt)$
-    mod_gzip_item_include handler ^cgi-script$
-    mod_gzip_item_include handler proxy-server
+    #mod_gzip_item_exclude reqheader \"User-agent: Mozilla/4.0[678]\"
+    mod_gzip_item_include file \.(php|css|json|js|css|txt|ico)$
+    mod_gzip_item_include mime ^text/html$
+    mod_gzip_item_include mime ^text/plain$
     mod_gzip_item_include mime ^text/css$
-    mod_gzip_item_include mime ^text/.*
+    mod_gzip_item_include mime ^text/javascript$
     mod_gzip_item_include mime ^application/json$
-    mod_gzip_item_include mime ^application/javascript$
     mod_gzip_item_include mime ^application/x-httpd-php$
-    mod_gzip_item_include mime ^application/x-javascript$
+    mod_gzip_item_include mime ^image/svg+xml$
+    mod_gzip_item_include mime ^image/x-icon$
     mod_gzip_item_include mime ^httpd/unix-directory$
-    mod_gzip_item_exclude rspheader Content-Type:image/*
+    mod_gzip_item_include handler ^proxy-server$
     mod_gzip_item_exclude rspheader ^Content-Encoding:.*gzip.*
+    mod_gzip_send_vary On
 </IfModule>
+<ifModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+    ExpiresByType text/css "access plus 6 months"
+    ExpiresByType text/plain "access plus 1 hour"
+    ExpiresByType text/javascript "access plus 6 months"
+    ExpiresByType application/x-httpd-php "access plus 0 second"
+    ExpiresByType application/json "access plus 0 second"
+    ExpiresByType image/png "access plus 1 month"
+    ExpiresByType image/jpg "access plus 1 month"
+    ExpiresByType image/gif "access plus 1 month"
+    ExpiresByType image/x-icon "access plus 1 week"
+    ExpiresByType image/vnd.microsoft.icon "access plus 1 week"
+    ExpiresByType image/svg+xml "access plus 1 month"
+</ifModule>
+<ifModule mod_headers.c>
+    <FilesMatch "\.(png|jpg|gif|svg)$">
+        Header set Cache-Control "public, max-age=2419200"
+    </FilesMatch>
+    <filesMatch "\.(css|js|json|txt)$">
+        Header set Cache-Control "public, max-age=31536000"
+        #Header set X-Robots-Tag none
+        #Header append Vary "Accept-Encoding, User-Agent"
+        Header append Vary Accept-Encoding
+        #Header set Content-Encoding: gzip
+    </filesMatch>
+    <filesMatch "\.(php)$">
+        Header set Cache-Control "private, must-revalidate, max-age=600"
+        #Header set Imagetoolbar no
+    </filesMatch>
+    FileETag None
+    Header unset ETag
+    Header unset Last-Modified
+    Header set X-Content-Type-Options: nosniff
+    #Header set Transfer-Encoding: chunked
+</ifModule>
 <IfModule mod_rewrite.c>
     RewriteEngine On
     
@@ -77,22 +102,23 @@ AddDefaultCharset utf-8
     RewriteCond %{QUERY_STRING} ^_escaped_fragment_=(.*)$
     RewriteRule .*$ %{REQUEST_URI}%1? [R=301,L]
     
-    # Remove multiple trailing slashes after domain
+    # Rewrite multiple slashes with single slash after domain
     RewriteCond %{THE_REQUEST} ^[A-Z]+\s//+(.*)\sHTTP/[0-9.]+$ [OR]
     RewriteCond %{THE_REQUEST} ^[A-Z]+\s(.*/)/+\sHTTP/[0-9.]+$
-    RewriteRule .* http://%{HTTP_HOST}/%1 [R=301,L]
+    RewriteRule .* http://%{HTTP_HOST}/%1 [R=301,L,NE]
     
-    # Remove multiple trailing slashes in the URL
+    # Rewrite multiple slashes with single slash in URL
     RewriteCond %{REQUEST_URI} ^(.*)//(.*)$
-    RewriteRule . %1/%2 [R=301,L]
+    RewriteRule . %1/%2 [R=301,NE,L]
     
-    # Remove trailing slash from URL end
+    # Remove slash from URL end
     RewriteCond %{REQUEST_URI} ^(.+)/$
-    RewriteRule ^.+/$ %1 [R=301,L]
+    RewriteRule ^.+/$ %1 [R=301,NE,L]
     
     # Rewrite backslash with slash
-    RewriteCond %{REQUEST_URI} (.*)\\(.*)
-    RewriteRule .* %1/%2 [R=301,L]
+    ## works on FF with using AllowEncodedSlashes On in httpd.conf
+    RewriteCond %{REQUEST_URI} ^(.*)\\(.*)$
+    RewriteRule .* %1/%2 [R=301,NC,L]
     
     # Rewrite space with dash
     RewriteCond %{REQUEST_URI} ^([^\ ]*)\ (.*)$
@@ -119,88 +145,10 @@ AddDefaultCharset utf-8
     RewriteRule ^(([^/]+/)*[^.]+)\.php$ http://%{HTTP_HOST}/%1$1 [R=301,L]
     
     # Rewrite uppercase letter URL to lowercase
+    ## solution without using RewriteMap in httpd.conf - https://github.com/laukstein/ajax-seo/wiki/Lowercase-URL
     RewriteCond %{REQUEST_URI} .+
     RewriteRule ^[^A-Z]*[A-Z] ${lc:%0} [R=301,L]
     
-#    # Solution for shared hostings that does not support RewriteMap
-#    # Rewrite uppercase letter URL to lowercase
-#    # Skip next two rules if lowercasing in progress (Remove this rule if case-conversion plug-in below is removed)
-#    RewriteCond %{ENV:qLow} ^yes$ [NC]
-#    RewriteRule . - [S=2]
-#    # Prevent recursion and over-writing of myURI and myQS
-#    RewriteCond %{ENV:qRed} ^yes$ [NC]
-#    RewriteRule .? - [L]
-#    # Get the client-requested full URI and full query string
-#    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ (/[^?]*)(\?[^\ ]*)?\ HTTP/
-#    RewriteRule .? - [E=myURI:%1,E=myQS:%2]
-#    # Uppercase to lowercase conversion plug-in (This section, along with the first noted rule above, may be removed if not needed or wanted) Skip next 28 rules if no uppercase letters in URL
-#    RewriteCond %{ENV:myURI} ![A-Z]
-#    RewriteRule .? - [S=28]
-#    # Else swap them out, one at a time
-#    RewriteCond %{ENV:myURI} ^([^A]*)A(.*)$
-#    RewriteRule . - [E=myURI:%1a%2]
-#    RewriteCond %{ENV:myURI} ^([^B]*)B(.*)$
-#    RewriteRule . - [E=myURI:%1b%2]
-#    RewriteCond %{ENV:myURI} ^([^C]*)C(.*)$
-#    RewriteRule . - [E=myURI:%1c%2]
-#    RewriteCond %{ENV:myURI} ^([^D]*)D(.*)$
-#    RewriteRule . - [E=myURI:%1d%2]
-#    RewriteCond %{ENV:myURI} ^([^E]*)E(.*)$
-#    RewriteRule . - [E=myURI:%1e%2]
-#    RewriteCond %{ENV:myURI} ^([^F]*)F(.*)$
-#    RewriteRule . - [E=myURI:%1f%2]
-#    RewriteCond %{ENV:myURI} ^([^G]*)G(.*)$
-#    RewriteRule . - [E=myURI:%1g%2]
-#    RewriteCond %{ENV:myURI} ^([^H]*)H(.*)$
-#    RewriteRule . - [E=myURI:%1h%2]
-#    RewriteCond %{ENV:myURI} ^([^I]*)I(.*)$
-#    RewriteRule . - [E=myURI:%1i%2]
-#    RewriteCond %{ENV:myURI} ^([^J]*)J(.*)$
-#    RewriteRule . - [E=myURI:%1j%2]
-#    RewriteCond %{ENV:myURI} ^([^K]*)K(.*)$
-#    RewriteRule . - [E=myURI:%1k%2]
-#    RewriteCond %{ENV:myURI} ^([^L]*)L(.*)$
-#    RewriteRule . - [E=myURI:%1l%2]
-#    RewriteCond %{ENV:myURI} ^([^M]*)M(.*)$
-#    RewriteRule . - [E=myURI:%1m%2]
-#    RewriteCond %{ENV:myURI} ^([^N]*)N(.*)$
-#    RewriteRule . - [E=myURI:%1n%2]
-#    RewriteCond %{ENV:myURI} ^([^O]*)O(.*)$
-#    RewriteRule . - [E=myURI:%1o%2]
-#    RewriteCond %{ENV:myURI} ^([^P]*)P(.*)$
-#    RewriteRule . - [E=myURI:%1p%2]
-#    RewriteCond %{ENV:myURI} ^([^Q]*)Q(.*)$
-#    RewriteRule . - [E=myURI:%1q%2]
-#    RewriteCond %{ENV:myURI} ^([^R]*)R(.*)$
-#    RewriteRule . - [E=myURI:%1r%2]
-#    RewriteCond %{ENV:myURI} ^([^S]*)S(.*)$
-#    RewriteRule . - [E=myURI:%1s%2]
-#    RewriteCond %{ENV:myURI} ^([^T]*)T(.*)$
-#    RewriteRule . - [E=myURI:%1t%2]
-#    RewriteCond %{ENV:myURI} ^([^U]*)U(.*)$
-#    RewriteRule . - [E=myURI:%1u%2]
-#    RewriteCond %{ENV:myURI} ^([^V]*)V(.*)$
-#    RewriteRule . - [E=myURI:%1v%2] 
-#    RewriteCond %{ENV:myURI} ^([^W]*)W(.*)$
-#    RewriteRule . - [E=myURI:%1w%2]
-#    RewriteCond %{ENV:myURI} ^([^X]*)X(.*)$
-#    RewriteRule . - [E=myURI:%1x%2]
-#    RewriteCond %{ENV:myURI} ^([^Y]*)Y(.*)$
-#    RewriteRule . - [E=myURI:%1y%2]
-#    RewriteCond %{ENV:myURI} ^([^Z]*)Z(.*)$
-#    RewriteRule . - [E=myURI:%1z%2]
-#    # Set lowercasing-in-progress flag
-#    RewriteRule . - [E=qLow:yes]
-#    # If any uppercase characters remain, re-start mod_rewrite processing from the beginning
-#    RewriteCond %{ENV:myURI} [A-Z]
-#    RewriteRule . - [N]
-#    # If any characters were lowercased, set redirect required flag and reset lowercasing-in-progress flag (S=28 from above lands here)
-#    RewriteCond %{ENV:qLow} ^yes$ [NC]
-#    RewriteRule . - [E=qRed:yes,E=qLow:done]
-#    # End Uppercase to lowercase conversion plug-in
-#    RewriteCond %{ENV:qRed} ^yes$ [NC]
-#    RewriteRule .? http://%{HTTP_HOST}%{ENV:myURI}%{ENV:myQS} [R=301,L]
-
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^([^.]*)$ index.php?url=$1 [L,QSA]
