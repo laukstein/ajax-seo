@@ -40,10 +40,10 @@ Ajax SEO is based on latest Web Technology (HTML5, JSONP, jQuery, CSS3). Web ser
 
 ### Speed Performance
 
- -  `$.ajax() json` vs `$.getJSON()` <//jsperf.com/getjson-vs-ajax-json>
- -  `document.title=data.title` vs `$('title').html(data.title)` <//jsperf.com/rename-title>
- -  `encodeURIComponent()` vs `encodeURI()` <//jsperf.com/encodeuri-vs-encodeuricomponent>
- -  `decodeURI()` vs `decodeURIComponent()` <//jsperf.com/decodeuri-vs-decodeuricomponent>
+ -  `$.ajax() json` vs `$.getJSON()` [jsperf](//jsperf.com/getjson-vs-ajax-json)
+ -  `document.title=data.title` vs `$('title').html(data.title)` [jsperf](//jsperf.com/rename-title)
+ -  `encodeURIComponent()` vs `encodeURI()` [jsperf](//jsperf.com/encodeuri-vs-encodeuricomponent)
+ -  `decodeURI()` vs `decodeURIComponent()` [jsperf](//jsperf.com/decodeuri-vs-decodeuricomponent)
 
 
 ### Known bugs
