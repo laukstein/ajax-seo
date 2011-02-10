@@ -62,4 +62,4 @@ Ajax SEO is based on latest Web Technology (HTML5, JSONP, jQuery, CSS3). Web ser
  -  Run ajax_seo.sql SQL queries on your database (through phpMyAdmin)
 
 
-> jQuery Address Plugin based on (github.com/asual/jquery-address)[//github.com/asual/jquery-address]
+> jQuery Address Plugin based on [github.com/asual/jquery-address](//github.com/asual/jquery-address)
