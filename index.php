@@ -39,6 +39,7 @@ if(str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME))!='/'
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset=utf-8>
 <title><?=$title;?> - Ajax SEO</title>
 <link rel=stylesheet href=<?=$path;?>style.css>
 <link rel=author href=humans.txt type=text/plain>
