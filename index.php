@@ -115,7 +115,7 @@ $.address.init(function(){
         },
         error:function(){
             document.title='404 Page not found';
-            $('#content').html('Sorry, this page cannot be found.');
+            $('#content').html('<h1>404 Page not found</h1>\r<p>Sorry, this page cannot be found.</p>\r');
         }
     });
 });
