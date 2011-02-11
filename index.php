@@ -112,7 +112,7 @@ $.address.init(function(){
         },
         error:function(){
             window.clearTimeout(timer);
-            $('#content').html('The request failed.');
+            $('#content').html('The request for "'+event.path.substr(1)+'" failed.');
         }
     });
 });
