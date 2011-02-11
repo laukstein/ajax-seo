@@ -80,7 +80,7 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
 </div>
 <script src=//ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js></script>
 <script>!window.jQuery&&document.write(unescape('%3Cscript src=<?=$path;?>jquery-1.5.min.js%3E%3C/script%3E'))</script>
-<script src=<?=$path;?>jquery.address.js?crawlable=1&amp;state=<?if(strlen(utf8_decode($path))>1){echo substr($path,0,-1);}else{echo $path;}?>></script>
+<script src="<?=$path;?>jquery.address.js?crawlable=1&amp;state=<?if(strlen(utf8_decode($path))>1){echo substr($path,0,-1);}else{echo $path;}?>"></script>
 <script>
 $.address.init(function(){
     $('li a').address();
