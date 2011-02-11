@@ -35,13 +35,15 @@ if(str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME))!='/'
 }else{
     $path=str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME));
 }
+
+$websitetitle=' - Ajax SEO';
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset=utf-8>
-<title><?=$title;?> - Ajax SEO</title>
-<link rel=stylesheet href=<?=$path;?>style.css>
+<title><?=$title.$websitetitle?></title>
+<link rel=stylesheet href=<?=$path?>style.css>
 <link rel=author href=humans.txt type=text/plain>
 <meta name=description content="Ajax SEO maximized performance - speed, availability, user-friendly">
 <meta name=keywords content=ajax,seo,crawl,performance,speed,availability,user-friendly>
@@ -79,8 +81,8 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
 </footer>
 </div>
 <script src=//ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js></script>
-<script>!window.jQuery&&document.write(unescape('%3Cscript src=<?=$path;?>jquery-1.5.min.js%3E%3C/script%3E'))</script>
-<script src="<?=$path;?>jquery.address.js?crawlable=1&amp;state=<?if(strlen(utf8_decode($path))>1){echo substr($path,0,-1);}else{echo $path;}?>"></script>
+<script>!window.jQuery&&document.write(unescape('%3Cscript src=<?=$path?>jquery-1.5.min.js%3E%3C/script%3E'))</script>
+<script src="<?=$path?>jquery.address.js?crawlable=1&amp;state=<?if(strlen(utf8_decode($path))>1){echo substr($path,0,-1);}else{echo $path;}?>"></script>
 <script>
 $.address.init(function(){
     $('li a').address();
@@ -103,11 +105,12 @@ $.address.init(function(){
         jsonpCallback:'i', // JSONP cache issue
         //async:false,
         beforeSend:function(){
+            document.title='Loading...<?=$websitetitle?>';
             $('#content').html('Loading...');
         },
         success:function(data){
             window.clearTimeout(timer);
-            document.title=data.title+' - Ajax SEO';
+            document.title=data.title+'<?=$websitetitle?>';
             $('#content').html(data.content);
         },
         error:function(){
