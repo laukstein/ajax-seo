@@ -52,7 +52,8 @@ Ajax SEO is based on latest Web Technology (HTML5, JSONP, jQuery, CSS3). Web ser
  -  jQuery Address - on browsers that supports `pushState` (Crome, Safari. FF 4) `/#/$` and `/#!/$` *jumps* from `/` to `/$`
  -  jQuery Address - browsers that does not support `pushState` must have redirect from /#/url to /#!/url
  -  jQuery Address - still has some IE bugs, including urldecode bug
- -  jQuery Address - W3C validator error on `=` in jquery.address.js?crawlable=1&amp;state=/
+ -  W3C - [Not validated CSS3 vendor-specific prefixes, like -webkit-, -moz-, -o- etc.](http://www.w3.org/Bugs/Public/show_bug.cgi?id=11989)
+ -  W3C - [border-radius throws Parse Error [empty string]](http://www.w3.org/Bugs/Public/show_bug.cgi?id=11975)
  -  Apache and IE - domain.com//контакты rewrited to urlencode domain.com/%D0%BA%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D1%8B
 
 
