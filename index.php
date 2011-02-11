@@ -114,8 +114,8 @@ $.address.init(function(){
             $('#content').html(data.content);
         },
         error:function(){
-            window.clearTimeout(timer);
-            $('#content').html('The request for "'+event.path.substr(1)+'" failed.');
+            document.title='404 Page not found';
+            $('#content').html('Sorry, this page cannot be found.');
         }
     });
 });
