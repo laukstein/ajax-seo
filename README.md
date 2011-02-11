@@ -12,6 +12,7 @@ Ajax SEO is based on latest Web Technology (HTML5, JSONP, jQuery, CSS3). Web ser
         cache:true,
         jsonpCallback:'i',
         beforeSend:function(){
+            document.title='Loading...';
             $('#content').html('Loading...');
         },
         success:function(data){
