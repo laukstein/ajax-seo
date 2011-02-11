@@ -129,7 +129,7 @@
                 }
             },
             _html = function() {
-                var src = _js() + ':' + FALSE + ';document.open();document.writeln(\'<html><head><title>' + _d.title.replace('\'', '\\\'') + '</title><script>var ' + ID + ' = "' + encodeURIComponent(_href()) + (_d.domain != _l.hostname ? '";document.domain="' + _d.domain : '') + '";</' + 'script></head></html>\');document.close();';
+                var src = _js() + ':' + FALSE + ';document.open();document.writeln(\'<html><head><title>' + _d.title.replace('\'', '\\\'') + '</title><script>var ' + ID + ' = "' + _href() + (_d.domain != _l.hostname ? '";document.domain="' + _d.domain : '') + '";</' + 'script></head></html>\');document.close();';
                 if (_version < 7) {
                     _frame.src = src;
                 } else {
@@ -191,7 +191,7 @@
                         _st(function() {
                             $(_frame).bind('load', function() {
                                 var win = _frame.contentWindow;
-                                _value = win[ID] !== UNDEFINED ? decode(win[ID]) : '';
+                                _value = win[ID] !== UNDEFINED ? $.address.decode(win[ID]) : '';
                                 if (_value != _href()) {
                                     _update(FALSE);
                                     _l.hash = _crawl(_value, TRUE);
