@@ -31,6 +31,7 @@ Ajax SEO is based on latest Web Technology (HTML5, JSONP, jQuery, CSS3). Web ser
 
  -  HTML5, `pushState` with crawlable fallback
  -  [Ajax crawling](//code.google.com/web/ajaxcrawling/docs/getting-started.html) with `?_escaped_fragment_=/$` 301 redirect to `/$`
+ -  Rewrite www to no-www domain
  -  Slash and backslash issues
  -  Rewrite uppercase letter URL to lowercase
  -  Rewrite space and underscore with dash
@@ -52,7 +53,7 @@ Ajax SEO is based on latest Web Technology (HTML5, JSONP, jQuery, CSS3). Web ser
  -  jQuery Address - on browsers that does not support `pushState` (IE, FF > 4, Opera) if you'll try to refresh [page](//lab.laukstein.com/ajax-seo/#!/contact), you'll notice *jumping* content from 'Home' to 'Contact' in the title and content
  -  jQuery Address - on browsers that supports `pushState` (Crome, Safari. FF 4) `/#/$` and `/#!/$` *jumps* from `/` to `/$`
  -  jQuery Address - browsers that does not support `pushState` must have redirect from /#/$ to /#!/$
- -  jQuery Address - jQuery Address breaks on IE6 click from Latin character url to non Latin character url
+ -  jQuery Address - jQuery Address breaks on IE6 click to non Latin character URLs, it *jumping* from `/` to `/$`
  -  W3C - [Not validated CSS3 vendor-specific prefixes, like -webkit-, -moz-, -o- etc.](//www.w3.org/Bugs/Public/show_bug.cgi?id=11989)
  -  W3C - [border-radius throws Parse Error [empty string]](//www.w3.org/Bugs/Public/show_bug.cgi?id=11975)
  -  Apache and IE - domain.com//контакты rewrited to urlencode domain.com/%D0%BA%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D1%8B
