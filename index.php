@@ -1,5 +1,4 @@
 <?php
-$urlid=(isset($urlid) ? $urlid : NULL);
 $title=(isset($title) ? $title : NULL);
 $content=(isset($content) ? $content : NULL);
 
@@ -13,15 +12,6 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
 }
 
 # Return 404 error, if url does not exist
-class validate{
-    public $title;
-    public $content;
-    function status($status){
-        header('Location:',true,$status);
-        $this->title="$status Page not found";
-        $this->content='Sorry, this page cannot be found.';
-    }
-}
 $validate=new validate($url);
 if($url==$urlid){}else{
     $validate->status('404');
@@ -114,6 +104,7 @@ $.address.init(function(){
             $('#content').html(data.content);
         },
         error:function(){
+            window.clearTimeout(timer);
             document.title='404 Page not found';
             $('#content').html('<h1>404 Page not found</h1>\r<p>Sorry, this page cannot be found.</p>\r');
         }
