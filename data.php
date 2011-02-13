@@ -17,7 +17,7 @@ mysql_close($con);
 $validate=new validate($url);
 if($url!==$urlid){
     $validate->status('404');
-    echo (isset($_GET['callback']) ? mysql_real_escape_string($_GET['callback']).'({})' : '{}');
+    echo (isset($_GET['callback']) ? $_GET['callback'].'({})' : '{}');
     //$title=$validate->title;
     //$content=$validate->content;
     //$array=array('url'=>$row['url'],'title'=>$title,'content'=>"<h1>$title</h1>\r\n<p>$content</p>\r\n");
