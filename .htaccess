@@ -20,7 +20,7 @@ AddDefaultCharset utf-8
 AddCharset utf-8 .json .css .js .txt
 
 <IfModule mod_deflate.c>
-    AddOutputFilterByType DEFLATE application/x-httpd-php application/json text/html text/plain text/css text/javascript image/svg+xml image/x-icon
+    AddOutputFilterByType DEFLATE application/x-httpd-php application/json application/xml text/html text/plain text/css text/javascript image/svg+xml image/x-icon
     <IfModule mod_setenvif.c>
         BrowserMatch ^Mozilla/4 gzip-only-text/html
         BrowserMatch ^Mozilla/4\.0[678] no-gzip
@@ -46,12 +46,13 @@ AddCharset utf-8 .json .css .js .txt
     mod_gzip_handle_methods GET POST
     #mod_gzip_item_exclude reqheader \"User-agent: Mozilla/4.0[678]\"
     mod_gzip_item_include file \.(php|css|json|js|css|txt|ico)$
+    mod_gzip_item_include mime ^application/x-httpd-php$
+    mod_gzip_item_include mime ^application/json$
+    mod_gzip_item_include mime ^application/xml
     mod_gzip_item_include mime ^text/html$
     mod_gzip_item_include mime ^text/plain$
     mod_gzip_item_include mime ^text/css$
     mod_gzip_item_include mime ^text/javascript$
-    mod_gzip_item_include mime ^application/json$
-    mod_gzip_item_include mime ^application/x-httpd-php$
     mod_gzip_item_include mime ^image/svg+xml$
     mod_gzip_item_include mime ^image/x-icon$
     mod_gzip_item_include mime ^httpd/unix-directory$
@@ -62,17 +63,18 @@ AddCharset utf-8 .json .css .js .txt
 <ifModule mod_expires.c>
     ExpiresActive On
     ExpiresDefault "access plus 1 month"
-    ExpiresByType text/css "access plus 6 months"
-    ExpiresByType text/plain "access plus 1 hour"
-    ExpiresByType text/javascript "access plus 6 months"
     ExpiresByType application/x-httpd-php "access plus 0 second"
     ExpiresByType application/json "access plus 0 second"
+    ExpiresByType application/xml "access plus 0 second"
+    ExpiresByType text/html "access plus 0 second"
+    ExpiresByType text/plain "access plus 1 hour"
+    ExpiresByType text/css "access plus 6 months"
+    ExpiresByType text/javascript "access plus 6 months"
+    ExpiresByType image/svg+xml "access plus 1 month"
+    ExpiresByType image/x-icon "access plus 1 week"
     ExpiresByType image/png "access plus 1 month"
     ExpiresByType image/jpg "access plus 1 month"
     ExpiresByType image/gif "access plus 1 month"
-    ExpiresByType image/x-icon "access plus 1 week"
-    ExpiresByType image/vnd.microsoft.icon "access plus 1 week"
-    ExpiresByType image/svg+xml "access plus 1 month"
 </ifModule>
 <ifModule mod_headers.c>
     <FilesMatch "\.(png|jpg|gif|svg)$">
@@ -98,9 +100,10 @@ AddCharset utf-8 .json .css .js .txt
 <IfModule mod_rewrite.c>
     RewriteEngine On
     
-    # Ajax SEO crawl /?_escaped_fragment_=url redirect to /url
-    RewriteCond %{QUERY_STRING} ^_escaped_fragment_=(.*)$
-    RewriteRule .*$ %{REQUEST_URI}%1? [R=301,L]
+    # Rewrite www to no-www domain
+    #RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+    RewriteRule .* http://%1%{REQUEST_URI} [R=301,L]
     
     # Rewrite multiple slashes with single slash after domain
     RewriteCond %{THE_REQUEST} ^[A-Z]+\s//+(.*)\sHTTP/[0-9.]+$ [OR]
@@ -112,6 +115,7 @@ AddCharset utf-8 .json .css .js .txt
     RewriteRule . %1/%2 [R=301,NE,L]
     
     # Remove slash from URL end
+    RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} ^(.+)/$
     RewriteRule ^.+/$ %1 [R=301,NE,L]
     
@@ -119,6 +123,10 @@ AddCharset utf-8 .json .css .js .txt
     ## works on FF with using AllowEncodedSlashes On in httpd.conf
     RewriteCond %{REQUEST_URI} ^(.*)\\(.*)$
     RewriteRule .* %1/%2 [R=301,NC,L]
+    
+    # Ajax SEO crawl /?_escaped_fragment_=url redirect to /url
+    RewriteCond %{QUERY_STRING} ^_escaped_fragment_=(.*)$
+    RewriteRule .*$ %{REQUEST_URI}%1? [R=301,L]
     
     # Rewrite space with dash
     RewriteCond %{REQUEST_URI} ^([^\ ]*)\ (.*)$
