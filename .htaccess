@@ -11,6 +11,9 @@ php_flag magic_quotes_gpc 0
 php_flag register_globals 0
 php_flag expose_php 0
 php_value output_handler ob_gzhandler
+<FilesMatch sitemap.xml>
+    php_value short_open_tag 0
+</FilesMatch>
 
 AddType text/javascript .js
 AddType application/json .json
@@ -60,7 +63,7 @@ AddCharset utf-8 .json .css .js .txt
     mod_gzip_item_exclude rspheader ^Content-Encoding:.*gzip.*
     mod_gzip_send_vary On
 </IfModule>
-<ifModule mod_expires.c>
+<IfModule mod_expires.c>
     ExpiresActive On
     ExpiresDefault "access plus 1 month"
     ExpiresByType application/x-httpd-php "access plus 0 second"
@@ -75,28 +78,41 @@ AddCharset utf-8 .json .css .js .txt
     ExpiresByType image/png "access plus 1 month"
     ExpiresByType image/jpg "access plus 1 month"
     ExpiresByType image/gif "access plus 1 month"
-</ifModule>
-<ifModule mod_headers.c>
-    <FilesMatch "\.(png|jpg|gif|svg)$">
-        Header set Cache-Control "public, max-age=2419200"
+</IfModule>
+<IfModule mod_headers.c>
+    <FilesMatch "\.php$">
+        Header set Cache-Control "private, must-revalidate, max-age=600"
+        #Header set Imagetoolbar no
     </FilesMatch>
-    <filesMatch "\.(css|js|json|txt)$">
+    <FilesMatch (robots\.txt|sitemap\.xml)>
+        Header set X-Robots-Tag "noindex, follow"
+        SetHandler application/x-httpd-php
+    </FilesMatch>
+    <FilesMatch "\.(css|js|json|txt)$">
         Header set Cache-Control "public, max-age=31536000"
         #Header set X-Robots-Tag none
         #Header append Vary "Accept-Encoding, User-Agent"
         Header append Vary Accept-Encoding
         #Header set Content-Encoding: gzip
-    </filesMatch>
-    <filesMatch "\.(php)$">
-        Header set Cache-Control "private, must-revalidate, max-age=600"
-        #Header set Imagetoolbar no
-    </filesMatch>
+    </FilesMatch>
+    <FilesMatch "\.(png|jpg|gif|svg)$">
+        Header set Cache-Control "public, max-age=2419200"
+    </FilesMatch>
     FileETag None
     Header unset ETag
     Header unset Last-Modified
     Header set X-Content-Type-Options: nosniff
     #Header set Transfer-Encoding: chunked
-</ifModule>
+</IfModule>
+#<IfModule mod_security.c>
+#    SecFilterEngine On
+#    SecAuditEngine RelevantOnly
+#    SecFilterDebugLevel 0
+#    SecFilterCheckURLEncoding On
+#    SecFilterCheckUnicodeEncoding Off
+#    SecFilterScanPOST On
+#    SecFilterDefaultAction "deny,log,status:500"
+#</IfModule>
 <IfModule mod_rewrite.c>
     RewriteEngine On
     
