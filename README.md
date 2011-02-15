@@ -1,5 +1,5 @@
 # [Ajax SEO maximized performance - speed, availability, user-friendly](//lab.laukstein.com/jsonp-ajax-seo/)
-Ajax SEO is based on latest Web Technology (HTML5, JSONP, jQuery, CSS3). Web server requirements: PHP 5.3, MySQL 5, Apache 2.
+Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Web server requirements: PHP 5.3, MySQL 5, Apache 2.
     
     
     var timer=window.setTimeout(function(){
