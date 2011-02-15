@@ -17,6 +17,7 @@ header,nav,article,footer,header nav a{display:block;}
 a:focus{outline:none;}
 a,#logo:hover,header a:hover,header li.selected a{text-decoration:none;}
 a:hover,header nav a{text-decoration:underline;}
+h2{margin:0;}
 #logo{
     display:inline-block;
     font-size:27px;
