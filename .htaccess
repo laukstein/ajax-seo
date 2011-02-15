@@ -87,6 +87,8 @@ AddCharset utf-8 .json .css .js .txt
     <FilesMatch (robots\.txt|sitemap\.xml)>
         Header set X-Robots-Tag "noindex, follow"
         SetHandler application/x-httpd-php
+        ## Some servers are using application/x-httpd-php5 beside of application/x-httpd-php
+        ##SetHandler application/x-httpd-php5
     </FilesMatch>
     <FilesMatch "\.(css|js|json|txt)$">
         Header set Cache-Control "public, max-age=31536000"
