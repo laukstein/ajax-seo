@@ -1,4 +1,7 @@
 <?php
+# Prevent XSS and SQL Injection
+if(strpos($_SERVER['HTTP_HOST'],$_SERVER['SERVER_NAME'])===false){header('HTTP/1.0 400 Bad Request');exit;}
+
 $title=(isset($title) ? $title : NULL);
 $content=(isset($content) ? $content : NULL);
 
@@ -42,14 +45,14 @@ $websitetitle=' - Ajax SEO';
 <body>
 <div id=container>
 <header>
-<a id=logo href=<?=$path?> title="Ajax SEO maximized performance" rel=home>Ajax SEO</a>
+<h2><a id=logo href=<?=$path?> title="Ajax SEO maximized performance" rel=home>Ajax SEO</a></h2>
 <nav>
 <ul>
 <?php
 $result=mysql_query("SELECT url,title FROM $dbtable ORDER BY orderid ASC");
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $row[]=array('row'=>array_map('htmlspecialchars',$row));
-    echo $nav='      <li';if($url==$row['url']){echo ' class=selected';}echo "><a href=\"$path{$row['url']}\" title=\"{$row['title']}\">{$row['title']}</a>\n";
+    echo $nav='      <li';if($url==$row['url']){echo ' class=selected';}echo "><a href=\"$path{$row['url']}\" title=\"{$row['title']}\">{$row['title']}</a>\r\n";
 }
 ?>
 </ul>
