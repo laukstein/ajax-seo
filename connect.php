@@ -11,8 +11,9 @@ mysql_select_db($dbname,$con)or die();
 mysql_query("SET NAMES 'utf8'");
 
 array_map('trim',$_GET);
+array_map('stripslashes',$_GET);
 array_map('mysql_real_escape_string',$_GET);
-$url=(isset($_GET['url']) ? mysql_real_escape_string($_GET['url']) : NULL);
+$url=(isset($_GET['url']) ? $_GET['url'] : NULL);
 $urlid=(isset($urlid) ? $urlid : NULL);
 
 # Return 404 error, if url does not exist
