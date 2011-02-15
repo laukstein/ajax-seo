@@ -5,8 +5,14 @@ if(strpos($_SERVER['HTTP_HOST'],$_SERVER['SERVER_NAME'])===false){
     header('HTTP/1.0 400 Bad Request');
     exit;
 }
+# Return dir path
+if(str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME))!='/'){
+    $path=str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME)).'/';
+}else{
+    $path=str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME));
+}
+echo '<?xml version="1.0" encoding="UTF-8"?>\r\n';
 ?>
-<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.sitemaps.org/schemas/sitemap-image/1.1"
         xmlns:video="http://www.sitemaps.org/schemas/sitemap-video/1.1">
@@ -16,7 +22,7 @@ include('connect.php');
 $result=mysql_query("SELECT url FROM $dbtable ORDER BY orderid ASC");
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $row[]=array('row'=>array_map('htmlspecialchars',$row));
-    echo "    <url>\r\n        <loc>http://{$_SERVER['SERVER_NAME']}/{$row['url']}</loc>\r\n    </url>";
+    echo "    <url>\r\n        <loc>http://{$_SERVER['SERVER_NAME']}$path{$row['url']}</loc>\r\n    </url>";
 }
 mysql_close($con);
 ?>

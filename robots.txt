@@ -5,6 +5,13 @@ if(strpos($_SERVER['HTTP_HOST'],$_SERVER['SERVER_NAME'])===false){
     header('HTTP/1.0 400 Bad Request');
     exit;
 }
+
+# Return dir path
+if(str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME))!='/'){
+    $path=str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME)).'/';
+}else{
+    $path=str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME));
+}
 ?>
 # Every bot that might possibly read and respect this file
 User-agent: *
@@ -15,7 +22,7 @@ Disallow: /*.css$
 Disallow: /*.js$
 Disallow: /*.sql$
 Disallow: /*.conf$
-Sitemap: http://<?=$_SERVER['SERVER_NAME']?>/sitemap.xml
+Sitemap: http://<?=$_SERVER['SERVER_NAME'].$path?>sitemap.xml
 
 # Disable Chinese Baidu crawl
 User-agent: Baiduspider
