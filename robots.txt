@@ -1,5 +1,11 @@
-﻿# This is robots.txt file for Search Engine Optimizing
-
+﻿<?php
+# This is robots.txt file for Search Engine Optimizing
+header("Content-type:text/plain");
+if(strpos($_SERVER['HTTP_HOST'],$_SERVER['SERVER_NAME'])===false){
+    header('HTTP/1.0 400 Bad Request');
+    exit;
+}
+?>
 # Every bot that might possibly read and respect this file
 User-agent: *
 Allow: /
@@ -9,7 +15,7 @@ Disallow: /*.css$
 Disallow: /*.js$
 Disallow: /*.sql$
 Disallow: /*.conf$
-#Sitemap: http://domain.com/sitemap.xml
+Sitemap: http://<?=$_SERVER['SERVER_NAME']?>/sitemap.xml
 
 # Disable Chinese Baidu crawl
 User-agent: Baiduspider
