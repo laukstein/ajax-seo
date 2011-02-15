@@ -11,9 +11,9 @@ php_flag magic_quotes_gpc 0
 php_flag register_globals 0
 php_flag expose_php 0
 php_value output_handler ob_gzhandler
-<FilesMatch sitemap.xml>
-    php_value short_open_tag 0
-</FilesMatch>
+#<FilesMatch sitemap.xml>
+#    php_value short_open_tag 0
+#</FilesMatch>
 
 AddType text/javascript .js
 AddType application/json .json
