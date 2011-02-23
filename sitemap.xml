@@ -1,31 +1,28 @@
 ﻿<?php
 # Creating Sitemaps in Google Webmaster Tools http://www.google.com/support/webmasters/bin/answer.py?hl=en&answer=183668
-header("Content-type:application/xml");
-if(strpos($_SERVER['HTTP_HOST'],$_SERVER['SERVER_NAME'])===false){
-    header('HTTP/1.0 400 Bad Request');
-    exit;
-}
+header('Content-type:application/xml');
+# Prevent XSS and SQL Injection
+if(strpos($_SERVER['HTTP_HOST'],$_SERVER['SERVER_NAME'])===false){header('HTTP/1.0 400 Bad Request');exit();}
+# HTTP header caching
+include('content/cache.php');cache($_SERVER['SCRIPT_FILENAME'],filemtime($_SERVER['SCRIPT_FILENAME']));
 # Return dir path
 if(str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME))!='/'){
     $path=str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME)).'/';
 }else{
     $path=str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME));
 }
-echo '<?xml version="1.0" encoding="UTF-8"?>';
-?>
-
+echo'<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.sitemaps.org/schemas/sitemap-image/1.1"
         xmlns:video="http://www.sitemaps.org/schemas/sitemap-video/1.1">
-<?php
-include('connect.php');
-
-$result=mysql_query("SELECT url FROM $dbtable ORDER BY orderid ASC");
+';
+include('content/connect.php');
+$result=mysql_query("SELECT url FROM $dbtable ORDER BY `order` ASC");
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $row[]=array('row'=>array_map('htmlspecialchars',$row));
-    echo "    <url>\r\n        <loc>http://{$_SERVER['SERVER_NAME']}$path{$row['url']}</loc>\r\n    </url>";
+    echo"    <url>\r\n        <loc>http://{$_SERVER['SERVER_NAME']}$path{$row['url']}</loc>\r\n    </url>";
 }
 mysql_close($con);
+echo'
+</urlset>';
 ?>
-
-</urlset>

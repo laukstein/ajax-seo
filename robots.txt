@@ -1,11 +1,10 @@
 ﻿<?php
 # This is robots.txt file for Search Engine Optimizing
-header("Content-type:text/plain");
-if(strpos($_SERVER['HTTP_HOST'],$_SERVER['SERVER_NAME'])===false){
-    header('HTTP/1.0 400 Bad Request');
-    exit;
-}
-
+header('Content-type:text/plain');
+# Prevent XSS and SQL Injection
+if(strpos($_SERVER['HTTP_HOST'],$_SERVER['SERVER_NAME'])===false){header('HTTP/1.0 400 Bad Request');exit();}
+# HTTP header caching
+include('content/cache.php');cache($_SERVER['SCRIPT_FILENAME'],filemtime($_SERVER['SCRIPT_FILENAME']));
 # Return dir path
 if(str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME))!='/'){
     $path=str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME)).'/';
@@ -22,7 +21,7 @@ Disallow: /*.css$
 Disallow: /*.js$
 Disallow: /*.sql$
 Disallow: /*.conf$
-Sitemap: http://<?=$_SERVER['SERVER_NAME'].$path?>sitemap.xml
+Sitemap: http://<?php echo$_SERVER['SERVER_NAME'].$path?>sitemap.xml
 
 # Disable Chinese Baidu crawl
 User-agent: Baiduspider
