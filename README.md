@@ -3,26 +3,27 @@ Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Web serv
     
     
     var timer=window.setTimeout(function(){
-        $('#content').fadeTo(110,1).html('Loading seems to be taking a while.');
-    },3800);
+        $('#content').html('Loading seems to be taking a while.');
+    },3800),clearTimeout=window.clearTimeout(timer);
     $.ajax({
         type:"GET",
         url:encodeURIComponent(event.path.substr(1))+'.json',
-        dataType:'jsonp',
+        dataType:'json',
         cache:true,
         jsonpCallback:'i',
         beforeSend:function(){
             document.title='Loading...';
-            $('#content').html('Loading...');
+            $('#content').fadeTo(200,0.33);
         },
         success:function(data){
-            window.clearTimeout(timer);
-            document.title=data.title;
-            $('#content').html(data.content);
+            clearTimeout;
+            document.title=data.fn+'<?php echo$title?>';
+            $('#content').fadeTo(20,1).html(data.content);
         },
         error:function(){
-            window.clearTimeout(timer);
-            $('#content').html('The request failed.');
+            clearTimeout;
+            document.title='404 Page not found';
+            $('#content').fadeTo(20,1).removeAttr('style').html('<h1>404 Page not found</h1>\r<p>Sorry, this page cannot be found.</p>\r');
         }
     });
     
@@ -42,6 +43,8 @@ Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Web serv
 
 ### Speed Performance
 
+ -  `jQuery $.ajax() timeout` vs `window.setTimeout()` [jsperf](//jsperf.com/jquery-ajax-jsonp-timeout-performormance)
+ -  `Ajax JSONP` vs `Ajax JSON` [jsperf](//jsperf.com/ajax-jsonp-vs-ajax-json)
  -  `$.ajax() json` vs `$.getJSON()` [jsperf](//jsperf.com/getjson-vs-ajax-json)
  -  `document.title=data.title` vs `$('title').html(data.title)` [jsperf](//jsperf.com/rename-title)
  -  `encodeURIComponent()` vs `encodeURI()` [jsperf](//jsperf.com/encodeuri-vs-encodeuricomponent)
@@ -55,15 +58,19 @@ Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Web serv
  -  jQuery Address - browsers that does not support `pushState` must have redirect from `/#/url` to `/#!/url`
  -  jQuery Address - jQuery Address breaks on IE6 click to non Latin character URLs, it *jumping* from `/` to `/#!/url`
  -  jQuery Address - for request `/url` or `/#!/url` (not click event) do not load/refresh `$.ajax` any content `DOM`, just change address url (if needed), add history
+ -  jQuery - bug for $.ajax() ifModified cache
+ -  jQuery - bug for .fadeTo() on IE
  -  W3C - [Not validated CSS3 vendor-specific prefixes, like -webkit-, -moz-, -o- etc.](//www.w3.org/Bugs/Public/show_bug.cgi?id=11989)
  -  W3C - [border-radius throws Parse Error [empty string]](//www.w3.org/Bugs/Public/show_bug.cgi?id=11975)
  -  Apache and IE - domain.com//контакты rewrited to urlencode domain.com/%D0%BA%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D1%8B
+ -  Apache - rewrite bug for -d and QUERY_STRING
 
 
 ### Installation
 
- -  Add your MySQL settings in connect.php
- -  Run ajax_seo.sql SQL queries on your database (through phpMyAdmin)
+ -  Use Apache settings from content/httpd.conf
+ -  Add your MySQL settings in content/connect.php
+ -  Run content/ajax-seo.sql SQL queries on your database (through phpMyAdmin)
 
 
 > jQuery Address Plugin based on [github.com/asual/jquery-address](//github.com/asual/jquery-address)
