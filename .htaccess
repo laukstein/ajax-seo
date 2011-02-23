@@ -5,14 +5,15 @@ ServerSignature Off
 php_flag display_errors 0
 php_flag log_errors 1
 php_value error_log error_log.txt
-php_flag allow_url_fopen 1
-php_value short_open_tag 1
+php_flag session.use_trans_sid 0
+php_flag allow_url_fopen 0
+php_flag short_open_tag 0
 php_flag magic_quotes_gpc 0
+php_flag safe_mode 0
 php_flag register_globals 0
 php_flag expose_php 0
-php_value output_handler ob_gzhandler
-#<FilesMatch sitemap.xml>
-#    php_value short_open_tag 0
+#<FilesMatch index.php>
+#    php_value output_handler ob_gzhandler
 #</FilesMatch>
 
 AddType text/javascript .js
@@ -28,6 +29,9 @@ AddCharset utf-8 .json .css .js .txt
         BrowserMatch ^Mozilla/4 gzip-only-text/html
         BrowserMatch ^Mozilla/4\.0[678] no-gzip
         BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+        SetEnvIf User-Agent ".*MSIE.*" \
+        nokeepalive ssl-unclean-shutdown \
+        downgrade-1.0 force-response-1.0
         <IfModule mod_headers.c>
             BrowserMatch MSIE ie
             Header set X-UA-Compatible "IE=Edge,chrome=1" env=ie
@@ -47,8 +51,7 @@ AddCharset utf-8 .json .css .js .txt
     mod_gzip_min_http 1000
     mod_gzip_dechunk Yes
     mod_gzip_handle_methods GET POST
-    #mod_gzip_item_exclude reqheader \"User-agent: Mozilla/4.0[678]\"
-    mod_gzip_item_include file \.(php|css|json|js|css|txt|ico)$
+    mod_gzip_item_include file \.(php|json|xml|txt|css|js|svg|ico)$
     mod_gzip_item_include mime ^application/x-httpd-php$
     mod_gzip_item_include mime ^application/json$
     mod_gzip_item_include mime ^application/xml
@@ -81,8 +84,14 @@ AddCharset utf-8 .json .css .js .txt
 </IfModule>
 <IfModule mod_headers.c>
     <FilesMatch "\.php$">
-        Header set Cache-Control "private, must-revalidate, max-age=600"
-        #Header set Imagetoolbar no
+        Header set Cache-Control "private, max-age=0"
+        Header set Imagetoolbar no
+    </FilesMatch>
+    <FilesMatch "\.(css|js|json|txt)$">
+        Header set Cache-Control "public, max-age=31536000"
+        Header set X-Robots-Tag none
+        Header append Vary Accept-Encoding
+        #Header set Content-Encoding: gzip
     </FilesMatch>
     <FilesMatch (robots\.txt|sitemap\.xml)>
         Header set X-Robots-Tag "noindex, follow"
@@ -90,21 +99,15 @@ AddCharset utf-8 .json .css .js .txt
         ## Some servers are using application/x-httpd-php5 beside of application/x-httpd-php
         ##SetHandler application/x-httpd-php5
     </FilesMatch>
-    <FilesMatch "\.(css|js|json|txt)$">
-        Header set Cache-Control "public, max-age=31536000"
-        #Header set X-Robots-Tag none
-        #Header append Vary "Accept-Encoding, User-Agent"
-        Header append Vary Accept-Encoding
-        #Header set Content-Encoding: gzip
-    </FilesMatch>
     <FilesMatch "\.(png|jpg|gif|svg)$">
         Header set Cache-Control "public, max-age=2419200"
     </FilesMatch>
     FileETag None
     Header unset ETag
-    Header unset Last-Modified
+    Header unset X-Powered-By
+    Header unset Pragma
+    #Header unset Last-Modified
     Header set X-Content-Type-Options: nosniff
-    #Header set Transfer-Encoding: chunked
 </IfModule>
 #<IfModule mod_security.c>
 #    SecFilterEngine On
@@ -177,6 +180,9 @@ AddCharset utf-8 .json .css .js .txt
     
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^([^.]*)$ index.php?url=$1 [L,QSA]
-    RewriteRule ^([^/\./-/+]*)\.json$ data.php?url=$1 [L,QSA]
+    RewriteRule ^api/?([^\./]*)$ ?api&url=$1 [L,QSA]
+    RewriteRule ^([^.]*)$ ?url=$1 [L,QSA]
+    
+    RewriteRule .* - [E=HTTP_IF_MODIFIED_SINCE:%{HTTP:If-Modified-Since}]
+    RewriteRule .* - [E=HTTP_IF_NONE_MATCH:%{HTTP:If-None-Match}]
 </IfModule>
