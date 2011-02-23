@@ -1,4 +1,4 @@
-Copyright (C) 2011 by Binyamin Laukstein, http://laukstein.com
+Copyright (C) 2011  Binyamin Laukstein <http://laukstein.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
