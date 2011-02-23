@@ -1,19 +1,24 @@
 <?php
 # Prevent XSS and SQL Injection
-if(strpos($_SERVER['HTTP_HOST'],$_SERVER['SERVER_NAME'])===false){header('HTTP/1.0 400 Bad Request');exit;}
+if(strpos($_SERVER['HTTP_HOST'],$_SERVER['SERVER_NAME'])===false){header('HTTP/1.0 400 Bad Request');exit();}
+# JSON respond
+if(isset($_GET['api'])){include('content/api.php');exit();}
 
-$title=(isset($title) ? $title : NULL);
+if(!ob_start("ob_gzhandler")) ob_start();
+
+$fn=(isset($fn) ? $fn : NULL);
 $content=(isset($content) ? $content : NULL);
 
-include('connect.php');
-$result=mysql_query("SELECT url,title,content FROM $dbtable WHERE url='$url'");
+# Database settings
+include('content/connect.php');
+
+$result=mysql_query("SELECT url,fn,content FROM $dbtable WHERE url='$url'");
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $row[]=array('row'=>array_map('htmlspecialchars',$row));
     $urlid=$row['url'];
-    $title=$row['title'];
+    $fn=$row['fn'];
     $content=$row['content'];
 }
-
 # Return 404 error, if url does not exist
 $validate=new validate($url);
 if($url==$urlid){}else{
@@ -21,7 +26,6 @@ if($url==$urlid){}else{
     $title=$validate->title;
     $content=$validate->content;
 }
-
 # Return dir path
 if(str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME))!='/'){
     $path=str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME)).'/';
@@ -29,14 +33,14 @@ if(str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME))!='/'
     $path=str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME));
 }
 
-$websitetitle=' - Ajax SEO';
+$title=' - Ajax SEO';
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset=utf-8>
-<title><?=$title.$websitetitle?></title>
-<link rel=stylesheet href=<?=$path?>style.css>
+<title><?php echo$fn.$title?></title>
+<link rel=stylesheet href=<?php echo$path?>images/style.css>
 <link rel=author href=humans.txt type=text/plain>
 <meta name=description content="Ajax SEO maximized performance - speed, availability, user-friendly">
 <meta name=keywords content=ajax,seo,crawl,performance,speed,availability,user-friendly>
@@ -45,21 +49,21 @@ $websitetitle=' - Ajax SEO';
 <body>
 <div id=container>
 <header>
-<h2><a id=logo href=<?=$path?> title="Ajax SEO maximized performance" rel=home>Ajax SEO</a></h2>
-<nav>
+<h2><a id=logo href=<?php echo$path?> title="Ajax SEO maximized performance" rel=home>Ajax SEO</a></h2>
+<nav id=nav>
 <ul>
 <?php
-$result=mysql_query("SELECT url,title FROM $dbtable ORDER BY orderid ASC");
+$result=mysql_query("SELECT url,fn FROM $dbtable ORDER BY `order` ASC");
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $row[]=array('row'=>array_map('htmlspecialchars',$row));
-    echo $nav='      <li';if($url==$row['url']){echo ' class=selected';}echo "><a href=\"$path{$row['url']}\" title=\"{$row['title']}\">{$row['title']}</a>\r\n";
+    echo$nav='      <li';if($url==$row['url']){echo ' class=selected';}echo "><a href=\"$path{$row['url']}\" title=\"{$row['fn']}\">{$row['fn']}</a>\r\n";
 }
 ?>
 </ul>
 </nav>
 <article>
 <div id=content>
-<?php echo "<h1>$title</h1>\r\n<p>$content</p>\r\n"; mysql_close($con);?>
+<?php echo"<h1>$fn</h1>\r\n<p>$content</p>\r\n"; mysql_close($con);?>
 </div>
 </article>
 </header>
@@ -74,42 +78,48 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
 </footer>
 </div>
 <script src=//ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js></script>
-<script>!window.jQuery&&document.write(unescape('%3Cscript src=<?=$path?>jquery-1.5.min.js%3E%3C/script%3E'))</script>
-<script src="<?=$path?>jquery.address.js?crawlable=1&amp;state=<?if(strlen(utf8_decode($path))>1){echo substr($path,0,-1);}else{echo $path;}?>"></script>
+<script>!window.jQuery&&document.write(unescape('%3Cscript src=<?php echo$path?>images/jquery-1.5.min.js%3E%3C/script%3E'))</script>
+<script src="<?php echo$path?>images/jquery.address.js?crawlable=1&amp;state=<?php if(strlen(utf8_decode($path))>1){echo substr($path,0,-1);}else{echo$path;}?>"></script>
 <script>
 $.address.init(function(){
-    $('li a').address();
+    $('#nav a').address();
 }).change(function(event){
-    $('li a').each(function(){
-        if($(this).attr('href')==(($.address.state()+event.path).replace(/\/\//,'/'))){
-            $(this).parent('li').addClass('selected').focus();
-        }else{
-            $(this).parent('li').removeClass().removeAttr('class');
-        }
-    });
     var timer=window.setTimeout(function(){ // Implement for timeout
         $('#content').html('Loading seems to be taking a while.');
-    },3800);
+    },3800),clearTimeout=window.clearTimeout(timer);
     $.ajax({
         type:"GET",
-        url:/*'http://lab.laukstein.com/ajax-seo/'+*/encodeURIComponent(event.path.substr(1))+'.json',
-        dataType:'jsonp',
+        url:/*'http://lab.laukstein.com/ajax-seo/'+*/'api/'+encodeURIComponent(event.path.substr(1)),
+        dataType:'json', //jsonp
         cache:true,
-        jsonpCallback:'i', // JSONP cache issue
-        //async:false,
+        //jsonpCallback:'i', // JSONP cache issue
+        //ifModified:true,
         beforeSend:function(){
-            document.title='Loading...<?=$websitetitle?>';
-            $('#content').html('Loading...');
+            document.title='Loading...';
+            $('#content').fadeTo(200,0.33);
         },
-        success:function(data){
-            window.clearTimeout(timer);
-            document.title=data.title+'<?=$websitetitle?>';
-            $('#content').html(data.content);
+        //statusCode:{304:function(){alert('304');}},
+        success:function(data,textStatus,jqXHR){
+            //if(data==undefined && textStatus=='notmodified'){console.debug(jqXHR.data);}
+            //console.debug(jqXHR.status);
+            clearTimeout;
+            $('#nav a').each(function(){
+                if($(this).attr('href')==(($.address.state()+event.path).replace(/\/\//,'/'))){
+                    $(this).parent('li').addClass('selected').focus();
+                }else{
+                    $(this).parent('li').removeAttr('class');
+                }
+            });
+            document.title=data.fn+'<?php echo$title?>';
+            $('#content').fadeTo(20,1).html(data.content);
         },
-        error:function(){
-            window.clearTimeout(timer);
+        error:function(jqXHR,textStatus,errorThrown,data){
+            clearTimeout;
+            $('li a').each(function(){
+                $(this).parent('li').removeAttr('class');
+            });
             document.title='404 Page not found';
-            $('#content').html('<h1>404 Page not found</h1>\r<p>Sorry, this page cannot be found.</p>\r');
+            $('#content').fadeTo(20,1).removeAttr('style').html('<h1>404 Page not found</h1>\r<p>Sorry, this page cannot be found.</p>\r');
         }
     });
 });
