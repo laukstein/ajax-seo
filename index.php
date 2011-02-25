@@ -77,8 +77,8 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
 </nav>
 </footer>
 </div>
-<script src=//ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js></script>
-<script>!window.jQuery&&document.write(unescape('%3Cscript src=<?php echo$path?>images/jquery-1.5.min.js%3E%3C/script%3E'))</script>
+<script src=//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js></script>
+<script>!window.jQuery&&document.write(unescape('%3Cscript src=<?php echo$path?>images/jquery-1.5.1.min.js%3E%3C/script%3E'))</script>
 <script src="<?php echo$path?>images/jquery.address.js?crawlable=1&amp;state=<?php if(strlen(utf8_decode($path))>1){echo substr($path,0,-1);}else{echo$path;}?>"></script>
 <script>
 $.address.init(function(){
@@ -89,7 +89,7 @@ $.address.init(function(){
     },3800),clearTimeout=window.clearTimeout(timer);
     $.ajax({
         type:"GET",
-        url:/*'http://lab.laukstein.com/ajax-seo/'+*/'api/'+encodeURIComponent(event.path.substr(1)),
+        url:/*'http://lab.alaukstein.com/ajax-seo/'*/'api/'+encodeURIComponent(event.path.substr(1)),
         dataType:'json', //jsonp
         cache:true,
         //jsonpCallback:'i', // JSONP cache issue
@@ -98,10 +98,8 @@ $.address.init(function(){
             document.title='Loading...';
             $('#content').fadeTo(200,0.33);
         },
-        //statusCode:{304:function(){alert('304');}},
         success:function(data,textStatus,jqXHR){
-            //if(data==undefined && textStatus=='notmodified'){console.debug(jqXHR.data);}
-            //console.debug(jqXHR.status);
+            //console.debug(jqXHR.status+':'+textStatus+':'+data.content);
             clearTimeout;
             $('#nav a').each(function(){
                 if($(this).attr('href')==(($.address.state()+event.path).replace(/\/\//,'/'))){
