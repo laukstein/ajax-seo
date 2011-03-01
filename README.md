@@ -69,6 +69,7 @@ Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Web serv
 ### Installation
 
  -  Use Apache settings from content/httpd.conf
+ -  Use PHP settings from content/php.ini or uncomment php_flag, php_value from .htaccess
  -  Add your MySQL settings in content/connect.php
  -  Run content/ajax-seo.sql SQL queries on your database (through phpMyAdmin)
 
