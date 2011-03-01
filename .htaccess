@@ -2,19 +2,18 @@ Options -Indexes +FollowSymLinks -MultiViews
 
 ServerSignature Off
 
-php_flag display_errors 0
-php_flag log_errors 1
-php_value error_log error_log.txt
-php_flag session.use_trans_sid 0
-php_flag allow_url_fopen 0
-php_flag short_open_tag 0
-php_flag magic_quotes_gpc 0
-php_flag safe_mode 0
-php_flag register_globals 0
-php_flag expose_php 0
-#<FilesMatch index.php>
-#    php_value output_handler ob_gzhandler
-#</FilesMatch>
+## uncomment php_flag, php_value if you have no access to content/php.ini settings on your server
+#php_flag display_errors 0
+#php_flag log_errors 1
+#php_value error_log error_log.txt
+#php_flag session.use_trans_sid 0
+#php_flag allow_url_fopen 0
+#php_flag allow_url_include 0
+#php_flag short_open_tag 0
+#php_flag magic_quotes_gpc 0
+#php_flag safe_mode 0
+#php_flag register_globals 0
+#php_flag expose_php 0
 
 AddType text/javascript .js
 AddType application/json .json
@@ -35,6 +34,10 @@ AddCharset utf-8 .json .css .js .txt
         <IfModule mod_headers.c>
             BrowserMatch MSIE ie
             Header set X-UA-Compatible "IE=Edge,chrome=1" env=ie
+            Header set X-Content-Type-Options "nosniff" env=ie
+            <FilesMatch "\.php$">
+                Header set Imagetoolbar "no" env=ie
+            </FilesMatch>
         </IfModule>
     </IfModule>
 </IfModule>
@@ -84,13 +87,11 @@ AddCharset utf-8 .json .css .js .txt
 </IfModule>
 <IfModule mod_headers.c>
     <FilesMatch "\.php$">
-        Header set Cache-Control "private, max-age=0"
-        Header set Imagetoolbar no
+        Header set Cache-Control max-age=300
     </FilesMatch>
-    <FilesMatch "\.(css|js|json|txt)$">
-        Header set Cache-Control "public, max-age=31536000"
+    <FilesMatch "\.(css|js|json|xml|txt)$">
+        Header set Cache-Control max-age=31536000
         Header set X-Robots-Tag none
-        Header append Vary Accept-Encoding
         #Header set Content-Encoding: gzip
     </FilesMatch>
     <FilesMatch (robots\.txt|sitemap\.xml)>
@@ -100,14 +101,15 @@ AddCharset utf-8 .json .css .js .txt
         ##SetHandler application/x-httpd-php5
     </FilesMatch>
     <FilesMatch "\.(png|jpg|gif|svg)$">
-        Header set Cache-Control "public, max-age=2419200"
+        Header set Cache-Control max-age=2419200
     </FilesMatch>
     FileETag None
     Header unset ETag
-    Header unset X-Powered-By
     Header unset Pragma
+    Header unset X-Powered-By
+    Header unset Accept-Ranges
     #Header unset Last-Modified
-    Header set X-Content-Type-Options: nosniff
+    Header append Vary Accept-Encoding
 </IfModule>
 #<IfModule mod_security.c>
 #    SecFilterEngine On
@@ -141,7 +143,7 @@ AddCharset utf-8 .json .css .js .txt
     RewriteRule ^.+/$ %1 [R=301,NE,L]
     
     # Rewrite backslash with slash
-    ## works on FF with using AllowEncodedSlashes On in httpd.conf
+    ## works on FF with using AllowEncodedSlashes On in content/httpd.conf
     RewriteCond %{REQUEST_URI} ^(.*)\\(.*)$
     RewriteRule .* %1/%2 [R=301,NC,L]
     
@@ -174,7 +176,7 @@ AddCharset utf-8 .json .css .js .txt
     RewriteRule ^(([^/]+/)*[^.]+)\.php$ http://%{HTTP_HOST}/%1$1 [R=301,L]
     
     # Rewrite uppercase letter URL to lowercase
-    ## solution without using RewriteMap in httpd.conf - https://github.com/laukstein/ajax-seo/wiki/Lowercase-URL
+    ## solution without using RewriteMap in content/httpd.conf - https://github.com/laukstein/ajax-seo/wiki/Lowercase-URL
     RewriteCond %{REQUEST_URI} .+
     RewriteRule ^[^A-Z]*[A-Z] ${lc:%0} [R=301,L]
     
