@@ -1,5 +1,5 @@
 <?php
-header('Content-type: application/json; charset=UTF-8');
+header('Content-type: application/json; charset=utf-8');
 include('connect.php');
 $result=mysql_query("SELECT url,fn,content,DATE_FORMAT(pubdate,'%a, %d %b %Y %T %Z') AS pubdate FROM $dbtable WHERE url='$url'");
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
@@ -13,7 +13,6 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
             }
         }
         header("Last-Modified: $gmtime");
-        header('Cache-Control: public');
     }
     cache($row['pubdate']); 
     $urlid=strip_tags($row['url']);
