@@ -6,11 +6,11 @@ if(isset($_GET['api'])){include('content/api.php');exit();}
 
 if(!ob_start("ob_gzhandler")) ob_start();
 
-$fn=(isset($fn) ? $fn : NULL);
-$content=(isset($content) ? $content : NULL);
-
 # Database settings
 include('content/connect.php');
+
+$fn=(isset($fn) ? $fn : NULL);
+$content=(isset($content) ? $content : NULL);
 
 $result=mysql_query("SELECT url,fn,content FROM $dbtable WHERE url='$url'");
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
@@ -23,7 +23,7 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
 $validate=new validate($url);
 if($url==$urlid){}else{
     $validate->status('404');
-    $title=$validate->title;
+    $fn=$validate->fn;
     $content=$validate->content;
 }
 # Return dir path
@@ -99,7 +99,8 @@ $.address.init(function(){
             $('#content').fadeTo(200,0.33);
         },
         success:function(data,textStatus,jqXHR){
-            //console.debug(jqXHR.status+':'+textStatus+':'+data.content);
+            //console.debug(jqXHR.status+':'+textStatus);
+            //console.debug(data);
             clearTimeout;
             $('#nav a').each(function(){
                 if($(this).attr('href')==(($.address.state()+event.path).replace(/\/\//,'/'))){
