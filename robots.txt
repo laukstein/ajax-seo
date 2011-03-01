@@ -19,8 +19,6 @@ Disallow: /*?
 Disallow: /*.json$
 Disallow: /*.css$
 Disallow: /*.js$
-Disallow: /*.sql$
-Disallow: /*.conf$
 Sitemap: http://<?php echo$_SERVER['SERVER_NAME'].$path?>sitemap.xml
 
 # Disable Chinese Baidu crawl
