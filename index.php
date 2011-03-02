@@ -1,10 +1,10 @@
 <?php
 # Prevent XSS and SQL Injection
-if(strpos($_SERVER['HTTP_HOST'],$_SERVER['SERVER_NAME'])===false){header('HTTP/1.0 400 Bad Request');exit();}
+if(strpos($_SERVER['HTTP_HOST'],$_SERVER['SERVER_NAME'])===false){header('Status:400 Bad Request',true,400);exit('400 Bad Request');}
 # JSON respond
 if(isset($_GET['api'])){include('content/api.php');exit();}
-
-if(!ob_start("ob_gzhandler")) ob_start();
+# gzip
+if(!ob_start('ob_gzhandler')){ob_start();}
 
 # Database settings
 include('content/connect.php');
@@ -22,7 +22,7 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
 # Return 404 error, if url does not exist
 $validate=new validate($url);
 if($url==$urlid){}else{
-    $validate->status('404');
+    $validate->status();
     $fn=$validate->fn;
     $content=$validate->content;
 }

@@ -1,8 +1,8 @@
 ﻿<?php
 # This is robots.txt file for Search Engine Optimizing
-header('Content-type:text/plain');
+header('Content-Type:text/plain');
 # Prevent XSS and SQL Injection
-if(strpos($_SERVER['HTTP_HOST'],$_SERVER['SERVER_NAME'])===false){header('HTTP/1.0 400 Bad Request');exit();}
+if(strpos($_SERVER['HTTP_HOST'],$_SERVER['SERVER_NAME'])===false){header('Status:400 Bad Request',true,400);exit('400 Bad Request');}
 # HTTP header caching
 include('content/cache.php');cache($_SERVER['SCRIPT_FILENAME'],filemtime($_SERVER['SCRIPT_FILENAME']));
 # Return dir path

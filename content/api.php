@@ -1,5 +1,5 @@
 <?php
-header('Content-type: application/json; charset=utf-8');
+header('Content-Type:application/json; charset=utf-8');
 include('connect.php');
 $result=mysql_query("SELECT url,fn,content,DATE_FORMAT(pubdate,'%a, %d %b %Y %T %Z') AS pubdate FROM $dbtable WHERE url='$url'");
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
@@ -8,11 +8,11 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     function cache($gmtime){
         if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])||isset($_SERVER['HTTP_IF_NONE_MATCH'])){
             if($_SERVER['HTTP_IF_MODIFIED_SINCE']==$gmtime){
-                header('HTTP/1.1 304 Not Modified');
+                header('Status:304 Not Modified',true,304);
                 exit();
             }
         }
-        header("Last-Modified: $gmtime");
+        header("Last-Modified:$gmtime");
     }
     cache($row['pubdate']); 
     $urlid=strip_tags($row['url']);
@@ -26,7 +26,7 @@ mysql_close($con);
 # Return 404 error, if url does not exist
 $validate=new validate($url);
 if($url!==$urlid){
-    $validate->status('404');
+    $validate->status();
     echo (isset($_GET['callback']) ? $_GET['callback'].'({})' : '{}');
 }
 ?>

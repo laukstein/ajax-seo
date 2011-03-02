@@ -17,9 +17,9 @@ array_map('mysql_real_escape_string',$_GET);
 class validate{
     public $fn;
     public $content;
-    function status($status){
-        header('Location:',true,$status);
-        $this->fn="$status Page not found";
+    function status(){
+        header('Status:404 Not Found',true,404);
+        $this->fn='404 Page not found';
         $this->content='Sorry, this page cannot be found.';
     }
 }

@@ -35,6 +35,7 @@ AddCharset utf-8 .json .css .js .txt
             BrowserMatch MSIE ie
             Header set X-UA-Compatible "IE=Edge,chrome=1" env=ie
             Header set X-Content-Type-Options "nosniff" env=ie
+            Header set X-XSS-Protection "1; mode=block" env=ie
             <FilesMatch "\.php$">
                 Header set Imagetoolbar "no" env=ie
             </FilesMatch>
@@ -96,9 +97,8 @@ AddCharset utf-8 .json .css .js .txt
     </FilesMatch>
     <FilesMatch (robots\.txt|sitemap\.xml)>
         Header set X-Robots-Tag "noindex, follow"
+        ## Some servers uses application/x-httpd-php5 beside of application/x-httpd-php
         SetHandler application/x-httpd-php
-        ## Some servers are using application/x-httpd-php5 beside of application/x-httpd-php
-        ##SetHandler application/x-httpd-php5
     </FilesMatch>
     <FilesMatch "\.(png|jpg|gif|svg)$">
         Header set Cache-Control max-age=2419200

@@ -1,8 +1,8 @@
 ﻿<?php
 # Creating Sitemaps in Google Webmaster Tools http://www.google.com/support/webmasters/bin/answer.py?hl=en&answer=183668
-header('Content-type:application/xml');
+header('Content-Type:application/xml');
 # Prevent XSS and SQL Injection
-if(strpos($_SERVER['HTTP_HOST'],$_SERVER['SERVER_NAME'])===false){header('HTTP/1.0 400 Bad Request');exit();}
+if(strpos($_SERVER['HTTP_HOST'],$_SERVER['SERVER_NAME'])===false){header('Status:400 Bad Request',true,400);exit('400 Bad Request');}
 # HTTP header caching
 include('content/cache.php');cache($_SERVER['SCRIPT_FILENAME'],filemtime($_SERVER['SCRIPT_FILENAME']));
 # Return dir path
