@@ -2,7 +2,7 @@ Options -Indexes +FollowSymLinks -MultiViews
 
 ServerSignature Off
 
-## uncomment php_flag, php_value if you have no access to content/php.ini settings on your server
+## Uncomment php_flag, php_value if you have no access to content/php.ini settings on your server
 #php_flag display_errors 0
 #php_flag log_errors 1
 #php_value error_log error_log.txt
@@ -73,10 +73,10 @@ AddCharset utf-8 .json .css .js .txt
 <IfModule mod_expires.c>
     ExpiresActive On
     ExpiresDefault "access plus 1 month"
-    ExpiresByType application/x-httpd-php "access plus 0 second"
-    ExpiresByType application/json "access plus 0 second"
-    ExpiresByType application/xml "access plus 0 second"
-    ExpiresByType text/html "access plus 0 second"
+    ExpiresByType application/x-httpd-php "access plus 1 minute"
+    ExpiresByType application/json "access plus 1 minute"
+    ExpiresByType application/xml "access plus 1 minute"
+    ExpiresByType text/html "access plus 1 minute"
     ExpiresByType text/plain "access plus 1 hour"
     ExpiresByType text/css "access plus 6 months"
     ExpiresByType text/javascript "access plus 6 months"
@@ -88,43 +88,31 @@ AddCharset utf-8 .json .css .js .txt
 </IfModule>
 <IfModule mod_headers.c>
     <FilesMatch "\.php$">
-        Header set Cache-Control max-age=300
+        Header set Cache-Control max-age=60
     </FilesMatch>
     <FilesMatch "\.(css|js|json|xml|txt)$">
         Header set Cache-Control max-age=31536000
         Header set X-Robots-Tag none
-        #Header set Content-Encoding: gzip
     </FilesMatch>
     <FilesMatch (robots\.txt|sitemap\.xml)>
         Header set X-Robots-Tag "noindex, follow"
-        ## Some servers uses application/x-httpd-php5 beside of application/x-httpd-php
-        SetHandler application/x-httpd-php
+        ## Some servers may use application/x-httpd-php beside of application/x-httpd-php5
+        SetHandler application/x-httpd-php5
     </FilesMatch>
     <FilesMatch "\.(png|jpg|gif|svg)$">
         Header set Cache-Control max-age=2419200
     </FilesMatch>
     FileETag None
-    Header unset ETag
     Header unset Pragma
     Header unset X-Powered-By
     Header unset Accept-Ranges
-    #Header unset Last-Modified
+    Header append Cache-Control public
     Header append Vary Accept-Encoding
 </IfModule>
-#<IfModule mod_security.c>
-#    SecFilterEngine On
-#    SecAuditEngine RelevantOnly
-#    SecFilterDebugLevel 0
-#    SecFilterCheckURLEncoding On
-#    SecFilterCheckUnicodeEncoding Off
-#    SecFilterScanPOST On
-#    SecFilterDefaultAction "deny,log,status:500"
-#</IfModule>
 <IfModule mod_rewrite.c>
     RewriteEngine On
     
     # Rewrite www to no-www domain
-    #RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
     RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
     RewriteRule .* http://%1%{REQUEST_URI} [R=301,L]
     
@@ -143,7 +131,7 @@ AddCharset utf-8 .json .css .js .txt
     RewriteRule ^.+/$ %1 [R=301,NE,L]
     
     # Rewrite backslash with slash
-    ## works on FF with using AllowEncodedSlashes On in content/httpd.conf
+    ## Works on FF with using AllowEncodedSlashes On in content/httpd.conf
     RewriteCond %{REQUEST_URI} ^(.*)\\(.*)$
     RewriteRule .* %1/%2 [R=301,NC,L]
     
@@ -175,8 +163,8 @@ AddCharset utf-8 .json .css .js .txt
     RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^/]+/)*[^.]+\.php(\?[^\ ]*)?\ HTTP/ [NC]
     RewriteRule ^(([^/]+/)*[^.]+)\.php$ http://%{HTTP_HOST}/%1$1 [R=301,L]
     
-    # Rewrite uppercase letter URL to lowercase
-    ## solution without using RewriteMap in content/httpd.conf - https://github.com/laukstein/ajax-seo/wiki/Lowercase-URL
+    # Rewrite uppercase letter URL to lowercase with content/httpd.conf RewriteMap lc int:tolower
+    ## Solution without httpd.conf RewriteMap in github.com/laukstein/ajax-seo/wiki/Lowercase-URL
     RewriteCond %{REQUEST_URI} .+
     RewriteRule ^[^A-Z]*[A-Z] ${lc:%0} [R=301,L]
     
