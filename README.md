@@ -64,6 +64,7 @@ Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Web serv
  -  W3C - [border-radius throws Parse Error [empty string]](//www.w3.org/Bugs/Public/show_bug.cgi?id=11975)
  -  Apache and IE - domain.com//контакты rewrited to urlencode domain.com/%D0%BA%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D1%8B
  -  Apache - rewrite bug for -d and QUERY_STRING
+ -  Apache - HTTP Header validation bug `The 304 response is not allowed to have a body.` for [robots.txt](http://redbot.org/?uri=http://lab.laukstein.com/ajax-seo/robots.txt) and [sitemap.xml](http://redbot.org/?uri=http://lab.laukstein.com/ajax-seo/sitemap.xml)
 
 
 ### Installation
