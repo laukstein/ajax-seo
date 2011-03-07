@@ -3,11 +3,10 @@
 if(strpos($_SERVER['HTTP_HOST'],$_SERVER['SERVER_NAME'])===false){header('Status:400 Bad Request',true,400);exit('400 Bad Request');}
 # JSON respond
 if(isset($_GET['api'])){include('content/api.php');exit();}
-# gzip
-if(!ob_start('ob_gzhandler')){ob_start();}
-
 # Database settings
 include('content/connect.php');
+# gzip
+if(!ob_start('ob_gzhandler')){ob_start();}
 
 $fn=(isset($fn) ? $fn : NULL);
 $content=(isset($content) ? $content : NULL);
@@ -89,15 +88,18 @@ $.address.init(function(){
     },3800),clearTimeout=window.clearTimeout(timer);
     $.ajax({
         type:"GET",
-        url:/*'http://lab.alaukstein.com/ajax-seo/'*/'api/'+encodeURIComponent(event.path.substr(1)),
-        dataType:'json', //jsonp
+        url:/*'http://lab.laukstein.com/ajax-seo/'+*/'api'+(event.path.length!=1 ? '/'+encodeURIComponent(event.path.substr(1)) : ''),
+        dataType:'json',        // jsonp
         cache:true,
-        //jsonpCallback:'i', // JSONP cache issue
+        //jsonpCallback:'i',    // JSONP cache issue
         //ifModified:true,
         beforeSend:function(){
             document.title='Loading...';
             $('#content').fadeTo(200,0.33);
         },
+        //statusCode:{304:function(){
+        //    console.debug('304 Not Modified');
+        //}},
         success:function(data,textStatus,jqXHR){
             //console.debug(jqXHR.status+':'+textStatus);
             //console.debug(data);
@@ -112,7 +114,7 @@ $.address.init(function(){
             document.title=data.fn+'<?php echo$title?>';
             $('#content').fadeTo(20,1).html(data.content);
         },
-        error:function(jqXHR,textStatus,errorThrown,data){
+        error:function(jqXHR,textStatus,errorThrown){
             clearTimeout;
             $('li a').each(function(){
                 $(this).parent('li').removeAttr('class');
