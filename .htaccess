@@ -94,10 +94,10 @@ AddCharset utf-8 .json .css .js .txt
         Header set Cache-Control max-age=31536000
         Header set X-Robots-Tag none
     </FilesMatch>
-    <FilesMatch (robots\.txt|sitemap\.xml)>
+    <FilesMatch (robots.txt|humans.txt|sitemap.xml)>
         Header set X-Robots-Tag "noindex, follow"
         ## Some servers may use application/x-httpd-php beside of application/x-httpd-php5
-        SetHandler application/x-httpd-php5
+        SetHandler application/x-httpd-php
     </FilesMatch>
     <FilesMatch "\.(png|jpg|gif|svg)$">
         Header set Cache-Control max-age=2419200
@@ -135,9 +135,13 @@ AddCharset utf-8 .json .css .js .txt
     RewriteCond %{REQUEST_URI} ^(.*)\\(.*)$
     RewriteRule .* %1/%2 [R=301,NC,L]
     
-    # Ajax SEO crawl /?_escaped_fragment_=url redirect to /url
+    # Rewrite query string, Ajax crawling
     RewriteCond %{QUERY_STRING} ^_escaped_fragment_=(.*)$
     RewriteRule .*$ %{REQUEST_URI}%1? [R=301,L]
+    RewriteCond %{QUERY_STRING} ^.+$
+    RewriteCond %{QUERY_STRING} !url=.+$
+    RewriteCond %{QUERY_STRING} !api
+    RewriteRule .*$ %{REQUEST_URI}? [R=301,L]
     
     # Rewrite space with dash
     RewriteCond %{REQUEST_URI} ^([^\ ]*)\ (.*)$
