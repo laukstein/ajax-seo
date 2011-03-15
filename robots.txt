@@ -1,10 +1,20 @@
-﻿<?php
+<?php
 # This is robots.txt file for Search Engine Optimizing
 header('Content-Type:text/plain');
 # Prevent XSS and SQL Injection
 if(strpos($_SERVER['HTTP_HOST'],$_SERVER['SERVER_NAME'])===false){header('Status:400 Bad Request',true,400);exit('400 Bad Request');}
 # HTTP header caching
-include('content/cache.php');cache($_SERVER['SCRIPT_FILENAME'],filemtime($_SERVER['SCRIPT_FILENAME']));
+function cache($file,$timestamp){
+    $gmtime=gmdate('D, d M Y H:i:s T',$timestamp);
+    if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])||isset($_SERVER['HTTP_IF_NONE_MATCH'])){
+        if($_SERVER['HTTP_IF_MODIFIED_SINCE']==$gmtime||str_replace('"','',stripslashes($_SERVER['HTTP_IF_NONE_MATCH']))==md5($timestamp.$file)){
+            header('Status:304 Not Modified',true,304);
+            exit();
+        }
+    }
+    header("Last-Modified:$gmtime");
+}
+cache($_SERVER['SCRIPT_FILENAME'],filemtime($_SERVER['SCRIPT_FILENAME']));
 # Return dir path
 if(str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME))!='/'){
     $path=str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME)).'/';
