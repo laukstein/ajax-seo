@@ -78,9 +78,9 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
 </div>
 <script src=//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js></script>
 <script>!window.jQuery&&document.write(unescape('%3Cscript src=<?php echo$path?>images/jquery-1.5.1.min.js%3E%3C/script%3E'))</script>
-<script src="<?php echo$path?>images/jquery.address.js?crawlable=1&amp;state=<?php if(strlen(utf8_decode($path))>1){echo substr($path,0,-1);}else{echo$path;}?>"></script>
+<script src=<?php echo$path?>images/jquery.address.js?state=<?php if(strlen(utf8_decode($path))>1){echo substr($path,0,-1);}else{echo$path;}?>></script>
 <script>
-$.address.init(function(){
+$.address.crawlable(1).init(function(){
     $('#nav a').address();
 }).change(function(event){
     var timer=window.setTimeout(function(){ // Implement for timeout
@@ -88,7 +88,7 @@ $.address.init(function(){
     },3800),clearTimeout=window.clearTimeout(timer);
     $.ajax({
         type:"GET",
-        url:/*'http://lab.laukstein.com/ajax-seo/'+*/'api'+(event.path.length!=1 ? '/'+encodeURIComponent(event.path.substr(1)) : ''),
+        url:/*'http://lab.laukstein.com/ajax-seo/'+*/'api'+(event.path.length!=1 ? '/'+encodeURIComponent(event.path.toLowerCase().substr(1)) : ''),
         dataType:'json',        // jsonp
         cache:true,
         //jsonpCallback:'i',    // JSONP cache issue
@@ -97,15 +97,12 @@ $.address.init(function(){
             document.title='Loading...';
             $('#content').fadeTo(200,0.33);
         },
-        //statusCode:{304:function(){
-        //    console.debug('304 Not Modified');
-        //}},
         success:function(data,textStatus,jqXHR){
             //console.debug(jqXHR.status+':'+textStatus);
             //console.debug(data);
             clearTimeout;
             $('#nav a').each(function(){
-                if($(this).attr('href')==(($.address.state()+event.path).replace(/\/\//,'/'))){
+                if($(this).attr('href')==(($.address.state()+decodeURI(event.path)).replace(/\/\//,'/'))){
                     $(this).parent('li').addClass('selected').focus();
                 }else{
                     $(this).parent('li').removeAttr('class');
