@@ -1,37 +1,73 @@
+<?php
+header('Content-Type:text/plain');
+class datemod{
+    public $cache;
+    public $maxmod;
+    function date($dir='.',$exclude=array('error_log.txt','.git','cgi-bin','.','..')){
+        $exclude=array_flip($exclude);
+        if(!is_dir($dir)){return;}
+        $dh=opendir($dir);
+        if(!$dh){return;}
+        $stack=array($dh);
+        $level=0;
+        while(count($stack)){
+            if(false!==($file=readdir($stack[0]))){
+                if(!isset($exclude[$file])){
+                    //print str_repeat('  ',$level);
+                    if(is_dir("$dir/$file")){
+                        $dh=opendir("$file/$dir");
+                        if($dh){
+                            $d=$file;
+                            array_unshift($stack,$dh);
+                            ++$level;
+                        }
+                    }else{
+                        if(isset($d)&&$level>0){
+                            $mod=date('Y/m/d H:i:s',filemtime("$d/$file"));
+                        }else{
+                            $mod=date('Y/m/d H:i:s',filemtime($file));
+                        }
+                        $array[]=$mod;
+                    }
+                }
+            }else{
+                closedir(array_shift($stack));
+                --$level;
+            }
+        }
+        //sort($array);print_r($array);
+        $fmod=max($array);
+        include('content/connect.php');
+        $tablemod=mysql_query("SELECT DATE_FORMAT(MAX(pubdate),'%Y/%m/%d %H:%i:%s') AS pubdate FROM $dbtable");
+        while($row=@mysql_fetch_array($tablemod,MYSQL_ASSOC)){
+            $rowmod=$row['pubdate'];
+            $this->maxmod=max($fmod,$rowmod)."\r\n";
+            $this->cache=date('D, d M Y H:i:s T',strtotime($this->maxmod));
+        }
+    }
+}
+$datemod=new datemod();
+$datemod->date();
+$cache=$datemod->cache;
+$maxmod=$datemod->maxmod;
+# HTTP header caching
+function cache($gmtime){
+    if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])||isset($_SERVER['HTTP_IF_NONE_MATCH'])){
+        if($_SERVER['HTTP_IF_MODIFIED_SINCE']==$gmtime){
+            header('Status:304 Not Modified',true,304);
+            exit();
+        }
+    }
+    header("Last-Modified:$gmtime");
+}
+cache($cache);
+?>
 /* SITE */
 Author:         Binyamin Laukstein
 Contact:        laukstein.com/contact
-Last update:    2011/03/08
+Last update:    <?php echo$maxmod;?>
 Doctype:        HTML5 with CSS3
 Tools:          JSON, jQuery 1.5.1, PHP 5.3, MySQL 5, Apache 2
-Ascii QR Code:  
-                ▄▄▄▄▄▄▄ ▄▄▄▄ ▄▄   ▄▄▄▄▄  ▄▄▄▄ ▄  ▄▄▄▄ ▄  ▄▄   ▄▄▄▄▄▄▄
-                █ ▄▄▄ █ ▀  ▄█▄▄ ▀▀▀█▄▀▄ ▀▀▄█▄ ▀▄▄ ▀▄  ▀▄▄▄▀█  █ ▄▄▄ █
-                █ ███ █ ▄█ ██▄ ▄█  ▄█   █▄█▄▄▀▄█▄▄█ ▄▄█▀  █ ▀ █ ███ █
-                █▄▄▄▄▄█ █▀▄▀▄ ▄ ▄▀█▀█ ▄ █ ▄ █▀█ ▄▀█▀▄ █▀█ █ ▄ █▄▄▄▄▄█
-                ▄▄▄  ▄▄ █ ▀▀▀█▄ ▄ ▀▄▄█▄▄█▄▄▄█▀▀ █▄▄▄█▀▀ ▄█▀▄ ▄▄▄▄  ▄▄
-                 ▄ █ ▀▄▄█ █▄▀█▄ ▄▄▄█▀█ ▀▄██ ██  ▀▄ ▄▄█ ▄▄▄ ▀▄▄ ▄▄██ █
-                ▄ ▀ █ ▄▄█▄ ▄▄▄▄▄ ▄▄▀▀▄█ ▄█ ▄▄ █▄█ ▄████ ▄▄▄▄▀  ▀▄  ▄ 
-                ▄█▀▄ ▄▄▄  █▀▀ ▀▄ ██▄▄ ▀    ▄█▀▄  ▄  ▀▄ ██▄ ▄   ██▀▀ ▄
-                ▀█▄▄▀█▄▀▄▀██  ▀▄██▄ ▄ ▀▀▄█  ▄▀█▄█▄▄▄██▀▄█▄▄▄▀▄▄▄█▀ ▀ 
-                █▄▄  ▀▄ ▀▀█▄ ▄▄█▀▀▄ ▄▄▄▄▄ ▄▀█▄  ▀█ ▄▄▀  ▀█▄▀▄▄ ▄▄▀▄ █
-                 █▀█▄ ▄▀▄ ▀▄▀▄▄▀▀██  ▄▄█▀▀ █▄  ▄███▄█▄▄▀▄▄▄▀▀  ▀▄▄  ▄
-                  ▄▄█▄▄▄█▄▀█ ▄█ ▄ ▀  ▄██▀▄█▀█▀▄██▄ █▄█ ▄▀▄   ▄ ██▄  ▄
-                ▄▀ ███▄█▄▀█▄██▄▀▄ ▀███▄█▄█▄██▀▀ ███▄██▄ ███▄▄▄▄▄█   ▄
-                ▄▀█▄█ ▄ ██ ▄██▄ ▄▄▄█▀█▄ █ ▄ ██ █ █ ▄▄█ █ █ ▀█ ▄ █▄▄▀█
-                ▄▄▀▄█▄▄▄█ ███▄▄▄  ▄█▀▄▄ █▄▄▄█ ▄██▄▄██▄▀ ▄▄▄ █▄▄▄█▀ ▀▄
-                █▄▄▄█ ▄██▄███ ▀█▄▄▄ ▄ ▀▄ ▄█▄▄█▄ ▀▀▄▄▄▀▄▄▄▄ ▄  ▄▄▄▄▀▀▄
-                ▀ ▄ ▀▀▄█▀▄▄█  ▀▄▄█▄ ▄ ▀▄▄▀██▄   █ ▄▄█ ▄ █ ▄██▄▄▄▄▄ ▄ 
-                 ▄▀▀█▄▄ ███▄ ▄▄█▀▀▄ ▄▄▄██▀█▄ █ ▀▄▀ ▄▄█ ▀▄▀  █ ▄█▄▀ ▀█
-                ▄ ▀▀ ▄▄▀▀▄  █▄▄▀▀ ▄  ▄▄▄▄█▄▀▄██▄█▄▄▄█ ▄▄█▄▄█▀█▄▄ █ █▄
-                █ ▀ ▀▀▄█ ▀ ▄▀▄█▀▄ ▀ ▄▄█ █ █▄ ▄ ▀▄█▄█ ▀ ▄▄▄  ▄ █▄▄▄▄ ▄
-                █  ▄▄▄▄▄█ █▀██▄ █ ▀▄▄█▄▀▀▄▄▄▄▀▀ █▀▄▄█   █▀▄█▀ █▄ ▄ ▄▄
-                ▄█▀███▄▄  █▄▀█▄ ▄  █▀█▄█▀▄██▀█  ▄█ ▄▄▀  ▄█ ▀▀ ▄▄▄ █ ▄
-                 ▀▀▄  ▄ ▀█ ▀ ██  ▀█▀▀▄▄▄█▄▄█▄▄▄██▄█▀█▀▄▄█▄▄██▄█▄█▀ ▄█
-                ▄▄▄▄▄▄▄ ▀  ▄▀▀▀█▄▄█▄▄▀▀▄█ ▄ █  ▄▄▀▄▄██ ▄▄▄  █ ▄ █▄▄▄█
-                █ ▄▄▄ █ ▀▄ █ ▄▀█▄█▄ ▄ ▀▄█▄▄▄██▀▀█ ▀▄██▄▀█ ▀▀█▄▄▄█▄ ▄▄
-                █ ███ █ ▄▄▀▀   █▀█▄ ▄▄▄▄█   ▄▀ ██▀ ▄▀  ██▀  █ █▄██▄  
-                █▄▄▄▄▄█ █ ▀▄▀▀▀▀▀▀█  ▄█▀█▄▄▄█▀▄▄█▄▄▀█▀▄▄█▄▄▀▀█ ▄▄█  ▄
 
 /* THANKS */
 Names & URL:    Rostislav Hristov, www.asual.com/jquery/address/ & jQuery Team, jquery.com
