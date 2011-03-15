@@ -2,36 +2,49 @@
 Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Web server requirements: PHP 5.3, MySQL 5, Apache 2.
     
     
-    var timer=window.setTimeout(function(){
-        $('#content').html('Loading seems to be taking a while.');
-    },3800),clearTimeout=window.clearTimeout(timer);
-    $.ajax({
-        type:"GET",
-        url:encodeURIComponent(event.path.substr(1))+'.json',
-        dataType:'json',
-        cache:true,
-        jsonpCallback:'i',
-        beforeSend:function(){
-            document.title='Loading...';
-            $('#content').fadeTo(200,0.33);
-        },
-        success:function(data){
-            clearTimeout;
-            document.title=data.fn+'<?php echo$title?>';
-            $('#content').fadeTo(20,1).html(data.content);
-        },
-        error:function(){
-            clearTimeout;
-            document.title='404 Page not found';
-            $('#content').fadeTo(20,1).removeAttr('style').html('<h1>404 Page not found</h1>\r<p>Sorry, this page cannot be found.</p>\r');
-        }
+    $.address.crawlable(1).init(function(){
+        $('#nav a').address();
+    }).change(function(event){
+        var timer=window.setTimeout(function(){
+            $('#content').html('Loading seems to be taking a while.');
+        },3800),clearTimeout=window.clearTimeout(timer);
+        $.ajax({
+            type:"GET",
+            url:'api'+(event.path.length!=1 ? '/'+encodeURIComponent(event.path.toLowerCase().substr(1)) : ''),
+            dataType:'json',
+            cache:true,
+            beforeSend:function(){
+                document.title='Loading...';
+                $('#content').fadeTo(200,0.33);
+            },
+            success:function(data,textStatus,jqXHR){
+                clearTimeout;
+                $('#nav a').each(function(){
+                    if($(this).attr('href')==(($.address.state()+decodeURI(event.path)).replace(/\/\//,'/'))){
+                        $(this).parent('li').addClass('selected').focus();
+                    }else{
+                        $(this).parent('li').removeAttr('class');
+                    }
+                });
+                document.title=data.fn+'<?php echo$title?>';
+                $('#content').fadeTo(20,1).html(data.content);
+            },
+            error:function(jqXHR,textStatus,errorThrown){
+                clearTimeout;
+                $('li a').each(function(){
+                    $(this).parent('li').removeAttr('class');
+                });
+                document.title='404 Page not found';
+                $('#content').fadeTo(20,1).removeAttr('style').html('<h1>404 Page not found</h1>\r<p>Sorry, this page cannot be found.</p>\r');
+            }
+        });
     });
     
     
 ### Search engine optimization
 
  -  HTML5, `pushState` with crawlable fallback
- -  [Ajax crawling](//code.google.com/web/ajaxcrawling/docs/getting-started.html) with `?_escaped_fragment_=/$` 301 redirect to `/$`
+ -  Rewrite query string, [Ajax crawling](//code.google.com/web/ajaxcrawling/docs/getting-started.html)
  -  Rewrite www to no-www domain
  -  Slash and backslash issues
  -  Rewrite uppercase letter URL to lowercase
@@ -63,8 +76,6 @@ Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Web serv
  -  W3C - [Not validated CSS3 vendor-specific prefixes, like -webkit-, -moz-, -o- etc.](//www.w3.org/Bugs/Public/show_bug.cgi?id=11989)
  -  W3C - [border-radius throws Parse Error [empty string]](//www.w3.org/Bugs/Public/show_bug.cgi?id=11975)
  -  Apache and IE - domain.com//контакты rewrited to urlencode domain.com/%D0%BA%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D1%8B
- -  Apache - rewrite bug for -d and QUERY_STRING
- -  Apache - HTTP Header validation bug `The 304 response is not allowed to have a body.` for [robots.txt](http://redbot.org/?uri=http://lab.laukstein.com/ajax-seo/robots.txt) and [sitemap.xml](http://redbot.org/?uri=http://lab.laukstein.com/ajax-seo/sitemap.xml)
 
 
 ### Installation
