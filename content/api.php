@@ -14,7 +14,7 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
         }
         header("Last-Modified:$gmtime");
     }
-    cache($row['pubdate']); 
+    cache($row['pubdate']);
     $urlid=strip_tags($row['url']);
     $fn=strip_tags($row['fn']);
     $array=array('url'=>$urlid,'fn'=>$fn,'content'=>"<h1>$fn</h1>\r\n<p>{$row['content']}</p>\r\n");
@@ -22,7 +22,6 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     echo(isset($_GET['callback']) ? $_GET['callback'].'('.$json.')' : $json);
 }
 mysql_close($con);
-
 # Return 404 error, if url does not exist
 $validate=new validate($url);
 if($url!==$urlid){
