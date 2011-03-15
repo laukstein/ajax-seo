@@ -73,8 +73,13 @@
             _search = function(el) {
                 var url, s;
                 for (var i = 0, l = el.childNodes.length; i < l; i++) {
-                    if (el.childNodes[i].src) {
-                        url = String(el.childNodes[i].src);
+                    try {
+                        if (el.childNodes[i].src) {
+                            url = String(el.childNodes[i].src);
+                        }
+                    } catch (e) {
+                        // IE has a problem with base64 encoded images, it raises an Invalid pointer when the
+                        // source field is accessed
                     }
                     s = _search(el.childNodes[i]);
                     if (s) {
@@ -155,7 +160,7 @@
                         body = $('body').ajaxComplete(complete);
                     complete();
                     if (_opts.wrap) {
-                        var wrap = $('body > *').wrapAll('<div style="padding:' + (_cssint(body, 'marginTop') + _cssint(body, 'paddingTop')) + 'px ' + (_cssint(body, 'marginRight') + _cssint(body, 'paddingRight')) + 'px ' + (_cssint(body, 'marginBottom') + _cssint(body, 'paddingBottom')) + 'px ' + (_cssint(body, 'marginLeft') + _cssint(body, 'paddingLeft')) + 'px;" />').parent().wrap('<div id="' + ID + '" style="height:100%;overflow:auto;position:relative;' + (_webkit ? (window.statusbar.visible && !/chrome/i.test(_agent) ? '' : 'resize:both;') : '') + '" />');
+                        var wrap = $('body > *').wrapAll('<div style="padding:' + (_cssint(body, 'marginTop') + _cssint(body, 'paddingTop')) + 'px ' + (_cssint(body, 'marginRight') + _cssint(body, 'paddingRight')) + 'px ' + (_cssint(body, 'marginBottom') + _cssint(body, 'paddingBottom')) + 'px ' + (_cssint(body, 'marginLeft') + _cssint(body, 'paddingLeft')) + 'px;" />').parent().wrap('<div id="' + ID + '" style="height:100%;overflow:auto;position:relative;' + (_webkit && !window.statusbar.visible ? 'resize:both;' : '') + '" />');
                         $('html, body').css({
                             height: '100%',
                             margin: 0,
@@ -183,7 +188,7 @@
                         _st(function() {
                             $(_frame).bind('load', function() {
                                 var win = _frame.contentWindow;
-                                _value = win[ID] !== UNDEFINED ? $.address.decode(win[ID]) : '';
+                                _value = win[ID] !== UNDEFINED ? decodeURIComponent(win[ID]) : '';
                                 if (_value != _href()) {
                                     _update(FALSE);
                                     _l.hash = _crawl(_value, TRUE);
@@ -249,69 +254,11 @@
                         $('a[href]:not([href^=http]), a[href*="' + document.domain + '"]').each(function() {
                             var href = $(this).attr('href').replace(/^http:/, '').replace(new RegExp(base + '/?$'), '');
                             if (href === '' || href.indexOf(fragment) != -1) {
-                                $(this).attr('href', '#' + $.address.decode(href.replace(new RegExp('/(.*)\\?' + fragment + '=(.*)$'), '!$2')));
+                                $(this).attr('href', '#' + href.replace(new RegExp('/(.*)\\?' + fragment + '=(.*)$'), '!$2'));
                             }
                         });
                     }
                 }
-            },
-            _decode = function(value) {
-                return value.replace(/\+/g, ' ');
-            },
-            _encode = function(value) {
-                return _ec(_dc(value)).replace(/%20/g, '+');
-            },
-            _path = function(value) {
-                return value.split('#')[0].split('?')[0];
-            },
-            _pathNames = function(value) {
-                var path = _path(value),
-                    names = path.replace(_re, '/').split('/');
-                if (path.substr(0, 1) == '/' || path.length === 0) {
-                    names.splice(0, 1);
-                }
-                if (path.substr(path.length - 1, 1) == '/') {
-                    names.splice(names.length - 1, 1);
-                }
-                return names;
-            },
-            _queryString = function(value) {
-                var arr = value.split('?');
-                return arr.slice(1, arr.length).join('?').split('#')[0];
-            },
-            _parameter = function(name, value) {
-                value = _queryString(value);
-                if (value) {
-                    var params = value.split('&'),
-                        r = [];
-                    for (i = 0; i < params.length; i++) {
-                        var p = params[i].split('=');
-                        if (p[0] == name || $.address.decode(p[0]) == name) {
-                            r.push(p.slice(1).join('='));
-                        }
-                    }
-                    if (r.length !== 0) {
-                        return r.length != 1 ? r : r[0];
-                    }
-                }
-            },
-            _parameterNames = function(value) {
-                var qs = _queryString(value),
-                    names = [];
-                if (qs && qs.indexOf('=') != -1) {
-                    var params = qs.split('&');
-                    for (var i = 0; i < params.length; i++) {
-                        var name = params[i].split('=')[0];
-                        if ($.inArray(name, names) == -1) {
-                            names.push(name);
-                        }
-                    }
-                }
-                return names;
-            },
-            _hash = function(value) {
-                var arr = value.split('#');
-                return arr.slice(1, arr.length).join('#');
             },
             UNDEFINED, ID = 'jQueryAddress',
             STRING = 'string',
@@ -342,8 +289,6 @@
             _l = _t.location,
             _si = setInterval,
             _st = setTimeout,
-            _ec = encodeURIComponent,
-            _dc = decodeURIComponent,
             _re = /\/{2,9}/g,
             _agent = navigator.userAgent,
             _frame, _form, _url = _search(document),
@@ -487,65 +432,6 @@
                 _updating = FALSE;
                 return this;
             },
-            encode: function(value) {
-                var pathNames = _pathNames(value),
-                    parameterNames = _parameterNames(value),
-                    queryString = _queryString(value),
-                    hash = _hash(value),
-                    first = value.substr(0, 1),
-                    last = value.substr(value.length - 1),
-                    encoded = '';
-                $.each(pathNames, function(i, v) {
-                    encoded += '/' + _encode(v);
-                });
-                if (queryString !== '') {
-                    encoded += '?';
-                    if (parameterNames.length === 0) {
-                        encoded += queryString;
-                    } else {
-                        $.each(parameterNames, function(i, v) {
-                            var pv = _parameter(v, value);
-                            if (typeof pv !== STRING) {
-                                $.each(pv, function(ni, nv) {
-                                    encoded += _encode(v) + '=' + _encode(nv) + '&';
-                                });
-                            } else {
-                                encoded += _encode(v) + '=' + _encode(pv) + '&';
-                            }
-                        });
-                        encoded = encoded.substr(0, encoded.length - 1);
-                    }
-                }
-                if (hash !== '') {
-                    encoded += '#' + _encode(hash);
-                }
-                if (first != '/' && encoded.substr(0, 1) == '/') {
-                    encoded = encoded.substr(1);
-                }
-                if (first == '/' && encoded.substr(0, 1) != '/') {
-                    encoded = '/' + encoded;
-                }
-                if (/#|&|\?/.test(last)) {
-                    encoded += last;
-                }
-                return encoded;
-            },
-            decode: function(value) {
-                if (value !== UNDEFINED) {
-                    var result = [],
-                        replace = function(value) {
-                            return _dc(value.toString().replace(/\+/g, '%20'));
-                        };
-                    if (typeof value == 'object' && value.length !== UNDEFINED) {
-                        for (var i = 0, l = value.length; i < l; i++) {
-                            result[i] = replace(value[i]);
-                        }
-                        return result;
-                    } else {
-                        return replace(value);
-                    }
-                }
-            },
             title: function(value) {
                 if (value !== UNDEFINED) {
                     _st(function() {
@@ -566,9 +452,6 @@
             value: function(value) {
                 if (value !== UNDEFINED) {
                     value = _strict(value);
-                    if (_opts.autoUpdate) {
-                        value = this.encode(value);
-                    }
                     if (value == '/') {
                         value = '';
                     }
@@ -591,7 +474,7 @@
                                 }
                             } else if (_value != _href()) {
                                 if (_opts.history) {
-                                    _l.hash = '#' + _crawl(this.decode(_strict(_value)), TRUE);
+                                    _l.hash = '#' + _crawl(_value, TRUE);
                                 } else {
                                     _l.replace('#' + _crawl(_value, TRUE));
                                 }
@@ -613,34 +496,43 @@
                 if (!_supported) {
                     return null;
                 }
-                return this.decode(_strict(_value));
+                return _strict(_value);
             },
             path: function(value) {
                 if (value !== UNDEFINED) {
-                    var qs = _queryString(_strict(_value)),
-                        hash = _hash(_strict(_value));
+                    var qs = this.queryString(),
+                        hash = this.hash();
                     this.value(value + (qs ? '?' + qs : '') + (hash ? '#' + hash : ''));
                     return this;
                 }
-                return this.decode(_path(_strict(_value)));
+                return _strict(_value).split('#')[0].split('?')[0];
             },
             pathNames: function() {
-                return this.decode(_pathNames(_strict(_value)));
+                var path = this.path(),
+                    names = path.replace(_re, '/').split('/');
+                if (path.substr(0, 1) == '/' || path.length === 0) {
+                    names.splice(0, 1);
+                }
+                if (path.substr(path.length - 1, 1) == '/') {
+                    names.splice(names.length - 1, 1);
+                }
+                return names;
             },
             queryString: function(value) {
                 if (value !== UNDEFINED) {
-                    var hash = _hash(_strict(_value));
+                    var hash = this.hash();
                     this.value(this.path() + (value ? '?' + value : '') + (hash ? '#' + hash : ''));
                     return this;
                 }
-                return this.decode(_queryString(_strict(_value)));
+                var arr = _value.split('?');
+                return arr.slice(1, arr.length).join('?').split('#')[0];
             },
             parameter: function(name, value, append) {
                 var i, params;
                 if (value !== UNDEFINED) {
                     var names = this.parameterNames();
                     params = [];
-                    value = value ? _ec(value) : '';
+                    value = value ? value.toString() : '';
                     for (i = 0; i < names.length; i++) {
                         var n = names[i],
                             v = this.parameter(n);
@@ -651,26 +543,51 @@
                             v = (value === null || value === '') ? [] : (append ? v.concat([value]) : [value]);
                         }
                         for (var j = 0; j < v.length; j++) {
-                            params.push(n + '=' + _decode(_encode(v[j])));
+                            params.push(n + '=' + v[j]);
                         }
                     }
                     if ($.inArray(name, names) == -1 && value !== null && value !== '') {
-                        params.push(name + '=' + _decode(_encode(value)));
+                        params.push(name + '=' + value);
                     }
                     this.queryString(params.join('&'));
                     return this;
                 }
-                return this.decode(_parameter(name, _strict(_value)));
+                value = this.queryString();
+                if (value) {
+                    var r = [];
+                    params = value.split('&');
+                    for (i = 0; i < params.length; i++) {
+                        var p = params[i].split('=');
+                        if (p[0] == name) {
+                            r.push(p.slice(1).join('='));
+                        }
+                    }
+                    if (r.length !== 0) {
+                        return r.length != 1 ? r : r[0];
+                    }
+                }
             },
             parameterNames: function() {
-                return this.decode(_parameterNames(_strict(_value)));
+                var qs = this.queryString(),
+                    names = [];
+                if (qs && qs.indexOf('=') != -1) {
+                    var params = qs.split('&');
+                    for (var i = 0; i < params.length; i++) {
+                        var name = params[i].split('=')[0];
+                        if ($.inArray(name, names) == -1) {
+                            names.push(name);
+                        }
+                    }
+                }
+                return names;
             },
             hash: function(value) {
                 if (value !== UNDEFINED) {
-                    this.value(_strict(_value).split('#')[0] + (value ? '#' + value : ''));
+                    this.value(_value.split('#')[0] + (value ? '#' + value : ''));
                     return this;
                 }
-                return this.decode(_hash(_strict(_value)));
+                var arr = _value.split('#');
+                return arr.slice(1, arr.length).join('#');
             }
         };
     })();
@@ -678,7 +595,6 @@
     $.fn.address = function(fn) {
         if (!$(this).attr('address')) {
             var f = function(e) {
-                // if they're holding a modifier let it go through: they're trying to open in a new window or tab
                 if (e.shiftKey || e.ctrlKey || e.metaKey) {
                     return true;
                 }
@@ -691,7 +607,7 @@
             $(this).click(f).live('click', f).live('submit', function(e) {
                 if ($(this).is('form')) {
                     var action = $(this).attr('action'),
-                        value = fn ? fn.call(this) : (action.indexOf('?') != -1 ? action.replace(/&$/, '') : action + '?') + $.address.decode($(this).serialize());
+                        value = fn ? fn.call(this) : (action.indexOf('?') != -1 ? action.replace(/&$/, '') : action + '?') + $(this).serialize();
                     $.address.value(value);
                     e.preventDefault();
                 }
