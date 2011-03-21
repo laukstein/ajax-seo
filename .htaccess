@@ -16,6 +16,7 @@ ServerSignature Off
 #php_flag expose_php 0
 
 AddType text/javascript .js
+AddType text/cache-manifest appcache
 AddType application/json .json
 AddType image/x-icon .ico
 
@@ -78,6 +79,7 @@ AddCharset utf-8 .json .css .js .txt
     ExpiresByType application/xml "access plus 1 minute"
     ExpiresByType text/html "access plus 1 minute"
     ExpiresByType text/plain "access plus 1 hour"
+    ExpiresByType text/cache-manifest "access plus 0 second"
     ExpiresByType text/css "access plus 6 months"
     ExpiresByType text/javascript "access plus 6 months"
     ExpiresByType image/svg+xml "access plus 1 month"
@@ -171,6 +173,9 @@ AddCharset utf-8 .json .css .js .txt
     ## Solution without httpd.conf RewriteMap in github.com/laukstein/ajax-seo/wiki/Lowercase-URL
     RewriteCond %{REQUEST_URI} .+
     RewriteRule ^[^A-Z]*[A-Z] ${lc:%0} [R=301,L]
+    
+    # Block access to folder .git
+    RewriteRule "(^|/)\." - [F]
     
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
