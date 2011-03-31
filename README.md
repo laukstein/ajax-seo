@@ -68,11 +68,10 @@ Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Web serv
 
  -  jQuery Address - on browsers that does not support `pushState` (IE, FF > 4, Opera) if you'll try to refresh [page](//lab.laukstein.com/ajax-seo/#!/contact), you'll notice *jumping* content from 'Home' to 'Contact' in the title and content
  -  jQuery Address - on browsers that supports `pushState` (Crome, Safari. FF 4) `/#/url` and `/#!/url` *jumps* from `/` to `/url`
- -  jQuery Address - browsers that does not support `pushState` must have redirect from `/#/url` to `/#!/url`
+ -  jQuery Address - browsers that does not support `pushState` must use `/#!/url` instead of `/#/url` and remove `/#`
  -  jQuery Address - jQuery Address breaks on IE6 click to non Latin character URLs, it *jumping* from `/` to `/#!/url`
  -  jQuery Address - for request `/url` or `/#!/url` (not click event) do not load/refresh `$.ajax` any content `DOM`, just change address url (if needed), add history
  -  jQuery - bug for $.ajax() ifModified cache
- -  jQuery - bug for .fadeTo() on IE
  -  W3C - [Not validated CSS3 vendor-specific prefixes, like -webkit-, -moz-, -o- etc.](//www.w3.org/Bugs/Public/show_bug.cgi?id=11989)
  -  W3C - [border-radius throws Parse Error [empty string]](//www.w3.org/Bugs/Public/show_bug.cgi?id=11975)
  -  Apache and IE - domain.com//контакты rewrited to urlencode domain.com/%D0%BA%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D1%8B
