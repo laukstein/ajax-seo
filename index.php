@@ -78,17 +78,17 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
 </div>
 <script src=//ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js></script>
 <script>!window.jQuery&&document.write(unescape('%3Cscript src=<?php echo$path?>images/jquery-1.5.2.min.js%3E%3C/script%3E'))</script>
-<script src=<?php echo$path?>images/jquery.address.js?state=<?php if(strlen(utf8_decode($path))>1){echo substr($path,0,-1);}else{echo$path;}?>></script>
+<script src=<?php echo$path?>images/jquery.address.js></script>
 <script>
-$.address.crawlable(1).init(function(){
+$.address.crawlable(1).state('<?php if(strlen(utf8_decode($path))>1){echo substr($path,0,-1);}else{echo$path;}?>').init(function(){
     $('#nav a').address();
-}).change(function(event){
+}).change(function(e){
     var timer=window.setTimeout(function(){ // Implement for timeout
         $('#content').html('Loading seems to be taking a while.');
     },3800),clearTimeout=window.clearTimeout(timer);
     $.ajax({
         type:"GET",
-        url:/*'http://lab.laukstein.com/ajax-seo/'+*/'api'+(event.path.length!=1 ? '/'+encodeURIComponent(event.path.toLowerCase().substr(1)) : ''),
+        url:/*'http://lab.laukstein.com/ajax-seo/'+*/'api'+(e.path.length!=1 ? '/'+encodeURIComponent(e.path.toLowerCase().substr(1)) : ''),
         dataType:'json',        // jsonp
         cache:true,
         //jsonpCallback:'i',    // JSONP cache issue
@@ -102,7 +102,7 @@ $.address.crawlable(1).init(function(){
             //console.debug(data);
             clearTimeout;
             $('#nav a').each(function(){
-                if($(this).attr('href')==(($.address.state()+decodeURI(event.path)).replace(/\/\//,'/'))){
+                if($(this).attr('href')==(($.address.state()+decodeURI(e.path)).replace(/\/\//,'/'))){
                     $(this).parent('li').addClass('selected').focus();
                 }else{
                     $(this).parent('li').removeAttr('class');

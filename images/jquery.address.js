@@ -78,8 +78,7 @@
                             url = String(el.childNodes[i].src);
                         }
                     } catch (e) {
-                        // IE has a problem with base64 encoded images, it raises an Invalid pointer when the
-                        // source field is accessed
+                        // IE Invalid pointer problem with base64 encoded images
                     }
                     s = _search(el.childNodes[i]);
                     if (s) {
@@ -331,16 +330,6 @@
                 _options();
                 $(_load);
             }
-            var hrefState = _hrefState();
-            if (_opts.state !== UNDEFINED) {
-                if (_h.pushState) {
-                    if (hrefState.substr(0, 3) == '/#/') {
-                        _l.replace(_opts.state.replace(/^\/$/, '') + hrefState.substr(2));
-                    }
-                } else if (hrefState != '/' && hrefState.replace(/^\/#/, '') != _hrefHash()) {
-                    _l.replace(_opts.state.replace(/^\/$/, '') + '/#' + hrefState);
-                }
-            }
             $(window).bind({
                 'popstate': _popstate,
                 'unload': _unload
@@ -401,6 +390,18 @@
             state: function(value) {
                 if (value !== UNDEFINED) {
                     _opts.state = value;
+                    var hrefState = _hrefState();
+                    if (_opts.state !== UNDEFINED) {
+                        if (_h.pushState) {
+                            if (hrefState.substr(0, 3) == '/#/') {
+                                _l.replace(_opts.state.replace(/^\/$/, '') + hrefState.substr(2));
+                            }
+                        } else if (hrefState != '/' && hrefState.replace(/^\/#/, '') != _hrefHash()) {
+                            _st(function() {
+                                _l.replace(_opts.state.replace(/^\/$/, '') + '/#' + hrefState);
+                            }, 1);
+                        }
+                    }
                     return this;
                 }
                 return _opts.state;
