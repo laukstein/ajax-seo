@@ -3,10 +3,15 @@
 if(strpos($_SERVER['HTTP_HOST'],$_SERVER['SERVER_NAME'])===false){header('Status:400 Bad Request',true,400);exit('400 Bad Request');}
 # JSON respond
 if(isset($_GET['api'])){include('content/api.php');exit();}
+# Gzip
+if(!ob_start('ob_gzhandler')){ob_start();}
 # Database settings
 include('content/connect.php');
-# gzip
-if(!ob_start('ob_gzhandler')){ob_start();}
+# HTTP header caching
+include('content/cache.php');
+$datemod=new datemod();
+$datemod->date(array('.htaccess','index.php','content/.htaccess','content/httpd.conf','content/php.ini','content/connect.php','content/api.php','content/cache.php'),$dbtable,$url);
+$datemod->cache($datemod->gmtime);
 
 $fn=(isset($fn) ? $fn : NULL);
 $content=(isset($content) ? $content : NULL);

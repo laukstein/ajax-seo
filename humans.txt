@@ -1,8 +1,9 @@
 <?php
 header('Content-Type:text/plain');
+# HTTP header caching
 class datemod{
-    public $cache;
     public $maxmod;
+    public $gmtime;
     function date($dir='.',$exclude=array('error_log.txt','.git','cgi-bin','.','..')){
         $exclude=array_flip($exclude);
         if(!is_dir($dir)){return;}
@@ -35,37 +36,36 @@ class datemod{
                 --$level;
             }
         }
-        //sort($array);print_r($array);
+        //sort($array);
+        //print_r($array);
         $fmod=max($array);
+        # Database settings
         include('content/connect.php');
         $tablemod=mysql_query("SELECT DATE_FORMAT(MAX(pubdate),'%Y/%m/%d %H:%i:%s') AS pubdate FROM $dbtable");
         while($row=@mysql_fetch_array($tablemod,MYSQL_ASSOC)){
             $rowmod=$row['pubdate'];
             $this->maxmod=max($fmod,$rowmod)."\r\n";
-            $this->cache=date('D, d M Y H:i:s T',strtotime($this->maxmod));
+            $this->gmtime=date('D, d M Y H:i:s T',strtotime($this->maxmod));
         }
+    }
+    function cache($gmtime){
+        if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])||isset($_SERVER['HTTP_IF_NONE_MATCH'])){
+            if($_SERVER['HTTP_IF_MODIFIED_SINCE']==$gmtime){
+                header('Status:304 Not Modified',true,304);
+                exit();
+            }
+        }
+        header("Last-Modified:$gmtime");
     }
 }
 $datemod=new datemod();
 $datemod->date();
-$cache=$datemod->cache;
-$maxmod=$datemod->maxmod;
-# HTTP header caching
-function cache($gmtime){
-    if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])||isset($_SERVER['HTTP_IF_NONE_MATCH'])){
-        if($_SERVER['HTTP_IF_MODIFIED_SINCE']==$gmtime){
-            header('Status:304 Not Modified',true,304);
-            exit();
-        }
-    }
-    header("Last-Modified:$gmtime");
-}
-cache($cache);
+$datemod->cache($datemod->gmtime);
 ?>
 /* SITE */
 Author:         Binyamin Laukstein
 Contact:        laukstein.com/contact
-Last update:    <?php echo$maxmod;?>
+Last update:    <?php echo$datemod->maxmod;?>
 Doctype:        HTML5 with CSS3
 Tools:          JSON, jQuery 1.5.1, PHP 5.3, MySQL 5, Apache 2
 
