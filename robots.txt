@@ -38,3 +38,7 @@ Disallow: /
 # Removing Documents From the Wayback Machine archive.org
 User-agent: ia_archiver
 Disallow: /
+
+# Disable *.domaintools.com crawl
+User-agent: SurveyBot
+Disallow: /
