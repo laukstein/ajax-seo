@@ -3,6 +3,7 @@
 header('Content-Type:application/xml');
 # Prevent XSS and SQL Injection
 if(strpos($_SERVER['HTTP_HOST'],$_SERVER['SERVER_NAME'])===false){header('Status:400 Bad Request',true,400);exit('400 Bad Request');}
+# Database settings
 include('content/connect.php');
 # HTTP header caching
 $tablemod=mysql_query("SELECT DATE_FORMAT(MAX(pubdate),'%a, %d %b %Y %T %Z') AS pubdate FROM $dbtable");
