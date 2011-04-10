@@ -83,6 +83,7 @@ Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Web serv
  -  Use PHP settings from content/php.ini or uncomment php_flag, php_value from .htaccess
  -  Add your MySQL settings in content/connect.php
  -  Run content/ajax-seo.sql SQL queries on your database (through phpMyAdmin)
+ -  **For MySQL UPDATE use SET `pubdate=NOW()`, so that cache will be affected fine**
 
 
 > jQuery Address Plugin based on [github.com/asual/jquery-address](//github.com/asual/jquery-address)
