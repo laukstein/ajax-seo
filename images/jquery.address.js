@@ -221,16 +221,17 @@
                 var el, elements = $('a'),
                     length = elements.size(),
                     delay = 1,
-                    index = -1;
-                _st(function() {
-                    if (++index != length) {
-                        el = $(elements.get(index));
-                        if (el.is('[rel*="address:"]')) {
-                            el.address();
+                    index = -1,
+                    fn = function() {
+                        if (++index != length) {
+                            el = $(elements.get(index));
+                            if (el.is('[rel*="address:"]')) {
+                                el.address();
+                            }
+                            _st(fn, delay);
                         }
-                        _st(arguments.callee, delay);
-                    }
-                }, delay);
+                    };
+                _st(fn, delay);
             },
             _popstate = function() {
                 if (_value != _href()) {
@@ -330,10 +331,7 @@
                 _options();
                 $(_load);
             }
-            $(window).bind({
-                'popstate': _popstate,
-                'unload': _unload
-            });
+            $(window).bind('popstate', _popstate).bind('unload', _unload);
         } else if (!_supported && _hrefHash() !== '') {
             _l.replace(_l.href.substr(0, _l.href.indexOf('#')));
         } else {
