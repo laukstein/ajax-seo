@@ -5,10 +5,10 @@ include('connect.php');
 # HTTP header caching
 include('content/cache.php');
 $datemod=new datemod();
-$datemod->date(array('.htaccess','index.php','content/.htaccess','content/httpd.conf','content/php.ini','content/connect.php','content/api.php','content/cache.php'),$dbtable,$url);
+$datemod->date(array('.htaccess','index.php','content/.htaccess','content/httpd.conf','content/php.ini','content/connect.php','content/api.php','content/cache.php'),MYSQL_TABLE,$url);
 $datemod->cache($datemod->gmtime);
 
-$result=mysql_query("SELECT url,fn,content FROM $dbtable WHERE url='$url'");
+$result=mysql_query("SELECT url,fn,content FROM ".MYSQL_TABLE." WHERE url='$url'");
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $row[]=array('row'=>array_map('htmlspecialchars',$row));
     $urlid=strip_tags($row['url']);

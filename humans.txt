@@ -41,10 +41,10 @@ class datemod{
         $fmod=max($array);
         # Database settings
         include('content/connect.php');
-        $tablemod=mysql_query("SELECT DATE_FORMAT(MAX(pubdate),'%Y/%m/%d %H:%i:%s') AS pubdate FROM $dbtable");
+        $tablemod=mysql_query('SELECT DATE_FORMAT(MAX(pubdate),\'%Y/%m/%d %H:%i:%s\') AS pubdate FROM '.MYSQL_TABLE);
         while($row=@mysql_fetch_array($tablemod,MYSQL_ASSOC)){
             $rowmod=$row['pubdate'];
-            $this->maxmod=max($fmod,$rowmod)."\r\n";
+            $this->maxmod=max($fmod,$rowmod).date(' T')."\r\n";
             $this->gmtime=date('D, d M Y H:i:s T',strtotime($this->maxmod));
         }
     }

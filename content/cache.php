@@ -7,7 +7,7 @@ class datemod{
             $array[]=$mod;
         }
         $fmod=max($array);
-        $result=mysql_query("SELECT DATE_FORMAT(pubdate,'%Y/%m/%d %H:%i:%s') AS pubdate FROM $dbtable WHERE url='$url'");
+        $result=mysql_query("SELECT DATE_FORMAT(pubdate,'%Y/%m/%d %H:%i:%s') AS pubdate FROM ".MYSQL_TABLE." WHERE url='$url'");
         while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
             $row[]=array('row'=>array_map('htmlspecialchars',$row));
             $pubdate=$row['pubdate'];

@@ -10,13 +10,13 @@ include('content/connect.php');
 # HTTP header caching
 include('content/cache.php');
 $datemod=new datemod();
-$datemod->date(array('.htaccess','index.php','content/.htaccess','content/httpd.conf','content/php.ini','content/connect.php','content/api.php','content/cache.php'),$dbtable,$url);
+$datemod->date(array('.htaccess','index.php','content/.htaccess','content/httpd.conf','content/php.ini','content/connect.php','content/api.php','content/cache.php'),MYSQL_TABLE,$url);
 $datemod->cache($datemod->gmtime);
 
-$fn=(isset($fn) ? $fn : NULL);
-$content=(isset($content) ? $content : NULL);
+$fn=(isset($fn)? $fn : null);
+$content=(isset($content)? $content : null);
 
-$result=mysql_query("SELECT url,fn,content FROM $dbtable WHERE url='$url'");
+$result=mysql_query("SELECT url,fn,content FROM ".MYSQL_TABLE." WHERE url='$url'");
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $row[]=array('row'=>array_map('htmlspecialchars',$row));
     $urlid=$row['url'];
@@ -45,7 +45,7 @@ $title=' - Ajax SEO';
 <meta charset=utf-8>
 <title><?php echo$fn.$title?></title>
 <link rel=stylesheet href=<?php echo$path?>images/style.css>
-<link rel=author href=humans.txt type=text/plain>
+<link rel=author href=<?php echo$path?>humans.txt>
 <meta name=description content="Ajax SEO maximized performance - speed, availability, user-friendly">
 <meta name=keywords content=ajax,seo,crawl,performance,speed,availability,user-friendly>
 <script>/*Add HTML5 tag support for old browsers*/var el=['header','nav','article','footer'];for(var i=el.length-1;i>=0;i--){document.createElement(el[i]);}</script>
@@ -57,7 +57,7 @@ $title=' - Ajax SEO';
 <nav id=nav>
 <ul>
 <?php
-$result=mysql_query("SELECT url,fn FROM $dbtable ORDER BY `order` ASC");
+$result=mysql_query('SELECT url,fn FROM '.MYSQL_TABLE.' ORDER BY `order` ASC');
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $row[]=array('row'=>array_map('htmlspecialchars',$row));
     echo$nav='      <li';if($url==$row['url']){echo ' class=selected';}echo "><a href=\"$path{$row['url']}\" title=\"{$row['fn']}\">{$row['fn']}</a>\r\n";

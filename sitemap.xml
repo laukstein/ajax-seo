@@ -6,7 +6,7 @@ if(strpos($_SERVER['HTTP_HOST'],$_SERVER['SERVER_NAME'])===false){header('Status
 # Database settings
 include('content/connect.php');
 # HTTP header caching
-$tablemod=mysql_query("SELECT DATE_FORMAT(MAX(pubdate),'%a, %d %b %Y %T %Z') AS pubdate FROM $dbtable");
+$tablemod=mysql_query('SELECT DATE_FORMAT(MAX(pubdate),\'%a, %d %b %Y %T %Z\') AS pubdate FROM '.MYSQL_TABLE);
 while($row=@mysql_fetch_array($tablemod,MYSQL_ASSOC)){
     function cache($gmtime){
         if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])||isset($_SERVER['HTTP_IF_NONE_MATCH'])){
@@ -30,7 +30,7 @@ if(str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME))!='/'
 }else{
     $path=str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME));
 }
-$result=mysql_query("SELECT url,DATE_FORMAT(pubdate,'%Y-%m-%dT%H:%i:%sZ') AS pubdate FROM $dbtable ORDER BY `order` ASC");
+$result=mysql_query('SELECT url,DATE_FORMAT(pubdate,\'%Y-%m-%dT%H:%i:%sZ\') AS pubdate FROM '.MYSQL_TABLE.' ORDER BY `order` ASC');
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $row[]=array('row'=>array_map('htmlspecialchars',$row));
     echo"    <url>\r\n        <loc>http://{$_SERVER['SERVER_NAME']}$path{$row['url']}</loc>\r\n        <lastmod>{$row['pubdate']}</lastmod>\r\n    </url>";
