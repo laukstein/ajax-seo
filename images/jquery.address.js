@@ -8,37 +8,41 @@
  *
  * Date: ${timestamp}
  */
-(function($) {
-
-    $.address = (function() {
-
+(function ($) {
+ 
+    $.address = (function () {
+ 
         var _trigger = function(name) {
-            $($.address).trigger(
-            $.extend($.Event(name), (function() {
-                var parameters = {},
-                    parameterNames = $.address.parameterNames();
-                for (var i = 0, l = parameterNames.length; i < l; i++) {
-                    parameters[parameterNames[i]] = $.address.parameter(parameterNames[i]);
-                }
-                return {
-                    value: $.address.value(),
-                    path: $.address.path(),
-                    pathNames: $.address.pathNames(),
-                    parameterNames: parameterNames,
-                    parameters: parameters,
-                    queryString: $.address.queryString()
-                };
-            }).call($.address)));
-        },
+                $($.address).trigger(
+                    $.extend($.Event(name), 
+                        (function() {
+                            var parameters = {},
+                                parameterNames = $.address.parameterNames();
+                            for (var i = 0, l = parameterNames.length; i < l; i++) {
+                                parameters[parameterNames[i]] = $.address.parameter(parameterNames[i]);
+                            }
+                            return {
+                                value: $.address.value(),
+                                path: $.address.path(),
+                                pathNames: $.address.pathNames(),
+                                parameterNames: parameterNames,
+                                parameters: parameters,
+                                queryString: $.address.queryString()
+                            };
+                        }).call($.address)
+                    )
+                );
+            },
             _bind = function(value, data, fn) {
-                $($.address).bind(value, data, fn);
+                $().bind.apply($($.address), Array.prototype.slice.call(arguments));
                 return $.address;
             },
             _supportsState = function() {
                 return (_h.pushState && _opts.state !== UNDEFINED);
             },
             _hrefState = function() {
-                return ('/' + _l.pathname.replace(new RegExp(_opts.state), '') + _l.search + (_hrefHash() ? '#' + _hrefHash() : '')).replace(_re, '/');
+                return ('/' + _l.pathname.replace(new RegExp(_opts.state), '') + 
+                    _l.search + (_hrefHash() ? '#' + _hrefHash() : '')).replace(_re, '/');
             },
             _hrefHash = function() {
                 var index = _l.href.indexOf('#');
@@ -50,7 +54,7 @@
             _window = function() {
                 try {
                     return top.document !== UNDEFINED ? top : window;
-                } catch (e) {
+                } catch (e) { 
                     return window;
                 }
             },
@@ -74,7 +78,7 @@
                 var url, s;
                 for (var i = 0, l = el.childNodes.length; i < l; i++) {
                     try {
-                        if (el.childNodes[i].src) {
+                        if ('src' in el.childNodes[i] && el.childNodes[i].src) {
                             url = String(el.childNodes[i].src);
                         }
                     } catch (e) {
@@ -112,7 +116,9 @@
             _track = function() {
                 if (_opts.tracker !== 'null' && _opts.tracker !== null) {
                     var fn = $.isFunction(_opts.tracker) ? _opts.tracker : _t[_opts.tracker],
-                        value = (_l.pathname + _l.search + ($.address && !_supportsState() ? $.address.value() : '')).replace(/\/\//, '/').replace(/^\/$/, '');
+                        value = (_l.pathname + _l.search + 
+                                ($.address && !_supportsState() ? $.address.value() : ''))
+                                .replace(/\/\//, '/').replace(/^\/$/, '');
                     if ($.isFunction(fn)) {
                         fn(value);
                     } else if ($.isFunction(_t.urchinTracker)) {
@@ -125,7 +131,10 @@
                 }
             },
             _html = function() {
-                var src = _js() + ':' + FALSE + ';document.open();document.writeln(\'<html><head><title>' + _d.title.replace('\'', '\\\'') + '</title><script>var ' + ID + ' = "' + _href() + (_d.domain != _l.hostname ? '";document.domain="' + _d.domain : '') + '";</' + 'script></head></html>\');document.close();';
+                var src = _js() + ':' + FALSE + ';document.open();document.writeln(\'<html><head><title>' + 
+                    _d.title.replace('\'', '\\\'') + '</title><script>var ' + ID + ' = "' + _href() + 
+                    (_d.domain != _l.hostname ? '";document.domain="' + _d.domain : '') + 
+                    '";</' + 'script></head></html>\');document.close();';
                 if (_version < 7) {
                     _frame.src = src;
                 } else {
@@ -153,21 +162,32 @@
                     _loaded = TRUE;
                     _options();
                     var complete = function() {
-                        _enable.call(this);
-                        _unescape.call(this);
-                    },
+                            _enable.call(this);
+                            _unescape.call(this);
+                        },
                         body = $('body').ajaxComplete(complete);
                     complete();
                     if (_opts.wrap) {
-                        var wrap = $('body > *').wrapAll('<div style="padding:' + (_cssint(body, 'marginTop') + _cssint(body, 'paddingTop')) + 'px ' + (_cssint(body, 'marginRight') + _cssint(body, 'paddingRight')) + 'px ' + (_cssint(body, 'marginBottom') + _cssint(body, 'paddingBottom')) + 'px ' + (_cssint(body, 'marginLeft') + _cssint(body, 'paddingLeft')) + 'px;" />').parent().wrap('<div id="' + ID + '" style="height:100%;overflow:auto;position:relative;' + (_webkit && !window.statusbar.visible ? 'resize:both;' : '') + '" />');
-                        $('html, body').css({
-                            height: '100%',
-                            margin: 0,
-                            padding: 0,
-                            overflow: 'hidden'
-                        });
+                        var wrap = $('body > *')
+                            .wrapAll('<div style="padding:' + 
+                                (_cssint(body, 'marginTop') + _cssint(body, 'paddingTop')) + 'px ' + 
+                                (_cssint(body, 'marginRight') + _cssint(body, 'paddingRight')) + 'px ' + 
+                                (_cssint(body, 'marginBottom') + _cssint(body, 'paddingBottom')) + 'px ' + 
+                                (_cssint(body, 'marginLeft') + _cssint(body, 'paddingLeft')) + 'px;" />')
+                            .parent()
+                            .wrap('<div id="' + ID + '" style="height:100%;overflow:auto;position:relative;' + 
+                                (_webkit && !window.statusbar.visible ? 'resize:both;' : '') + '" />');
+                        $('html, body')
+                            .css({
+                                height: '100%',
+                                margin: 0,
+                                padding: 0,
+                                overflow: 'hidden'
+                            });
                         if (_webkit) {
-                            $('<style type="text/css" />').appendTo('head').text('#' + ID + '::-webkit-resizer { background-color: #fff; }');
+                            $('<style type="text/css" />')
+                                .appendTo('head')
+                                .text('#' + ID + '::-webkit-resizer { background-color: #fff; }');
                         }
                     }
                     if (_msie && _version < 8) {
@@ -187,7 +207,7 @@
                         _st(function() {
                             $(_frame).bind('load', function() {
                                 var win = _frame.contentWindow;
-                                _value = win[ID] !== UNDEFINED ? decodeURIComponent(win[ID]) : '';
+                                _value = win[ID] !== UNDEFINED ? win[ID] : '';
                                 if (_value != _href()) {
                                     _update(FALSE);
                                     _l.hash = _crawl(_value, TRUE);
@@ -198,12 +218,12 @@
                             }
                         }, 50);
                     }
-
+ 
                     _st(function() {
                         _trigger('init');
                         _update(FALSE);
                     }, 1);
-
+ 
                     if (!_supportsState()) {
                         if ((_msie && _version > 7) || (!_msie && ('on' + HASH_CHANGE) in _t)) {
                             if (_t.addEventListener) {
@@ -218,7 +238,8 @@
                 }
             },
             _enable = function() {
-                var el, elements = $('a'),
+                var el, 
+                    elements = $('a'), 
                     length = elements.size(),
                     delay = 1,
                     index = -1,
@@ -260,7 +281,8 @@
                     }
                 }
             },
-            UNDEFINED, ID = 'jQueryAddress',
+            UNDEFINED,
+            ID = 'jQueryAddress',
             STRING = 'string',
             HASH_CHANGE = 'hashchange',
             INIT = 'init',
@@ -270,13 +292,13 @@
             TRUE = true,
             FALSE = false,
             _opts = {
-                autoUpdate: TRUE,
+                autoUpdate: TRUE, 
                 crawlable: FALSE,
-                history: TRUE,
+                history: TRUE, 
                 strict: TRUE,
                 wrap: FALSE
             },
-            _browser = $.browser,
+            _browser = $.browser, 
             _version = parseFloat($.browser.version),
             _mozilla = _browser.mozilla,
             _msie = _browser.msie,
@@ -285,37 +307,47 @@
             _supported = FALSE,
             _t = _window(),
             _d = _t.document,
-            _h = _t.history,
+            _h = _t.history, 
             _l = _t.location,
             _si = setInterval,
             _st = setTimeout,
             _re = /\/{2,9}/g,
-            _agent = navigator.userAgent,
-            _frame, _form, _url = _search(document),
+            _agent = navigator.userAgent,            
+            _frame,
+            _form,
+            _url = _search(document),
             _qi = _url ? _url.indexOf('?') : -1,
-            _title = _d.title,
+            _title = _d.title, 
             _silent = FALSE,
             _loaded = FALSE,
             _justset = TRUE,
             _juststart = TRUE,
             _updating = FALSE,
-            _listeners = {},
+            _listeners = {}, 
             _value = _href();
-
+            
         if (_msie) {
             _version = parseFloat(_agent.substr(_agent.indexOf('MSIE') + 4));
             if (_d.documentMode && _d.documentMode != _version) {
                 _version = _d.documentMode != 8 ? 7 : 8;
             }
-            $(document).bind('propertychange', function() {
+            var pc = _d.onpropertychange;
+            _d.onpropertychange = function() {
+                if (pc) {
+                    pc.call(_d);
+                }
                 if (_d.title != _title && _d.title.indexOf('#' + _href()) != -1) {
                     _d.title = _title;
                 }
-            });
+            };
         }
-
-        _supported = (_mozilla && _version >= 1) || (_msie && _version >= 6) || (_opera && _version >= 9.5) || (_webkit && _version >= 523);
-
+        
+        _supported = 
+            (_mozilla && _version >= 1) || 
+            (_msie && _version >= 6) ||
+            (_opera && _version >= 9.5) ||
+            (_webkit && _version >= 523);
+            
         if (_supported) {
             if (_opera) {
                 history.navigationMode = 'compatible';
@@ -331,13 +363,13 @@
                 _options();
                 $(_load);
             }
-            $(window).bind('popstate', _popstate).bind('unload', _unload);
+            $(window).bind('popstate', _popstate).bind('unload', _unload);            
         } else if (!_supported && _hrefHash() !== '') {
             _l.replace(_l.href.substr(0, _l.href.indexOf('#')));
         } else {
             _track();
         }
-
+ 
         return {
             bind: function(type, data, fn) {
                 return _bind(type, data, fn);
@@ -462,7 +494,8 @@
                     if (_opts.autoUpdate || _updating) {
                         _update(TRUE);
                         if (_supportsState()) {
-                            _h[_opts.history ? 'pushState' : 'replaceState']({}, '', _opts.state.replace(/\/$/, '') + (_value === '' ? '/' : _value));
+                            _h[_opts.history ? 'pushState' : 'replaceState']({}, '', 
+                                    _opts.state.replace(/\/$/, '') + (_value === '' ? '/' : _value));
                         } else {
                             _silent = TRUE;
                             if (_webkit) {
@@ -482,9 +515,7 @@
                                 _st(_html, 50);
                             }
                             if (_webkit) {
-                                _st(function() {
-                                    _silent = FALSE;
-                                }, 1);
+                                _st(function(){ _silent = FALSE; }, 1);
                             } else {
                                 _silent = FALSE;
                             }
@@ -539,7 +570,8 @@
                             v = [v];
                         }
                         if (n == name) {
-                            v = (value === null || value === '') ? [] : (append ? v.concat([value]) : [value]);
+                            v = (value === null || value === '') ? [] : 
+                                (append ? v.concat([value]) : [value]);
                         }
                         for (var j = 0; j < v.length; j++) {
                             params.push(n + '=' + v[j]);
@@ -586,11 +618,11 @@
                     return this;
                 }
                 var arr = _value.split('#');
-                return arr.slice(1, arr.length).join('#');
+                return arr.slice(1, arr.length).join('#');                
             }
         };
     })();
-
+    
     $.fn.address = function(fn) {
         if (!$(this).attr('address')) {
             var f = function(e) {
@@ -598,7 +630,11 @@
                     return true;
                 }
                 if ($(this).is('a')) {
-                    var value = fn ? fn.call(this) : /address:/.test($(this).attr('rel')) ? $(this).attr('rel').split('address:')[1].split(' ')[0] : $.address.state() !== undefined && $.address.state() != '/' ? $(this).attr('href').replace(new RegExp('^(.*' + $.address.state() + '|\\.)'), '') : $(this).attr('href').replace(/^(#\!?|\.)/, '');
+                    var value = fn ? fn.call(this) : 
+                        /address:/.test($(this).attr('rel')) ? $(this).attr('rel').split('address:')[1].split(' ')[0] : 
+                        $.address.state() !== undefined && $.address.state() != '/' ? 
+                                $(this).attr('href').replace(new RegExp('^(.*' + $.address.state() + '|\\.)'), '') : 
+                                $(this).attr('href').replace(/^(#\!?|\.)/, '');
                     $.address.value(value);
                     e.preventDefault();
                 }
@@ -606,7 +642,8 @@
             $(this).click(f).live('click', f).live('submit', function(e) {
                 if ($(this).is('form')) {
                     var action = $(this).attr('action'),
-                        value = fn ? fn.call(this) : (action.indexOf('?') != -1 ? action.replace(/&$/, '') : action + '?') + $(this).serialize();
+                        value = fn ? fn.call(this) : (action.indexOf('?') != -1 ? action.replace(/&$/, '') : action + '?') + 
+                            $(this).serialize();
                     $.address.value(value);
                     e.preventDefault();
                 }
@@ -614,5 +651,5 @@
         }
         return this;
     };
-
+    
 })(jQuery);
