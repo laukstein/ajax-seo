@@ -12,6 +12,7 @@ class datemod{
             $row[]=array('row'=>array_map('htmlspecialchars',$row));
             $pubdate=$row['pubdate'];
         }
+        $pubdate=(isset($pubdate)? $pubdate : null);
         $maxmod=max($fmod,$pubdate);
         $this->gmtime=date('D, d M Y H:i:s T',strtotime($maxmod));
     }
