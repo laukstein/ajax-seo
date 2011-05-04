@@ -81,8 +81,8 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
 </nav>
 </footer>
 </div>
-<script src=//ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js></script>
-<script>!window.jQuery&&document.write(unescape('%3Cscript src=<?php echo$path?>images/jquery-1.5.2.min.js%3E%3C/script%3E'))</script>
+<script src=//ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js></script>
+<script>window.jQuery || document.write('<script src=<?php echo$path?>images/jquery-1.6.min.js>\x3C/script>')</script>
 <script src=<?php echo$path?>images/jquery.address.js></script>
 <script>
 $.address.crawlable(1).state('<?php if(strlen(utf8_decode($path))>1){echo substr($path,0,-1);}else{echo$path;}?>').init(function(){
