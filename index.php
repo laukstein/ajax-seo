@@ -45,7 +45,7 @@ $title=' - Ajax SEO';
 <meta charset=utf-8>
 <title><?php echo$fn.$title?></title>
 <link rel=stylesheet href=<?php echo$path?>images/style.css>
-<link rel=author href=<?php echo$path?>humans.txt>
+<link rel=author href=/humans.txt>
 <meta name=description content="Ajax SEO maximized performance - speed, availability, user-friendly">
 <meta name=keywords content=ajax,seo,crawl,performance,speed,availability,user-friendly>
 <script>/*Add HTML5 tag support for old browsers*/var el=['header','nav','article','footer'];for(var i=el.length-1;i>=0;i--){document.createElement(el[i]);}</script>
