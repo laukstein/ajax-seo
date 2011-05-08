@@ -66,12 +66,12 @@ Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Web serv
 
 ### Known bugs
 
- -  jQuery Address - on browsers that does not support `pushState` (IE, FF > 4, Opera) if you'll try to refresh [page](//lab.laukstein.com/ajax-seo/#!/contact), you'll notice *jumping* content from 'Home' to 'Contact' in the title and content
- -  jQuery Address - on browsers that supports `pushState` (Crome, Safari. FF 4) `/#/url` and `/#!/url` *jumps* from `/` to `/url`
- -  jQuery Address - browsers that does not support `pushState` must use `/#!/url` instead of `/#/url` and remove `/#`
- -  jQuery Address - jQuery Address breaks on IE6 click to non Latin character URLs, it *jumping* from `/` to `/#!/url`
- -  jQuery Address - for request `/url` or `/#!/url` (not click event) do not load/refresh `$.ajax` any content `DOM`, just change address url (if needed), add history
- -  jQuery - bug for $.ajax() ifModified cache
+ -  jQuery Address - browsers that does not support `pushState` (IE, FF > 4, Opera): must use `/#!/url` instead of `/#/url` and remove `/#` and `/#!`
+ -  jQuery Address - browsers that does not support `pushState`: if you'll try to refresh [page](//lab.laukstein.com/ajax-seo/#!/contact), you'll notice *jumping* content from 'Home' to 'Contact' in the title and content
+ -  jQuery Address - browsers that supports `pushState` (Crome, Safari, FF4): `/#/url` and `/#!/url` *jumps* from `/` to `/url`
+ -  jQuery Address - browsers that supports `pushState`: `/url` or `/#!/url` request (not click event) - avoid `$.ajax` request and change address url (if needed), add history
+ -  jQuery Address - if `$.ajax` requested content is not modificeted - avoid `fadeTo()` and use browser cached data without repeated `$.ajax` request
+ -  FF4 bug [635548](//bugzilla.mozilla.org/show_bug.cgi?id=635548): "attempt to run compile-and-go script on a cleared scope"
  -  W3C - [Not validated CSS3 vendor-specific prefixes, like -webkit-, -moz-, -o- etc.](//www.w3.org/Bugs/Public/show_bug.cgi?id=11989)
  -  W3C - [border-radius throws Parse Error [empty string]](//www.w3.org/Bugs/Public/show_bug.cgi?id=11975)
  -  Apache and IE - domain.com//контакты rewrited to urlencode domain.com/%D0%BA%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D1%8B
@@ -80,9 +80,9 @@ Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Web serv
 ### How to use
 
  -  Apache settings in content/httpd.conf
- -  PHP settings in content/php.ini or php_flag, php_value in .htaccess
+ -  PHP settings in content/php.ini or php_flag, php_value's in .htaccess
  -  MySQL settings in content/connect.php
- -  **For MySQL UPDATE use SET `pubdate=NOW()` to affected cache correct**
+ -  **For MySQL UPDATE use SET `pubdate=NOW()` to affected cache!**
 
 
 > jQuery Address Plugin based on [github.com/asual/jquery-address](//github.com/asual/jquery-address)

@@ -97,14 +97,11 @@ $.address.crawlable(1).state('<?php if(strlen(utf8_decode($path))>1){echo substr
         dataType:'json',        // jsonp
         cache:true,
         //jsonpCallback:'i',    // JSONP cache issue
-        //ifModified:true,
         beforeSend:function(){
             document.title='Loading...';
             $('#content').fadeTo(200,0.33);
         },
         success:function(data,textStatus,jqXHR){
-            //console.debug(jqXHR.status+':'+textStatus);
-            //console.debug(data);
             clearTimeout;
             $('#nav a').each(function(){
                 if($(this).attr('href')==(($.address.state()+decodeURI(e.path)).replace(/\/\//,'/'))){
