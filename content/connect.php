@@ -19,11 +19,11 @@ if($con){
         
         # Return 404 error, if url does not exist
         class validate{
-            public $fn;
+            public $title;
             public $content;
             function status(){
                 header('Status:404 Not Found',true,404);
-                $this->fn='404 Page not found';
+                $this->title='404 Page not found';
                 $this->content='Sorry, this page cannot be found.';
             }
         }
@@ -48,13 +48,13 @@ if($con){
               `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
               `order` mediumint(8) unsigned NOT NULL,
               `url` varchar(70) collate utf8_unicode_ci NOT NULL,
-              `fn` varchar(70) collate utf8_unicode_ci NOT NULL,
+              `title` varchar(70) collate utf8_unicode_ci NOT NULL,
               `content` text collate utf8_unicode_ci,
               `pubdate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
               PRIMARY KEY (`id`)
             ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=7;");
             // Insert data
-            mysql_query("INSERT INTO `".MYSQL_TABLE."` (`order`, `url`, `fn`, `content`) VALUES
+            mysql_query("INSERT INTO `".MYSQL_TABLE."` (`order`, `url`, `title`, `content`) VALUES
             (1, '', 'Home', 'Home content'),
             (2, 'about', 'About', 'About content'),
             (3, 'portfolio', 'Portfolio', 'Portfolio  content'),

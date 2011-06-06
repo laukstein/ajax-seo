@@ -1,5 +1,5 @@
 # [Ajax SEO maximized performance - speed, availability, user-friendly](//lab.laukstein.com/jsonp-ajax-seo/)
-Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Web server requirements: PHP 5.3, MySQL 5, Apache 2.
+Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Web server requirements: PHP 5, MySQL 5, Apache 2.
     
     
     $.address.crawlable(1).init(function(){
@@ -13,10 +13,6 @@ Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Web serv
             url:'api'+(event.path.length!=1 ? '/'+encodeURIComponent(event.path.toLowerCase().substr(1)) : ''),
             dataType:'json',
             cache:true,
-            beforeSend:function(){
-                document.title='Loading...';
-                $('#content').fadeTo(200,0.33);
-            },
             success:function(data,textStatus,jqXHR){
                 clearTimeout;
                 $('#nav a').each(function(){
@@ -26,8 +22,8 @@ Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Web serv
                         $(this).parent('li').removeAttr('class');
                     }
                 });
-                document.title=data.fn+'<?php echo$title?>';
-                $('#content').fadeTo(20,1).html(data.content);
+                document.title=data.title;
+                $('#content').html(data.content);
             },
             error:function(jqXHR,textStatus,errorThrown){
                 clearTimeout;
@@ -35,7 +31,7 @@ Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Web serv
                     $(this).parent('li').removeAttr('class');
                 });
                 document.title='404 Page not found';
-                $('#content').fadeTo(20,1).removeAttr('style').html('<h1>404 Page not found</h1>\r<p>Sorry, this page cannot be found.</p>\r');
+                $('#content').removeAttr('style').html('<h1>404 Page not found</h1>\r<p>Sorry, this page cannot be found.</p>\r');
             }
         });
     });
@@ -43,7 +39,7 @@ Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Web serv
     
 ### Search engine optimization
 
- -  HTML5, `pushState` with crawlable fallback
+ -  HTML5 `pushState` and `replaceState` with crawlable fallback
  -  Rewrite query string, [Ajax crawling](//code.google.com/web/ajaxcrawling/docs/getting-started.html)
  -  Rewrite www to no-www domain
  -  Slash and backslash issues

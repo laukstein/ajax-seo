@@ -13,21 +13,21 @@ $datemod=new datemod();
 $datemod->date(array('.htaccess','index.php','content/.htaccess','content/httpd.conf','content/php.ini','content/connect.php','content/api.php','content/cache.php'),MYSQL_TABLE,$url);
 $datemod->cache($datemod->gmtime);
 
-$fn=(isset($fn)? $fn : null);
+$title=(isset($title)? $title : null);
 $content=(isset($content)? $content : null);
 
-$result=mysql_query("SELECT url,fn,content FROM ".MYSQL_TABLE." WHERE url='$url'");
+$result=mysql_query("SELECT url,title,content FROM ".MYSQL_TABLE." WHERE url='$url'");
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $row[]=array('row'=>array_map('htmlspecialchars',$row));
     $urlid=$row['url'];
-    $fn=$row['fn'];
+    $title=$row['title'];
     $content=$row['content'];
 }
 # Return 404 error, if url does not exist
 $validate=new validate($url);
 if($url==$urlid){}else{
     $validate->status();
-    $fn=$validate->fn;
+    $title=$validate->title;
     $content=$validate->content;
 }
 # Return dir path
@@ -37,13 +37,13 @@ if(str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME))!='/'
     $path=str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME));
 }
 
-$title=' - Ajax SEO';
+$additional_title=' - Ajax SEO';
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset=utf-8>
-<title><?php echo$fn.$title?></title>
+<title><?php echo$title.$additional_title?></title>
 <link rel=stylesheet href=<?php echo$path?>images/style.css>
 <link rel=author href=/humans.txt>
 <meta name=description content="Ajax SEO maximized performance - speed, availability, user-friendly">
@@ -57,17 +57,17 @@ $title=' - Ajax SEO';
 <nav id=nav>
 <ul>
 <?php
-$result=mysql_query('SELECT url,fn FROM '.MYSQL_TABLE.' ORDER BY `order` ASC');
+$result=mysql_query('SELECT url,title FROM '.MYSQL_TABLE.' ORDER BY `order` ASC');
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $row[]=array('row'=>array_map('htmlspecialchars',$row));
-    echo$nav='      <li';if($url==$row['url']){echo ' class=selected';}echo "><a href=\"$path{$row['url']}\" title=\"{$row['fn']}\">{$row['fn']}</a>\r\n";
+    echo$nav='      <li';if($url==$row['url']){echo ' class=selected';}echo "><a href=\"$path{$row['url']}\" title=\"{$row['title']}\">{$row['title']}</a>\r\n";
 }
 ?>
 </ul>
 </nav>
 <article>
 <div id=content>
-<?php echo"<h1>$fn</h1>\r\n<p>$content</p>\r\n"; mysql_close($con);?>
+<?php echo"<h1>$title</h1>\r\n<p>$content</p>\r\n"; mysql_close($con);?>
 </div>
 </article>
 </header>
@@ -110,7 +110,7 @@ $.address.crawlable(1).state('<?php if(strlen(utf8_decode($path))>1){echo substr
                     $(this).parent('li').removeAttr('class');
                 }
             });
-            document.title=data.fn+'<?php echo$title?>';
+            document.title=data.title+'<?php echo$additional_title?>';
             $('#content').fadeTo(20,1).html(data.content);
         },
         error:function(jqXHR,textStatus,errorThrown){
