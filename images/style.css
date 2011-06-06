@@ -1,17 +1,22 @@
 :focus{outline:0;}
-html{overflow:auto;}
-html,body{background-color:#000;}
+html,body{
+    height:100%;
+    overflow:auto;
+}
 body{
     margin:0;
     padding:0;
-    font:14px 'Helvetica Neue',Arial,sans-serif;
+    font:14px Sans-Serif;
     text-align:center;
+    background-color:#323232;
+    *overflow-y:hidden;
 }
 body,a{color:#fff;}
 header,nav,article,footer,header nav a{display:block;}
 #container{
     width:760px;
-    margin:20px auto;
+    margin:0 auto;
+    padding:20px 0;
     text-align:left;
 }
 a:focus{outline:none;}
