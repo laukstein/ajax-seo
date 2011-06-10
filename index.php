@@ -111,7 +111,8 @@ $.address.crawlable(1).state('<?php if(strlen(utf8_decode($path))>1){echo substr
                 }
             });
             document.title=data.title+'<?php echo$additional_title?>';
-            $('#content').fadeTo(20,1).html(data.content);
+            $('#content').fadeTo(20,1).removeAttr('style').html(data.content);
+            if($.browser.msie){$('#content').removeAttr('filter');}
         },
         error:function(jqXHR,textStatus,errorThrown){
             clearTimeout;
@@ -120,6 +121,7 @@ $.address.crawlable(1).state('<?php if(strlen(utf8_decode($path))>1){echo substr
             });
             document.title='404 Page not found';
             $('#content').fadeTo(20,1).removeAttr('style').html('<h1>404 Page not found</h1>\r<p>Sorry, this page cannot be found.</p>\r');
+            if($.browser.msie){$('#content').removeAttr('filter');}
         }
     });
 });
