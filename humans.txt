@@ -69,7 +69,7 @@ $datemod->cache($datemod->gmtime);
 Author:         Binyamin Laukstein
 Contact:        http://laukstein.com/contact
 Last update:    <?php echo$datemod->maxmod;?>
-Doctype:        HTML5 with CSS3
+Doctype:        HTML5 with CSS3 and Microdata
 Tools:          jQuery, JSON, PHP, MySQL, Apache
 Source:         https://github.com/laukstein/ajax-seo
 
