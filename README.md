@@ -1,5 +1,5 @@
 # [Ajax SEO maximized performance - speed, availability, user-friendly](//lab.laukstein.com/jsonp-ajax-seo/)
-Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Server requirements: PHP 5, MySQL 5, Apache 2.
+Ajax SEO is based on latest Web Technology (HTML5, Microdata, JSON, jQuery, CSS3). Server requirements: PHP 5, MySQL 5, Apache 2.
     
     
     $.address.crawlable(1).init(function(){
@@ -39,6 +39,7 @@ Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Server r
     
 ### Search engine optimization
 
+ -  Schema.org Microdata markup
  -  HTML5 `pushState` and `replaceState` with crawlable fallback
  -  Rewrite query string, [Ajax crawling](//code.google.com/web/ajaxcrawling/docs/getting-started.html)
  -  Rewrite www to no-www domain

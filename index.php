@@ -50,7 +50,7 @@ $additional_title=' - Ajax SEO';
 <meta name=keywords content=ajax,seo,crawl,performance,speed,availability,user-friendly>
 <script>/*Add HTML5 tag support for old browsers*/var el=['header','nav','article','footer'];for(var i=el.length-1;i>=0;i--){document.createElement(el[i]);}</script>
 </head>
-<body>
+<body itemscope itemtype="http://schema.org/WebPage">
 <div id=container>
 <header>
 <h2><a id=logo href=<?php echo$path?> title="Ajax SEO maximized performance" rel=home>Ajax SEO</a></h2>
@@ -73,10 +73,10 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
 </header>
 <footer>
 <nav>
-    <ul>
-        <li itemscope itemtype=//data-vocabulary.org/Breadcrumb><a href=//github.com/laukstein/ajax-seo title="GitHub repository for Ajax SEO" itemprop=url><span itemprop=title>Latest Ajax SEO in GitHub</span></a>
-        <li itemscope itemtype=//data-vocabulary.org/Breadcrumb><a href=//github.com/laukstein/ajax-seo/zipball/master title="Download latest Ajax SEO from GitHub" itemprop=url><span itemprop=title>Download</span></a>
-        <li itemscope itemtype=//data-vocabulary.org/Breadcrumb><a href=//github.com/laukstein/ajax-seo/issues title="Report an issue" itemprop=url><span itemprop=title>Report an issue</span></a>
+    <ul itemprop=breadcrumb>
+        <li><a href=//github.com/laukstein/ajax-seo title="GitHub repository for Ajax SEO">Latest Ajax SEO in GitHub</a> >
+        <li><a href=//github.com/laukstein/ajax-seo/zipball/master title="Download latest Ajax SEO from GitHub">Download</a> >
+        <li><a href=//github.com/laukstein/ajax-seo/issues title="Report an issue">Report an issue</a>
     </ul>
 </nav>
 </footer>
