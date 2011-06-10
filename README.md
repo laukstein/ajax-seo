@@ -1,5 +1,5 @@
 # [Ajax SEO maximized performance - speed, availability, user-friendly](//lab.laukstein.com/jsonp-ajax-seo/)
-Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Web server requirements: PHP 5, MySQL 5, Apache 2.
+Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Server requirements: PHP 5, MySQL 5, Apache 2.
     
     
     $.address.crawlable(1).init(function(){
@@ -31,7 +31,7 @@ Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Web serv
                     $(this).parent('li').removeAttr('class');
                 });
                 document.title='404 Page not found';
-                $('#content').removeAttr('style').html('<h1>404 Page not found</h1>\r<p>Sorry, this page cannot be found.</p>\r');
+                $('#content').html('<h1>404 Page not found</h1>\r<p>Sorry, this page cannot be found.</p>\r');
             }
         });
     });
@@ -62,9 +62,9 @@ Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Web serv
 
 ### Known bugs
 
- -  jQuery Address - browsers that does not support `pushState` (IE, FF > 4, Opera): must use `/#!/url` instead of `/#/url` and remove `/#` and `/#!`
+ -  jQuery Address - browsers that does not support `pushState` like IE: must use `/#!/url` instead of `/#/url` and remove `/#` and `/#!`
  -  jQuery Address - browsers that does not support `pushState`: if you'll try to refresh [page](//lab.laukstein.com/ajax-seo/#!/contact), you'll notice *jumping* content from 'Home' to 'Contact' in the title and content
- -  jQuery Address - browsers that supports `pushState` (Crome, Safari, FF4): `/#/url` and `/#!/url` *jumps* from `/` to `/url`
+ -  jQuery Address - browsers that supports `pushState` **(Crome 10, Firefox 4, Safari 5, Opera 11.5)**: `/#/url` and `/#!/url` *jumps* from `/` to `/url`
  -  jQuery Address - browsers that supports `pushState`: `/url` or `/#!/url` request (not click event) - avoid `$.ajax` request and change address url (if needed), add history
  -  jQuery Address - if `$.ajax` requested content is not modificeted - avoid `fadeTo()` and use browser cached data without repeated `$.ajax` request
  -  FF4 bug [635548](//bugzilla.mozilla.org/show_bug.cgi?id=635548): "attempt to run compile-and-go script on a cleared scope"
@@ -79,6 +79,7 @@ Ajax SEO is based on latest Web Technology (HTML5, JSON, jQuery, CSS3). Web serv
  -  PHP settings in content/php.ini or php_flag, php_value's in .htaccess
  -  MySQL settings in content/connect.php
  -  **For MySQL UPDATE use SET `pubdate=NOW()` to affected cache!**
+ -  Add humans.txt and robots.txt in website root
 
 
 > jQuery Address Plugin based on [github.com/asual/jquery-address](//github.com/asual/jquery-address)
