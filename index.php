@@ -7,11 +7,11 @@ if(isset($_GET['api'])){include('content/api.php');exit();}
 if(!ob_start('ob_gzhandler')){ob_start();}
 # Database settings
 include('content/connect.php');
-# HTTP header caching
+/*# HTTP header caching
 include('content/cache.php');
 $datemod=new datemod();
 $datemod->date(array('.htaccess','index.php','content/.htaccess','content/httpd.conf','content/php.ini','content/connect.php','content/api.php','content/cache.php'),MYSQL_TABLE,$url);
-$datemod->cache($datemod->gmtime);
+$datemod->cache($datemod->gmtime);*/
 
 $title=(isset($title)? $title : null);
 $content=(isset($content)? $content : null);
