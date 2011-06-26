@@ -9,9 +9,9 @@
  * Date: ${timestamp}
  */
 (function ($) {
- 
+
     $.address = (function () {
- 
+
         var _trigger = function(name) {
                 $($.address).trigger(
                     $.extend($.Event(name), 
@@ -204,12 +204,12 @@
                             }
                         }, 50);
                     }
- 
+
                     _st(function() {
                         _trigger('init');
                         _update(FALSE);
                     }, 1);
- 
+
                     if (!_supportsState()) {
                         if ((_msie && _version > 7) || (!_msie && ('on' + HASH_CHANGE) in _t)) {
                             if (_t.addEventListener) {
@@ -355,7 +355,7 @@
         } else {
             _track();
         }
- 
+
         return {
             bind: function(type, data, fn) {
                 return _bind.apply(this, _array(arguments));
@@ -616,22 +616,22 @@
                     return true;
                 }
                 if ($(this).is('a')) {
+                    e.preventDefault();
                     var value = fn ? fn.call(this) : 
                         /address:/.test($(this).attr('rel')) ? $(this).attr('rel').split('address:')[1].split(' ')[0] : 
                         $.address.state() !== undefined && $.address.state() != '/' ? 
                                 $(this).attr('href').replace(new RegExp('^(.*' + $.address.state() + '|\\.)'), '') : 
                                 $(this).attr('href').replace(/^(#\!?|\.)/, '');
                     $.address.value(value);
-                    e.preventDefault();
                 }
             };
             $(this).live('click', f).live('submit', function(e) {
                 if ($(this).is('form')) {
+                    e.preventDefault();
                     var action = $(this).attr('action'),
                         value = fn ? fn.call(this) : (action.indexOf('?') != -1 ? action.replace(/&$/, '') : action + '?') + 
                             $(this).serialize();
                     $.address.value(value);
-                    e.preventDefault();
                 }
             }).attr('address', true);
         }
