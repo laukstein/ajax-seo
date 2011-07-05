@@ -16,10 +16,11 @@ $datemod->cache($datemod->gmtime);*/
 $title=(isset($title)? $title : null);
 $content=(isset($content)? $content : null);
 
-$result=mysql_query("SELECT url,title,content FROM ".MYSQL_TABLE." WHERE url='$url'");
+$result=mysql_query("SELECT url,name,title,content FROM ".MYSQL_TABLE." WHERE url='$url'");
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $row[]=array('row'=>array_map('htmlspecialchars',$row));
     $urlid=$row['url'];
+    $name=$row['name'];
     $title=$row['title'];
     $content=$row['content'];
 }
@@ -43,7 +44,7 @@ $additional_title=' - Ajax SEO';
 <html>
 <head>
 <meta charset=utf-8>
-<title><?php echo$title.$additional_title?></title>
+<title><?php echo$name.$additional_title?></title>
 <link rel=stylesheet href=<?php echo$path?>images/style.css>
 <link rel=author href=/humans.txt>
 <meta name=description content="Ajax SEO maximized performance - speed, availability, user-friendly">
@@ -57,17 +58,25 @@ $additional_title=' - Ajax SEO';
 <nav id=nav>
 <ul>
 <?php
-$result=mysql_query('SELECT url,title FROM '.MYSQL_TABLE.' ORDER BY `order` ASC');
+$result=mysql_query('SELECT url,name,title FROM '.MYSQL_TABLE.' ORDER BY `order` ASC');
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $row[]=array('row'=>array_map('htmlspecialchars',$row));
-    echo$nav='      <li';if($url==$row['url']){echo ' class=selected';}echo "><a href=\"$path{$row['url']}\" title=\"{$row['title']}\">{$row['title']}</a>\r\n";
+    echo$nav='      <li';
+    if($url==$row['url']){echo' class=selected';}
+    echo"><a href=\"$path{$row['url']}\"";
+    if(strlen($row['title'])>0){if($row['name']!==$row['title']){echo" title=\"{$row['title']}\"";}}
+    echo">{$row['name']}</a>\r\n";
 }
 ?>
 </ul>
 </nav>
 <article>
 <div id=content>
-<?php echo"<h1>$title</h1>\r\n<p>$content</p>\r\n"; mysql_close($con);?>
+<?php
+if(strlen($title)>0){if($name!==$title){$name=$title;}}
+echo"<h1>$name</h1>\r\n<p>$content</p>\r\n";
+mysql_close($con);
+?>
 </div>
 </article>
 </header>
@@ -81,8 +90,8 @@ while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
 </nav>
 </footer>
 </div>
-<script src=//ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js></script>
-<script>window.jQuery || document.write('<script src=<?php echo$path?>images/jquery-1.6.1.min.js>\x3C/script>')</script>
+<script src=//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js></script>
+<script>window.jQuery || document.write('<script src=<?php echo$path?>images/jquery-1.6.2.min.js>\x3C/script>')</script>
 <script src=<?php echo$path?>images/jquery.address.js></script>
 <script>
 $.address.crawlable(1).state('<?php if(strlen(utf8_decode($path))>1){echo substr($path,0,-1);}else{echo$path;}?>').init(function(){

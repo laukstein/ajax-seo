@@ -8,12 +8,14 @@ $datemod=new datemod();
 $datemod->date(array('.htaccess','index.php','content/.htaccess','content/httpd.conf','content/php.ini','content/connect.php','content/api.php','content/cache.php'),MYSQL_TABLE,$url);
 $datemod->cache($datemod->gmtime);
 
-$result=mysql_query("SELECT url,title,content FROM ".MYSQL_TABLE." WHERE url='$url'");
+$result=mysql_query("SELECT url,name,title,content FROM ".MYSQL_TABLE." WHERE url='$url'");
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $row[]=array('row'=>array_map('htmlspecialchars',$row));
     $urlid=strip_tags($row['url']);
+    $name=strip_tags($row['name']);
     $title=strip_tags($row['title']);
-    $array=array('url'=>$urlid,'title'=>$title,'content'=>"<h1>$title</h1>\r\n<p>{$row['content']}</p>\r\n");
+    if(strlen($title)>0){if($name!==$title){$fn=$title;}else{$fn=$name;}}else{$fn=$name;}
+    $array=array('url'=>$urlid,'title'=>$name,'content'=>"<h1>$fn</h1>\r\n<p>{$row['content']}</p>\r\n");
     $json=str_replace('\\/','/',json_encode($array));
     echo(isset($_GET['callback']) ? $_GET['callback'].'('.$json.')' : $json);
 }
