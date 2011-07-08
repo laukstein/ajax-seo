@@ -32,8 +32,8 @@ Disallow: /*.js$
 Sitemap: http://<?php echo$_SERVER['SERVER_NAME'].$path?>sitemap.xml
 
 # Disable Chinese Baidu crawl
-User-agent: Baiduspider
-Disallow: /
+# User-agent: Baiduspider
+# Disallow: /
 
 # Removing Documents From the Wayback Machine archive.org
 User-agent: ia_archiver
