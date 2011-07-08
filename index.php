@@ -13,6 +13,7 @@ $datemod=new datemod();
 $datemod->date(array('.htaccess','index.php','content/.htaccess','content/httpd.conf','content/php.ini','content/connect.php','content/api.php','content/cache.php'),MYSQL_TABLE,$url);
 $datemod->cache($datemod->gmtime);*/
 
+$name=(isset($name)? $name : null);
 $title=(isset($title)? $title : null);
 $content=(isset($content)? $content : null);
 
