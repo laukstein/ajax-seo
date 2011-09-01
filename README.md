@@ -63,14 +63,12 @@ Ajax SEO is based on latest Web Technology (HTML5, Microdata, JSON, jQuery, CSS3
 
 ### Known bugs
 
- -  jQuery Address - browsers that does not support `pushState` like IE: must use `/#!/url` instead of `/#/url` and remove `/#` and `/#!`
+ -  jQuery Address - browsers that does not support `pushState` like IE must rewrite `/#/url` to `/#!/url`
  -  jQuery Address - browsers that does not support `pushState`: if you'll try to refresh [page](//lab.laukstein.com/ajax-seo/#!/contact), you'll notice *jumping* content from 'Home' to 'Contact' in the title and content
- -  jQuery Address - browsers that supports `pushState` **(Crome 10, Firefox 4, Safari 5, Opera 11.5)**: `/#/url` and `/#!/url` *jumps* from `/` to `/url`
- -  jQuery Address - browsers that supports `pushState`: `/url` or `/#!/url` request (not click event) - avoid `$.ajax` request and change address url (if needed), add history
+ -  jQuery Address - browsers that supports `pushState` **(Chrome 10, Firefox 4, Safari 5, Opera 11.5)**: `/#/url` and `/#!/url` *jumps* from `/` to `/url`
+ -  jQuery Address - browsers that supports `pushState`: avoid `$.ajax` request from the first open url
  -  jQuery Address - if `$.ajax` requested content is not modificeted - avoid `fadeTo()` and use browser cached data without repeated `$.ajax` request
- -  FF4 bug [635548](//bugzilla.mozilla.org/show_bug.cgi?id=635548): "attempt to run compile-and-go script on a cleared scope"
- -  W3C - [Not validated CSS3 vendor-specific prefixes, like -webkit-, -moz-, -o- etc.](//www.w3.org/Bugs/Public/show_bug.cgi?id=11989)
- -  W3C - [border-radius throws Parse Error [empty string]](//www.w3.org/Bugs/Public/show_bug.cgi?id=11975)
+ -  W3C - [CSS3 standards does not accept vendor-specific prefixes, like -webkit-, -moz-, -o-, -khtml-, -ms-](//www.w3.org/Bugs/Public/show_bug.cgi?id=11989)
  -  Apache and IE - domain.com//контакты rewrited to urlencode domain.com/%D0%BA%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D1%8B
 
 
