@@ -12,17 +12,12 @@ body{
     *overflow-y:hidden;
 }
 body,a{color:#fff;}
-header,nav,article,footer,header nav a{display:block;}
+header,nav,article,footer{display:block;}
 a:focus{outline:none;}
-a,#logo:hover,header a:hover,header li.selected a{text-decoration:none;}
+a,#logo:hover,header a:hover,a.selected{text-decoration:none;}
 a:hover,header nav a{text-decoration:underline;}
-h1,h2,ul{margin:0;}
+h1,h2{margin:0;}
 h1{font-size:21px;}
-ul{padding:0;}
-ul li{
-    float:left;
-    list-style:none;
-}
 #container{
     width:760px;
     margin:0 auto;
@@ -38,15 +33,21 @@ ul li{
 }
 #logo,h1{margin-bottom:10px;}
 #logo,footer{padding-left:4px;}
-header nav ul{
-    height:20px;
-    width:100%;
+header nav{height:20px;}
+header nav,#content{margin-bottom:7px;}
+header nav a{
+    *display:inline-block;
+    margin:0 2px;
+    padding:2px 5px;
+    border-radius:2px;
+    -ms-transition:.40s ease-in-out;
+    -moz-transition:.40s ease-in-out;
+    -o-transition:.40s ease-in-out;
+    -webkit-transition:.40s ease-in-out;
+    transition:.40s ease-in-out;
 }
-header nav ul,#content{margin-bottom:7px;}
-header nav li{margin-right:10px;}
-header nav a{padding:2px 4px;}
 header nav a:hover{background:#5db0e6;}
-header li.selected a,header li.selected a:hover{background-color:#176092;}
+a.selected,a.selected:hover{background-color:#176092;}
 article{
     height:300px;
     padding:10px;
@@ -55,6 +56,9 @@ article{
     border:1px solid #f3f3f3;
     border-radius:5px;
 }
-#content{background-color:#fff;}
-footer nav ul{margin-top:4px;}
-footer nav li{padding-right:4px;}
+#content{
+    display:inline-block;
+    background-color:#fff;
+}
+footer nav{margin-top:4px;}
+footer a{padding:0 2px;}
