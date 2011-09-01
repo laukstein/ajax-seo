@@ -90,15 +90,17 @@ mysql_close($con);
 </nav>
 </footer>
 </div>
-<script src=//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js></script>
-<script>window.jQuery || document.write('<script src=<?php echo$path?>images/jquery-1.6.2.min.js>\x3C/script>')</script>
+<script src=//ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js></script>
+<script>window.jQuery || document.write('<script src=<?php echo$path?>images/jquery-1.6.3.min.js>\x3C/script>')</script>
 <script src=<?php echo$path?>images/jquery.address.js></script>
 <script>
+var nav=$('#nav a');
 $.address.crawlable(1).state('<?php if(strlen(utf8_decode($path))>1){echo substr($path,0,-1);}else{echo$path;}?>').init(function(){
-    $('#nav a').address();
+    nav.address();
 }).change(function(e){
+    var content=$('#content');
     var timer=window.setTimeout(function(){ // Implement for timeout
-        $('#content').html('Loading seems to be taking a while.');
+        content.html('Loading seems to be taking a while.');
     },3800),clearTimeout=window.clearTimeout(timer);
     $.ajax({
         type:"GET",
@@ -108,11 +110,11 @@ $.address.crawlable(1).state('<?php if(strlen(utf8_decode($path))>1){echo substr
         //jsonpCallback:'i',    // JSONP cache issue
         beforeSend:function(){
             document.title='Loading...';
-            $('#content').fadeTo(200,0.33);
+            content.fadeTo(200,0.33);
         },
         success:function(data,textStatus,jqXHR){
             clearTimeout;
-            $('#nav a').each(function(){
+            nav.each(function(){
                 if($(this).attr('href')==(($.address.state()+decodeURI(e.path)).replace(/\/\//,'/'))){
                     $(this).parent('li').addClass('selected').focus();
                 }else{
@@ -120,17 +122,17 @@ $.address.crawlable(1).state('<?php if(strlen(utf8_decode($path))>1){echo substr
                 }
             });
             document.title=data.title+'<?php echo$additional_title?>';
-            $('#content').fadeTo(20,1).removeAttr('style').html(data.content);
-            if($.browser.msie){$('#content').removeAttr('filter');}
+            content.fadeTo(20,1).removeAttr('style').html(data.content);
+            if($.browser.msie){content.removeAttr('filter');}
         },
         error:function(jqXHR,textStatus,errorThrown){
             clearTimeout;
-            $('li a').each(function(){
+            nav.each(function(){
                 $(this).parent('li').removeAttr('class');
             });
             document.title='404 Page not found';
-            $('#content').fadeTo(20,1).removeAttr('style').html('<h1>404 Page not found</h1>\r<p>Sorry, this page cannot be found.</p>\r');
-            if($.browser.msie){$('#content').removeAttr('filter');}
+            content.fadeTo(20,1).removeAttr('style').html('<h1>404 Page not found</h1>\r<p>Sorry, this page cannot be found.</p>\r');
+            if($.browser.msie){content.removeAttr('filter');}
         }
     });
 });
