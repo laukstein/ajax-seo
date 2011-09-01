@@ -55,38 +55,34 @@ $additional_title=' - Ajax SEO';
 <div id=container>
 <header>
 <h2><a id=logo href=<?php echo$path?> title="Ajax SEO maximized performance" rel=home>Ajax SEO</a></h2>
-<nav id=nav>
-<ul>
+<nav>
 <?php
 $result=mysql_query('SELECT url,name,title FROM '.MYSQL_TABLE.' ORDER BY `order` ASC');
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
     $row[]=array('row'=>array_map('htmlspecialchars',$row));
-    echo$nav='      <li';
+    echo'<a';
     if($url==$row['url']){echo' class=selected';}
-    echo"><a href=\"$path{$row['url']}\"";
+    echo" href=\"$path{$row['url']}\"";
     if(strlen($row['title'])>0){if($row['name']!==$row['title']){echo" title=\"{$row['title']}\"";}}
     echo">{$row['name']}</a>\r\n";
 }
 ?>
-</ul>
 </nav>
 <article>
-<div id=content>
+<span id=content>
 <?php
 if(strlen($title)>0){if($name!==$title){$name=$title;}}
 echo"<h1>$name</h1>\r\n<p>$content</p>\r\n";
 mysql_close($con);
 ?>
-</div>
+</span>
 </article>
 </header>
 <footer>
-<nav>
-    <ul itemprop=breadcrumb>
-        <li><a href=//github.com/laukstein/ajax-seo title="GitHub repository for Ajax SEO">Latest Ajax SEO in GitHub</a> >
-        <li><a href=//github.com/laukstein/ajax-seo/zipball/master title="Download latest Ajax SEO from GitHub">Download</a> >
-        <li><a href=//github.com/laukstein/ajax-seo/issues title="Report an issue">Report an issue</a>
-    </ul>
+<nav itemprop=breadcrumb>
+    <a href=//github.com/laukstein/ajax-seo title="GitHub repository for Ajax SEO">Latest Ajax SEO in GitHub</a> >
+    <a href=//github.com/laukstein/ajax-seo/zipball/master title="Download latest Ajax SEO from GitHub">Download</a> >
+    <a href=//github.com/laukstein/ajax-seo/issues>Report an issue</a>
 </nav>
 </footer>
 </div>
@@ -116,9 +112,9 @@ $.address.crawlable(1).state('<?php if(strlen(utf8_decode($path))>1){echo substr
             clearTimeout;
             nav.each(function(){
                 if($(this).attr('href')==(($.address.state()+decodeURI(e.path)).replace(/\/\//,'/'))){
-                    $(this).parent('li').addClass('selected').focus();
+                    $(this).addClass('selected').focus();
                 }else{
-                    $(this).parent('li').removeAttr('class');
+                    $(this).removeAttr('class');
                 }
             });
             document.title=data.title+'<?php echo$additional_title?>';
@@ -128,7 +124,7 @@ $.address.crawlable(1).state('<?php if(strlen(utf8_decode($path))>1){echo substr
         error:function(jqXHR,textStatus,errorThrown){
             clearTimeout;
             nav.each(function(){
-                $(this).parent('li').removeAttr('class');
+                $(this).removeAttr('class');
             });
             document.title='404 Page not found';
             content.fadeTo(20,1).removeAttr('style').html('<h1>404 Page not found</h1>\r<p>Sorry, this page cannot be found.</p>\r');
