@@ -45,23 +45,26 @@ if($con){
         if(!$result){
             // Create table
             mysql_query("CREATE TABLE IF NOT EXISTS `".MYSQL_TABLE."` (
-              `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-              `order` mediumint(8) unsigned NOT NULL,
-              `url` varchar(70) collate utf8_unicode_ci NOT NULL,
-              `name` text collate utf8_unicode_ci NOT NULL,
-              `title` varchar(70) collate utf8_unicode_ci,
-              `content` text collate utf8_unicode_ci,
-              `pubdate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-              PRIMARY KEY (`id`)
-            ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=7;");
+              `id` mediumint(8) NOT NULL auto_increment,
+              `order` mediumint(8) NOT NULL,
+              `url` varchar(70) NOT NULL,
+              `title` varchar(70) NOT NULL,
+              `name` text NOT NULL,
+              `content` text NOT NULL,
+              `pubdate` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+              `updated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+              PRIMARY KEY  (`id`,`url`),
+              UNIQUE KEY `order` (`order`)
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
             // Insert data
-            mysql_query("INSERT INTO `".MYSQL_TABLE."` (`order`,`url`,`name`,`title`,`content`) VALUES
-            (1,'','Home','','Home content'),
-            (2,'about','About','','About content'),
-            (3,'portfolio','Portfolio','Portfolio','Portfolio content'),
-            (4,'contact','Contact','Contact us','Contact content'),
-            (5,'контакты','Контакты','','Содержание контактом'),
-            (6,'צור-קשר','צור קשר','','תוכן לצור קשר');");
+            $now=date('Y-m-d H:i:s');
+            mysql_query("INSERT INTO `".MYSQL_TABLE."` (`order`,url,name,title,content,pubdate) VALUES
+              (1,'','Home','','Home content','$now'),
+              (2,'about','About','','About content','$now'),
+              (3,'portfolio','Portfolio','Portfolio','Portfolio content','$now'),
+              (4,'contact','Contact','Contact us','Contact content','$now'),
+              (5,'контакты','Контакты','','Содержание контактом','$now'),
+              (6,'צור-קשר','צור קשר','','תוכן לצור קשר','$now');");
             
             if(is_writable($f)){chmod($f,0600);}
             header('Content-Type:text/html');
