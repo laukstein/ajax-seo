@@ -2,36 +2,45 @@
 Ajax SEO is based on latest Web Technology (HTML5, Microdata, JSON, jQuery, CSS3). Server requirements: PHP 5, MySQL 5, Apache 2.
     
     
-    $.address.crawlable(1).init(function(){
-        $('#nav a').address();
-    }).change(function(event){
-        var timer=window.setTimeout(function(){
-            $('#content').html('Loading seems to be taking a while.');
+    var nav=$('#nav a');
+    $.address.crawlable(1).state('<?php if(strlen(utf8_decode($path))>1){echo substr($path,0,-1);}else{echo$path;}?>').init(function(){
+        nav.address();
+    }).change(function(e){
+        var content=$('#content');
+        var timer=window.setTimeout(function(){ // Implement for timeout
+            content.html('Loading seems to be taking a while.');
         },3800),clearTimeout=window.clearTimeout(timer);
         $.ajax({
             type:"GET",
-            url:'api'+(event.path.length!=1 ? '/'+encodeURIComponent(event.path.toLowerCase().substr(1)) : ''),
-            dataType:'json',
+            url:/*'http://lab.laukstein.com/ajax-seo/'+*/'api'+(e.path.length!=1 ? '/'+encodeURIComponent(e.path.toLowerCase().substr(1)) : ''),
+            dataType:'json',        // jsonp
             cache:true,
+            //jsonpCallback:'i',    // JSONP cache issue
+            beforeSend:function(){
+                document.title='Loading...';
+                content.fadeTo(200,0.33);
+            },
             success:function(data,textStatus,jqXHR){
                 clearTimeout;
-                $('#nav a').each(function(){
-                    if($(this).attr('href')==(($.address.state()+decodeURI(event.path)).replace(/\/\//,'/'))){
-                        $(this).parent('li').addClass('selected').focus();
+                nav.each(function(){
+                    if($(this).attr('href')==(($.address.state()+decodeURI(e.path)).replace(/\/\//,'/'))){
+                        $(this).addClass('selected').focus();
                     }else{
-                        $(this).parent('li').removeAttr('class');
+                        $(this).removeAttr('class');
                     }
                 });
-                document.title=data.title;
-                $('#content').html(data.content);
+                document.title=data.title+'<?php echo$additional_title?>';
+                content.fadeTo(20,1).removeAttr('style').html(data.content);
+                if($.browser.msie){content.removeAttr('filter');}
             },
             error:function(jqXHR,textStatus,errorThrown){
                 clearTimeout;
-                $('li a').each(function(){
-                    $(this).parent('li').removeAttr('class');
+                nav.each(function(){
+                    $(this).removeAttr('class');
                 });
                 document.title='404 Page not found';
-                $('#content').html('<h1>404 Page not found</h1>\r<p>Sorry, this page cannot be found.</p>\r');
+                content.fadeTo(20,1).removeAttr('style').html('<h1>404 Page not found</h1>\r<p>Sorry, this page cannot be found.</p>\r');
+                if($.browser.msie){content.removeAttr('filter');}
             }
         });
     });
