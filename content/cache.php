@@ -14,6 +14,7 @@ class datemod{
         }
         $pubdate=(isset($pubdate)? $pubdate : null);
         $maxmod=max($fmod,$pubdate);
+        date_default_timezone_set('Etc/GMT');
         $this->gmtime=date('D, d M Y H:i:s T',strtotime($maxmod));
     }
     function cache($gmtime){
