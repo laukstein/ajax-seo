@@ -2,7 +2,7 @@
 Ajax SEO is based on latest Web Technology (HTML5, Microdata, JSON, jQuery, CSS3). Server requirements: PHP 5, MySQL 5, Apache 2.
     
     
-    var nav=$('#nav a');
+    var nav=$('header nav a');
     $.address.crawlable(1).state('<?php if(strlen(utf8_decode($path))>1){echo substr($path,0,-1);}else{echo$path;}?>').init(function(){
         nav.address();
     }).change(function(e){
