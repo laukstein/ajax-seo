@@ -16,6 +16,7 @@ $datemod->cache($datemod->gmtime);*/
 $name=(isset($name)? $name : null);
 $title=(isset($title)? $title : null);
 $content=(isset($content)? $content : null);
+$note=(isset($note)? $note : null);
 
 $result=mysql_query("SELECT url,name,title,content FROM ".MYSQL_TABLE." WHERE url='$url'");
 while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
@@ -47,14 +48,19 @@ $additional_title=' - Ajax SEO';
 <meta charset=utf-8>
 <title><?php echo$name.$additional_title?></title>
 <link rel=stylesheet href=<?php echo$path?>images/style.css>
-<meta name=description content="Ajax SEO maximized performance - speed, availability, user-friendly">
+<meta name=description content="Ajax SEO maximized performance - speed, accessibility, user-friendly">
 <meta name=keywords content=ajax,seo,crawl,performance,speed,availability,user-friendly>
 <script>/*Add HTML5 tag support for old browsers*/var el=['header','nav','article','footer'];for(var i=el.length-1;i>=0;i--){document.createElement(el[i]);}</script>
 </head>
 <body itemscope itemtype="http://schema.org/WebPage">
+<?php
+if($note==null){}else{
+    echo"<div id=note>$note</div>";
+}
+?>
 <div id=container>
 <header>
-<h2><a id=logo href=<?php echo$path?> title="Ajax SEO maximized performance" rel=home>Ajax SEO</a></h2>
+<a id=logo href=<?php echo$path?> title="Ajax SEO maximized performance" rel=home>Ajax SEO</a>
 <nav>
 <?php
 $result=mysql_query('SELECT url,name,title FROM '.MYSQL_TABLE.' ORDER BY `order` ASC');
@@ -90,7 +96,7 @@ mysql_close($con);
 <script>window.jQuery || document.write('<script src=<?php echo$path?>images/jquery-1.6.3.min.js>\x3C/script>')</script>
 <script src=<?php echo$path?>images/jquery.address.js></script>
 <script>
-var nav=$('#nav a');
+var nav=$('header nav a');
 $.address.crawlable(1).state('<?php if(strlen(utf8_decode($path))>1){echo substr($path,0,-1);}else{echo$path;}?>').init(function(){
     nav.address();
 }).change(function(e){
@@ -99,7 +105,7 @@ $.address.crawlable(1).state('<?php if(strlen(utf8_decode($path))>1){echo substr
         content.html('Loading seems to be taking a while.');
     },3800),clearTimeout=window.clearTimeout(timer);
     $.ajax({
-        type:"GET",
+        type:'GET',
         url:/*'http://lab.laukstein.com/ajax-seo/'+*/'api'+(e.path.length!=1 ? '/'+encodeURIComponent(e.path.toLowerCase().substr(1)) : ''),
         dataType:'json',        // jsonp
         cache:true,

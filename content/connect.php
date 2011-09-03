@@ -69,7 +69,7 @@ if($con){
             if(is_writable($f)){chmod($f,0600);}
             header('Content-Type:text/html');
             header('X-Robots-Tag: index, noarchive, nosnippet',true);
-            exit('Installation has completed successfully! Try to refresh your browser.');
+            $note='Congratulations, installation has completed successfully.';
         }
     }
 }else{
