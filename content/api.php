@@ -1,7 +1,5 @@
 <?php
 header('Content-Type:application/json; charset=utf-8');
-# Database settings
-include('connect.php');
 # HTTP header caching
 include('content/cache.php');
 $datemod=new datemod();
