@@ -22,16 +22,14 @@ if(str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME))!='/'
     $path=str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME));
 }
 ?>
-# Every bot that might possibly read and respect this file
 User-agent: *
-Allow: /
 Disallow: /*?
 Disallow: /*.json$
 Disallow: /*.css$
 Disallow: /*.js$
 Sitemap: http://<?php echo$_SERVER['SERVER_NAME'].$path?>sitemap.xml
 
-# Disable Chinese Baidu crawl
+# Disable Chinese Baidu crawler
 # User-agent: Baiduspider
 # Disallow: /
 
@@ -39,6 +37,6 @@ Sitemap: http://<?php echo$_SERVER['SERVER_NAME'].$path?>sitemap.xml
 User-agent: ia_archiver
 Disallow: /
 
-# Disable *.domaintools.com crawl
+# Disable *.domaintools.com crawler
 User-agent: SurveyBot
 Disallow: /
