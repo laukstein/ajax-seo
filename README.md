@@ -11,7 +11,7 @@ Ajax SEO is based on latest Web Technology (HTML5, Microdata, JSON, jQuery, CSS3
             content.html('Loading seems to be taking a while.');
         },3800),clearTimeout=window.clearTimeout(timer);
         $.ajax({
-            type:"GET",
+            type:'GET',
             url:/*'http://lab.laukstein.com/ajax-seo/'+*/'api'+(e.path.length!=1 ? '/'+encodeURIComponent(e.path.toLowerCase().substr(1)) : ''),
             dataType:'json',        // jsonp
             cache:true,
@@ -49,35 +49,36 @@ Ajax SEO is based on latest Web Technology (HTML5, Microdata, JSON, jQuery, CSS3
 ### Search engine optimization
 
  -  Schema.org Microdata markup
- -  HTML5 `pushState` and `replaceState` with crawlable fallback
- -  Rewrite query string, [Ajax crawling](//code.google.com/web/ajaxcrawling/docs/getting-started.html)
+ -  HTML5 `pushState` and `replaceState` **(Chrome 10, Firefox 4, Safari 5, Opera 11.5)** with crawlable fallback
+ -  Rewrite query string, [Making AJAX Applications Crawlable](//code.google.com/web/ajaxcrawling/docs/getting-started.html)
  -  Rewrite www to no-www domain
  -  Slash and backslash issues
  -  Rewrite uppercase letter URL to lowercase
  -  Rewrite space and underscore with dash
  -  Remove .php extension
+ -  Remove dot
  -  Remove comma
  -  404 error page
 
 
 ### Speed Performance
 
- -  `jQuery $.ajax() timeout` vs `window.setTimeout()` [jsperf](//jsperf.com/jquery-ajax-jsonp-timeout-performormance)
- -  `Ajax JSONP` vs `Ajax JSON` [jsperf](//jsperf.com/ajax-jsonp-vs-ajax-json)
- -  `$.ajax() json` vs `$.getJSON()` [jsperf](//jsperf.com/getjson-vs-ajax-json)
- -  `document.title=data.title` vs `$('title').html(data.title)` [jsperf](//jsperf.com/rename-title)
- -  `encodeURIComponent()` vs `encodeURI()` [jsperf](//jsperf.com/encodeuri-vs-encodeuricomponent)
- -  `decodeURI()` vs `decodeURIComponent()` [jsperf](//jsperf.com/decodeuri-vs-decodeuricomponent)
+ -  [jsperf](http://jsperf.com/jquery-ajax-jsonp-timeout-performormance) `jQuery $.ajax() timeout` vs `window.setTimeout()`
+ -  [jsperf](http://jsperf.com/ajax-jsonp-vs-ajax-json) `Ajax JSONP` vs `Ajax JSON`
+ -  [jsperf](http://jsperf.com/getjson-vs-ajax-json) `$.ajax() json` vs `$.getJSON()`
+ -  [jsperf](http://jsperf.com/rename-title) `document.title=data.title` vs `$('title').html(data.title)`
+ -  [jsperf](http://jsperf.com/encodeuri-vs-encodeuricomponent) `encodeURIComponent()` vs `encodeURI()`
+ -  [jsperf](http://jsperf.com/decodeuri-vs-decodeuricomponent) `decodeURI()` vs `decodeURIComponent()`
 
 
 ### Known bugs
 
  -  jQuery Address - browsers that does not support `pushState` like IE must rewrite `/#/url` to `/#!/url`
- -  jQuery Address - browsers that does not support `pushState`: if you'll try to refresh [page](//lab.laukstein.com/ajax-seo/#!/contact), you'll notice *jumping* content from 'Home' to 'Contact' in the title and content
- -  jQuery Address - browsers that supports `pushState` **(Chrome 10, Firefox 4, Safari 5, Opera 11.5)**: `/#/url` and `/#!/url` *jumps* from `/` to `/url`
- -  jQuery Address - browsers that supports `pushState`: avoid `$.ajax` request from the first open url
- -  jQuery Address - if `$.ajax` requested content is not modificeted - avoid `fadeTo()` and use browser cached data without repeated `$.ajax` request
- -  W3C - [CSS3 standards does not accept vendor-specific prefixes, like -webkit-, -moz-, -o-, -khtml-, -ms-](//www.w3.org/Bugs/Public/show_bug.cgi?id=11989)
+ -  jQuery Address - browsers that does not support `pushState`: `/#!/url` *jumps* from `/` to `/#!/url` and has two XHR requests
+ -  jQuery Address - browsers that supports `pushState`: `/#/url` and `/#!/url` *jumps* from `/` to `/url` and has two XHR requests
+ -  jQuery Address - avoid `$.ajax()` for the first open url
+ -  jQuery Address - avoid `$.ajax()` when content is in cache and is not modificeted
+ -  W3C - CSS3 standards have [no vendor (-webkit-, -moz-, -o-, -khtml-, -ms-) prefix expectation](//www.w3.org/Bugs/Public/show_bug.cgi?id=11989)
  -  Apache and IE - domain.com//контакты rewrited to urlencode domain.com/%D0%BA%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D1%8B
 
 
