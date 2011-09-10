@@ -12,7 +12,7 @@ class datemod{
             $row[]=array('row'=>array_map('htmlspecialchars',$row));
             $pubdate=$row['pubdate'];
         }
-        $pubdate=(isset($pubdate)? $pubdate : null);
+        $pubdate=(isset($pubdate)? $pubdate: null);
         $maxmod=max($fmod,$pubdate);
         date_default_timezone_set('Etc/GMT');
         $this->gmtime=date('D, d M Y H:i:s T',strtotime($maxmod));
@@ -21,7 +21,7 @@ class datemod{
         if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])||isset($_SERVER['HTTP_IF_NONE_MATCH'])){
             if($_SERVER['HTTP_IF_MODIFIED_SINCE']==$gmtime){
                 header('Status:304 Not Modified',true,304);
-                exit();
+                exit;
             }
         }
         header("Last-Modified:$gmtime");

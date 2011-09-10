@@ -25,7 +25,7 @@ class datemod{
                             ++$level;
                         }
                     }else{
-                        $d=(isset($dir)? $dir.'/' : null);
+                        $d=(isset($dir)? $dir.'/': null);
                         if(isset($f)&&$level>0){
                             $mod=date('Y/m/d H:i:s',filemtime("$d$f/$file"));
                         }else{
