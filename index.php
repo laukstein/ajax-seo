@@ -108,8 +108,8 @@ if(MYSQL_CON){
 </footer>
 </div>
 <?php if(MYSQL_CON){ ?>
-<script src=//ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js></script>
-<script>window.jQuery || document.write('<script src=<?php echo$path?>images/jquery-1.6.3.min.js>\x3C/script>')</script>
+<script src=//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js></script>
+<script>window.jQuery || document.write('<script src=<?php echo$path?>images/jquery-1.6.4.min.js>\x3C/script>')</script>
 <script src=<?php echo$path?>images/jquery.address.js></script>
 <script>
 var nav=$('header nav a');
