@@ -116,10 +116,10 @@ var nav=$('header nav a');
 $.address.crawlable(1).state('<?php if(strlen(utf8_decode($path))>1){echo substr($path,0,-1);}else{echo$path;}?>').init(function(){
     nav.address();
 }).change(function(e){
-    var content=$('#content');
-    var timer=window.setTimeout(function(){ // Implement for timeout
-        content.html('Loading seems to be taking a while.');
-    },3800),clearTimeout=window.clearTimeout(timer);
+    var content=$('#content'),
+        timer=window.setTimeout(function(){ // Implement for timeout
+            content.html('Loading seems to be taking a while.');
+        },3800),clearTimeout=window.clearTimeout(timer);
     $.ajax({
         type:'GET',
         url:/*'http://lab.laukstein.com/ajax-seo/'+*/'api'+(e.path.length!=1 ? '/'+encodeURIComponent(e.path.toLowerCase().substr(1)) : ''),
