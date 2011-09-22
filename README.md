@@ -6,16 +6,15 @@ Ajax SEO is based on latest Web Technology (HTML5, Microdata, JSON, jQuery, CSS3
     $.address.crawlable(1).state('<?php if(strlen(utf8_decode($path))>1){echo substr($path,0,-1);}else{echo$path;}?>').init(function(){
         nav.address();
     }).change(function(e){
-        var content=$('#content');
-        var timer=window.setTimeout(function(){ // Implement for timeout
-            content.html('Loading seems to be taking a while.');
-        },3800),clearTimeout=window.clearTimeout(timer);
+        var content=$('#content'),
+            timer=window.setTimeout(function(){ // Implement for timeout
+                content.html('Loading seems to be taking a while.');
+            },3800),clearTimeout=window.clearTimeout(timer);
         $.ajax({
             type:'GET',
-            url:/*'http://lab.laukstein.com/ajax-seo/'+*/'api'+(e.path.length!=1 ? '/'+encodeURIComponent(e.path.toLowerCase().substr(1)) : ''),
-            dataType:'json',        // jsonp
+            url:'api'+(e.path.length!=1 ? '/'+encodeURIComponent(e.path.toLowerCase().substr(1)) : ''),
+            dataType:'json',
             cache:true,
-            //jsonpCallback:'i',    // JSONP cache issue
             beforeSend:function(){
                 document.title='Loading...';
                 content.fadeTo(200,0.33);
@@ -74,11 +73,11 @@ Ajax SEO is based on latest Web Technology (HTML5, Microdata, JSON, jQuery, CSS3
 ### Known bugs
 
  -  jQuery Address - browsers that does not support `pushState` like IE must rewrite `/#/url` to `/#!/url`
- -  jQuery Address - browsers that does not support `pushState`: `/#!/url` *jumps* from `/` to `/#!/url` and has two XHR requests
- -  jQuery Address - browsers that supports `pushState`: `/#/url` and `/#!/url` *jumps* from `/` to `/url` and has two XHR requests
+ -  jQuery Address - FF6 : `/#/url`, `/#!/url` redirected to `/url` and has two XHR requests `/api` and `/api/url`
+ -  jQuery Address - IE : `/url` redirected to `/#!/url` and has two XHR requests `/api` and `/api/url`
  -  jQuery Address - avoid `$.ajax()` for the first open url
- -  jQuery Address - avoid `$.ajax()` when content is in cache and is not modificeted
- -  W3C - CSS3 standards have [no vendor (-webkit-, -moz-, -o-, -khtml-, -ms-) prefix expectation](//www.w3.org/Bugs/Public/show_bug.cgi?id=11989)
+ -  jQuery Address - avoid `$.ajax()` when content is in cache and is not modificated
+ -  W3C - CSS3 standards does not accept [any vendor prefix (-webkit-, -moz-, -o-, -khtml-, -ms-)](//www.w3.org/Bugs/Public/show_bug.cgi?id=11989)
  -  Apache and IE - domain.com//контакты rewrited to urlencode domain.com/%D0%BA%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D1%8B
 
 
