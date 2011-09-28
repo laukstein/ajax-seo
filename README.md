@@ -1,4 +1,4 @@
-# [Ajax SEO maximized performance - speed, accessibility, user-friendly](//lab.laukstein.com/jsonp-ajax-seo/)
+# [Ajax SEO maximized performance - speed, accessibility, user-friendly](http://lab.laukstein.com/ajax-seo/)
 Ajax SEO is based on latest Web Technology (HTML5, Microdata, JSON, jQuery, CSS3). Server requirements: PHP 5, MySQL 5, Apache 2.
     
     
@@ -48,7 +48,7 @@ Ajax SEO is based on latest Web Technology (HTML5, Microdata, JSON, jQuery, CSS3
 ### Search engine optimization
 
  -  Schema.org Microdata markup
- -  HTML5 `pushState` and `replaceState` **(Chrome 10, Firefox 4, Safari 5, Opera 11.5)** with crawlable fallback
+ -  HTML5 `pushState` and `replaceState` **(Chrome 10, Firefox 4, Safari 5, Opera 11.5)** with crawlable SEO fallback
  -  Rewrite query string, [Making AJAX Applications Crawlable](//code.google.com/web/ajaxcrawling/docs/getting-started.html)
  -  Rewrite www to no-www domain
  -  Slash and backslash issues
@@ -76,7 +76,7 @@ Ajax SEO is based on latest Web Technology (HTML5, Microdata, JSON, jQuery, CSS3
  -  jQuery Address - FF6 : `/#/url`, `/#!/url` redirected to `/url` and has two XHR requests `/api` and `/api/url`
  -  jQuery Address - IE : `/url` redirected to `/#!/url` and has two XHR requests `/api` and `/api/url`
  -  jQuery Address - avoid `$.ajax()` for the first open url
- -  jQuery Address - avoid `$.ajax()` when content is in cache and is not modificated
+ -  jQuery Address - avoid `$.ajax()` when content is in cache and is not modified
  -  W3C - CSS3 standards does not accept [any vendor prefix (-webkit-, -moz-, -o-, -khtml-, -ms-)](//www.w3.org/Bugs/Public/show_bug.cgi?id=11989)
  -  Apache and IE - domain.com//контакты rewrited to urlencode domain.com/%D0%BA%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D1%8B
 
