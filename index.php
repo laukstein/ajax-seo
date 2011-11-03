@@ -59,7 +59,7 @@ $installation=(isset($installation)? $installation: null);
 <link rel=stylesheet href=<?php echo$path?>images/style.css>
 <meta name=description content="Ajax SEO maximized performance - speed, accessibility, user-friendly">
 <meta name=keywords content=ajax,seo,crawl,performance,speed,availability,user-friendly>
-<script>/*Add HTML5 tag support for old browsers*/var el=['header','nav','article','footer'];for(var i=el.length-1;i>=0;i--){document.createElement(el[i]);}</script>
+<!--[if lt IE 9]><script src=//html5shiv.googlecode.com/svn/trunk/html5.js></script><![endif]-->
 </head>
 <body itemscope itemtype="http://schema.org/WebPage">
 <?php
@@ -108,8 +108,8 @@ if(MYSQL_CON){
 </footer>
 </div>
 <?php if(MYSQL_CON){ ?>
-<script src=//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js></script>
-<script>window.jQuery || document.write('<script src=<?php echo$path?>images/jquery-1.6.4.min.js>\x3C/script>')</script>
+<script src=//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js></script>
+<script>window.jQuery || document.write('<script src=<?php echo$path?>images/jquery-1.7.min.js>\x3C/script>')</script>
 <script src=<?php echo$path?>images/jquery.address.js></script>
 <script>
 var nav=$('header nav a');
