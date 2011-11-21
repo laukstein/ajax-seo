@@ -154,8 +154,8 @@ $.address.crawlable(1).state('<?php if(strlen(utf8_decode($path))>1){echo substr
         }
     });
 });
-// Optimized async Google Analytics snippet
-//var _gaq=[['_setAccount','UA-XXXXXXXX-X'],['_trackPageview']];(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=1;g.src='//www.google-analytics.com/ga.js';s.parentNode.insertBefore(g,s)}(document,'script'))
+// Optimized Google Analytics snippet
+//var _gaq=[['_setAccount','UA-XXXXXXXX-X'],['_trackPageview']];(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.src='//www.google-analytics.com/ga.js';s.parentNode.insertBefore(g,s)}(document,'script'))
 </script>
 <?php } ?>
 </body>
