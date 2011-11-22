@@ -108,8 +108,10 @@ if(MYSQL_CON){
 </footer>
 </div>
 <?php if(MYSQL_CON){ ?>
-<script src=//ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js></script>
-<script>window.jQuery || document.write('<script src=<?php echo$path?>images/jquery-1.7.min.js>\x3C/script>')</script>
+<!-- code.jquery.com Edgecast's CDN has better performance http://royal.pingdom.com/2010/05/11/cdn-performance-downloading-jquery-from-google-microsoft-and-edgecast-cdns/
+     If you use HTTPS, replace jQuery CDN with Google CDN, like "//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" -->
+<script src=http://code.jquery.com/jquery-1.7.1.min.js></script>
+<script>window.jQuery || document.write('<script src=<?php echo$path?>images/jquery-1.7.1.min.js><\/script>')</script>
 <script src=<?php echo$path?>images/jquery.address.js></script>
 <script>
 var nav=$('header nav a');
