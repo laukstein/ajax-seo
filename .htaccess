@@ -15,8 +15,8 @@ ServerSignature Off
 #php_flag register_globals 0
 #php_flag expose_php 0
 
-AddType text/javascript .js
 AddType text/cache-manifest appcache
+AddType application/javascript .js
 AddType application/json .json
 AddType image/x-icon .ico
 
@@ -39,32 +39,31 @@ AddCharset utf-8 .json .css .js .txt
     </IfModule>
     <IfModule filter_module>
         FilterDeclare   COMPRESS
+        FilterProvider  COMPRESS  DEFLATE resp=Content-Type $text/html
+        FilterProvider  COMPRESS  DEFLATE resp=Content-Type $text/css
+        FilterProvider  COMPRESS  DEFLATE resp=Content-Type $text/plain
+        FilterProvider  COMPRESS  DEFLATE resp=Content-Type $application/javascript
         FilterProvider  COMPRESS  DEFLATE resp=Content-Type $application/json
         FilterProvider  COMPRESS  DEFLATE resp=Content-Type $application/xml
-        FilterProvider  COMPRESS  DEFLATE resp=Content-Type $text/html
-        FilterProvider  COMPRESS  DEFLATE resp=Content-Type $text/plain
-        FilterProvider  COMPRESS  DEFLATE resp=Content-Type $text/css
-        FilterProvider  COMPRESS  DEFLATE resp=Content-Type $text/javascript
         FilterProvider  COMPRESS  DEFLATE resp=Content-Type $image/svg+xml
         FilterProvider  COMPRESS  DEFLATE resp=Content-Type $image/x-icon
         FilterChain     COMPRESS
         FilterProtocol  COMPRESS  DEFLATE change=yes;byteranges=no
     </IfModule>
     <IfModule !mod_filter.c>
-        AddOutputFilterByType DEFLATE application/json application/xml text/html text/plain text/css text/javascript image/svg+xml image/x-icon
+        AddOutputFilterByType DEFLATE text/html text/css text/plain application/javascript application/json application/xml image/svg+xml image/x-icon
     </IfModule>
 </IfModule>
 <IfModule mod_expires.c>
     ExpiresActive On
     ExpiresDefault "access plus 1 month"
-    ExpiresByType application/x-httpd-php "access plus 1 minute"
+    ExpiresByType text/cache-manifest "access plus 0 seconds"
+    ExpiresByType text/html "access plus 1 minute"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType text/plain "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
     ExpiresByType application/json "access plus 1 minute"
     ExpiresByType application/xml "access plus 1 minute"
-    ExpiresByType text/html "access plus 1 minute"
-    ExpiresByType text/plain "access plus 1 hour"
-    ExpiresByType text/cache-manifest "access plus 0 seconds"
-    ExpiresByType text/css "access plus 6 months"
-    ExpiresByType text/javascript "access plus 6 months"
     ExpiresByType image/svg+xml "access plus 1 month"
     ExpiresByType image/x-icon "access plus 1 week"
     ExpiresByType image/png "access plus 1 month"
@@ -87,6 +86,7 @@ AddCharset utf-8 .json .css .js .txt
         Header set Cache-Control max-age=2419200
     </FilesMatch>
     FileETag None
+    Header unset ETag
     Header unset Pragma
     Header unset X-Powered-By
     Header unset Accept-Ranges
@@ -98,7 +98,7 @@ AddCharset utf-8 .json .css .js .txt
     
     # Rewrite www to no-www domain
     RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-    RewriteRule .* http://%1%{REQUEST_URI} [R=301,L]
+    RewriteRule ^ http://%1%{REQUEST_URI} [R=301,L]
     
     # Rewrite multiple slashes with single slash after domain
     RewriteCond %{THE_REQUEST} ^[A-Z]+\s//+(.*)\sHTTP/[0-9.]+$ [OR]
@@ -166,7 +166,7 @@ AddCharset utf-8 .json .css .js .txt
     
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^api/?([^\./]*)$ ?api&url=$1 [L,QSA]
+    RewriteRule ^api/?(.*)$ ?api&url=$1 [L,QSA]
     RewriteRule ^([^.]*)$ ?url=$1 [L,QSA]
     
     RewriteRule .* - [E=HTTP_IF_MODIFIED_SINCE:%{HTTP:If-Modified-Since}]
