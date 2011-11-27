@@ -166,7 +166,7 @@ AddCharset utf-8 .json .css .js .txt
     
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^api/?(.*)$ ?api&url=$1 [L,QSA]
+    RewriteRule ^api/?([^\./]*)$ ?api&url=$1 [L,QSA]
     RewriteRule ^([^.]*)$ ?url=$1 [L,QSA]
     
     RewriteRule .* - [E=HTTP_IF_MODIFIED_SINCE:%{HTTP:If-Modified-Since}]
