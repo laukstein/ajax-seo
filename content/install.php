@@ -4,7 +4,7 @@ if(MYSQL_CON){
     $change=file_get_contents($f);
     $change=preg_replace("/define\('(MYSQL_CON)',true\);/","define('$1',false);",$change);
     $change=preg_replace("/define\('(MYSQL_ERROR)',true\);/","define('$1',false);",$change);
-    if(!@is_writable($f)){chmod($f,0755);} // Change connect.php file permissions if needed
+    if(!@is_writable($f)){@chmod($f,0755);} // Change connect.php file permissions if needed
     $fopen=fopen($f,'w');
     fwrite($fopen,$change);
     fclose($fopen);
@@ -21,7 +21,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     $change=preg_replace("/define\('(MYSQL_DB)','(.*)'\);/","define('$1','".trim($_POST['db'])."');",$change);
     $change=preg_replace("/define\('(MYSQL_TABLE)','(.*)'\);/","define('$1','".trim($_POST['table'])."');",$change);
     $change=preg_replace("/define\('(MYSQL_ERROR)',false\);/","define('$1',true);",$change);
-    if(!@is_writable($f)){chmod($f,0755);} // Change connect.php file permissions if needed
+    if(!@is_writable($f)){@chmod($f,0755);} // Change connect.php file permissions if needed
     $fopen=fopen($f,'w');
     fwrite($fopen,$change);
     fclose($fopen);
