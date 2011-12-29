@@ -1,19 +1,31 @@
-Options -Indexes +FollowSymLinks -MultiViews
+#
+# Without -MultiViews will be returned 404 error for a rewrite if a folder of the same name does not exist
+# Without -SymLinksIfOwnerMatch Apache will have to issue extra system calls to check up on symlinks.
+# For highest performance and no symlink protection set +FollowSymLinks and -SymLinksIfOwnerMatch
+# IncludesNOEXEC Server-side includes are permitted, but the #exec cmd and #exec cgi are disabled
+# httpd.apache.org/docs/current/misc/perf-tuning.html#symlinks
+#
+Options -MultiViews -SymLinksIfOwnerMatch
+
+# -Indexes Apache will block users from browsing folders without a default document
+<IfModule mod_autoindex.c>
+    Options -Indexes
+</IfModule>
 
 ServerSignature Off
 
-## Uncomment php_flag's and php_value if you're not able use content/php.ini settings on your server
-#php_flag display_errors 0
-#php_flag log_errors 1
-#php_value error_log error_log.txt
-#php_flag session.use_trans_sid 0
-#php_flag allow_url_fopen 0
-#php_flag allow_url_include 0
-#php_flag short_open_tag 0
-#php_flag magic_quotes_gpc 0
-#php_flag safe_mode 0
-#php_flag register_globals 0
-#php_flag expose_php 0
+# Uncomment php_flag's and php_value if you're not able use content/php.ini settings on your server
+# php_flag display_errors 0
+# php_flag log_errors 1
+# php_value error_log error_log.txt
+# php_flag session.use_trans_sid 0
+# php_flag allow_url_fopen 0
+# php_flag allow_url_include 0
+# php_flag short_open_tag 0
+# php_flag magic_quotes_gpc 0
+# php_flag safe_mode 0
+# php_flag register_globals 0
+# php_flag expose_php 0
 
 AddType text/cache-manifest appcache
 AddType application/javascript .js
@@ -22,6 +34,7 @@ AddType image/x-icon .ico
 AddDefaultCharset utf-8
 AddCharset utf-8 .css .txt .js .xml
 
+# Gzip compression
 <IfModule mod_deflate.c>
     <IfModule mod_setenvif.c>
         <IfModule mod_headers.c>
@@ -56,6 +69,8 @@ AddCharset utf-8 .css .txt .js .xml
         AddOutputFilterByType DEFLATE image/svg+xml image/x-icon
     </IfModule>
 </IfModule>
+
+# Expires headers (for better cache control)
 <IfModule mod_expires.c>
     ExpiresActive On
     ExpiresDefault "access plus 1 month"
@@ -80,7 +95,7 @@ AddCharset utf-8 .css .txt .js .xml
         Header set Cache-Control max-age=31536000
         Header set X-Robots-Tag none
     </FilesMatch>
-    <FilesMatch (robots.txt|humans.txt|sitemap.xml)>
+    <FilesMatch "(robots.txt|humans.txt|sitemap.xml)">
         Header set X-Robots-Tag "noindex, follow"
         SetHandler application/x-httpd-php
     </FilesMatch>
@@ -89,13 +104,18 @@ AddCharset utf-8 .css .txt .js .xml
     </FilesMatch>
     FileETag None
     Header unset ETag
-    Header unset Pragma
-    Header unset X-Powered-By
-    Header unset Accept-Ranges
-    Header append Cache-Control public
-    Header append Vary Accept-Encoding
+#    Header unset Pragma
+#    Header unset X-Powered-By
+#    Header unset Accept-Ranges
+#    Header append Cache-Control public
+#    Header append Vary Accept-Encoding
 </IfModule>
+
 <IfModule mod_rewrite.c>
+    # +FollowSymLinks must be enabled for turning on the rewrite engine
+    Options +FollowSymlinks
+    
+    DirectorySlash Off
     RewriteEngine On
     
     # Rewrite www to no-www domain
@@ -105,29 +125,22 @@ AddCharset utf-8 .css .txt .js .xml
     # Rewrite multiple slashes with single slash after domain
     RewriteCond %{THE_REQUEST} ^[A-Z]+\s//+(.*)\sHTTP/[0-9.]+$ [OR]
     RewriteCond %{THE_REQUEST} ^[A-Z]+\s(.*/)/+\sHTTP/[0-9.]+$
-    RewriteRule .* http://%{HTTP_HOST}/%1 [R=301,L,NE]
+    RewriteRule .* http://%{HTTP_HOST}/%1 [R=301,NE,L]
     
     # Rewrite multiple slashes with single slash in URL
     RewriteCond %{REQUEST_URI} ^(.*)//(.*)$
     RewriteRule . %1/%2 [R=301,NE,L]
     
     # Remove slash from URL end
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_URI} ^(.+)/$
-    RewriteRule ^.+/$ %1 [R=301,NE,L]
+    RewriteCond %{REQUEST_URI} ^(.+)/$ [OR]
+    RewriteRule ^.+/$ %1 [R=301,L]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^.+/$ %1 [R=301,L]
     
     # Rewrite backslash with slash
-    ## Works on FF with using AllowEncodedSlashes On in content/httpd.conf
+    # Works on FF with using AllowEncodedSlashes On in content/httpd.conf
     RewriteCond %{REQUEST_URI} ^(.*)\\(.*)$
     RewriteRule .* %1/%2 [R=301,NC,L]
-    
-    # Rewrite query string, Ajax crawling
-    RewriteCond %{QUERY_STRING} ^_escaped_fragment_=(.*)$
-    RewriteRule .*$ %{REQUEST_URI}%1? [R=301,L]
-    RewriteCond %{QUERY_STRING} ^.+$
-    RewriteCond %{QUERY_STRING} !^url=
-    RewriteCond %{QUERY_STRING} !api
-    RewriteRule .*$ %{REQUEST_URI}? [R=301,L]
     
     # Rewrite space with dash
     RewriteCond %{REQUEST_URI} ^([^\ ]*)\ (.*)$
@@ -136,6 +149,29 @@ AddCharset utf-8 .css .txt .js .xml
     # Rewrite underscore with dash
     RewriteCond %{REQUEST_URI} ^([^\_]*)\_(.*)$
     RewriteRule .* %1-%2 [R=301,L]
+    
+    # Remove index.php
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^/]+/)*index\.php\ HTTP/ [NC]
+    RewriteRule ^(.*)index\.php$ http://%{HTTP_HOST}/%1 [R=301,L]
+    
+    # Remove .php extension
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^/]+/)*[^.]+\.php(\?[^\ ]*)?\ HTTP/ [NC]
+    RewriteRule ^(([^/]+/)*[^.]+)\.php$ http://%{HTTP_HOST}/%1$1 [R=301,L]
+    
+    # Rewrite query string for Ajax crawling http://support.google.com/webmasters/bin/answer.py?hl=en&answer=174992
+    RewriteCond %{QUERY_STRING} ^_escaped_fragment_=(.*)$
+    RewriteRule .*$ %{REQUEST_URI}%1? [R=302,L]
+    # RewriteCond %{QUERY_STRING} ^.+$
+    # RewriteCond %{QUERY_STRING} !url
+    # RewriteCond %{QUERY_STRING} !api
+    # RewriteRule .*$ %{REQUEST_URI}? [R=302,L]
+    
+    # Remove question mark and parameters
+    RewriteCond %{THE_REQUEST} ^[A-Z]+\ /([^?#\ ]*)\?[^\ ]*\ HTTP/ [NC]
+    # Add exceptions
+    # RewriteCond $1 !^images/
+    # RewriteCond !{QUERY_STRING} id
+    RewriteRule .*$ %{REQUEST_URI}? [R=301,L]
     
     # Remove dot
     RewriteCond %{REQUEST_URI} ^([^\.]*)\.(.*)$
@@ -154,19 +190,15 @@ AddCharset utf-8 .css .txt .js .xml
     RewriteCond %{REQUEST_URI} ^(^\.)\/-(.*)$
     RewriteRule ^(.*)\/-(.*)$  %1/%2 [R=301,L]
     
-    # Remove .php extension
-    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^/]+/)*[^.]+\.php(\?[^\ ]*)?\ HTTP/ [NC]
-    RewriteRule ^(([^/]+/)*[^.]+)\.php$ http://%{HTTP_HOST}/%1$1 [R=301,L]
-    
     # Rewrite uppercase letter URL to lowercase with content/httpd.conf RewriteMap lc int:tolower
-    ## Solution without httpd.conf RewriteMap in github.com/laukstein/ajax-seo/wiki/Lowercase-URL
+    # Solution without httpd.conf RewriteMap in github.com/laukstein/ajax-seo/wiki/Lowercase-URL
     RewriteCond %{REQUEST_URI} .+
     RewriteRule ^[^A-Z]*[A-Z] ${lc:%0} [R=301,L]
     
-    # Block folder access that begins with a period (like .git, .svn)
+    # Block folder access that begins with a period (like .git and .svn)
     RewriteRule "(^|/)\." - [F]
     
-    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-f [OR]
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^api/?([^\./]*)$ ?api&url=$1 [L,QSA]
     RewriteRule ^([^.]*)$ ?url=$1 [L,QSA]
