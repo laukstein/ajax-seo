@@ -79,6 +79,8 @@ Ajax SEO is based on latest Web Technology (HTML5, Microdata, JSON, jQuery, CSS3
  -  jQuery Address - avoid `$.ajax()` when content is in cache and is not modified
  -  W3C - CSS3 standards does not accept [any vendor prefix (-webkit-, -moz-, -o-, -khtml-, -ms-)](//www.w3.org/Bugs/Public/show_bug.cgi?id=11989)
  -  Apache and IE - domain.com//контакты rewrited to urlencode domain.com/%D0%BA%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D1%8B
+ -  Apache - domain.com/ajax-seo returns 403 because of `DirectorySlash Off`
+ -  Apache - domain.com/ajax-seo/path/index.php has redirect 301 to domain.com/path/
 
 
 ### How to use
