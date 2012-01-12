@@ -23,7 +23,7 @@ a{
     color:#176092;
     text-decoration:underline;
 }
-a:hover{text-decoration:none;}
+a:hover,a:focus{text-decoration:none;}
 article h1{
     margin:0;
     font-weight:normal;
@@ -60,7 +60,7 @@ header nav a{
     -webkit-transition:.40s ease-in-out;
     transition:.40s ease-in-out;
 }
-header nav a:hover{
+header nav a:hover,header nav a:focus{
     text-decoration:none;
     background-color:#5db0e6;
 }
@@ -124,4 +124,4 @@ footer a{
     padding:0 2px;
     text-decoration:none;
 }
-footer a:hover{text-decoration:underline;}
+footer a:hover,footer a:focus{text-decoration:underline;}
