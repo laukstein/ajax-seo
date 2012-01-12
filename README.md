@@ -62,6 +62,7 @@ Ajax SEO is based on latest Web Technology (HTML5, Microdata, JSON, jQuery, CSS3
 
 ### Speed Performance
 
+ -  Performance tuning on Apache, PHP, MySQL
  -  [jsperf](http://jsperf.com/jquery-ajax-jsonp-timeout-performormance) `jQuery $.ajax() timeout` vs `window.setTimeout()`
  -  [jsperf](http://jsperf.com/ajax-jsonp-vs-ajax-json) `Ajax JSONP` vs `Ajax JSON`
  -  [jsperf](http://jsperf.com/getjson-vs-ajax-json) `$.ajax() json` vs `$.getJSON()`
@@ -75,8 +76,8 @@ Ajax SEO is based on latest Web Technology (HTML5, Microdata, JSON, jQuery, CSS3
  -  jQuery Address - browsers that does not support `pushState` like IE must rewrite `/#/url` to `/#!/url`
  -  jQuery Address - FF6 : `/#/url`, `/#!/url` redirected to `/url` and has two XHR requests `/api` and `/api/url`
  -  jQuery Address - IE : `/url` redirected to `/#!/url` and has two XHR requests `/api` and `/api/url`
- -  jQuery Address - avoid `$.ajax()` for the first open url
  -  jQuery Address - avoid `$.ajax()` when content is in cache and is not modified
+ -  jQuery Address - on first open url GA plugin has repeated request
  -  W3C - CSS3 standards does not accept [any vendor prefix (-webkit-, -moz-, -o-, -khtml-, -ms-)](//www.w3.org/Bugs/Public/show_bug.cgi?id=11989)
  -  Apache and IE - domain.com//контакты rewrited to urlencode domain.com/%D0%BA%D0%BE%D0%BD%D1%82%D0%B0%D0%BA%D1%82%D1%8B
  -  Apache - domain.com/ajax-seo returns 403 because of `DirectorySlash Off`
