@@ -142,11 +142,7 @@ var nav = $('header a'),
         if ($.browser.msie) {
             content.removeAttr('filter');
         }
-    },
-    timer = window.setTimeout(function () {
-        // Implement timeout
-        content.html('Loading seems to be taking a while...');
-    }, 3800);
+    };
 
 $.address.crawlable(1).state('<?php
 if(strlen(utf8_decode($path))>1){
@@ -157,7 +153,7 @@ if(strlen(utf8_decode($path))>1){
 ?>').init(function () {
     // Initialize jQuery Address
     nav.address();
-
+    
 }).change(function (e) {
     // Select nav link
     nav.each(function () {
@@ -171,15 +167,22 @@ if(strlen(utf8_decode($path))>1){
 
     if (state && init) {
         init = false;
+
     } else {
+        // Implement timeout
+        var timer = window.setTimeout(function () {
+            content.html('Loading seems to be taking a while...');
+        }, 3800);
+
         // Load API content
         $.ajax({
             type: 'GET',
-            url: /*'http://lab.laukstein.com/ajax-seo/'+*/
+            url: // '//lab.alaukstein.com/ajax-seo/'+
             'api' + (e.path.length !== 1 ? '/' + encodeURIComponent(e.path.toLowerCase().substr(1)) : ''),
-            // You maight switch to 'jsonp'
+            // You maight switch it to 'jsonp'
             dataType: 'json',
-            // Add `jsonpCallback: 'i',` in case you use 'jsonp'
+            // Uncomment the next line in case you use 'jsonp'
+            //jsonpCallback: 'i',
             cache: true,
             beforeSend: function () {
                 document.title = 'Loading...';
@@ -202,8 +205,16 @@ if(strlen(utf8_decode($path))>1){
     }
 });
 
-// Optimized Google Analytics snippet
-//var _gaq=[['_setAccount','UA-XXXXXXXX-X'],['_trackPageview']];(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.src='//www.google-analytics.com/ga.js';s.parentNode.insertBefore(g,s)}(document,'script'))
+// Optimized Google Analytics snippet by http://mathiasbynens.be/notes/async-analytics-snippet
+var _gaq = [
+    ['_setAccount', 'UA-XXXXXXXX-X']
+];
+(function (d, t) {
+    var g = d.createElement(t),
+        s = d.getElementsByTagName(t)[0];
+    g.src = '//www.google-analytics.com/ga.js';
+    s.parentNode.insertBefore(g, s);
+}(document, 'script'));
 </script>
 <?php } ?>
 </body>
