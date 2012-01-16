@@ -115,7 +115,7 @@ AddCharset utf-8 .css .txt .js .xml
     # +FollowSymLinks must be enabled for turning on the rewrite engine
     Options +FollowSymlinks
     
-    DirectorySlash Off
+    # DirectorySlash Off
     RewriteEngine On
     
     # Rewrite www to no-www domain
