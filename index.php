@@ -131,6 +131,10 @@ if(MYSQL_CON){
 <script>window.jQuery || document.write('<script src=<?php echo $path?>images/jquery-1.7.1.min.js><\/script>')</script>
 <script src=<?php echo $path?>images/jquery.address.js></script>
 <script>
+(function() {
+
+'use strict';
+
 var nav = $('header a'),
     content = $('#content'),
     init = true,
@@ -215,6 +219,8 @@ var _gaq = [
     g.src = '//www.google-analytics.com/ga.js';
     s.parentNode.insertBefore(g, s);
 }(document, 'script'));
+
+})();
 </script>
 <?php } ?>
 </body>
