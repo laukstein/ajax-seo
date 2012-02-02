@@ -107,7 +107,6 @@ AddCharset utf-8 .css .txt .js .xml
 #    Header unset Pragma
 #    Header unset X-Powered-By
 #    Header unset Accept-Ranges
-#    Header append Cache-Control public
 #    Header append Vary Accept-Encoding
 </IfModule>
 
