@@ -53,7 +53,7 @@ if(MYSQL_CON){
 
 $note           = (isset($note) ? $note : null);
 $name           = (isset($name) ? $name : null);
-$additional_title   = ' - Ajax SEO';
+$additional_title   = ' - AJAX SEO';
 $title_installation = (isset($title_installation)   ? $title_installation   : null);
 $installation   = (isset($installation) ? $installation : null);
 
@@ -64,8 +64,8 @@ $installation   = (isset($installation) ? $installation : null);
 <meta charset=utf-8>
 <title><?php echo $name.$additional_title?></title>
 <link rel=stylesheet href=<?php echo $path?>images/style.css>
-<meta name=description content="Ajax SEO maximized performance - speed, accessibility, user-friendly">
-<meta name=keywords content="ajax, seo, crawl, performance, speed, availability, user-friendly, ux">
+<meta name=description content="AJAX SEO maximized performance - speed, accessibility, usability">
+<meta name=keywords content="ajax, seo, crawl, performance, speed, accessibility, usability, ux">
 <!--[if lt IE 9]><script src=//html5shiv.googlecode.com/svn/trunk/html5.js></script><![endif]-->
 </head>
 <body itemscope itemtype="http://schema.org/WebPage">
@@ -76,7 +76,7 @@ if($note==null){}else{
 ?>
 <div id=container>
 <header>
-<a id=logo href=<?php echo $path?> title="Ajax SEO maximized performance" rel=home>Ajax SEO<?php echo $title_installation?></a>
+<a id=logo href=<?php echo $path?> title="AJAX SEO maximized performance" rel=home>AJAX SEO<?php echo $title_installation?></a>
 <nav>
 <?php
 if(MYSQL_CON){
@@ -209,11 +209,15 @@ if(strlen(utf8_decode($path))>1){
     }
 });
 
-// Optimized Google Analytics snippet by http://mathiasbynens.be/notes/async-analytics-snippet
+
+
+// Optimized Google Analytics snippet, http://mathiasbynens.be/notes/async-analytics-snippet
 var _gaq = [
-    ['_setAccount', 'UA-XXXXXXXX-X']
+    ['_setAccount', 'UA-XXXXXXXX-X'],
+    ['_trackPageview']
 ];
 (function (d, t) {
+    'use strict';
     var g = d.createElement(t),
         s = d.getElementsByTagName(t)[0];
     g.src = '//www.google-analytics.com/ga.js';
