@@ -1,17 +1,26 @@
 <?php
-# Creating Sitemaps in Google Webmaster Tools http://www.google.com/support/webmasters/bin/answer.py?hl=en&answer=183668
-header('Content-Type:application/xml');
-# Prevent XSS and SQL Injection
-if(strpos($_SERVER['HTTP_HOST'],$_SERVER['SERVER_NAME'])===false){header('Status:400 Bad Request',true,400);exit('400 Bad Request');}
-# Database settings
+// Creating Sitemaps in Google Webmaster Tools http://support.google.com/webmasters/bin/answer.py?hl=en&answer=183668
+// --------------------------------------------------
+
+header('Content-Type: application/xml');
+
+// Prevent XSS and SQL Injection
+if (strpos($_SERVER['HTTP_HOST'], $_SERVER['SERVER_NAME']) === false) {
+    header('Status: 400 Bad Request', true, 400);
+    exit('400 Bad Request');
+}
+
+// Database settings
 include('content/connect.php');
-# HTTP header caching
-$tablemod=mysql_query('SELECT DATE_FORMAT(MAX(pubdate),\'%a, %d %b %Y %T %Z\') AS pubdate FROM '.MYSQL_TABLE);
-while($row=@mysql_fetch_array($tablemod,MYSQL_ASSOC)){
-    function cache($gmtime){
-        if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])||isset($_SERVER['HTTP_IF_NONE_MATCH'])){
-            if($_SERVER['HTTP_IF_MODIFIED_SINCE']==$gmtime){
-                header('Status:304 Not Modified',true,304);
+
+// HTTP header caching
+$tablemod = mysql_query('SELECT DATE_FORMAT(MAX(pubdate),\'%a, %d %b %Y %T %Z\') AS pubdate FROM ' . MYSQL_TABLE);
+while ($row = @mysql_fetch_array($tablemod, MYSQL_ASSOC)) {
+    function cache($gmtime)
+    {
+        if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
+            if ($_SERVER['HTTP_IF_MODIFIED_SINCE'] == $gmtime) {
+                header('Status:304 Not Modified', true, 304);
                 exit();
             }
         }
@@ -19,22 +28,29 @@ while($row=@mysql_fetch_array($tablemod,MYSQL_ASSOC)){
     }
     cache($row['pubdate']);
 }
-echo'<?xml version="1.0" encoding="UTF-8"?>
+
+echo '<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.sitemaps.org/schemas/sitemap-image/1.1"
         xmlns:video="http://www.sitemaps.org/schemas/sitemap-video/1.1">
 ';
-# Return dir path
-if(str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME))!='/'){
-    $path=str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME)).'/';
-}else{
-    $path=str_replace('\\','/',pathinfo($_SERVER['SCRIPT_NAME'],PATHINFO_DIRNAME));
+
+// Return dir path
+if (str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME)) != '/') {
+    $path = str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME)) . '/';
+} else {
+    $path = str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME));
 }
-$result=mysql_query('SELECT url,DATE_FORMAT(pubdate,\'%Y-%m-%dT%H:%i:%sZ\') AS pubdate FROM '.MYSQL_TABLE.' ORDER BY `order` ASC');
-while($row=@mysql_fetch_array($result,MYSQL_ASSOC)){
-    $row[]=array('row'=>array_map('htmlspecialchars',$row));
-    echo"    <url>\r\n        <loc>http://{$_SERVER['SERVER_NAME']}$path{$row['url']}</loc>\r\n        <lastmod>{$row['pubdate']}</lastmod>\r\n    </url>";
+
+$result = mysql_query('SELECT url,DATE_FORMAT(pubdate,\'%Y-%m-%dT%H:%i:%sZ\') AS pubdate FROM ' . MYSQL_TABLE . ' ORDER BY `order` ASC');
+while ($row = @mysql_fetch_array($result, MYSQL_ASSOC)) {
+    $row[] = array(
+        'row' => array_map('htmlspecialchars', $row)
+    );
+    echo "    <url>\n        <loc>http://{$_SERVER['SERVER_NAME']}$path{$row['url']}</loc>\n        <lastmod>{$row['pubdate']}</lastmod>\n    </url>";
 }
+
 mysql_close($con);
-echo"\r\n</urlset>";
+
+echo "\n</urlset>";
 ?>
