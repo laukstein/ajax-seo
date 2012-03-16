@@ -1,4 +1,6 @@
 <?php
+// HTTP header caching
+// --------------------------------------------------
 class datemod
 {
     public $gmtime;
