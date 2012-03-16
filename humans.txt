@@ -1,77 +1,98 @@
 <?php
-header('Content-Type:text/plain');
-# HTTP header caching
-class datemod{
-    public $maxmod;
+header('Content-Type: text/plain');
+
+// Prevent XSS and SQL Injection
+if (strpos($_SERVER['HTTP_HOST'], $_SERVER['SERVER_NAME']) === false) {
+    header('Status: 400 Bad Request', true, 400);
+    exit('400 Bad Request');
+}
+
+// HTTP header caching
+class datemod
+{
     public $gmtime;
-    function date($dir=null,$exclude=array('error_log.txt','.git','cgi-bin','.','..')){
-        $d=(isset($dir)? $dir : '.');
-        $exclude=array_flip($exclude);
-        if(!is_dir($d)){return;}
-        $dh=opendir($d);
-        if(!$dh){return;}
-        $stack=array($dh);
-        $level=0;
-        while(count($stack)){
-            if(false!==($file=readdir($stack[0]))){
-                if(!isset($exclude[$file])){
+    public $moddate;
+    
+    function date($dir = null, $exclude = array('error_log.txt', '.git', 'cgi-bin', '.', '..'))
+    {
+        $d       = isset($dir) ? $dir : '.';
+        $exclude = array_flip($exclude);
+        if (!is_dir($d)) {
+            return;
+        }
+        
+        $dh = opendir($d);
+        if (!$dh) {
+            return;
+        }
+        
+        $stack = array(
+            $dh
+        );
+        
+        $level = 0;
+        
+        while (count($stack)) {
+            if (false !== ($file = readdir($stack[0]))) {
+                if (!isset($exclude[$file])) {
                     //print str_repeat('  ',$level);
-                    $df="$d/$file";
-                    if(is_dir($df)){
-                        $dh=opendir($df);
-                        if($dh){
-                            $f=$file;
-                            array_unshift($stack,$dh);
+                    $df = "$d/$file";
+                    if (is_dir($df)) {
+                        $dh = opendir($df);
+                        if ($dh) {
+                            $f = $file;
+                            array_unshift($stack, $dh);
                             ++$level;
                         }
-                    }else{
-                        $d=(isset($dir)? $dir.'/': null);
-                        if(isset($f)&&$level>0){
-                            $mod=date('Y/m/d H:i:s',filemtime("$d$f/$file"));
-                        }else{
-                            $mod=date('Y/m/d H:i:s',filemtime("$d$file"));
+                    } else {
+                        $d = (isset($dir) ? $dir . '/' : null);
+                        if (isset($f) && $level > 0) {
+                            $mod = date('Y-m-d H:i:s', filemtime("$d$f/$file"));
+                        } else {
+                            $mod = date('Y-m-d H:i:s', filemtime("$d$file"));
                         }
-                        $array[]=$mod;
+                        $array[] = $mod;
                     }
                 }
-            }else{
+            } else {
                 closedir(array_shift($stack));
                 --$level;
             }
         }
+        
         //sort($array);
         //print_r($array);
-        $fmod=max($array);
-        # Database settings
+        $fmod = date('D, d M Y H:i:s T', strtotime(max($array)));
+        
+        // Database settings
         include('content/connect.php');
-        $tablemod=mysql_query('SELECT DATE_FORMAT(MAX(pubdate),\'%Y/%m/%d %H:%i:%s\') AS pubdate FROM '.MYSQL_TABLE);
-        while($row=@mysql_fetch_array($tablemod,MYSQL_ASSOC)){
-            $rowmod=$row['pubdate'];
-            $this->maxmod=max($fmod,$rowmod).date(' T')."\r\n";
-            $this->gmtime=date('D, d M Y H:i:s T',strtotime($this->maxmod));
+        $tablemod = mysql_query("SELECT DATE_FORMAT(MAX(pubdate),'%a, %d %b %Y %T') AS pubdate FROM " . MYSQL_TABLE);
+        while ($row = @mysql_fetch_array($tablemod, MYSQL_ASSOC)) {
+            $rowmod        = $row['pubdate'] . date(' T');
+            $this->gmtime  = date('Y-m-d H:i:s', strtotime($fmod)) >= date('Y-m-d H:i:s', strtotime($rowmod)) ? $fmod : $rowmod;
+            $this->moddate = date('Y/m/d', strtotime($this->gmtime));
         }
     }
-    function cache($gmtime){
-        if(isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])||isset($_SERVER['HTTP_IF_NONE_MATCH'])){
-            if($_SERVER['HTTP_IF_MODIFIED_SINCE']==$gmtime){
-                header('Status:304 Not Modified',true,304);
-                exit();
+    
+    function cache($gmtime)
+    {
+        if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
+            if ($_SERVER['HTTP_IF_MODIFIED_SINCE'] == $gmtime) {
+                header('Status: 304 Not Modified', true, 304);
+                exit;
             }
         }
-        header("Last-Modified:$gmtime");
+        header("Last-Modified: $gmtime");
     }
 }
-$datemod=new datemod();
+$datemod = new datemod();
 $datemod->date();
 $datemod->cache($datemod->gmtime);
 ?>
 /* SITE */
 Author:         Binyamin Laukstein
 Contact:        http://laukstein.com/contact
-Last update:    <?php echo$datemod->maxmod;?>
-Doctype:        HTML5 with CSS3 and Microdata
-Tools:          jQuery, JSON, PHP, MySQL, Apache
+Last update:    <?php echo "{$datemod->moddate}\n"; ?>
+Standards:      HTML5, CSS3, Microdata, JSON
+Components:     jQuery, PHP, MySQL
 Source:         https://github.com/laukstein/ajax-seo
-
-/* THANKS */
-Names & URL:    Rostislav Hristov, www.asual.com/jquery/address/ & jQuery Team, jquery.com
