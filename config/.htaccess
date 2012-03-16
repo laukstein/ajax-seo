@@ -1,2 +1,16 @@
 Order Deny,Allow
-Deny from All
+#Deny from all
+Allow from all
+
+<IfModule mod_rewrite.c>
+    # FollowSymLinks must be enabled for turning on the rewrite engine.
+    Options FollowSymlinks
+    
+    RewriteEngine On
+    
+    # Remove dot.
+    RewriteCond %{REQUEST_URI} ^([^\.]*)\.(.*)$
+    RewriteRule .* %1%2 [R=301,L]
+</IfModule>
+
+RedirectMatch 404 ^(/|$)
