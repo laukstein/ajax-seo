@@ -32,6 +32,12 @@ AddType image/x-icon .ico
 AddDefaultCharset utf-8
 AddCharset utf-8 .css .txt .js .xml
 
+
+# Custom error pages
+ErrorDocument 403 "403 Forbidden"
+ErrorDocument 404 "404 Not Found"
+ErrorDocument 500 "500 Internal Server Error"
+
 # Gzip compression
 <IfModule mod_deflate.c>
     <IfModule mod_setenvif.c>
