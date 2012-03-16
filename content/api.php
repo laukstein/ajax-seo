@@ -1,39 +1,79 @@
 <?php
-header('Content-Type:application/json; charset=utf-8');
+header('Content-Type: application/json; charset=utf-8');
 
-# HTTP header caching
-include('content/cache.php');
-$datemod    = new datemod();
-$datemod->date(array('.htaccess', 'index.php', 'content/.htaccess', 'config/httpd.conf', 'config/php.ini', 'config/my.cnf', 'content/connect.php', 'content/api.php', 'content/cache.php'), MYSQL_TABLE, $url);
-$datemod->cache($datemod->gmtime);
-
-$result     = mysql_query("SELECT url, name, title, content FROM ".MYSQL_TABLE." WHERE url='$url';");
-while($row  = @mysql_fetch_array($result,MYSQL_ASSOC)){
-    $row[]  = array('row'=>array_map('htmlspecialchars', $row));
-    $urlid  = strip_tags($row['url']);
-    $name   = strip_tags($row['name']);
-    $title  = strip_tags($row['title']);
+// Check if url exist
+if (mysql_num_rows($result)) {
+    // HTTP header caching
+    include('content/cache.php');
+    $datemod = new datemod();
+    $datemod->date(array(
+        '.htaccess',
+        'index.php',
+        'content/.htaccess',
+        'content/api.php',
+        'content/cache.php',
+        'content/connect.php'
+    ), MYSQL_TABLE, $url);
+    $datemod->cache($datemod->gmtime);
     
-    if(strlen($title)>0){
-        if($name!==$title){
-            $fn=$title;
-        }else{
-            $fn=$name;
+    while ($row = @mysql_fetch_array($result, MYSQL_ASSOC)) {
+        $row[] = array(
+            'row' => array_map('htmlspecialchars', $row)
+        );
+        $urlid = strip_tags($row['url']);
+        $name  = strip_tags($row['name']);
+        $title = strip_tags($row['title']);
+        
+        if (strlen($title) > 0) {
+            $fn = ($name !== $title) ? $title : $name;
+        } else {
+            $fn = $name;
         }
-    }else{
-        $fn=$name;
+        
+        $pagetitle = $name . ' - ';
+        if (strlen($url) == 0) {
+            $pagetitle = '';
+        }
+        
+        $array = array(
+            'url' => $urlid,
+            'pagetitle' => $pagetitle,
+            'title' => $name,
+            'content' => "<h1>$fn</h1>\n<p>{$row['content']}</p>\n"
+        );
+        
+        // Use for latest PHP standards for php.net/json-encode
+        if (version_compare(PHP_VERSION, '5.4', '>=')) {
+            // Add option "JSON_PRETTY_PRINT" in case you care more readability than to save some bits
+            $json = json_encode($array, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        } else {
+            $json = str_replace('\\/', '/', json_encode($array));
+        }
+        
+        echo isset($_GET['callback']) ? $_GET['callback'] . '(' . $json . ')' : $json;
+    }
+    mysql_close($con);
+} else {
+    // Return 404 error, if url does not exist
+    $validate = new validate($url);
+    $validate->status();
+    exit('404 Not Found');
+    /*$title = $validate->title;
+    $array = array(
+        'url' => $url,
+        'pagetitle' => $title . ' - ',
+        'title' => $title,
+        'content' => $validate->content
+    );
+    
+    // Use for latest PHP standards for php.net/json-encode
+    if (version_compare(PHP_VERSION, '5.4', '>=')) {
+        // Add option "JSON_PRETTY_PRINT" in case you care more readability than to save some bits
+        $json = json_encode($array, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    } else {
+        $json = str_replace('\\/', '/', json_encode($array));
     }
     
-    $array  = array('url'=>$urlid, 'title'=>$name, 'content'=>"<h1>$fn</h1>\r\n<p>{$row['content']}</p>\r\n");
-    $json   = str_replace('\\/', '/', json_encode($array)); // PHP 5.4.0  json_encode($array, JSON_UNESCAPED_UNICODE);
-    echo (isset($_GET['callback']) ? $_GET['callback'].'('.$json.')' : $json);
-}
-mysql_close($con);
-
-# Return 404 error, if url does not exist
-$validate   = new validate($url);
-if($url!==$urlid){
-    $validate->status();
-    echo (isset($_GET['callback']) ? $_GET['callback'].'({})' : '{}');
+    echo isset($_GET['callback']) ? $_GET['callback'] . '(' . $json . ')' : $json;*/
 }
 ?>
