@@ -62,6 +62,8 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
         // Set the global server time zone, needs for SUPER privileges
         mysql_query("SET GLOBAL time_zone = '" . date('T') . "'");
         
+        mysql_query("SET NAMES 'utf8'");
+        
         // Create table
         mysql_query("CREATE TABLE IF NOT EXISTS `" . MYSQL_TABLE . "` (
           `id` mediumint(8) NOT NULL AUTO_INCREMENT,
