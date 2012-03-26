@@ -78,6 +78,7 @@ if (strlen($url) == 0) {
 <link rel=stylesheet href=<?php echo $path; ?>images/style.css>
 <meta name=description content="AJAX SEO is crawlable framework for AJAX applications">
 <meta name=keywords content="ajax, seo, crawlable, applications, performance, speed, accessibility, usability">
+<meta name=referrer content=never>
 <meta name=viewport content="user-scalable=no, width=device-width, target-densitydpi=device-dpi">
 <!--[if lt IE 9]><script src=//html5shiv.googlecode.com/svn/trunk/html5.js></script><![endif]-->
 </head>
