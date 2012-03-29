@@ -31,7 +31,7 @@ class datemod
         if (isset($gmtime)) {
             if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
                 if ($_SERVER['HTTP_IF_MODIFIED_SINCE'] == $gmtime) {
-                    header('Status: 304 Not Modified', true, 304);
+                    http_response_code(304);
                     exit;
                 }
             }

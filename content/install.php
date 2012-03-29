@@ -37,12 +37,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     exit;
 }
 
-// Valid indexing & serving directives https://developers.google.com/webmasters/control-crawl-index/docs/robots_meta_tag
-header('X-Robots-Tag: none', true);
+// SEO friendly blackout status, http://googlewebmastercentral.blogspot.com/2011/01/how-to-deal-with-planned-site-downtime.html
+// Website outages and blackouts the right way - https://plus.google.com/115984868678744352358/posts/Gas8vjZ5fmB
+http_response_code(503);
+
+// Try to reach server after 1 minute 
+header('Retry-After: 60');
+
+// Valid indexing & serving directives, https://developers.google.com/webmasters/control-crawl-index/docs/robots_meta_tag
+header('X-Robots-Tag: none');
 
 // Installer setup
 $name               = 'Installation';
-$title_installation = ' - ' . $name;
+$pagetitle          = 'AJAX SEO ' . $name;
+$title_installation = ' ' . $name;
 $error              = (MYSQL_ERROR) ? '<span id=error>Could not connect to server</span>' : null;
 $installation       = '<style>
 ul.installation{

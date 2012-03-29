@@ -1,11 +1,19 @@
 <?php
-header('Content-Type: text/plain');
+
+// Add latest PHP functions
+if (version_compare(PHP_VERSION, '5.4', '<')) {
+    include('content/function.http-response-code.php');
+}
 
 // Prevent XSS and SQL Injection
 if (strpos($_SERVER['HTTP_HOST'], $_SERVER['SERVER_NAME']) === false) {
-    header('Status: 400 Bad Request', true, 400);
+    http_response_code(400);
+    header('X-Robots-Tag: none');
+    header('Content-Type: text/plain');
     exit('400 Bad Request');
 }
+
+header('Content-Type: text/plain');
 
 // HTTP header caching
 class datemod
@@ -78,7 +86,7 @@ class datemod
     {
         if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
             if ($_SERVER['HTTP_IF_MODIFIED_SINCE'] == $gmtime) {
-                header('Status: 304 Not Modified', true, 304);
+                http_response_code(304);
                 exit;
             }
         }

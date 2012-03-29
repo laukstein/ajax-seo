@@ -2,13 +2,20 @@
 // This is robots.txt file for Search Engine Optimizing
 // --------------------------------------------------
 
-header('Content-Type: text/plain');
+// Add latest PHP functions
+if (version_compare(PHP_VERSION, '5.4', '<')) {
+    include('content/function.http-response-code.php');
+}
 
 // Prevent XSS and SQL Injection
 if (strpos($_SERVER['HTTP_HOST'], $_SERVER['SERVER_NAME']) === false) {
-    header('Status: 400 Bad Request', true, 400);
+    http_response_code(400);
+    header('X-Robots-Tag: none');
+    header('Content-Type: text/plain');
     exit('400 Bad Request');
 }
+
+header('Content-Type: text/plain');
 
 // HTTP header caching
 function cache($file, $timestamp)
@@ -16,7 +23,7 @@ function cache($file, $timestamp)
     $gmtime = gmdate('D, d M Y H:i:s T', $timestamp);
     if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
         if ($_SERVER['HTTP_IF_MODIFIED_SINCE'] == $gmtime || str_replace('"', '', stripslashes($_SERVER['HTTP_IF_NONE_MATCH'])) == md5($timestamp . $file)) {
-            header('Status:304 Not Modified', true, 304);
+            http_response_code(304);
             exit;
         }
     }

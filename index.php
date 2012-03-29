@@ -1,9 +1,15 @@
 <?php
+
+// Add latest PHP functions
+if (version_compare(PHP_VERSION, '5.4', '<')) {
+    include('content/function.http-response-code.php');
+}
+
 // Prevent XSS and SQL Injection
 if (strpos($_SERVER['HTTP_HOST'], $_SERVER['SERVER_NAME']) === false) {
+    http_response_code(400);
+    header('X-Robots-Tag: none');
     header('Content-Type: text/plain');
-    header('X-Robots-Tag: none', true);
-    header('Status: 400 Bad Request', true, 400);
     exit('400 Bad Request');
 }
 
@@ -25,7 +31,7 @@ if (MYSQL_CON) {
     }
     
     // Check if url exist
-    if ($result) {
+    if (mysql_num_rows($result)) {
         // HTTP header caching
         include('content/cache.php');
         $datemod = new datemod();
@@ -45,36 +51,36 @@ if (MYSQL_CON) {
             );
             $urlid     = $row['url'];
             $name      = $row['name'];
-            $pagetitle = $name . ' - ';
             $title     = $row['title'];
             $content   = $row['content'];
+        }
+        $pretitle  = 'AJAX SEO';
+        $pagetitle = $name . ' - ' . $pretitle;
+        
+        // SEO page title improvement for the root page
+        if (strlen($url) == 0) {
+            $pagetitle = null;
         }
     } else {
         // Return 404 error, if url does not exist
         $validate = new validate($url);
         $validate->status();
         $title     = $validate->title;
-        $pagetitle = $title . ' - ';
+        $pagetitle = $title;
         $content   = $validate->content;
     }
 }
 
 // Avoid undefined variables
-$pretitle           = 'AJAX SEO';
 $note               = isset($note) ? $note : null;
 $title_installation = isset($title_installation) ? $title_installation : null;
 $installation       = isset($installation) ? $installation : null;
-
-// SEO page title improvement for the root page
-if (strlen($url) == 0) {
-    $pagetitle = null;
-}
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset=utf-8>
-<title><?php echo $pagetitle . $pretitle; ?></title>
+<title><?php echo $pagetitle; ?></title>
 <link rel=stylesheet href=<?php echo $path; ?>images/style.css>
 <meta name=description content="AJAX SEO is crawlable framework for AJAX applications">
 <meta name=keywords content="ajax, seo, crawlable, applications, performance, speed, accessibility, usability">

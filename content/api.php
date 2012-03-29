@@ -5,7 +5,7 @@
 header('Content-Type: application/json; charset=utf-8');
 
 // Check if url exist
-if ($result) {
+if (mysql_num_rows($result)) {
     // HTTP header caching
     include('content/cache.php');
     $datemod = new datemod();
@@ -61,22 +61,5 @@ if ($result) {
     $validate = new validate($url);
     $validate->status();
     exit('404 Not Found');
-    /*$title = $validate->title;
-    $array = array(
-        'url' => $url,
-        'pagetitle' => $title . ' - ',
-        'title' => $title,
-        'content' => $validate->content
-    );
-    
-    // Use for latest PHP standards for php.net/json-encode
-    if (version_compare(PHP_VERSION, '5.4', '>=')) {
-        // Add option "JSON_PRETTY_PRINT" in case you care more readability than to save some bits
-        $json = json_encode($array, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-    } else {
-        $json = str_replace('\\/', '/', json_encode($array));
-    }
-    
-    echo isset($_GET['callback']) ? $_GET['callback'] . '(' . $json . ')' : $json;*/
 }
 ?>

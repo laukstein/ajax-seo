@@ -26,12 +26,15 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
         $change = file_get_contents($f);
         $change = preg_replace("/define\('(MYSQL_CON)', false\);/", "define('$1', true);", $change);
         $change = preg_replace("/define\('(MYSQL_ERROR)', true\);/", "define('$1', false);", $change);
+        
+        // Change connect.php file permissions if needed
         if (!@is_writable($f)) {
             chmod($f, 0755);
-        } // Change connect.php file permissions if needed
+        }
         $fopen = fopen($f, 'w');
         fwrite($fopen, $change);
         fclose($fopen);
+        
         header("Location: {$_SERVER['REQUEST_URI']}");
         exit;
     }
@@ -51,7 +54,7 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
         public $content;
         function status()
         {
-            header('Status: 404 Not Found', true, 404);
+            http_response_code(404);
             $this->title   = '404 Not Found';
             $this->content = 'Sorry, this page cannot be found.';
         }
@@ -92,7 +95,6 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
         }
         
         header('Content-Type: text/html');
-        
         // Valid indexing & serving directives https://developers.google.com/webmasters/control-crawl-index/docs/robots_meta_tag
         header('X-Robots-Tag: none', true);
         $note = 'Congratulations, installation has completed successfully.';

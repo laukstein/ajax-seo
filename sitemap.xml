@@ -1,14 +1,21 @@
 <?php
-// Creating Sitemaps in Google Webmaster Tools http://support.google.com/webmasters/bin/answer.py?hl=en&answer=183668
+// Creating Sitemaps in Google Webmaster Tools - http://support.google.com/webmasters/bin/answer.py?hl=en&answer=183668
 // --------------------------------------------------
 
-header('Content-Type: application/xml');
+// Add latest PHP functions
+if (version_compare(PHP_VERSION, '5.4', '<')) {
+    include('content/function.http-response-code.php');
+}
 
 // Prevent XSS and SQL Injection
 if (strpos($_SERVER['HTTP_HOST'], $_SERVER['SERVER_NAME']) === false) {
-    header('Status: 400 Bad Request', true, 400);
+    http_response_code(400);
+    header('X-Robots-Tag: none');
+    header('Content-Type: text/plain');
     exit('400 Bad Request');
 }
+
+header('Content-Type: application/xml');
 
 // Database settings
 include('content/connect.php');
@@ -20,8 +27,8 @@ while ($row = @mysql_fetch_array($tablemod, MYSQL_ASSOC)) {
     {
         if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
             if ($_SERVER['HTTP_IF_MODIFIED_SINCE'] == $gmtime) {
-                header('Status:304 Not Modified', true, 304);
-                exit();
+                http_response_code(304);
+                exit;
             }
         }
         header("Last-Modified:$gmtime");
