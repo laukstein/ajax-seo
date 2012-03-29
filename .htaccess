@@ -157,11 +157,7 @@ ErrorDocument 500 "500 Internal Server Error"
     
     # Rewrite query string for AJAX crawling support.google.com/webmasters/bin/answer.py?hl=en&answer=174992
     RewriteCond %{QUERY_STRING} ^_escaped_fragment_=(.*)$
-    RewriteRule .*$ %{REQUEST_URI}%1? [R=302,L]
-    #RewriteCond %{QUERY_STRING} ^.+$
-    #RewriteCond %{QUERY_STRING} !url
-    #RewriteCond %{QUERY_STRING} !api
-    #RewriteRule .*$ %{REQUEST_URI}? [R=302,L]
+    RewriteRule .*$ %{REQUEST_URI}%1? [R=301,L]
     
     # Remove question mark and parameters.
     RewriteCond %{THE_REQUEST} ^[A-Z]+\ /([^?#\ ]*)\?[^\ ]*\ HTTP/ [NC]
