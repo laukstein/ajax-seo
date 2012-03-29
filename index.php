@@ -78,7 +78,9 @@ if (strlen($url) == 0) {
 <link rel=stylesheet href=<?php echo $path; ?>images/style.css>
 <meta name=description content="AJAX SEO is crawlable framework for AJAX applications">
 <meta name=keywords content="ajax, seo, crawlable, applications, performance, speed, accessibility, usability">
+<!-- Secure less byte request without HTTP Referrer, http://wiki.whatwg.org/wiki/Meta_referrer -->
 <meta name=referrer content=never>
+<!-- Mobile UI - avoid user zoom, match UI width with device screen width, adapt UI to any pixel ratio with meta "viewport". http://designbycode.tumblr.com/post/1127120282 -->
 <meta name=viewport content="user-scalable=no, width=device-width, target-densitydpi=device-dpi">
 <!--[if lt IE 9]><script src=//html5shiv.googlecode.com/svn/trunk/html5.js></script><![endif]-->
 </head>
@@ -144,7 +146,7 @@ if (MYSQL_CON) {
 </div>
 <?php if(MYSQL_CON){ ?>
 <!-- code.jquery.com Edgecast's CDN has better performance http://royal.pingdom.com/2010/05/11/cdn-performance-downloading-jquery-from-google-microsoft-and-edgecast-cdns/
-     If you use HTTPS, replace jQuery CDN with Google CDN, like "//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" -->
+     If you use HTTPS, replace jQuery CDN source with Google CDN //ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js -->
 <script src=http://code.jquery.com/jquery-1.7.2.min.js></script>
 <script>window.jQuery || document.write('<script src=<?php echo $path; ?>images/jquery-1.7.2.min.js><\/script>')</script>
 <script src=<?php echo $path; ?>images/jquery.address.js></script>
