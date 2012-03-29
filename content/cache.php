@@ -8,7 +8,7 @@ class datemod
     function date($files, $dbtable, $url)
     {
         $result = mysql_query("SELECT DATE_FORMAT(pubdate, '%a, %d %b %Y %T') AS pubdate FROM " . MYSQL_TABLE . " WHERE url = '$url'");
-        if (mysql_num_rows($result)) {
+        if ($result) {
             foreach ($files as $val) {
                 $mod     = date('D, d M Y H:i:s T', filemtime($val));
                 $array[] = $mod;

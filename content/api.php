@@ -5,7 +5,7 @@
 header('Content-Type: application/json; charset=utf-8');
 
 // Check if url exist
-if (mysql_num_rows($result)) {
+if ($result) {
     // HTTP header caching
     include('content/cache.php');
     $datemod = new datemod();
