@@ -59,7 +59,7 @@ if (MYSQL_CON) {
         
         // SEO page title improvement for the root page
         if (strlen($url) == 0) {
-            $pagetitle = null;
+            $pagetitle = 'AJAX SEO';
         }
     } else {
         // Return 404 error, if url does not exist
