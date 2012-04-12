@@ -163,7 +163,7 @@ ErrorDocument 500 "500 Internal Server Error"
     RewriteCond %{THE_REQUEST} ^[A-Z]+\ /([^?#\ ]*)\?[^\ ]*\ HTTP/ [NC]
     # Query exceptions.
     #RewriteCond $1 !^images/
-    RewriteCond !{QUERY_STRING} callback
+    #RewriteCond !{QUERY_STRING} callback
     RewriteRule .*$ %{REQUEST_URI}? [R=301,L]
     
     # Remove dot.
