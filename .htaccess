@@ -1,8 +1,8 @@
 # Without -MultiViews will be returned 404 error for a rewrite if a folder of the same name does not exist.
 # For highest performance, and no symlink protection, set FollowSymLinks everywhere, and never set SymLinksIfOwnerMatch, httpd.apache.org/docs/current/misc/perf-tuning.html#symlinks
-# With IncludesNOEXEC server-side includes are permitted, but the #exec cmd and #exec cgi are disabled.
+# With +IncludesNOEXEC server-side includes are permitted, but the #exec cmd and #exec cgi are disabled.
 # It is still possible to #include virtual CGI scripts from ScriptAliase'd directories, httpd.apache.org/docs/trunk/mod/core.html
-Options -MultiViews +SymLinksIfOwnerMatch IncludesNOEXEC
+Options -MultiViews +SymLinksIfOwnerMatch +IncludesNOEXEC
 
 # -Indexes will block users from browsing folders without a default document.
 <IfModule mod_autoindex.c>
