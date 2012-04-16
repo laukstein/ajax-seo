@@ -81,13 +81,13 @@ $installation       = isset($installation) ? $installation : null;
 <head>
 <meta charset=utf-8>
 <title><?php echo $pagetitle; ?></title>
-<link rel=stylesheet href=<?php echo $path; ?>images/style.css>
 <meta name=description content="AJAX SEO is crawlable framework for AJAX applications">
 <meta name=keywords content="ajax, seo, crawlable, applications, performance, speed, accessibility, usability">
 <!-- Secure less byte request without HTTP Referrer, http://wiki.whatwg.org/wiki/Meta_referrer -->
 <meta name=referrer content=never>
-<!-- Mobile UI - avoid user zoom, match UI width with device screen width, adapt UI to any pixel ratio with meta "viewport". http://designbycode.tumblr.com/post/1127120282 -->
-<meta name=viewport content="user-scalable=no, width=device-width, target-densitydpi=device-dpi">
+<!-- Mobile UI - avoid user zoom, match UI width with device screen width -->
+<meta name=viewport content="initial-scale=0.666, maximum-scale=0.666, width=device-width, target-densityDpi=high-dpi">
+<link rel=stylesheet href=<?php echo $path; ?>images/style.css>
 <!--[if lt IE 9]><script src=//html5shiv.googlecode.com/svn/trunk/html5.js></script><![endif]-->
 </head>
 <body itemscope itemtype=http://schema.org/WebPage>
