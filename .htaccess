@@ -116,14 +116,18 @@ ErrorDocument 500 "500 Internal Server Error"
     
     RewriteEngine On
     
+    # Handle HTTPS protocol.
+    RewriteCond %{HTTPS} on
+    RewriteRule .* - [env=https:s]
+    
     # Rewrite www to no-www domain.
     RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-    RewriteRule ^ http://%1%{REQUEST_URI} [R=301,L]
+    RewriteRule ^ http%{ENV:https}://%1%{REQUEST_URI} [R=301,L]
     
     # Rewrite multiple slashes with single slash after domain.
     RewriteCond %{THE_REQUEST} ^[A-Z]+\s//+(.*)\sHTTP/[0-9.]+$ [OR]
     RewriteCond %{THE_REQUEST} ^[A-Z]+\s(.*/)/+\sHTTP/[0-9.]+$
-    RewriteRule .* http://%{HTTP_HOST}/%1 [R=301,NE,L]
+    RewriteRule .* http%{ENV:https}://%{HTTP_HOST}/%1 [R=301,NE,L]
     
     # Rewrite multiple slashes with single slash in URL.
     RewriteCond %{REQUEST_URI} ^(.*)//(.*)$
@@ -148,19 +152,19 @@ ErrorDocument 500 "500 Internal Server Error"
     RewriteRule .* %1-%2 [R=301,L]
     
     # Remove index.php
-    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^/]+/)*index\.php\ HTTP/ [NC]
-    RewriteRule ^(.*)index\.php$ http://%{HTTP_HOST}/%1 [R=301,L]
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /(.*)index\.php\ HTTP/ [NC]
+    RewriteRule .* http%{ENV:https}://%{HTTP_HOST}/%1 [R=301,L]
     
     # Remove extension .php
-    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^/]+/)*[^.]+\.php(\?[^\ ]*)?\ HTTP/ [NC]
-    RewriteRule ^(([^/]+/)*[^.]+)\.php$ http://%{HTTP_HOST}/%1$1 [R=301,L]
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /(.*).php\ HTTP/ [NC]
+    RewriteRule .* http%{ENV:https}://%{HTTP_HOST}/%1 [R=301,L]
     
     # Rewrite query string for AJAX crawling support.google.com/webmasters/bin/answer.py?hl=en&answer=174992
     RewriteCond %{QUERY_STRING} ^_escaped_fragment_=(.*)$
     RewriteRule .*$ %{REQUEST_URI}%1? [R=301,L]
     
     # Remove question mark and parameters.
-    RewriteCond %{THE_REQUEST} ^[A-Z]+\ /([^?#\ ]*)\?[^\ ]*\ HTTP/ [NC]
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^?#\ ]*)\?[^\ ]*\ HTTP/ [NC]
     # Query exceptions.
     #RewriteCond $1 !^images/
     #RewriteCond !{QUERY_STRING} callback
@@ -179,9 +183,9 @@ ErrorDocument 500 "500 Internal Server Error"
     RewriteCond %{REQUEST_URI} ^(.*)\-/(.*)$
     RewriteRule ^(.*)\-/(.*)$  %1/%2 [R=301,L]
     
-    # Remove dash after slash.
-    RewriteCond %{REQUEST_URI} ^(^\.)\/-(.*)$
-    RewriteRule ^(.*)\/-(.*)$  %1/%2 [R=301,L]
+    # Remove dash at URL end.
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /(.*)-\ HTTP/ [NC]
+    RewriteRule .* http%{ENV:https}://%{HTTP_HOST}/%1 [R=301,L]
     
     # Rewrite uppercase letter URL to lowercase with config/httpd.conf RewriteMap lc int:tolower
     # Solution without httpd.conf RewriteMap in github.com/laukstein/ajax-seo/wiki/Lowercase-URL
