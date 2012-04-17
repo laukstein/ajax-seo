@@ -23,10 +23,11 @@ The source code is build on latest Web technology, like HTML5, Microdata, PHP 5,
 * HTML5 history API for Chrome 10, FF4, IE10, Safari 5, Opera 11.5 with crawlable SEO fallback for older browsers
 * AJAX crawling scheme with Apache Rewrite, <https://developers.google.com/webmasters/ajax-crawling/docs/getting-started>
 * Rewrite www to no-www domain, <http://no-www.org>
+* Handle HTTP/HTTPS protocol
 * Slash and backslash issues
-* Rewrite uppercase letter URLs to lowercase
+* Rewrite uppercase URLs to lowercase
 * Rewrite space and underscore with dash
-* Remove .php extension
+* Remove index.php and .php extension
 * Remove dot and comma
 * 404 error page
 
@@ -45,7 +46,6 @@ The source code is build on latest Web technology, like HTML5, Microdata, PHP 5,
 
 ## Known bugs
 
-* Apache - domain.com/ajax-seo/path/index.php has redirect 301 to domain.com/path/
 * jQuery Address - GA bug - repeted __utm.gif request for first page load
 * jQuery Address - rewrite `/#/url` to `/#!/url`
 * jQuery Address - avoid `$.ajax()` when content is cached, not modified
