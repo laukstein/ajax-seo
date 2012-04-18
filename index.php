@@ -212,7 +212,6 @@ if (strlen(utf8_decode($path)) > 1) {
                 //jsonpCallback: 'i',
                 cache: true,
                 beforeSend: function () {
-                    document.title = 'Loading...';
                     content.fadeTo(200, 0.33);
                 },
                 success: function (data, textStatus, jqXHR) {
