@@ -90,7 +90,7 @@ echo "<!DOCTYPE html>
 <meta name=keywords content=\"$meta_keywords\">
 <meta name=referrer content=never>
 <meta name=viewport content=\"initial-scale=0.666, maximum-scale=0.666, width=device-width, target-densityDpi=high-dpi\">
-<link rel=stylesheet href={$path}images/style.css>
+<link rel=stylesheet href={$path}images/style.min.css>
 <!--[if lt IE 9]><script src=//html5shiv.googlecode.com/svn/trunk/html5.js></script><![endif]-->
 </head>
 <body itemscope itemtype=http://schema.org/WebPage>\n";
@@ -175,7 +175,7 @@ $rootpath = (strlen(utf8_decode($path)) > 1) ? substr($path, 0, -1) : $path;
 
 echo "<script src=http://code.jquery.com/jquery-1.7.2.min.js></script>
 <script>window.jQuery || document.write('<script src={$path}images/jquery-1.7.2.min.js><\/script>')</script>
-<script src={$path}images/jquery.address.js></script>
+<script src={$path}images/jquery.address.min.js></script>
 <script>
 (function () {
     'use strict';
