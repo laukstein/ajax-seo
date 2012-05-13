@@ -69,6 +69,7 @@ if (MYSQL_CON) {
         $validate -> status();
         $title			  = $validate->title;
         $pagetitle		  = $title;
+        $pretitle		  = null;
         $meta_description = null;
         $meta_keywords	  = null;
         $content		  = $validate -> content;
@@ -186,7 +187,7 @@ echo "<script src=http://code.jquery.com/jquery-1.7.2.min.js></script>
         state = window.history.pushState !== undefined,
         handler = function (data) {
             // Response
-            document.title = data.pagetitle + '$pagetitle';
+            document.title = data.pagetitle + '$pretitle';
             content.fadeTo(20, 1).removeAttr('style').html(data.content);
             if ($.browser.msie) {
                 content.removeAttr('filter');
