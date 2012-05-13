@@ -74,7 +74,7 @@ class datemod
         
         // Database settings
         include('content/connect.php');
-        $tablemod = mysql_query("SELECT DATE_FORMAT(MAX(pubdate),'%a, %d %b %Y %T') AS pubdate FROM " . MYSQL_TABLE);
+        $tablemod = mysql_query("SELECT DATE_FORMAT(MAX(pubdate),'%a, %d %b %Y %T') AS pubdate FROM `" . MYSQL_TABLE . "`");
         while ($row = @mysql_fetch_array($tablemod, MYSQL_ASSOC)) {
             $rowmod        = $row['pubdate'] . date(' T');
             $this->gmtime  = date('Y-m-d H:i:s', strtotime($fmod)) >= date('Y-m-d H:i:s', strtotime($rowmod)) ? $fmod : $rowmod;
