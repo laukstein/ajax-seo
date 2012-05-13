@@ -83,13 +83,13 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
         
         // Insert data
         $now = date('Y-m-d H:i:s');
-        mysql_query("INSERT INTO `" . MYSQL_TABLE . "` (array, url, `meta-title`, title, content) VALUES
-					(1, '', '', 'Home', 'AJAX SEO is crawlable framework for AJAX applications that applies the latest SEO standards, Page Speed and YSlow rules, Google HTML/CSS Style Guide etc to improve maximal performance, speed, accessibility and usability.<br>\nThe source code is build on latest Web technology, like HTML5, Microdata, PHP 5, etc.'),
-					(2, 'about', 'About', '', 'About content'),
-					(3, 'portfolio', 'Portfolio', 'Portfolio', 'Portfolio content'),
-					(4, 'contact', 'Contact us', 'Contact', 'Contact content'),
-					(5, 'контакты', '', 'Контакты', 'Содержание контактом'),
-					(6, 'צור-קשר', '', 'צור קשר', 'תוכן לצור קשר');");
+        mysql_query("INSERT INTO `" . MYSQL_TABLE . "` (array, url, `meta-title`, `meta-description`, `meta-keywords`, title, content) VALUES
+					(1, '', '', 'AJAX SEO is crawlable framework for AJAX applications.', 'ajax, seo, crawlable, applications, performance, speed, accessibility, usability', 'Home', 'AJAX SEO is crawlable framework for AJAX applications that applies the latest SEO standards, Page Speed and YSlow rules, Google HTML/CSS Style Guide, etc to improve maximal performance, speed, accessibility and usability.<br>\nThe source code is build on latest Web technology, like HTML5, Microdata, PHP 5, etc.'),
+					(2, 'about', 'About', '', '', '', 'About content'),
+					(3, 'portfolio', 'Portfolio', '', '', 'Portfolio', 'Portfolio content'),
+					(4, 'contact', 'Contact us', '', '', 'Contact', 'Contact content'),
+					(5, 'контакты', 'Контакты', '', '', '', 'Содержание контактом'),
+					(6, 'צור-קשר', 'צור קשר', '', '', '', 'תוכן לצור קשר');
         
         if (is_writable($f)) {
             chmod($f, 0600);
