@@ -7,7 +7,7 @@ class datemod
     
     function date($files, $dbtable, $url)
     {
-        $result = mysql_query("SELECT DATE_FORMAT(pubdate, '%a, %d %b %Y %T') AS pubdate FROM " . MYSQL_TABLE . " WHERE url = '$url'");
+        $result = mysql_query("SELECT DATE_FORMAT(pubdate, '%a, %d %b %Y %T') AS pubdate FROM `" . MYSQL_TABLE . "` WHERE url = '$url'");
         if ($result) {
             foreach ($files as $val) {
                 $mod     = date('D, d M Y H:i:s T', filemtime($val));
@@ -26,6 +26,7 @@ class datemod
         }
     }
     
+    
     function cache($gmtime)
     {
         if (isset($gmtime)) {
@@ -38,5 +39,6 @@ class datemod
             header("Last-Modified: $gmtime");
         }
     }
+    
 }
 ?>
