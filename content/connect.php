@@ -89,7 +89,7 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
 					(3, 'portfolio', 'Portfolio', '', '', 'Portfolio', 'Portfolio content'),
 					(4, 'contact', 'Contact us', '', '', 'Contact', 'Contact content'),
 					(5, 'контакты', 'Контакты', '', '', '', 'Содержание контактом'),
-					(6, 'צור-קשר', 'צור קשר', '', '', '', 'תוכן לצור קשר');
+					(6, 'צור-קשר', 'צור קשר', '', '', '', 'תוכן לצור קשר');");
         
         if (is_writable($f)) {
             chmod($f, 0600);
