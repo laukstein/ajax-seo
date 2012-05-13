@@ -20,9 +20,6 @@ ServerSignature Off
 #php_flag allow_url_fopen 0
 #php_flag allow_url_include 0
 #php_flag short_open_tag 0
-#php_flag magic_quotes_gpc 0
-#php_flag safe_mode 0
-#php_flag register_globals 0
 #php_flag expose_php 0
 
 AddType text/cache-manifest appcache
@@ -108,6 +105,7 @@ ErrorDocument 500 "500 Internal Server Error"
     </FilesMatch>
     FileETag None
     Header unset ETag
+    Header unset Cache-Control
 </IfModule>
 
 <IfModule mod_rewrite.c>
@@ -197,8 +195,8 @@ ErrorDocument 500 "500 Internal Server Error"
     
     RewriteCond %{REQUEST_FILENAME} !-f [OR]
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^api/?([^\./]*)$ index.php?api&url=$1 [L,QSA]
-    RewriteRule ^([^.]*)$ index.php?url=$1 [L,QSA]
+    RewriteRule ^api/?([^\./]*)$ index.php?api&url=$1 [QSA,L]
+    RewriteRule ^([^.]*)$ index.php?url=$1 [QSA,L]
     
     # Get the headers If-Modified-Since and If-None-Match when apache_request_headers() is not available
     RewriteRule .* - [E=HTTP_IF_MODIFIED_SINCE:%{HTTP:If-Modified-Since}]
