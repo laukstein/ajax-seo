@@ -46,9 +46,7 @@ The source code is build on latest Web technology, like HTML5, Microdata, PHP 5,
 
 ## Known bugs
 
-* jQuery Address - GA bug - repeted __utm.gif request for first page load
 * jQuery Address - rewrite `/#/url` to `/#!/url`
-* jQuery Address - avoid `$.ajax()` when content is cached, not modified
 * W3C - CSS3 standards does not accept [vendor prefixes](//www.w3.org/Bugs/Public/show_bug.cgi?id=11989)
 
 
