@@ -1,6 +1,6 @@
 # [AJAX SEO](http://lab.laukstein.com/ajax-seo/)
 
-AJAX SEO is crawlable framework for AJAX applications that applies the latest SEO standards, Page Speed and YSlow rules. For maximized performance, speed, accessibility and usability.
+AJAX SEO is crawlable framework for AJAX applications that applies the latest SEO standards, Page Speed and YSlow rules, Google HTML/CSS Style Guide, etc. to improve maximal performance, speed, accessibility and usability.
 The source code is build on latest Web technology, like HTML5, Microdata, PHP 5, etc.
 
 [See the demo](<http://lab.laukstein.com/ajax-seo/>)
