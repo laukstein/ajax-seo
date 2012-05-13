@@ -2,6 +2,9 @@
 // API
 // --------------------------------------------------
 
+// Simulate API slow respond
+//sleep(3);
+
 header('Content-Type: application/json; charset=utf-8');
 
 // Check if url exist
@@ -24,16 +27,16 @@ if (mysql_num_rows($result)) {
             'row' => array_map('htmlspecialchars', $row)
         );
         $urlid = strip_tags($row['url']);
-        $name  = strip_tags($row['name']);
+        $meta_title  = strip_tags($row['meta-title']);
         $title = strip_tags($row['title']);
         
         if (strlen($title) > 0) {
-            $fn = ($name !== $title) ? $title : $name;
+            $fn = ($meta_title !== $title) ? $title : $meta_title;
         } else {
-            $fn = $name;
+            $fn = $meta_title;
         }
         
-        $pagetitle = $name . ' - ';
+        $pagetitle = $meta_title . ' - ';
         if (strlen($url) == 0) {
             $pagetitle = '';
         }
@@ -41,7 +44,7 @@ if (mysql_num_rows($result)) {
         $array = array(
             'url' => $urlid,
             'pagetitle' => $pagetitle,
-            'title' => $name,
+            'title' => $meta_title,
             'content' => "<h1>$fn</h1>\n<p>{$row['content']}</p>\n"
         );
         
