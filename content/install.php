@@ -48,16 +48,16 @@ header('Retry-After: 60');
 header('X-Robots-Tag: none');
 
 // Installer setup
-$name               = 'Installation';
-$pagetitle          = 'AJAX SEO ' . $name;
-$title_installation = ' ' . $name;
-$error              = (MYSQL_ERROR) ? '<span id=error>Could not connect to server</span>' : null;
+$meta_title         = 'Installation';
+$pagetitle          = 'AJAX SEO ' . $meta_title;
+$title_installation = ' ' . $meta_title;
+$error              = (MYSQL_ERROR) ? '<span class=error>Could not connect to server</span>' : null;
 $installation       = '<style>
-ul.installation{
+.installation{
     padding:0;
     list-style:none;
 }
-ul.installation label{
+.installation label{
     display:inline-block;
     width:105px;
 }
@@ -67,7 +67,7 @@ input{
     font-size:15px;
     line-height:20px;
 }
-#install{
+.install{
     margin-left:105px;
     padding:2px 15px;
     border-radius:3px;
@@ -75,8 +75,8 @@ input{
     background-color:#ddd;
     cursor:pointer;
 }
-#install:hover{background-color:#e3e3e3;}
-#error{
+.install:hover{background-color:#e3e3e3;}
+.error{
     margin-left:105px;
     color:#ff2121;
 }
@@ -84,13 +84,13 @@ input{
 <h1>MySQL connection details</h1>
 <form method=post>
 <ul class=installation>
-    <li><label for=db>Database Name</label><input id=db type=text name=db value="' . MYSQL_DB . '" placeholder=ajax_seo>
-    <li><label for=user>User Name</label><input id=user type=text name=user value="' . MYSQL_USER . '">
+    <li><label for=db>Database name</label><input id=db type=text name=db value="' . MYSQL_DB . '" placeholder=ajax_seo>
+    <li><label for=user>User name</label><input id=user type=text name=user value="' . MYSQL_USER . '">
     <li><label for=pass>Password</label><input id=pass type=password name=pass>
-    <li><label for=host>Database Host</label><input id=host name=host value="' . MYSQL_HOST . '" placeholder=localhost>
+    <li><label for=host>Database host</label><input id=host name=host value="' . MYSQL_HOST . '" placeholder=localhost>
     <li><label for=table>Table</label><input id=table type=text name=table value="' . MYSQL_TABLE . '">
-    <li><input id=install type=submit name=install value=Install><input type=hidden name=submitted value=true>
+    <li><input class=install type=submit name=install value=Install><input type=hidden name=submitted value=true>
 </ul>' . $error . '
 </form>
-Your MySQL connection details will be saved in connect.php, after you can open and edit it trough text editor.';
+Your db configuration will be saved in connect.php, after you can open and edit it trough text editor.';
 ?>
