@@ -4,7 +4,7 @@ define('MYSQL_DB', 'test');
 define('MYSQL_USER', 'root');
 define('MYSQL_PASS', '');
 define('MYSQL_HOST', 'localhost');
-define('MYSQL_TABLE', 'ajax_seo');
+define('MYSQL_TABLE', 'ajax-seo');
 define('MYSQL_CON', true);
 define('MYSQL_ERROR', false);
 
@@ -60,7 +60,7 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
         }
     }
     
-    $sql = "SELECT * FROM " . MYSQL_TABLE;
+    $sql = 'SELECT * FROM `' . MYSQL_TABLE .'`';
     if (!mysql_query($sql)) {
         // Set the global server time zone, needs for SUPER privileges
         mysql_query("SET GLOBAL time_zone = '" . date('T') . "'");
@@ -68,27 +68,28 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
         mysql_query("SET NAMES 'utf8'");
         
         // Create table
-        mysql_query("CREATE TABLE IF NOT EXISTS `" . MYSQL_TABLE . "` (
-          `id` mediumint(8) NOT NULL AUTO_INCREMENT,
-          `order` mediumint(8) NOT NULL,
-          `url` varchar(70) NOT NULL,
-          `title` varchar(70) NOT NULL,
-          `name` text NOT NULL,
-          `content` text NOT NULL,
-          `pubdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-          PRIMARY KEY (`id`, `url`),
-          UNIQUE KEY `order` (`order`)
-        ) ENGINE=MyISAM DEFAULT CHARSET=utf8");
+        mysql_query('CREATE TABLE IF NOT EXISTS `' . MYSQL_TABLE . '` (
+					  id mediumint(8) NOT NULL AUTO_INCREMENT,
+					  array mediumint(8) NOT NULL,
+					  url varchar(70) NOT NULL,
+					  `meta-title` varchar(70) NOT NULL,
+					  `meta-description` varchar(154) NOT NULL,
+					  `meta-keywords` varchar(250) NOT NULL,
+					  title varchar(70) NOT NULL,
+					  content text NOT NULL,
+					  pubdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+					  PRIMARY KEY (id)
+					) ENGINE=MyISAM DEFAULT CHARSET=utf8;');
         
         // Insert data
         $now = date('Y-m-d H:i:s');
-        mysql_query("INSERT INTO `" . MYSQL_TABLE . "` (`order`, url, name, title, content, pubdate) VALUES
-          (1, '', 'Home', '', 'Home content', '$now'),
-          (2, 'about', 'About', '', 'About content', '$now'),
-          (3, 'portfolio', 'Portfolio', 'Portfolio', 'Portfolio content', '$now'),
-          (4, 'contact', 'Contact', 'Contact us', 'Contact content', '$now'),
-          (5, 'контакты', 'Контакты', '', 'Содержание контактом', '$now'),
-          (6, 'צור-קשר' ,'צור קשר' ,'' ,'תוכן לצור קשר', '$now');");
+        mysql_query("INSERT INTO `" . MYSQL_TABLE . "` (array, url, `meta-title`, title, content) VALUES
+					(1, '', '', 'Home', 'AJAX SEO is crawlable framework for AJAX applications that applies the latest SEO standards, Page Speed and YSlow rules, Google HTML/CSS Style Guide etc to improve maximal performance, speed, accessibility and usability.<br>\nThe source code is build on latest Web technology, like HTML5, Microdata, PHP 5, etc.'),
+					(2, 'about', 'About', '', 'About content'),
+					(3, 'portfolio', 'Portfolio', 'Portfolio', 'Portfolio content'),
+					(4, 'contact', 'Contact us', 'Contact', 'Contact content'),
+					(5, 'контакты', '', 'Контакты', 'Содержание контактом'),
+					(6, 'צור-קשר', '', 'צור קשר', 'תוכן לצור קשר');");
         
         if (is_writable($f)) {
             chmod($f, 0600);
