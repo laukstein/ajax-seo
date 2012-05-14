@@ -1,5 +1,7 @@
 <?php
+
 // MySQL settings
+// --------------------------------------------------
 define('MYSQL_DB', 'test');
 define('MYSQL_USER', 'root');
 define('MYSQL_PASS', '');
@@ -8,10 +10,15 @@ define('MYSQL_TABLE', 'ajax-seo');
 define('MYSQL_CON', true);
 define('MYSQL_ERROR', false);
 
-$con = @mysql_connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASS);
-$f   = 'content/connect.php';
 
-//date_default_timezone_set('Etc/GMT');
+
+// Connect to db
+// --------------------------------------------------
+$con = @mysql_connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASS);
+
+
+
+$f   = 'content/connect.php';
 
 // Return dir path
 if (str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME)) != '/') {
@@ -102,6 +109,7 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
     }
 } else {
     // Installer on not reachable database
-    include('content/install.php');
+    include 'content/install.php';
 }
+
 ?>

@@ -1,4 +1,5 @@
 <?php
+
 // HTTP header caching
 // --------------------------------------------------
 class datemod
@@ -41,4 +42,5 @@ class datemod
     }
     
 }
+
 ?>

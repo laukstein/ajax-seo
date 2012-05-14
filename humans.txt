@@ -1,21 +1,17 @@
 <?php
 
-// Add latest PHP functions
-if (version_compare(PHP_VERSION, '5.4', '<')) {
-    include('content/function.http-response-code.php');
-}
+// Configuration
+// --------------------------------------------------
+include 'content/config.php';
 
-// Prevent XSS and SQL Injection
-if (strpos($_SERVER['HTTP_HOST'], $_SERVER['SERVER_NAME']) === false) {
-    http_response_code(400);
-    header('X-Robots-Tag: none');
-    header('Content-Type: text/plain');
-    exit('400 Bad Request');
-}
+
 
 header('Content-Type: text/plain');
 
+
+
 // HTTP header caching
+// --------------------------------------------------
 class datemod
 {
     public $gmtime;
@@ -72,8 +68,12 @@ class datemod
         //print_r($array);
         $fmod = date('D, d M Y H:i:s T', strtotime(max($array)));
         
-        // Database settings
-        include('content/connect.php');
+        
+        
+        // Connect to MySQL
+        // --------------------------------------------------
+        include 'content/connect.php';
+        
         $tablemod = mysql_query("SELECT DATE_FORMAT(MAX(pubdate),'%a, %d %b %Y %T') AS pubdate FROM `" . MYSQL_TABLE . "`");
         while ($row = @mysql_fetch_array($tablemod, MYSQL_ASSOC)) {
             $rowmod        = $row['pubdate'] . date(' T');
@@ -96,11 +96,15 @@ class datemod
 $datemod = new datemod();
 $datemod->date();
 $datemod->cache($datemod->gmtime);
-?>
-/* SITE */
+
+
+
+echo "/* SITE */
 Author:         Binyamin Laukstein
 Contact:        http://laukstein.com/contact
-Last update:    <?php echo "{$datemod->moddate}\n"; ?>
+Last update:    {$datemod->moddate}
 Standards:      HTML5, CSS3, Microdata, JSON
 Components:     jQuery, PHP, MySQL
-Source:         https://github.com/laukstein/ajax-seo
+Source:         https://github.com/laukstein/ajax-seo";
+
+?>

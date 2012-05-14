@@ -1,4 +1,5 @@
 <?php
+
 // Define MySQL connection and error status
 if (MYSQL_CON) {
     $change = file_get_contents($f);
@@ -17,6 +18,7 @@ if (MYSQL_CON) {
 }
 
 // Add MySQL settings
+// --------------------------------------------------
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $change = file_get_contents($f);
     $change = preg_replace("/define\('(MYSQL_HOST)', '(.*)'\);/", "define('$1', '" . trim($_POST['host']) . "');", $change);
@@ -47,7 +49,10 @@ header('Retry-After: 60');
 // Valid indexing & serving directives, https://developers.google.com/webmasters/control-crawl-index/docs/robots_meta_tag
 header('X-Robots-Tag: none');
 
+
+
 // Installer setup
+// --------------------------------------------------
 $meta_title         = 'Installation';
 $pagetitle          = 'AJAX SEO ' . $meta_title;
 $title_installation = ' ' . $meta_title;
@@ -93,4 +98,5 @@ input{
 </ul>' . $error . '
 </form>
 Your db configuration will be saved in connect.php, after you can open and edit it trough text editor.';
+
 ?>

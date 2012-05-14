@@ -1,18 +1,27 @@
 <?php
+
+// --------------------------------------------------
 // API
 // --------------------------------------------------
 
+
+
 // Simulate API slow respond
+// --------------------------------------------------
 //sleep(3);
 
+
+
 header('Content-Type: application/json; charset=utf-8');
+
+
 
 // Check if url exist
 if (mysql_num_rows($result)) {
     // HTTP header caching
-    include('content/cache.php');
+    include 'content/cache.php';
     $datemod = new datemod();
-    $datemod->date(array(
+    $datemod -> date(array(
         '.htaccess',
         'index.php',
         'content/.htaccess',
@@ -20,7 +29,7 @@ if (mysql_num_rows($result)) {
         'content/cache.php',
         'content/connect.php'
     ), MYSQL_TABLE, $url);
-    $datemod->cache($datemod->gmtime);
+    $datemod -> cache($datemod -> gmtime);
     
     while ($row = @mysql_fetch_array($result, MYSQL_ASSOC)) {
         $row[] = array(
@@ -62,7 +71,8 @@ if (mysql_num_rows($result)) {
 } else {
     // Return 404 error, if url does not exist
     $validate = new validate($url);
-    $validate->status();
+    $validate -> status();
     exit('404 Not Found');
 }
+
 ?>

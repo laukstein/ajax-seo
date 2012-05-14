@@ -1,4 +1,5 @@
 <?php
+
 function http_response_code($code = NULL) {
     if ($code !== NULL) {
         switch ($code) {
@@ -51,4 +52,5 @@ function http_response_code($code = NULL) {
     }
     return $code;
 }
+
 ?>
