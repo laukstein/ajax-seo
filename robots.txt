@@ -1,23 +1,23 @@
 <?php
-// This is robots.txt file for Search Engine Optimizing
+
+// --------------------------------------------------
+// Web Robots
 // --------------------------------------------------
 
-// Add latest PHP functions
-if (version_compare(PHP_VERSION, '5.4', '<')) {
-    include('content/function.http-response-code.php');
-}
 
-// Prevent XSS and SQL Injection
-if (strpos($_SERVER['HTTP_HOST'], $_SERVER['SERVER_NAME']) === false) {
-    http_response_code(400);
-    header('X-Robots-Tag: none');
-    header('Content-Type: text/plain');
-    exit('400 Bad Request');
-}
+
+// Configuration
+// --------------------------------------------------
+include 'content/config.php';
+
+
 
 header('Content-Type: text/plain');
 
+
+
 // HTTP header caching
+// --------------------------------------------------
 function cache($file, $timestamp)
 {
     $gmtime = gmdate('D, d M Y H:i:s T', $timestamp);
@@ -37,21 +37,18 @@ if (str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME)) 
 } else {
     $path = str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME));
 }
-?>
-User-agent: *
-Disallow: /api*
-Disallow: /*.css$
-Disallow: /*.js$
-Sitemap: http://<?php echo $_SERVER['SERVER_NAME'] . $path; ?>sitemap.xml
+
+
+# Global rules and sitemap
+echo "User-agent: *\nDisallow: /api*\nDisallow: /*.css$\nDisallow: /*.js$\nSitemap: http://{$_SERVER['SERVER_NAME']}{$path}sitemap.xml";
 
 # Disable Chinese Baidu crawler
-# User-agent: Baiduspider
-# Disallow: /
+#echo "\n\nUser-agent: Baiduspider\n# Disallow: /";
 
 # Removing Documents From the Wayback Machine archive.org
-User-agent: ia_archiver
-Disallow: /
+echo "\n\nUser-agent: ia_archiver\nDisallow: /";
 
 # Disable *.domaintools.com crawler
-User-agent: SurveyBot
-Disallow: /
+echo "\n\nUser-agent: SurveyBot\nDisallow: /";
+
+?>

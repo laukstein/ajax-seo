@@ -1,26 +1,28 @@
 <?php
+
 // Creating Sitemaps in Google Webmaster Tools - http://support.google.com/webmasters/bin/answer.py?hl=en&answer=183668
 // --------------------------------------------------
 
-// Add latest PHP functions
-if (version_compare(PHP_VERSION, '5.4', '<')) {
-    include('content/function.http-response-code.php');
-}
 
-// Prevent XSS and SQL Injection
-if (strpos($_SERVER['HTTP_HOST'], $_SERVER['SERVER_NAME']) === false) {
-    http_response_code(400);
-    header('X-Robots-Tag: none');
-    header('Content-Type: text/plain');
-    exit('400 Bad Request');
-}
+
+// Configuration
+// --------------------------------------------------
+include 'content/config.php';
+
+
 
 header('Content-Type: application/xml');
 
-// Database settings
-include('content/connect.php');
+
+
+// Connect to MySQL
+// --------------------------------------------------
+include 'content/connect.php';
+
+
 
 // HTTP header caching
+// --------------------------------------------------
 $tablemod = mysql_query("SELECT DATE_FORMAT(MAX(pubdate), '%a, %d %b %Y %T %Z') AS pubdate FROM `" . MYSQL_TABLE . "`");
 while ($row = @mysql_fetch_array($tablemod, MYSQL_ASSOC)) {
     function cache($gmtime)
