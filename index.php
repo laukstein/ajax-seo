@@ -1,39 +1,28 @@
 <?php
 
-// Add latest PHP functions
-if (version_compare(PHP_VERSION, '5.4', '<')) {
-    include('content/function.http-response-code.php');
-}
+// Configuration
+// --------------------------------------------------
+include 'content/config.php';
 
-// Gzip
-if (!ob_start('ob_gzhandler')) {
-    ob_start();
-}
 
-// Prevent XSS and SQL Injection
-if (strpos($_SERVER['HTTP_HOST'], $_SERVER['SERVER_NAME']) === false) {
-    http_response_code(400);
-    header('X-Robots-Tag: none');
-    header('Content-Type: text/plain');
-    exit('400 Bad Request');
-}
 
-// Database settings
-include('content/connect.php');
+// Connect to MySQL
+// --------------------------------------------------
+include 'content/connect.php';
 
 if (MYSQL_CON) {
     $result = mysql_query("SELECT url, `meta-title`, `meta-description`, `meta-keywords`, title, content FROM `" . MYSQL_TABLE . "` WHERE url = '$url'");
     
     // JSON/JSONP respond
     if (isset($_GET['api'])) {
-        include('content/api.php');
+        include 'content/api.php';
         exit;
     }
     
     // Check if url exist
     if (mysql_num_rows($result)) {
         // HTTP header caching
-        include('content/cache.php');
+        include 'content/cache.php';
         $datemod = new datemod();
         $datemod->date(array(
             '.htaccess',
@@ -120,9 +109,9 @@ if (MYSQL_CON) {
 			echo '      <a';
 			
 			if ($url == $row['url']) {
-				echo ' class="selected transition"';
+				echo ' class="js-as selected"';
 			} else {
-				echo ' class=transition';
+				echo ' class=js-as';
 			}
 			
 			echo " href=\"$path{$row['url']}\"";
@@ -181,7 +170,7 @@ echo "<script src=http://code.jquery.com/jquery-1.7.2.min.js></script>
 (function () {
     'use strict';
 
-    var nav = $('.nav a'),
+    var nav = $('.js-as'),
         content = $('.content'),
         init = true,
         state = window.history.pushState !== undefined,
@@ -207,7 +196,7 @@ echo "<script src=http://code.jquery.com/jquery-1.7.2.min.js></script>
             if (link.attr('href') === (($.address.state() + decodeURI(e.path)).replace(/\/\//, '/'))) {
                 link.addClass('selected').focus();
             } else {
-                link.removeAttr('class');
+                link.removeClass('selected');
             }
         });
 		
@@ -245,7 +234,7 @@ echo "<script src=http://code.jquery.com/jquery-1.7.2.min.js></script>
                 error: function (jqXHR, textStatus, errorThrown) {
                     if (fadeTimer) { clearTimeout(fadeTimer); }
                     window.clearTimeout(timer);
-                    nav.removeAttr('class');
+                    nav.removeClass('selected');
                     document.title = 'Page not found';
                     content.fadeTo(20, 1).removeAttr('style').html('<h1>404 Not Found</h1><p>Sorry, this page cannot be found.</p>');
                     if ($.browser.msie) {
