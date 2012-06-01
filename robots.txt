@@ -2,6 +2,7 @@
 
 // --------------------------------------------------
 // Web Robots
+// https://developers.google.com/webmasters/control-crawl-index/docs/robots_txt
 // --------------------------------------------------
 
 
@@ -40,7 +41,7 @@ if (str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME)) 
 
 
 # Global rules and sitemap
-echo "User-agent: *\nDisallow: /api*\nDisallow: /*.css$\nDisallow: /*.js$\nSitemap: http://{$_SERVER['SERVER_NAME']}{$path}sitemap.xml";
+echo "User-agent: *\nSitemap: http://{$_SERVER['SERVER_NAME']}{$path}sitemap.xml";
 
 # Disable Chinese Baidu crawler
 #echo "\n\nUser-agent: Baiduspider\n# Disallow: /";
