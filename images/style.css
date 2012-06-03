@@ -28,7 +28,7 @@ body, input, textarea {
     background-color: #bbb;
 }
 :focus { outline: 0; }
-body, h1, h2, h3, h4, p, ul, ol, figure { margin: auto; }
+body, h1, h2, h3, h4, p, ul, ol, dl, dd , figure { margin: auto; }
 ul, ol { padding: 0; }
 li { list-style: none; }
 img, abbr, iframe { border: 0; }
