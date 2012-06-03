@@ -31,13 +31,6 @@ $con = @mysql_connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASS);
 
 $f   = 'content/connect.php';
 
-// Return dir path
-if (str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME)) != '/') {
-    $path = str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME)) . '/';
-} else {
-    $path = str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME));
-}
-
 if (@mysql_select_db(MYSQL_DB, $con)) {
     // Define MySQL connection status
     if (!MYSQL_CON) {

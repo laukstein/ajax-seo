@@ -49,4 +49,13 @@ if (strpos($_SERVER['HTTP_HOST'], $_SERVER['SERVER_NAME']) === false) {
     exit('400 Bad Request');
 }
 
+
+
+// Return dir path
+if (str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME)) != '/') {
+    $path = str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME)) . '/';
+} else {
+    $path = str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME));
+}
+
 ?>

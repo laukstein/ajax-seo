@@ -44,12 +44,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>
         xmlns:video="http://www.sitemaps.org/schemas/sitemap-video/1.1">
 ';
 
-// Return dir path
-if (str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME)) != '/') {
-    $path = str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME)) . '/';
-} else {
-    $path = str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME));
-}
+
 
 $result = mysql_query("SELECT url, DATE_FORMAT(pubdate, '%Y-%m-%dT%H:%i:%sZ') AS pubdate FROM `" . MYSQL_TABLE . "` ORDER BY array ASC");
 while ($row = @mysql_fetch_array($result, MYSQL_ASSOC)) {
