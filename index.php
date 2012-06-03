@@ -82,7 +82,7 @@ echo "<!DOCTYPE html>
 <link rel=stylesheet href={$path}images/style.min.css>
 <!--[if lt IE 9]><script src=//html5shiv.googlecode.com/svn/trunk/html5.js></script><![endif]-->
 </head>
-<body itemscope itemtype=http://schema.org/WebPage>\n";
+<body class=clearfix itemscope itemtype=http://schema.org/WebPage>\n";
 
 
 if ($note !== null) {
