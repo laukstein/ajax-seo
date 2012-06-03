@@ -78,7 +78,7 @@ echo "<!DOCTYPE html>
 <title>$pagetitle</title>
 <meta name=description content=\"$meta_description\">
 <meta name=referrer content=never>
-<meta name=viewport content=\"initial-scale=0.666, maximum-scale=0.666, width=device-width, target-densityDpi=high-dpi\">
+<meta name=viewport content=\"width=device-width, initial-scale=1\">
 <!-- Save page loading time with DNS Prefetching, http://html5boilerplate.com/docs/DNS-Prefetching/ -->
 <link rel=dns-prefetch href=$cdn>
 <link rel=stylesheet href={$path}images/style.min.css>
