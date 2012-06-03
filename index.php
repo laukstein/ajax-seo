@@ -77,7 +77,6 @@ echo "<!DOCTYPE html>
 <meta charset=utf-8>
 <title>$pagetitle</title>
 <meta name=description content=\"$meta_description\">
-<meta name=keywords content=\"$meta_keywords\">
 <meta name=referrer content=never>
 <meta name=viewport content=\"initial-scale=0.666, maximum-scale=0.666, width=device-width, target-densityDpi=high-dpi\">
 <link rel=stylesheet href={$path}images/style.min.css>
