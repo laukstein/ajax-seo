@@ -86,7 +86,10 @@ echo "<!DOCTYPE html>
 
 
 if ($note !== null) {
-    echo "<div class=note>$note</div>\n";
+    // Yahoo since 2007 seems to be supporting the feature to exclude content from search engine's index with class=robots-nocontent http://www.ysearchblog.com/2007/05/02/introducing-robots-nocontent-for-page-sections/
+    // Yandex supports the same feature on using HTML non standard element <noindex>to exclude content from indexing</noindex> and <!--noindex-->to do the same<!--/noindex--> http://help.yandex.ru/webmaster/?id=1111858
+    
+    echo "<!--noindex--><div class=note>$note</div><!--/noindex-->\n";
 }
 
 
