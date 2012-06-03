@@ -94,10 +94,9 @@ ErrorDocument 500 "500 Internal Server Error"
     </FilesMatch>
     <FilesMatch "\.(css|js|json|xml|txt)$">
         Header set Cache-Control max-age=31536000
-        Header set X-Robots-Tag none
+        Header set X-Robots-Tag nosnippet
     </FilesMatch>
     <FilesMatch "(robots.txt|humans.txt|sitemap.xml)">
-        Header set X-Robots-Tag "noindex, follow"
         SetHandler application/x-httpd-php
     </FilesMatch>
     <FilesMatch "\.(png|jpg|gif|svg)$">
