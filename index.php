@@ -71,6 +71,7 @@ $title_installation = isset($title_installation) ? $title_installation : null;
 $installation       = isset($installation) ? $installation : null;
 
 
+
 echo "<!DOCTYPE html>
 <html lang=en>
 <head>
@@ -78,10 +79,14 @@ echo "<!DOCTYPE html>
 <title>$pagetitle</title>
 <meta name=description content=\"$meta_description\">
 <meta name=referrer content=never>
-<meta name=viewport content=\"width=device-width, initial-scale=1\">
-<!-- Save page loading time with DNS Prefetching, http://html5boilerplate.com/docs/DNS-Prefetching/ -->
-<link rel=dns-prefetch href=$cdn>
-<link rel=stylesheet href={$path}images/style.min.css>
+<meta name=viewport content=\"width=device-width, initial-scale=1\">";
+
+// Save page loading time with DNS Prefetching, http://html5boilerplate.com/docs/DNS-Prefetching/
+if ($issetcdn) {
+    echo "\n<link rel=dns-prefetch href=//$cdndomain>";
+}
+
+echo "\n<link rel=stylesheet href={$cdn}images/style.min.css>
 <!--[if lt IE 9]><script src=//html5shiv.googlecode.com/svn/trunk/html5.js></script><![endif]-->
 </head>
 <body class=clearfix itemscope itemtype=http://schema.org/WebPage>\n";
@@ -168,8 +173,8 @@ if(MYSQL_CON){
 $rootpath = (strlen(utf8_decode($path)) > 1) ? substr($path, 0, -1) : $path;
 
 echo "<script src=http://code.jquery.com/jquery-1.7.2.min.js></script>
-<script>window.jQuery || document.write('<script src={$path}images/jquery-1.7.2.min.js><\/script>')</script>
-<script src={$path}images/jquery.address.min.js></script>
+<script>window.jQuery || document.write('<script src={$cdn}images/jquery-1.7.2.min.js><\/script>')</script>
+<script src={$cdn}images/jquery.address.min.js></script>
 <script>
 (function () {
     'use strict';

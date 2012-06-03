@@ -12,6 +12,17 @@ define('MYSQL_ERROR', false);
 
 
 
+// Path for static content
+// --------------------------------------------------
+// Use CDN
+//$cdndomain = 'cdn.domain.com';
+
+$cdndomain  = isset($cdndomain) ? $cdndomain : null;
+$issetcdn   = isset($cdndomain) ? true : false;
+$cdn        = $issetcdn ? '//'.$cdndomain.'/' : $path;
+
+
+
 // Connect to db
 // --------------------------------------------------
 $con = @mysql_connect(MYSQL_HOST, MYSQL_USER, MYSQL_PASS);
