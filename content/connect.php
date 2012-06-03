@@ -102,9 +102,6 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
             chmod($f, 0600);
         }
         
-        // Valid indexing & serving directives https://developers.google.com/webmasters/control-crawl-index/docs/robots_meta_tag
-        header('X-Robots-Tag: none', true);
-        header('Content-Type: text/html');
         $note = 'Congratulations, installation has completed successfully.';
     }
 } else {
