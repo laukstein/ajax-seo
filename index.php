@@ -79,6 +79,8 @@ echo "<!DOCTYPE html>
 <meta name=description content=\"$meta_description\">
 <meta name=referrer content=never>
 <meta name=viewport content=\"initial-scale=0.666, maximum-scale=0.666, width=device-width, target-densityDpi=high-dpi\">
+<!-- Save page loading time with DNS Prefetching, http://html5boilerplate.com/docs/DNS-Prefetching/ -->
+<link rel=dns-prefetch href=$cdn>
 <link rel=stylesheet href={$path}images/style.min.css>
 <!--[if lt IE 9]><script src=//html5shiv.googlecode.com/svn/trunk/html5.js></script><![endif]-->
 </head>
