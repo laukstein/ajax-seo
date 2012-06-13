@@ -24,7 +24,7 @@ if (MYSQL_CON) {
         // HTTP header caching
         include 'content/cache.php';
         $datemod = new datemod();
-        $datemod->date(array(
+        $datemod -> date(array(
             '.htaccess',
             'index.php',
             'content/.htaccess',
@@ -38,12 +38,12 @@ if (MYSQL_CON) {
             $row[]     = array(
                 'row' => array_map('htmlspecialchars', $row)
             );
-            $urlid			  = $row['url'];
-            $title			  = isset($row['title']) ? $row['title'] : null;
-            $meta_title		  = isset($row['meta-title']) ? $row['meta-title'] : $title;
+            $urlid            = $row['url'];
+            $title            = isset($row['title']) ? $row['title'] : null;
+            $meta_title       = isset($row['meta-title']) ? $row['meta-title'] : $title;
             $meta_description = isset($row['meta-description']) ? $row['meta-description'] : null;
-            $meta_keywords	  = isset($row['meta-keywords']) ? $row['meta-keywords'] : null;
-            $content		  = isset($row['content']) ? $row['content'] : null;
+            $meta_keywords    = isset($row['meta-keywords']) ? $row['meta-keywords'] : null;
+            $content          = isset($row['content']) ? $row['content'] : null;
         }
         $pretitle  = 'AJAX SEO';
         $pagetitle = $meta_title . ' - ' . $pretitle;
@@ -54,14 +54,14 @@ if (MYSQL_CON) {
         }
     } else {
         // Return 404 error, if url does not exist
-        $validate		  = new validate($url);
+        $validate         = new validate($url);
         $validate -> status();
-        $title			  = $validate->title;
-        $pagetitle		  = $title;
-        $pretitle		  = null;
+        $title            = $validate -> title;
+        $pagetitle        = $title;
+        $pretitle         = null;
         $meta_description = null;
-        $meta_keywords	  = null;
-        $content		  = $validate -> content;
+        $meta_keywords    = null;
+        $content          = $validate -> content;
     }
 }
 
@@ -107,32 +107,32 @@ echo "<div class=\"container center-container\">
 
 if (MYSQL_CON) {
     $result = mysql_query('SELECT url, `meta-title`, title FROM `' . MYSQL_TABLE . '` ORDER BY array ASC');
-	
-	if (mysql_num_rows($result)) {
-		echo "	<nav class=\"nav clearfix\">\n";
-		
-		while ($row = @mysql_fetch_array($result, MYSQL_ASSOC)) {
-			$row[] = array(
-				'row' => array_map('htmlspecialchars', $row)
-			);
-			echo '      <a';
-			
-			if ($url == $row['url']) {
-				echo ' class="js-as selected"';
-			} else {
-				echo ' class=js-as';
-			}
-			
-			echo " href=\"$path{$row['url']}\"";
-			
-			if ((strlen($row['title']) > 0) && ($row['meta-title'] !== $row['title'])) {
-				echo " title=\"{$row['title']}\"";
-			}
-			$nav_fn  = (strlen($row['url']) > 0) ? $row['meta-title'] :  "<span class=home>{$row['title']}</span>";
-			echo ">$nav_fn</a>\r\n";
-		}
-		echo "    </nav>\n";
-	}
+    
+    if (mysql_num_rows($result)) {
+        echo "  <nav class=\"nav clearfix\">\n";
+        
+        while ($row = @mysql_fetch_array($result, MYSQL_ASSOC)) {
+            $row[] = array(
+                'row' => array_map('htmlspecialchars', $row)
+            );
+            echo '      <a';
+            
+            if ($url == $row['url']) {
+                echo ' class="js-as selected"';
+            } else {
+                echo ' class=js-as';
+            }
+            
+            echo " href=\"$path{$row['url']}\"";
+            
+            if ((strlen($row['title']) > 0) && ($row['meta-title'] !== $row['title'])) {
+                echo " title=\"{$row['title']}\"";
+            }
+            $nav_fn  = (strlen($row['url']) > 0) ? $row['meta-title'] :  "<span class=home>{$row['title']}</span>";
+            echo ">$nav_fn</a>\r\n";
+        }
+        echo "    </nav>\n";
+    }
 }
 
 
@@ -192,7 +192,7 @@ echo "<script src=http://code.jquery.com/jquery-1.7.2.min.js></script>
             }
             
             // GA tracking
-			//console.log('tracking');
+            //console.log('tracking');
             _gaq && _gaq.push(['_trackPageview']);
         };
     $.address.tracker(function () {}).crawlable(1).state('$rootpath').init(function () {
@@ -208,7 +208,7 @@ echo "<script src=http://code.jquery.com/jquery-1.7.2.min.js></script>
                 link.removeClass('selected');
             }
         });
-		
+        
         if (state && init) {
             init = false;
         } else {
