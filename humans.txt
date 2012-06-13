@@ -74,15 +74,15 @@ class datemod
         // --------------------------------------------------
         include 'content/connect.php';
         
-        $tablemod = mysql_query("SELECT DATE_FORMAT(MAX(pubdate),'%a, %d %b %Y %T') AS pubdate FROM `" . MYSQL_TABLE . "`");
+        $tablemod = mysql_query("SELECT DATE_FORMAT(MAX(pubdate), '%a, %d %b %Y %T') AS pubdate FROM `" . MYSQL_TABLE . "`");
         while ($row = @mysql_fetch_array($tablemod, MYSQL_ASSOC)) {
             $rowmod        = $row['pubdate'] . date(' T');
-            $this->gmtime  = date('Y-m-d H:i:s', strtotime($fmod)) >= date('Y-m-d H:i:s', strtotime($rowmod)) ? $fmod : $rowmod;
-            $this->moddate = date('Y/m/d', strtotime($this->gmtime));
+            $this -> gmtime  = date('Y-m-d H:i:s', strtotime($fmod)) >= date('Y-m-d H:i:s', strtotime($rowmod)) ? $fmod : $rowmod;
+            $this -> moddate = date('Y/m/d', strtotime($this -> gmtime));
         }
     }
     
-    function cache($gmtime)
+    function cache(&$gmtime)
     {
         if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
             if ($_SERVER['HTTP_IF_MODIFIED_SINCE'] == $gmtime) {
@@ -94,8 +94,8 @@ class datemod
     }
 }
 $datemod = new datemod();
-$datemod->date();
-$datemod->cache($datemod->gmtime);
+$datemod -> date();
+$datemod -> cache($datemod -> gmtime);
 
 
 

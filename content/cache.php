@@ -28,7 +28,7 @@ class datemod
     }
     
     
-    function cache($gmtime)
+    function cache(&$gmtime)
     {
         if (isset($gmtime)) {
             if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MATCH'])) {

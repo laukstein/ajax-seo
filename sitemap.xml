@@ -25,7 +25,7 @@ include 'content/connect.php';
 // --------------------------------------------------
 $tablemod = mysql_query("SELECT DATE_FORMAT(MAX(pubdate), '%a, %d %b %Y %T %Z') AS pubdate FROM `" . MYSQL_TABLE . "`");
 while ($row = @mysql_fetch_array($tablemod, MYSQL_ASSOC)) {
-    function cache($gmtime)
+    function cache(&$gmtime)
     {
         if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
             if ($_SERVER['HTTP_IF_MODIFIED_SINCE'] == $gmtime) {
@@ -33,7 +33,7 @@ while ($row = @mysql_fetch_array($tablemod, MYSQL_ASSOC)) {
                 exit;
             }
         }
-        header("Last-Modified:$gmtime");
+        header("Last-Modified: $gmtime");
     }
     cache($row['pubdate']);
 }
