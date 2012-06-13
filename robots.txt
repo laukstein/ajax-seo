@@ -35,10 +35,8 @@ cache($_SERVER['SCRIPT_FILENAME'], filemtime($_SERVER['SCRIPT_FILENAME']));
 
 
 // Global rules and sitemap
+// Be sure your sitemap.xml is located in the same path or rewrite its destination.
 echo "User-agent: *\nSitemap: http://{$_SERVER['SERVER_NAME']}{$path}sitemap.xml";
-
-// Disable Chinese Baidu crawler
-//echo "\n\nUser-agent: Baiduspider\n# Disallow: /";
 
 // Removing Documents From the Wayback Machine archive.org
 echo "\n\nUser-agent: ia_archiver\nDisallow: /";
