@@ -14,13 +14,13 @@ The source code is build on latest Web technology, like HTML5, Microdata, PHP 5,
 * Apply PHP settings from content/php.ini or uncomment .htaccess `php_flag` and `php_value`
 * Apply MySQL settings from content/connect.php
 * For MySQL UPDATE use SET `pubdate=NOW()` to affected cache
-* Add humans.txt and robots.txt in website root
+* Add robots.txt and humans.txt in website root
 
 
 ## Search engine optimization
 
 * Schema.org Microdata markup
-* HTML5 history API for Chrome 10, FF4, IE10, Safari 5, Opera 11.5 with crawlable SEO fallback for older browsers
+* HTML5 history API with crawlable SEO fallback for < IE10
 * AJAX crawling scheme with Apache Rewrite, <https://developers.google.com/webmasters/ajax-crawling/docs/getting-started>
 * Rewrite www to no-www domain, <http://no-www.org>
 * Handle HTTP/HTTPS protocol
@@ -29,7 +29,7 @@ The source code is build on latest Web technology, like HTML5, Microdata, PHP 5,
 * Rewrite space and underscore with dash
 * Remove index.php and .php extension
 * Remove dot and comma
-* 404 error page
+* Custom 404 error page
 
 
 ## Speed performance
