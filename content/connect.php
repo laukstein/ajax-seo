@@ -17,9 +17,10 @@ define('MYSQL_ERROR', false);
 // Use CDN
 //$cdndomain = 'cdn.domain.com';
 
-$cdndomain  = isset($cdndomain) ? $cdndomain : null;
-$issetcdn   = isset($cdndomain) ? true : false;
-$cdn        = $issetcdn ? '//'.$cdndomain.'/' : $path;
+$cdndomain = isset($cdndomain) ? $cdndomain : null;
+$issetcdn  = isset($cdndomain) ? true : false;
+$path      = isset($path) ? $path : null;
+$cdn       = $issetcdn ? '//'.$cdndomain.'/' : $path;
 
 
 
@@ -66,8 +67,8 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
         function status()
         {
             http_response_code(404);
-            $this->title   = '404 Not Found';
-            $this->content = 'Sorry, this page cannot be found.';
+            $this -> title   = '404 Not Found';
+            $this -> content = 'Sorry, this page cannot be found.';
         }
     }
     
@@ -80,27 +81,27 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
         
         // Create table
         mysql_query('CREATE TABLE IF NOT EXISTS `' . MYSQL_TABLE . '` (
-					  id mediumint(8) NOT NULL AUTO_INCREMENT,
-					  array mediumint(8) NOT NULL,
-					  url varchar(70) NOT NULL,
-					  `meta-title` varchar(70) NOT NULL,
-					  `meta-description` varchar(154) NOT NULL,
-					  `meta-keywords` varchar(250) NOT NULL,
-					  title varchar(70) NOT NULL,
-					  content text NOT NULL,
-					  pubdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-					  PRIMARY KEY (id)
-					) ENGINE=MyISAM DEFAULT CHARSET=utf8;');
+              id mediumint(8) NOT NULL AUTO_INCREMENT,
+              array mediumint(8) NOT NULL,
+              url varchar(70) NOT NULL,
+              `meta-title` varchar(70) NOT NULL,
+              `meta-description` varchar(154) NOT NULL,
+              `meta-keywords` varchar(250) NOT NULL,
+              title varchar(70) NOT NULL,
+              content text NOT NULL,
+              pubdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+              PRIMARY KEY (id)
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8;');
         
         // Insert data
         $now = date('Y-m-d H:i:s');
         mysql_query("INSERT INTO `" . MYSQL_TABLE . "` (array, url, `meta-title`, `meta-description`, `meta-keywords`, title, content) VALUES
-					(1, '', '', 'AJAX SEO is crawlable framework for AJAX applications.', 'ajax, seo, crawlable, applications, performance, speed, accessibility, usability', 'Home', 'AJAX SEO is crawlable framework for AJAX applications that applies the latest SEO standards, Page Speed and YSlow rules, Google HTML/CSS Style Guide, etc. to improve maximal performance, speed, accessibility and usability.<br>\nThe source code is build on latest Web technology, like HTML5, Microdata, PHP 5, etc.'),
-					(2, 'about', 'About', '', '', '', 'About content'),
-					(3, 'portfolio', 'Portfolio', '', '', 'Portfolio', 'Portfolio content'),
-					(4, 'contact', 'Contact us', '', '', 'Contact', 'Contact content'),
-					(5, 'контакты', 'Контакты', '', '', '', 'Содержание контактом'),
-					(6, 'צור-קשר', 'צור קשר', '', '', '', 'תוכן לצור קשר');");
+            (1, '', '', 'AJAX SEO is crawlable framework for AJAX applications.', 'ajax, seo, crawlable, applications, performance, speed, accessibility, usability', 'Home', 'AJAX SEO is crawlable framework for AJAX applications that applies the latest SEO standards, Page Speed and YSlow rules, Google HTML/CSS Style Guide, etc. to improve maximal performance, speed, accessibility and usability.<br>\nThe source code is build on latest Web technology, like HTML5, Microdata, PHP 5, etc.'),
+            (2, 'about', 'About', '', '', '', 'About content'),
+            (3, 'portfolio', 'Portfolio', '', '', 'Portfolio', 'Portfolio content'),
+            (4, 'contact', 'Contact us', '', '', 'Contact', 'Contact content'),
+            (5, 'контакты', 'Контакты', '', '', '', 'Содержание контактом'),
+            (6, 'צור-קשר', 'צור קשר', '', '', '', 'תוכן לצור קשר');");
         
         if (is_writable($f)) {
             chmod($f, 0600);
