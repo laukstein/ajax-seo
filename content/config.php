@@ -12,8 +12,8 @@
 
 // Debug mode
 // --------------------------------------------------
-$debug = in_array($_SERVER['REMOTE_ADDR'], ['127.0.0.1']);
-if ($debug) {
+$ip = array("127.0.0.1", "localhost");
+if (in_array($_SERVER['REMOTE_ADDR'], $ip)) {
     error_reporting(E_ALL);
 } else {
     error_reporting(0);
