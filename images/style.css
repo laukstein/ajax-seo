@@ -3,10 +3,10 @@
 html, body { height: 100%; }
 html {
     font-size: 62.5%;
-    -khtml-user-select: none;
-      -moz-user-select: -moz-none;
-       -ms-user-select: none;
-           user-select: none;
+    -webkit-user-select: none;
+       -moz-user-select: -moz-none;
+        -ms-user-select: none;
+            user-select: none;
     cursor: default;
 }
 body, input, textarea {
@@ -26,7 +26,7 @@ body, input, textarea {
     background-color: #bbb;
 }
 :focus { outline: 0; }
-body, h1, h2, h3, h4, p, ul, ol, dl, dd , figure { margin: auto; }
+body, h3, h4, ul, ol, dl, dd , figure { margin: auto; }
 ul, ol { padding: 0; }
 li { list-style: none; }
 img, abbr, iframe { border: 0; }
@@ -42,13 +42,23 @@ a {
     cursor: default;
 }
 a:hover, a:focus { text-decoration: underline; }
-img{ -ms-interpolation-mode: bicubic; }
+img{
+    max-width: 100%;
+    vertical-align: middle;
+    -ms-interpolation-mode: bicubic;
+}
 h1 {
     margin-top: 5px;
     margin-bottom: 5px;
     font-weight: normal;
     font-size: 24px;
     font-size: 2.4rem;
+}
+h2 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 13px;
+    font-size: 1.3rem;
 }
 p {
     margin-top: 12px;
@@ -60,10 +70,10 @@ label {
     cursor: pointer;
 }
 input, textarea {
-    -khtml-user-select: text;
-      -moz-user-select: text;
-       -ms-user-select: text;
-           user-select: text;
+    -webkit-user-select: text;
+       -moz-user-select: text;
+        -ms-user-select: text;
+            user-select: text;
 }
 input {
     box-sizing: border-box;
@@ -83,12 +93,13 @@ textarea {
 
 /* Common rules
 -------------------------------------------------- */
-/* Clear Floats */
-.clearfix:before, .clearfix:after {
-    display: table;
+/* Contain floats */
+.clearfix:after {
     content: "";
+    display: table;
+    clear: both;
 }
-.clearfix:after { clear: both; }
+
 .transition, .transition:before {
     -webkit-transition-duration: .14s;
        -moz-transition-duration: .14s;
@@ -279,7 +290,6 @@ textarea {
     form { *margin:0; }
     input, textarea, select { *vertical-align: middle; }
     input { *overflow: visible; }
-    .clearfix { *zoom:1; }
     .center-container { *width: 760px; }
 }
 
