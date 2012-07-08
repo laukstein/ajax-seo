@@ -72,24 +72,43 @@ $installation       = isset($installation) ? $installation : null;
 
 
 
-echo "<!DOCTYPE html>
-<html lang=en>
-<head>
-<meta charset=utf-8>
-<title>$pagetitle</title>
-<meta name=description content=\"$meta_description\">
-<meta name=referrer content=never>
-<meta name=viewport content=\"width=device-width, initial-scale=1\">";
+// 160 character title       blogs.msdn.com/b/ie/archive/2012/05/14/sharing-links-from-ie10-on-windows-8.aspx
+$meta_tags  = "<title>$pagetitle</title>";
 
-// Save page loading time with DNS Prefetching, http://html5boilerplate.com/docs/DNS-Prefetching/
+// 253 character description blogs.msdn.com/b/ie/archive/2012/05/14/sharing-links-from-ie10-on-windows-8.aspx
+$meta_tags .= "\n<meta name=description content=\"$meta_description\">";
+
+// Declare the family friendly content schema.org/WebPage
+$meta_tags .= "\n<meta itemprop=isFamilyFriendly content=true>";
+
+// Save the copyright and keep out from Pinterest robots SEO affect blog.pinterest.com/post/17949261591/growing-up
+$meta_tags .= "\n<meta name=pinterest content=nopin>";
+
+// Perform speed and security on removing referrer-header-value wiki.whatwg.org/wiki/Meta_referrer
+$meta_tags .= "\n<meta name=referrer content=never>";
+
+// Return identical DPI on desktop and mobile
+$meta_tags .= "\n<meta name=viewport content=\"width=480\">";
+
+// Authorship in Google Search support.google.com/webmasters/bin/answer.py?hl=en&answer=1408986
+//$meta_tags .= "\n<link rel=author href=https://plus.google.com/u/0000000000000000000>";
+
+// Save page loading time on pre-resolving the CDN domain name html5boilerplate.com/docs/DNS-Prefetching/
 if ($issetcdn) {
-    echo "\n<link rel=dns-prefetch href=//$cdndomain>";
+    $meta_tags .= "\n<link rel=dns-prefetch href=$cdn>";
 }
 
-echo "\n<link rel=stylesheet href={$cdn}images/style.min.css>
+
+
+echo "<!DOCTYPE html>
+<html lang=en itemscope itemtype=http://schema.org/WebPage>
+<head>
+<meta charset=UTF-8>
+$meta_tags
+<link rel=stylesheet href={$cdn}images/style.min.css>
 <!--[if lt IE 9]><script src=//html5shiv.googlecode.com/svn/trunk/html5.js></script><![endif]-->
 </head>
-<body class=clearfix itemscope itemtype=http://schema.org/WebPage>\n";
+<body class=clearfix>\n";
 
 
 if ($note !== null) {
