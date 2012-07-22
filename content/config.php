@@ -33,8 +33,13 @@ if (version_compare(PHP_VERSION, '5.4', '<')) {
 
 // Gzip
 // --------------------------------------------------
-if (!ob_start('ob_gzhandler')) {
-    ob_start();
+// PHP 5.4.4 bug https://bugs.php.net/bug.php?id=55544
+//if (!ob_start('ob_gzhandler')) {
+//    ob_start();
+//}
+$zlib_oc = ini_get('zlib.output_compression');
+if(empty($zlib_oc)) {
+    @ob_start('ob_gzhandler');
 }
 
 
