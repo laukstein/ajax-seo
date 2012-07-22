@@ -40,6 +40,9 @@ a {
     color: #08c;
     text-decoration: none;
     cursor: default;
+
+    /* Remove outline and highlight-color from click-able elements on Android and iOS */
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 a:hover, a:focus { text-decoration: underline; }
 img{
@@ -112,6 +115,12 @@ textarea {
          -o-transition-duration: .1s;
             transition-duration: .1s;
 }
+/* [class*="sprites"] {
+    display: inline-block;
+    vertical-align: middle;
+    background-image: url(sprites.png);
+    background-repeat: no-repeat;
+} */
 .center-container {
     width: 95%;
     min-width: 460px;
@@ -235,7 +244,10 @@ textarea {
     0% { -webkit-transform: translateY(-50px); }
     10% { -webkit-transform: translateY(0); }
     90% { -webkit-transform: translateY(0); }
-    100% { -webkit-transform: translateY(-50px); }
+    99% { -webkit-transform: translateY(-50px); }
+
+    /* Android 2 flicker issue http://georgehess.com/post/2054803814/css-keyframe-animation-flicker */
+    100% { }
 }
 @-moz-keyframes slide-down {
     0%, 100% {-moz-transform: translateY(-50px); }
@@ -267,6 +279,16 @@ textarea {
 
 /* Media Queries
 -------------------------------------------------- */
+/* @viewport http://dev.w3.org/csswg/css-device-adapt/ */
+@viewport {
+    width: device-width;
+    resolution: device;
+    zoom: 1;
+}
+
+@media (orientation: portrait) { }
+@media (orientation: landscape) { }
+
 /* Small devices */
 @media (max-width: 480px) {
     html {
@@ -282,15 +304,12 @@ textarea {
 -------------------------------------------------- */
 /* IE6-8 */
 @media \0screen\,screen\9 {
-    /* HTML5 elements behave */
-    article, aside, footer, header, hgroup, nav, section, figure, figcaption, address { display: block; }
-    time { display: inline; }
-    
     html { *overflow: auto; }
     form { *margin:0; }
     input, textarea, select { *vertical-align: middle; }
     input { *overflow: visible; }
     .center-container { *width: 760px; }
+    .article { width: 100%; }
 }
 
 /* Chrome */
