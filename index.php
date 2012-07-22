@@ -12,13 +12,13 @@ include 'content/connect.php';
 
 if (MYSQL_CON) {
     $result = mysql_query("SELECT url, `meta-title`, `meta-description`, `meta-keywords`, title, content FROM `" . MYSQL_TABLE . "` WHERE url = '$url'");
-    
+
     // JSON/JSONP respond
     if (isset($_GET['api'])) {
         include 'content/api.php';
         exit;
     }
-    
+
     // Check if url exist
     if (mysql_num_rows($result)) {
         // HTTP header caching
@@ -33,7 +33,7 @@ if (MYSQL_CON) {
             'content/cache.php'
         ), MYSQL_TABLE, $url);
         $datemod->cache($datemod->gmtime);
-        
+
         while ($row = @mysql_fetch_array($result, MYSQL_ASSOC)) {
             $row[]     = array(
                 'row' => array_map('htmlspecialchars', $row)
@@ -47,7 +47,7 @@ if (MYSQL_CON) {
         }
         $pretitle  = 'AJAX SEO';
         $pagetitle = $meta_title . ' - ' . $pretitle;
-        
+
         // SEO page title improvement for the root page
         if (strlen($url) == 0) {
             $pagetitle = 'AJAX SEO';
@@ -87,8 +87,8 @@ $meta_tags .= "\n<meta name=pinterest content=nopin>";
 // Perform speed and security on removing referrer-header-value wiki.whatwg.org/wiki/Meta_referrer
 $meta_tags .= "\n<meta name=referrer content=never>";
 
-// Return identical DPI on desktop and mobile
-$meta_tags .= "\n<meta name=viewport content=\"width=480\">";
+// Return on mobile width 480px with same DPI like on desktop
+$meta_tags .= "\n<meta name=viewport content=\"width=480, target-densityDpi=device-dpi\">";
 
 // Authorship in Google Search support.google.com/webmasters/bin/answer.py?hl=en&answer=1408986
 //$meta_tags .= "\n<link rel=author href=https://plus.google.com/u/0000000000000000000>";
@@ -114,7 +114,7 @@ $meta_tags
 if ($note !== null) {
     // Yahoo since 2007 seems to be supporting the feature to exclude content from search engine's index with class=robots-nocontent http://www.ysearchblog.com/2007/05/02/introducing-robots-nocontent-for-page-sections/
     // Yandex supports the same feature on using HTML non standard element <noindex>to exclude content from indexing</noindex> and <!--noindex-->to do the same<!--/noindex--> http://help.yandex.ru/webmaster/?id=1111858
-    
+
     echo "<!--noindex--><div class=note>$note</div><!--/noindex-->\n";
 }
 
@@ -126,24 +126,24 @@ echo "<div class=\"container center-container\">
 
 if (MYSQL_CON) {
     $result = mysql_query('SELECT url, `meta-title`, title FROM `' . MYSQL_TABLE . '` ORDER BY array ASC');
-    
+
     if (mysql_num_rows($result)) {
         echo "  <nav class=\"nav clearfix\">\n";
-        
+
         while ($row = @mysql_fetch_array($result, MYSQL_ASSOC)) {
             $row[] = array(
                 'row' => array_map('htmlspecialchars', $row)
             );
             echo '      <a';
-            
+
             if ($url == $row['url']) {
                 echo ' class="js-as selected"';
             } else {
                 echo ' class=js-as';
             }
-            
+
             echo " href=\"$path{$row['url']}\"";
-            
+
             if ((strlen($row['title']) > 0) && ($row['meta-title'] !== $row['title'])) {
                 echo " title=\"{$row['title']}\"";
             }
@@ -209,7 +209,7 @@ echo "<script src=http://code.jquery.com/jquery-1.7.2.min.js></script>
             if ($.browser.msie) {
                 content.removeAttr('filter');
             }
-            
+
             // GA tracking
             //console.log('tracking');
             _gaq && _gaq.push(['_trackPageview']);
@@ -227,7 +227,7 @@ echo "<script src=http://code.jquery.com/jquery-1.7.2.min.js></script>
                 link.removeClass('selected');
             }
         });
-        
+
         if (state && init) {
             init = false;
         } else {
@@ -235,9 +235,9 @@ echo "<script src=http://code.jquery.com/jquery-1.7.2.min.js></script>
             var timer = window.setTimeout(function () {
                 content.html('Loading seems to be taking a while...');
             }, 3800);
-            
+
             var fadeTimer;
-            
+
             // Load API content
             $.ajax({
                 type: 'GET',
