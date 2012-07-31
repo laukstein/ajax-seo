@@ -57,6 +57,7 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
 
     // Full Unicode support with utf8mb4 http://mathiasbynens.be/notes/mysql-utf8mb4
     // mysql_query("SET NAMES 'utf8mb4'");
+    mysql_query("SET NAMES 'utf8'");
 
     $url   = isset($_GET['url']) ? $_GET['url'] : null;
     $urlid = isset($urlid) ? $urlid : null;
@@ -91,7 +92,7 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
               content text NOT NULL,
               pubdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
               PRIMARY KEY (id)
-            ) ENGINE=MyISAM;');
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8;');
 
         // Insert data
         $now = date('Y-m-d H:i:s');
