@@ -55,9 +55,8 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
     array_map('stripslashes', $_GET);
     array_map('mysql_real_escape_string', $_GET);
 
-    // Full Unicode support with utf8mb4 http://mathiasbynens.be/notes/mysql-utf8mb4
+    // Full Unicode support http://mathiasbynens.be/notes/mysql-utf8mb4
     // mysql_query("SET NAMES 'utf8mb4'");
-    mysql_query("SET NAMES 'utf8'");
 
     $url   = isset($_GET['url']) ? $_GET['url'] : null;
     $urlid = isset($urlid) ? $urlid : null;
@@ -87,22 +86,21 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
               url varchar(70) NOT NULL,
               `meta-title` varchar(70) NOT NULL,
               `meta-description` varchar(154) NOT NULL,
-              `meta-keywords` varchar(250) NOT NULL,
               title varchar(70) NOT NULL,
               content text NOT NULL,
               pubdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
               PRIMARY KEY (id)
-            ) ENGINE=MyISAM DEFAULT CHARSET=utf8;');
+            ) ENGINE=MyISAM;');
 
         // Insert data
         $now = date('Y-m-d H:i:s');
-        mysql_query("INSERT INTO `" . MYSQL_TABLE . "` (array, url, `meta-title`, `meta-description`, `meta-keywords`, title, content) VALUES
-            (1, '', '', 'AJAX SEO is crawlable framework for AJAX applications.', 'ajax, seo, crawlable, applications, performance, speed, accessibility, usability', 'Home', 'AJAX SEO is crawlable framework for AJAX applications that applies the latest SEO standards, Page Speed and YSlow rules, Google HTML/CSS Style Guide, etc. to improve maximal performance, speed, accessibility and usability.<br>\nThe source code is build on latest Web technology, like HTML5, Microdata, PHP 5, etc.'),
-            (2, 'about', 'About', '', '', '', 'About content'),
-            (3, 'portfolio', 'Portfolio', '', '', 'Portfolio', 'Portfolio content'),
-            (4, 'contact', 'Contact us', '', '', 'Contact', 'Contact content'),
-            (5, 'контакты', 'Контакты', '', '', '', 'Содержание контактом'),
-            (6, 'צור-קשר', 'צור קשר', '', '', '', 'תוכן לצור קשר');");
+        mysql_query("INSERT INTO `" . MYSQL_TABLE . "` (array, url, `meta-title`, `meta-description`, title, content) VALUES
+            (1, '', '', 'AJAX SEO is crawlable framework for AJAX applications.', 'Home', 'AJAX SEO is crawlable framework for AJAX applications that applies the latest SEO standards, Page Speed and YSlow rules, Google HTML/CSS Style Guide, etc. to improve maximal performance, speed, accessibility and usability.<br>\nThe source code is build on latest Web technology, like HTML5, Microdata, PHP 5, etc.'),
+            (2, 'about', 'About', '', '', 'About content'),
+            (3, 'portfolio', 'Portfolio', '', 'Portfolio', 'Portfolio content'),
+            (4, 'contact', 'Contact us', '', 'Contact', 'Contact content'),
+            (5, 'контакты', 'Контакты', '', '', 'Содержание контактом'),
+            (6, 'צור-קשר', 'צור קשר', '', '', 'תוכן לצור קשר');");
 
         if (is_writable($f)) {
             chmod($f, 0600);

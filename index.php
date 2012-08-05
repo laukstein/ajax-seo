@@ -11,7 +11,7 @@ include 'content/config.php';
 include 'content/connect.php';
 
 if (MYSQL_CON) {
-    $result = mysql_query("SELECT url, `meta-title`, `meta-description`, `meta-keywords`, title, content FROM `" . MYSQL_TABLE . "` WHERE url = '$url'");
+    $result = mysql_query("SELECT url, `meta-title`, `meta-description`, title, content FROM `" . MYSQL_TABLE . "` WHERE url = '$url'");
 
     // JSON/JSONP respond
     if (isset($_GET['api'])) {
@@ -42,7 +42,6 @@ if (MYSQL_CON) {
             $title            = isset($row['title']) ? $row['title'] : null;
             $meta_title       = isset($row['meta-title']) ? $row['meta-title'] : $title;
             $meta_description = isset($row['meta-description']) ? $row['meta-description'] : null;
-            $meta_keywords    = isset($row['meta-keywords']) ? $row['meta-keywords'] : null;
             $content          = isset($row['content']) ? $row['content'] : null;
         }
         $pretitle  = 'AJAX SEO';
@@ -60,7 +59,6 @@ if (MYSQL_CON) {
         $pagetitle        = $title;
         $pretitle         = null;
         $meta_description = null;
-        $meta_keywords    = null;
         $content          = $validate -> content;
     }
 }
