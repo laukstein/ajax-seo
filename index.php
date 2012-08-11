@@ -98,12 +98,21 @@ if ($issetcdn) {
 
 
 
+// Apply CSS developmenet or production minified version
+if ($debug) {
+    $path_css = $path.'images/style.css';
+} else {
+    $path_css = $cdn.'/images/style.min.css';
+}
+
+
+
 echo "<!DOCTYPE html>
 <html lang=en itemscope itemtype=http://schema.org/WebPage>
 <head>
 <meta charset=UTF-8>
 $meta_tags
-<link rel=stylesheet href={$cdn}images/style.min.css>
+<link rel=stylesheet href=$path_css>
 <!--[if lt IE 9]><script src=//html5shiv.googlecode.com/svn/trunk/html5.js></script><![endif]-->
 </head>
 <body class=clearfix>\n";
@@ -239,8 +248,7 @@ echo "<script src=http://code.jquery.com/jquery-1.8.0.min.js></script>
             // Load API content
             $.ajax({
                 type: 'GET',
-                url: // '//lab.alaukstein.com/ajax-seo/'+
-                'api' + (e.path.length !== 1 ? '/' + encodeURIComponent(e.path.toLowerCase().substr(1)) : ''),
+                url: 'api' + (e.path.length !== 1 ? '/' + encodeURIComponent(e.path.toLowerCase().substr(1)) : ''),
                 // You maight switch it to 'jsonp'
                 dataType: 'json',
                 // Uncomment the next line in case you use 'jsonp'
