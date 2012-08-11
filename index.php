@@ -184,13 +184,13 @@ echo '    </span>
 if(MYSQL_CON){
 
 // code.jquery.com Edgecast's CDN has better performance http://royal.pingdom.com/2010/05/11/cdn-performance-downloading-jquery-from-google-microsoft-and-edgecast-cdns/
-// If you use HTTPS, replace jQuery CDN source with Google CDN //ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js
+// If you use HTTPS, replace jQuery CDN source with Google CDN //ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js
 
 // Return root path
 $rootpath = (strlen(utf8_decode($path)) > 1) ? substr($path, 0, -1) : $path;
 
-echo "<script src=http://code.jquery.com/jquery-1.7.2.min.js></script>
-<script>window.jQuery || document.write('<script src={$cdn}images/jquery-1.7.2.min.js><\/script>')</script>
+echo "<script src=http://code.jquery.com/jquery-1.8.0.min.js></script>
+<script>window.jQuery || document.write('<script src={$cdn}images/jquery-1.8.0.min.js><\/script>')</script>
 <script src={$cdn}images/jquery.address.min.js></script>
 <script>
 (function () {
