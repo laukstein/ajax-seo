@@ -14,13 +14,9 @@ define('MYSQL_ERROR', false);
 
 // Path for static content
 // --------------------------------------------------
-// Use CDN
-//$cdndomain = 'cdn.domain.com';
-
-$cdndomain = isset($cdndomain) ? $cdndomain : null;
-$issetcdn  = isset($cdndomain) ? true : false;
-$path      = isset($path) ? $path : null;
-$cdn       = $issetcdn ? '//'.$cdndomain.'/' : $path;
+// $cdndomain = 'cdn.domain.com'; // enable to use CDN
+$issetcdn = isset($cdndomain) ? true : false;
+$assets   = $issetcdn ? '//'.$cdndomain : $rootpath;
 
 
 

@@ -48,10 +48,10 @@ if(empty($zlib_oc)) {
 // --------------------------------------------------
 if (strpos($_SERVER['HTTP_HOST'], $_SERVER['SERVER_NAME']) === false) {
     http_response_code(400);
-    
+
     // Robots meta tag and X-Robots-Tag HTTP header specifications https://developers.google.com/webmasters/control-crawl-index/docs/robots_meta_tag
     header('X-Robots-Tag: none');
-    
+
     header('Content-Type: text/plain');
     exit('400 Bad Request');
 }
@@ -64,5 +64,10 @@ if (str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME)) 
 } else {
     $path = str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME));
 }
+
+
+
+// Return root path
+$rootpath = substr($path, 0, -1);
 
 ?>
