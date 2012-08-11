@@ -1,13 +1,43 @@
+/*
+
+Resources
+--------------------------------------------------
+Google HTML/CSS Style Guide
+http://google-styleguide.googlecode.com/svn/trunk/htmlcssguide.xml
+
+CSS formatting
+http://www.markdotto.com/2011/11/29/css-property-order/
+http://www.markdotto.com/2011/12/12/css-commenting-strategy/
+http://www.markdotto.com/2011/12/06/formatting-vendor-prefixed-css/
+
+Avoid IDs
+http://screwlewse.com/2010/07/dont-use-id-selectors-in-css/
+http://screwlewse.com/2010/08/different-css-techniques-and-their-performance/
+
+Font-size with REM
+http://snook.ca/archives/html_and_css/font-size-with-rem
+
+
+
+Android version issues
+--------------------------------------------------
+all - slow click/hover state on all element except <a>
+all - flicker issue, http://georgehess.com/post/2054803814/css-keyframe-animation-flicker
+2.3 - overflow issue on <a> elements
+2.3 - flexbox updated syntax no supported http://dev.w3.org/csswg/css3-flexbox/, http://css-tricks.com/old-flexbox-and-new-flexbox/ (use old and new syntax to support on all devices)
+
+*/
+
 /* Standards
 -------------------------------------------------- */
 html, body { height: 100%; }
 html {
     font-size: 62.5%;
+    cursor: default;
     -webkit-user-select: none;
        -moz-user-select: -moz-none;
         -ms-user-select: none;
             user-select: none;
-    cursor: default;
 }
 body, input, textarea {
     color: #333;
@@ -79,7 +109,8 @@ input, textarea {
             user-select: text;
 }
 input {
-    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+         box-sizing: border-box;
     -webkit-appearance: none;
 }
 input[type="submit"] { cursor: pointer; }
@@ -87,7 +118,8 @@ textarea {
     overflow: auto;
     word-wrap: break-word;
     resize: vertical;
-    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+         box-sizing: border-box;
 }
 ::-webkit-input-placeholder { color: #ddd; }
 ::-moz-placeholder { color: #ddd; }
@@ -105,14 +137,14 @@ textarea {
 
 .transition, .transition:before {
     -webkit-transition-duration: .14s;
-       -moz-transition-duration: .14s;
-         -o-transition-duration: .14s;
+       -moz-transition-duration: .14s; /* removable at Firefox 16 */
+         -o-transition-duration: .14s; /* removable at Opera 12.50 */
             transition-duration: .14s;
 }
 .transition:hover, .transition:hover:before {
     -webkit-transition-duration: .1s;
-       -moz-transition-duration: .1s;
-         -o-transition-duration: .1s;
+       -moz-transition-duration: .1s; /* removable at Firefox 16 */
+         -o-transition-duration: .1s; /* removable at Opera 12.50 */
             transition-duration: .1s;
 }
 /* [class*="sprites"] {
@@ -167,8 +199,8 @@ textarea {
     text-transform: uppercase;
     background-color: #f5f5f5;
     background-image: -webkit-linear-gradient(#f8f8f8, #f1f1f1);
-    background-image:    -moz-linear-gradient(#f8f8f8, #f1f1f1);
-    background-image:      -o-linear-gradient(#f8f8f8, #f1f1f1);
+    background-image:    -moz-linear-gradient(#f8f8f8, #f1f1f1); /* removable at Firefox 16 */
+    background-image:      -o-linear-gradient(#f8f8f8, #f1f1f1); /* removable at Opera 12.50 */
     background-image:         linear-gradient(#f8f8f8, #f1f1f1);
     box-shadow: 0 1px 1px rgba(0,0,0,.1);
     border: 1px solid #dcdcdc;
@@ -191,8 +223,8 @@ textarea {
 .nav a:hover, .nav a:focus {
     background-color: #eee;
     background-image: -webkit-linear-gradient(#fbfbfb, #f8f8f8);
-    background-image:    -moz-linear-gradient(#fbfbfb, #f8f8f8);
-    background-image:      -o-linear-gradient(#fbfbfb, #f8f8f8);
+    background-image:    -moz-linear-gradient(#fbfbfb, #f8f8f8); /* removable at Firefox 16 */
+    background-image:      -o-linear-gradient(#fbfbfb, #f8f8f8); /* removable at Opera 12.50 */
     background-image:         linear-gradient(#fbfbfb, #f8f8f8);
 }
 .nav .selected, .nav .selected:hover, .nav .selected:focus {
@@ -226,18 +258,17 @@ textarea {
     text-shadow: 1px 1px 0 rgba(255,255,255,.5);
     background-color: #ffe65c;
     background-image: -webkit-linear-gradient(#ffe998, #ffe65c);
-    background-image:    -moz-linear-gradient(#ffe998, #ffe65c);
-    background-image:      -o-linear-gradient(#ffe998, #ffe65c);
+    background-image:    -moz-linear-gradient(#ffe998, #ffe65c); /* removable at Firefox 16 */
+    background-image:      -o-linear-gradient(#ffe998, #ffe65c); /* removable at Opera 12.50 */
     background-image:         linear-gradient(#ffe998, #ffe65c);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr=#ffe998, endColorStr=#ffe65c);
     box-shadow: 0 0 4px rgba(0,0,0,.5);
     -webkit-transform: translateY(-50px);
-       -moz-transform: translateY(-50px);
-         -o-transform: translateY(-50px);
+       -moz-transform: translateY(-50px); /* removable at Firefox 16 */
+         -o-transform: translateY(-50px); /* removable at Opera 12.50 */
             transform: translateY(-50px);
     -webkit-animation: slide-down 6s linear 1.5s 1;
-       -moz-animation: slide-down 6s linear 1.5s 1;
-         -o-animation: slide-down 6s linear 1.5s 1;
+       -moz-animation: slide-down 6s linear 1.5s 1; /* removable at Firefox 16 */
+         -o-animation: slide-down 6s linear 1.5s 1; /* removable at Opera 12.50 */
             animation: slide-down 6s linear 1.5s 1;
 }
 @-webkit-keyframes slide-down {
@@ -249,11 +280,13 @@ textarea {
     /* Android 2 flicker issue http://georgehess.com/post/2054803814/css-keyframe-animation-flicker */
     100% { }
 }
+/* removable at Firefox 16 */
 @-moz-keyframes slide-down {
-    0%, 100% {-moz-transform: translateY(-50px); }
+    0%, 100% { -moz-transform: translateY(-50px); }
     10%, 90% { -moz-transform: translateY(0); }
 }
-@-o-keyframes slide-down{
+/* removable at Opera 12.50 */
+@-o-keyframes slide-down {
     0%, 100% { -o-transform: translateY(-50px); }
     10%, 90% { -o-transform: translateY(0); }
 }
@@ -286,8 +319,12 @@ textarea {
     zoom: 1;
 }
 
-@media (orientation: portrait) { }
-@media (orientation: landscape) { }
+/* 480x640 160dpi http://www.w3.org/blog/CSS/2012/06/14/unprefix-webkit-device-pixel-ratio/ */
+/* @media (-webkit-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) { } */
+/* 720x960 240dpi */
+/* @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) { } */
+/* @media (orientation: portrait) { } */
+/* @media (orientation: landscape) { } */
 
 /* Small devices */
 @media (max-width: 480px) {
@@ -296,6 +333,27 @@ textarea {
         /* –ms-text-size-adjust property will be ignored where the viewport tag is present */
         /*     -ms-text-size-adjust: 100%; */
     }
+}
+
+@media print {
+    * {
+        color: #000;
+        text-shadow: none;
+        background: transparent;
+    }
+    a, a:visited {
+        color: #444!important;
+        text-decoration: underline;
+    }
+    a[href]:after { content: ' (' attr(href) ')'; }
+    abbr[title]:after { content: ' (' attr(title) ')'; }
+    img { page-break-inside: avoid; }
+    @page { margin: .5cm; }
+    p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+    }
+    h2, h3 { page-break-after: avoid; }
 }
 
 
@@ -313,10 +371,10 @@ textarea {
 }
 
 /* Chrome */
-@media (-webkit-min-device-pixel-ratio:0) { }
+/* @media (-webkit-min-device-pixel-ratio:0) { } */
 
 /* Opera */
-@media not screen and (1) { }
+/* @media (min-resolution: .001dpcm) { } */
 
 /* Firefox */
-@-moz-document url-prefix() { }
+/* @-moz-document url-prefix() { } */
