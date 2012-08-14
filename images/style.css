@@ -96,6 +96,11 @@ h2 {
 p {
     margin-top: 12px;
     margin-bottom: 12px;
+    word-break: break-word;
+    -webkit-hyphens: auto;
+       -moz-hyphens: auto;
+        -ms-hyphens: auto;
+            hyphens: auto;
 }
 label {
     display: inline-block;
