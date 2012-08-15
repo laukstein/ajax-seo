@@ -252,7 +252,6 @@ textarea {
     cursor: default;
 }
 .article {
-    overflow: auto;
     padding-top: 13px;
     padding-bottom: 65px;
 }
@@ -385,7 +384,7 @@ textarea {
 }
 
 /* Chrome */
-/* @media (-webkit-min-device-pixel-ratio:0) { } */
+/* @media (-webkit-min-device-pixel-ratio: 0) { } */
 
 /* Opera */
 /* @media (min-resolution: .001dpcm) { } */
