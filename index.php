@@ -86,7 +86,7 @@ $meta_tags .= "\n<meta name=pinterest content=nopin>";
 $meta_tags .= "\n<meta name=referrer content=never>";
 
 // Return on mobile width 480px with same DPI like on desktop
-$meta_tags .= "\n<meta name=viewport content=\"width=480, target-densityDpi=device-dpi\">";
+$meta_tags .= "\n<meta name=viewport content=\"width=480\">";
 
 // Authorship in Google Search support.google.com/webmasters/bin/answer.py?hl=en&answer=1408986
 //$meta_tags .= "\n<link rel=author href=https://plus.google.com/u/0000000000000000000>";
