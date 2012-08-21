@@ -10,17 +10,17 @@ Options -MultiViews +SymLinksIfOwnerMatch +IncludesNOEXEC
 </IfModule>
 
 ServerSignature Off
-#DirectorySlash Off
+# DirectorySlash Off
 
 # Uncomment php_flag and php_value if you are not able to apply config/php.ini on your server.
-#php_flag display_errors 0
-#php_flag log_errors 1
-#php_value error_log error_log.txt
-#php_flag session.use_trans_sid 0
-#php_flag allow_url_fopen 0
-#php_flag allow_url_include 0
-#php_flag short_open_tag 0
-#php_flag expose_php 0
+# php_flag display_errors 0
+# php_flag log_errors 1
+# php_value error_log error_log.txt
+# php_flag session.use_trans_sid 0
+# php_flag allow_url_fopen 0
+# php_flag allow_url_include 0
+# php_flag short_open_tag 0
+# php_flag expose_php 0
 
 AddType text/cache-manifest appcache
 AddType application/javascript .js
@@ -110,93 +110,100 @@ ErrorDocument 500 "500 Internal Server Error"
 <IfModule mod_rewrite.c>
     # FollowSymLinks must be enabled for turning on the rewrite engine.
     Options FollowSymlinks
-    
+
     RewriteEngine On
-    
+
     # Handle HTTPS protocol.
     RewriteCond %{HTTPS} on
     RewriteRule .* - [env=https:s]
-    
+
     # Rewrite www to no-www domain.
     RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
     RewriteRule ^ http%{ENV:https}://%1%{REQUEST_URI} [R=301,L]
-    
+
+    # Avoid subdomains.
+    # RewriteCond %{HTTP_HOST} !^domain\.com$ [NC]
+    # RewriteRule ^(.*)$ http%{ENV:https}://domain.com/$1 [R=301,L]
+
     # Rewrite multiple slashes with single slash after domain.
     RewriteCond %{THE_REQUEST} ^[A-Z]+\s//+(.*)\sHTTP/[0-9.]+$ [OR]
     RewriteCond %{THE_REQUEST} ^[A-Z]+\s(.*/)/+\sHTTP/[0-9.]+$
     RewriteRule .* http%{ENV:https}://%{HTTP_HOST}/%1 [R=301,NE,L]
-    
+
     # Rewrite multiple slashes with single slash in URL.
     RewriteCond %{REQUEST_URI} ^(.*)//(.*)$
     RewriteRule . %1/%2 [R=301,NE,L]
-    
+
     # Remove slash from URL end.
     RewriteCond %{REQUEST_URI} ^(.+)/$ [OR]
     RewriteRule ^.+/$ %1 [R=301,L]
     RewriteCond %{REQUEST_FILENAME} -d
     RewriteRule ^.+/$ %1 [R=301,L]
-    
+
     # Rewrite backslash with slash. Works on FF when applied config/httpd.conf AllowEncodedSlashes On
     RewriteCond %{REQUEST_URI} ^(.*)\\(.*)$
     RewriteRule .* %1/%2 [R=301,NC,L]
-    
+
+    # Rewrite exemptions for specific path.
+    # RewriteRule ^images/ - [L]
+
     # Rewrite space with dash.
     RewriteCond %{REQUEST_URI} ^([^\ ]*)\ (.*)$
     RewriteRule .* %1-%2 [R=301,L]
-    
+
     # Rewrite underscore with dash.
     RewriteCond %{REQUEST_URI} ^([^\_]*)\_(.*)$
     RewriteRule .* %1-%2 [R=301,L]
-    
+
     # Remove index.php
     RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /(.*)index\.php\ HTTP/ [NC]
     RewriteRule .* http%{ENV:https}://%{HTTP_HOST}/%1 [R=301,L]
-    
+
     # Remove extension .php
     RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /(.*).php\ HTTP/ [NC]
     RewriteRule .* http%{ENV:https}://%{HTTP_HOST}/%1 [R=301,L]
-    
+
     # Rewrite query string for AJAX crawling support.google.com/webmasters/bin/answer.py?hl=en&answer=174992
     RewriteCond %{QUERY_STRING} ^_escaped_fragment_=(.*)$
     RewriteRule .*$ %{REQUEST_URI}%1? [R=301,L]
-    
+
     # Remove question mark and parameters.
     RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^?#\ ]*)\?[^\ ]*\ HTTP/ [NC]
-    # Query exceptions.
-    #RewriteCond $1 !^images/
-    #RewriteCond !{QUERY_STRING} callback
+    # Query rewrite exceptions.
+    # RewriteCond $1 !^images/
+    # RewriteCond !{QUERY_STRING} callback
     RewriteRule .*$ %{REQUEST_URI}? [R=301,L]
-    
+
     # Remove dot.
     RewriteCond %{REQUEST_URI} ^([^\.]*)\.(.*)$
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule .* %1%2 [R=301,L]
-    
+
     # Remove comma.
     RewriteCond %{REQUEST_URI} ^([^\,]*)\,(.*)$
     RewriteRule .* %1%2 [R=301,L]
-    
+
     # Remove dash before slash.
     RewriteCond %{REQUEST_URI} ^(.*)\-/(.*)$
     RewriteRule ^(.*)\-/(.*)$  %1/%2 [R=301,L]
-    
+
     # Remove dash at URL end.
     RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /(.*)-\ HTTP/ [NC]
     RewriteRule .* http%{ENV:https}://%{HTTP_HOST}/%1 [R=301,L]
-    
+
     # Rewrite uppercase letter URL to lowercase with config/httpd.conf RewriteMap lc int:tolower
     # Solution without httpd.conf RewriteMap in github.com/laukstein/ajax-seo/wiki/Lowercase-URL
     RewriteCond %{REQUEST_URI} .+
     RewriteRule ^[^A-Z]*[A-Z] ${lc:%0} [R=301,L]
-    
+
     # Block access to folders that begins with a period, like .git, .svn
     RewriteRule "(^|/)\." - [F]
-    
+
     RewriteCond %{REQUEST_FILENAME} !-d [OR]
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^api/?([^\./]*)$ index.php?api&url=$1 [QSA,L]
+    RewriteRule ^api/?([^.]*)$ index.php?api&url=$1 [QSA,L]
     RewriteRule ^([^.]*)$ index.php?url=$1 [QSA,L]
-    
+
     # Get the headers If-Modified-Since and If-None-Match when apache_request_headers() is not available
     RewriteRule .* - [E=HTTP_IF_MODIFIED_SINCE:%{HTTP:If-Modified-Since}]
     RewriteRule .* - [E=HTTP_IF_NONE_MATCH:%{HTTP:If-None-Match}]
