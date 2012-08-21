@@ -21,10 +21,12 @@ http://snook.ca/archives/html_and_css/font-size-with-rem
 
 Android version issues
 --------------------------------------------------
-all - slow click/hover state on all element except <a>
-all - flicker issue, http://georgehess.com/post/2054803814/css-keyframe-animation-flicker
+all - slow click/hover state on any element except <a>
+all - flicker issue http://georgehess.com/post/2054803814/css-keyframe-animation-flicker
+2.3 - screen flash on scroll issue http://georgehess.com/post/2054803814/css-keyframe-animation-flicker
 2.3 - overflow issue on <a> elements
-2.3 - flexbox updated syntax no supported http://dev.w3.org/csswg/css3-flexbox/, http://css-tricks.com/old-flexbox-and-new-flexbox/ (use old and new syntax to support on all devices)
+2.3 - not supported flexbox updated syntax - use old and new syntax to support on all devices http://dev.w3.org/csswg/css3-flexbox/ http://css-tricks.com/old-flexbox-and-new-flexbox/
+2.3 - unknown appearance of visibility: hidden on new DOM elements on scroll when using "-webkit-transform: translate3d(0,0,0);", "-webkit-backface-visibility: hidden;" or "-webkit-perspective: 1000;"
 
 */
 
@@ -102,9 +104,17 @@ p {
         -ms-hyphens: auto;
             hyphens: auto;
 }
+hr {
+    height: 0;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    border: 1px solid #eee;
+    border-width: 1px 0 0;
+}
 label {
     display: inline-block;
-    padding: 3px 0 5px;
+    padding-top: 3px;
+    padding-bottom: 5px;
     cursor: pointer;
 }
 input, textarea {
@@ -114,11 +124,44 @@ input, textarea {
             user-select: text;
 }
 input {
+    padding: 7px 10px;
+    border: 1px solid #555;
+    line-height: 20px;
+    border-radius: 3px;
     -moz-box-sizing: border-box;
          box-sizing: border-box;
     -webkit-appearance: none;
 }
-input[type="submit"] { cursor: pointer; }
+input[type="submit"] {
+    display: inline-block;
+    padding: 4px 25px;
+    margin: 0;
+    margin-top: 2px;
+    color: #212121;
+    font-weight: bold;
+    line-height: 23px;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #b0e251;
+    background-image: -webkit-linear-gradient(#d2f683,#8ece1f);
+    background-image: -moz-linear-gradient(#d2f683,#8ece1f);
+    background-image: -o-linear-gradient(#d2f683,#8ece1f);
+    background-image: linear-gradient(#d2f683,#8ece1f);
+    border: 1px solid #9aaa77;
+    border-radius: 3px;
+    box-shadow: 1px 1px 1px rgba(39,56,2,.4);
+    cursor: pointer;
+}
+input[type="submit"]:hover, input[type="submit"]:focus {
+    color: black;
+    text-decoration: none;
+    background-color: #bbe965;
+    background-image: -webkit-linear-gradient(#e1ffa0,#98d42e);
+    background-image: -moz-linear-gradient(#e1ffa0,#98d42e);
+    background-image: -o-linear-gradient(#e1ffa0,#98d42e);
+    background-image: linear-gradient(#e1ffa0,#98d42e);
+    border-color: #657542;
+}
 textarea {
     overflow: auto;
     word-wrap: break-word;
@@ -180,7 +223,7 @@ textarea {
     text-decoration: none;
     text-shadow: 0 0 1px #fefefe;
 }
-.logo:hover, .logo:active {
+.logo:hover, .logo:focus {
     color: #333;
     text-decoration: none;
 }
@@ -256,7 +299,6 @@ textarea {
     padding-bottom: 65px;
 }
 .content {
-    display: inline-block;
     background-color: #fff;
 }
 .note {
