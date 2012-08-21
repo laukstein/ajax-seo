@@ -10,6 +10,8 @@ include 'content/config.php';
 // --------------------------------------------------
 include 'content/connect.php';
 
+$meta_description = null;
+
 if (MYSQL_CON) {
     $result = mysql_query("SELECT url, `meta-title`, `meta-description`, title, content FROM `" . MYSQL_TABLE . "` WHERE url = '$url'");
 
@@ -18,6 +20,11 @@ if (MYSQL_CON) {
         include 'content/api.php';
         exit;
     }
+
+    $pretitle  = null;
+    $pagetitle = $pagetitle_error = 'Page not found';
+    $title     = $title_error     = '404 Not Found';
+    $content   = $content_error   = 'Sorry, this page cannot be found.';
 
     // Check if url exist
     if (mysql_num_rows($result)) {
@@ -38,12 +45,14 @@ if (MYSQL_CON) {
             $row[]     = array(
                 'row' => array_map('htmlspecialchars', $row)
             );
+
             $urlid            = $row['url'];
             $title            = isset($row['title']) ? $row['title'] : null;
             $meta_title       = isset($row['meta-title']) ? $row['meta-title'] : $title;
             $meta_description = isset($row['meta-description']) ? $row['meta-description'] : null;
             $content          = isset($row['content']) ? $row['content'] : null;
         }
+
         $pretitle  = 'AJAX SEO';
         $pagetitle = $meta_title . ' - ' . $pretitle;
 
@@ -52,14 +61,8 @@ if (MYSQL_CON) {
             $pagetitle = 'AJAX SEO';
         }
     } else {
-        // Return 404 error, if url does not exist
-        $validate         = new validate($url);
-        $validate -> status();
-        $title            = $validate -> title;
-        $pagetitle        = $title;
-        $pretitle         = null;
-        $meta_description = null;
-        $content          = $validate -> content;
+        // If URL does not exist, return 404 error
+        http_response_code(404);
     }
 }
 
@@ -70,39 +73,41 @@ $installation       = isset($installation) ? $installation : null;
 
 
 
-// 160 character title       blogs.msdn.com/b/ie/archive/2012/05/14/sharing-links-from-ie10-on-windows-8.aspx
+// 160 character title http://blogs.msdn.com/b/ie/archive/2012/05/14/sharing-links-from-ie10-on-windows-8.aspx
 $meta_tags  = "<title>$pagetitle</title>";
 
-// 253 character description blogs.msdn.com/b/ie/archive/2012/05/14/sharing-links-from-ie10-on-windows-8.aspx
+// 253 character description http://blogs.msdn.com/b/ie/archive/2012/05/14/sharing-links-from-ie10-on-windows-8.aspx
 $meta_tags .= "\n<meta name=description content=\"$meta_description\">";
 
-// Declare the family friendly content schema.org/WebPage
+// Declare the family friendly content http://schema.org/WebPage
 $meta_tags .= "\n<meta itemprop=isFamilyFriendly content=true>";
 
-// Save the copyright and keep out from Pinterest robots SEO affect blog.pinterest.com/post/17949261591/growing-up
+// Opt-out of pinning by Pinterest, save copyrights and avoid SEO impact http://pinterest.com/about/help/#linking_faqs
 $meta_tags .= "\n<meta name=pinterest content=nopin>";
 
-// Perform speed and security on removing referrer-header-value wiki.whatwg.org/wiki/Meta_referrer
+// Perform speed and security on removing referrer-header-value http://wiki.whatwg.org/wiki/Meta_referrer
 $meta_tags .= "\n<meta name=referrer content=never>";
 
 // Return on mobile width 480px with same DPI like on desktop
 $meta_tags .= "\n<meta name=viewport content=\"width=480\">";
 
-// Authorship in Google Search support.google.com/webmasters/bin/answer.py?hl=en&answer=1408986
-//$meta_tags .= "\n<link rel=author href=https://plus.google.com/u/0000000000000000000>";
+// Authorship in Google Search http://support.google.com/webmasters/bin/answer.py?hl=en&answer=1408986
+//$meta_tags .= "\n<link rel=author href=https://plus.google.com/000000000000000000000/posts>";
 
-// Save page loading time on pre-resolving the CDN domain name html5boilerplate.com/docs/DNS-Prefetching/
+// Save page loading time on pre-resolving the CDN domain name http://html5boilerplate.com/docs/DNS-Prefetching/
 if ($issetcdn) {
     $meta_tags .= "\n<link rel=dns-prefetch href=$assets>";
 }
 
 
 
-// Apply CSS developmenet or production minified version
+// Assets development and production minified version.
 if ($debug) {
     $path_css = $assets.'/images/style.css';
+    $path_js  = $assets.'/images/jquery.address.js';
 } else {
     $path_css = $assets.'/images/style.min.css';
+    $path_js  = $assets.'/images/jquery.address.min.js';
 }
 
 
@@ -128,7 +133,7 @@ if ($note !== null) {
 
 echo "<div class=\"container center-container\">
 <header class=clearfix>
-    <div><a class=logo href=//github.com/laukstein/ajax-seo rel=home>AJAX SEO{$title_installation} <small>Bring your App crawable</small></a></div>\n";
+    <div><a class=logo href=https://github.com/laukstein/ajax-seo rel=home>AJAX SEO{$title_installation} <small>Bring your App crawable</small></a></div>\n";
 
 
 if (MYSQL_CON) {
@@ -162,7 +167,7 @@ if (MYSQL_CON) {
 }
 
 
-echo "    </header>\n<article class=article>\n    <span class=content>\n";
+echo "    </header>\n<article class=article>\n    <div class=\"content js-content\">\n";
 
 
 if (MYSQL_CON) {
@@ -177,14 +182,14 @@ if (MYSQL_CON) {
 }
 
 
-echo '    </span>
+echo '    </div>
 </article>
 </div>
 <footer class="footer center-container">
     <nav itemprop=breadcrumb>
-        <a href=//github.com/laukstein/ajax-seo title="AJAX SEO Git Repository">Contribute on github</a> >
-        <a href=//github.com/laukstein/ajax-seo/zipball/master title="Download AJAX SEO">Download</a> >
-        <a href=//github.com/laukstein/ajax-seo/issues>Submit issue</a>
+        <a href=https://github.com/laukstein/ajax-seo title="AJAX SEO Git Repository">Contribute on github</a> >
+        <a href=https://github.com/laukstein/ajax-seo/zipball/master title="Download AJAX SEO">Download</a> >
+        <a href=https://github.com/laukstein/ajax-seo/issues>Submit issue</a>
     </nav>
 </footer>
 ';
@@ -192,30 +197,26 @@ echo '    </span>
 
 if(MYSQL_CON){
 
-// code.jquery.com Edgecast's CDN has better performance http://royal.pingdom.com/2010/05/11/cdn-performance-downloading-jquery-from-google-microsoft-and-edgecast-cdns/
-// If you use HTTPS, replace jQuery CDN source with Google CDN //ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js
+// code.jquery.com Edgecast's CDN has an better performance http://royal.pingdom.com/2010/05/11/cdn-performance-downloading-jquery-from-google-microsoft-and-edgecast-cdns/
+// If you use (also) HTTPS, replace jQuery CDN source with Google CDN //ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js
 
 echo "<script src=http://code.jquery.com/jquery-1.8.0.min.js></script>
 <script>window.jQuery || document.write('<script src=$assets/images/jquery-1.8.0.min.js><\/script>')</script>
-<script src=$assets/images/jquery.address.min.js></script>
+<script src=$path_js></script>
 <script>
 (function () {
     'use strict';
 
     var nav = $('.js-as'),
-        content = $('.content'),
+        content = $('.js-content'),
         init = true,
         state = window.history.pushState !== undefined,
+        // Response
         handler = function (data) {
-            // Response
             document.title = data.pagetitle + '$pretitle';
-            content.fadeTo(20, 1).removeAttr('style').html(data.content);
-            if ($.browser.msie) {
-                content.removeAttr('filter');
-            }
+            content.fadeTo(20, 1).html(data.content);
 
             // GA tracking
-            //console.log('tracking');
             _gaq && _gaq.push(['_trackPageview']);
         };
     $.address.tracker(function () {}).crawlable(1).state('$rootpath').init(function () {
@@ -225,6 +226,7 @@ echo "<script src=http://code.jquery.com/jquery-1.8.0.min.js></script>
         // Select nav link
         nav.each(function () {
             var link = $(this);
+
             if (link.attr('href') === (($.address.state() + decodeURI(e.path)).replace(/\/\//, '/'))) {
                 link.addClass('selected').focus();
             } else {
@@ -235,42 +237,41 @@ echo "<script src=http://code.jquery.com/jquery-1.8.0.min.js></script>
         if (state && init) {
             init = false;
         } else {
-            // Implement timeout
-            var timer = window.setTimeout(function () {
-                content.html('Loading seems to be taking a while...');
-            }, 3800);
-
             var fadeTimer;
 
             // Load API content
             $.ajax({
                 type: 'GET',
-                url: 'api' + (e.path.length !== 1 ? '/' + encodeURIComponent(e.path.toLowerCase().substr(1)) : ''),
-                // You maight switch it to 'jsonp'
+                url: 'api' + (e.path.length !== 1 ? '/' + e.path.toLowerCase().substr(1) : ''),
                 dataType: 'json',
-                // Uncomment the next line in case you use 'jsonp'
-                //jsonpCallback: 'i',
+                // jsonpCallback: 'i',
                 cache: true,
+                timeout: 3800,
                 beforeSend: function () {
                     fadeTimer = setTimeout(function() {
-                        //console.log('fading');
                         content.fadeTo(200, 0.33);
                     }, 300);
                 },
                 success: function (data, textStatus, jqXHR) {
-                    if (fadeTimer) { clearTimeout(fadeTimer); }
-                    window.clearTimeout(timer);
+                    if (fadeTimer) {
+                        clearTimeout(fadeTimer);
+                    }
+
                     handler(data);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    if (fadeTimer) { clearTimeout(fadeTimer); }
-                    window.clearTimeout(timer);
                     nav.removeClass('selected');
-                    document.title = 'Page not found';
-                    content.fadeTo(20, 1).removeAttr('style').html('<h1>404 Not Found</h1><p>Sorry, this page cannot be found.</p>');
-                    if ($.browser.msie) {
-                        content.removeAttr('filter');
+
+                    if (fadeTimer) {
+                        clearTimeout(fadeTimer);
                     }
+
+                    if (textStatus === 'timeout') {
+                        content.html('Loading seems to be taking a while...');
+                    }
+
+                    document.title = '$pagetitle_error';
+                    content.fadeTo(20, 1).html('<h1>$title_error</h1><p>$content_error</p>');
                 }
             });
         }
