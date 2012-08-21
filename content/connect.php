@@ -12,11 +12,13 @@ define('MYSQL_ERROR', false);
 
 
 
-// Path for static content
+// Path for static assets
 // --------------------------------------------------
-// $cdndomain = 'cdn.domain.com'; // enable to use CDN
+define('CDN_DOMAIN', null);
+$cdndomain = CDN_DOMAIN;
+
 $issetcdn = isset($cdndomain) ? true : false;
-$assets   = $issetcdn ? '//'.$cdndomain : $rootpath;
+$assets   = $issetcdn ? '//' . $cdndomain : $rootpath;
 
 
 
@@ -56,19 +58,6 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
 
     $url   = isset($_GET['url']) ? $_GET['url'] : null;
     $urlid = isset($urlid) ? $urlid : null;
-
-    // Return 404 error, if url does not exist
-    class validate
-    {
-        public $title;
-        public $content;
-        function status()
-        {
-            http_response_code(404);
-            $this -> title   = '404 Not Found';
-            $this -> content = 'Sorry, this page cannot be found.';
-        }
-    }
 
     $sql = 'SELECT * FROM `' . MYSQL_TABLE .'`';
     if (!mysql_query($sql)) {
