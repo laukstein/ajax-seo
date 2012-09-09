@@ -1,6 +1,4 @@
-/*
-
-Resources
+/* Resources
 --------------------------------------------------
 Google HTML/CSS Style Guide
 http://google-styleguide.googlecode.com/svn/trunk/htmlcssguide.xml
@@ -16,18 +14,6 @@ http://screwlewse.com/2010/08/different-css-techniques-and-their-performance/
 
 Font-size with REM
 http://snook.ca/archives/html_and_css/font-size-with-rem
-
-
-
-Android version issues
---------------------------------------------------
-all - slow click/hover state on any element except <a>
-all - flicker issue http://georgehess.com/post/2054803814/css-keyframe-animation-flicker
-2.3 - screen flash on scroll issue http://georgehess.com/post/2054803814/css-keyframe-animation-flicker
-2.3 - overflow issue on <a> elements
-2.3 - not supported flexbox updated syntax - use old and new syntax to support on all devices http://dev.w3.org/csswg/css3-flexbox/ http://css-tricks.com/old-flexbox-and-new-flexbox/
-2.3 - unknown appearance of visibility: hidden on new DOM elements on scroll when using "-webkit-transform: translate3d(0,0,0);", "-webkit-backface-visibility: hidden;" or "-webkit-perspective: 1000;"
-
 */
 
 /* Standards
@@ -47,36 +33,40 @@ body, input, textarea {
     font-size: 1.3rem;
     font-family: sans-serif;
 }
-::-moz-selection {
-    color: #fff;
-    text-shadow: none;
-    background-color: #bbb;
-}
 ::selection {
     color: #fff;
     text-shadow: none;
     background-color: #bbb;
 }
 :focus { outline: 0; }
-body, h3, h4, ul, ol, dl, dd , figure { margin: auto; }
-ul, ol { padding: 0; }
-li { list-style: none; }
-img, abbr, iframe { border: 0; }
-a, input, textarea { pointer-events: auto; }
+body, h3, h4, ul, ol, dl, dd , figure, input, textarea, select {
+    margin: auto;
+}
+ul, ol {
+    padding: 0;
+}
+li {
+    list-style: none;
+}
+img, abbr, iframe {
+    border: 0;
+}
+a, input, textarea {
+    pointer-events: auto;
+}
 a, img {
     -webkit-user-drag: none;
        -moz-user-drag: -moz-none;
             user-drag: none;
 }
 a {
-    color: #08c;
+    color: #2d76b9;
     text-decoration: none;
     cursor: default;
-
-    /* Remove outline and highlight-color from click-able elements on Android and iOS */
-    -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
-a:hover, a:focus { text-decoration: underline; }
+a:hover, a:focus {
+    text-decoration: underline;
+}
 img{
     max-width: 100%;
     vertical-align: middle;
@@ -117,7 +107,7 @@ label {
     padding-bottom: 5px;
     cursor: pointer;
 }
-input, textarea {
+input, textarea, .content {
     -webkit-user-select: text;
        -moz-user-select: text;
         -ms-user-select: text;
@@ -130,7 +120,6 @@ input {
     border-radius: 3px;
     -moz-box-sizing: border-box;
          box-sizing: border-box;
-    -webkit-appearance: none;
 }
 input[type="submit"] {
     display: inline-block;
@@ -143,23 +132,23 @@ input[type="submit"] {
     text-align: center;
     white-space: nowrap;
     background-color: #b0e251;
-    background-image: -webkit-linear-gradient(#d2f683,#8ece1f);
-    background-image: -moz-linear-gradient(#d2f683,#8ece1f);
-    background-image: -o-linear-gradient(#d2f683,#8ece1f);
-    background-image: linear-gradient(#d2f683,#8ece1f);
+    background-image: -webkit-linear-gradient(#d2f683, #8ece1f);
+    background-image:    -moz-linear-gradient(#d2f683, #8ece1f); /* removable at Firefox 16 */
+    background-image:      -o-linear-gradient(#d2f683, #8ece1f); /* removable at Opera 12.50 */
+    background-image:         linear-gradient(#d2f683, #8ece1f);
     border: 1px solid #9aaa77;
     border-radius: 3px;
     box-shadow: 1px 1px 1px rgba(39,56,2,.4);
     cursor: pointer;
 }
 input[type="submit"]:hover, input[type="submit"]:focus {
-    color: black;
+    color: #000;
     text-decoration: none;
     background-color: #bbe965;
-    background-image: -webkit-linear-gradient(#e1ffa0,#98d42e);
-    background-image: -moz-linear-gradient(#e1ffa0,#98d42e);
-    background-image: -o-linear-gradient(#e1ffa0,#98d42e);
-    background-image: linear-gradient(#e1ffa0,#98d42e);
+    background-image: -webkit-linear-gradient(#e1ffa0, #98d42e);
+    background-image:    -moz-linear-gradient(#e1ffa0, #98d42e); /* removable at Firefox 16 */
+    background-image:      -o-linear-gradient(#e1ffa0, #98d42e); /* removable at Opera 12.50 */
+    background-image:         linear-gradient(#e1ffa0, #98d42e);
     border-color: #657542;
 }
 textarea {
@@ -169,8 +158,6 @@ textarea {
     -moz-box-sizing: border-box;
          box-sizing: border-box;
 }
-::-webkit-input-placeholder { color: #ddd; }
-::-moz-placeholder { color: #ddd; }
 
 
 
@@ -425,11 +412,43 @@ textarea {
     .article { width: 100%; }
 }
 
-/* Chrome */
-/* @media (-webkit-min-device-pixel-ratio: 0) { } */
+/* Webkit */
+@media (-webkit-min-device-pixel-ratio: 0) {
+    /* Android version issues
+    --------------------------------------------------
+    all - slow click/hover state on any element except <a>
+    all - flicker issue http://georgehess.com/post/2054803814/css-keyframe-animation-flicker
+    2.3 - screen flash on scroll issue http://georgehess.com/post/2054803814/css-keyframe-animation-flicker
+    2.3 - overflow issue on <a> elements
+    2.3 - not supported flexbox updated syntax - use old and new syntax to support on all devices http://dev.w3.org/csswg/css3-flexbox/ http://css-tricks.com/old-flexbox-and-new-flexbox/
+    2.3 - unknown appearance of visibility: hidden on new DOM elements on scroll when using "-webkit-transform: translate3d(0,0,0);", "-webkit-backface-visibility: hidden;" or "-webkit-perspective: 1000;"
+    */
+    a {
+        /* Remove outline and highlight-color from click-able elements on Android and iOS */
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+    }
+    input {
+        -webkit-appearance: none;
+    }
+    input[type="search"]::-webkit-search-cancel-button {
+        -webkit-appearance: none;
+    }
+    ::-webkit-input-placeholder {
+        color: #ddd;
+    }
+}
 
 /* Opera */
 /* @media (min-resolution: .001dpcm) { } */
 
 /* Firefox */
-/* @-moz-document url-prefix() { } */
+@-moz-document url-prefix() {
+    ::-moz-selection {
+        color: #fff;
+        text-shadow: none;
+        background-color: #bbb;
+    }
+    :-moz-placeholder {
+        color: #ddd;
+    }
+}
