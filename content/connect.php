@@ -53,9 +53,6 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
     array_map('stripslashes', $_GET);
     array_map('mysql_real_escape_string', $_GET);
 
-    // Full Unicode support http://mathiasbynens.be/notes/mysql-utf8mb4
-    // mysql_query("SET NAMES 'utf8mb4'");
-
     $url   = isset($_GET['url']) ? $_GET['url'] : null;
     $urlid = isset($urlid) ? $urlid : null;
 
