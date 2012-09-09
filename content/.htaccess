@@ -1,6 +1,6 @@
 # Upgrading to 2.4 from 2.2 http://httpd.apache.org/docs/2.4/upgrading.html
 # Apache 2.4
-Require all denied
+# Require all denied
 
 # Apache 2.2
 Order deny,allow

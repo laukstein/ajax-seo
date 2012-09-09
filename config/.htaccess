@@ -1,13 +1,18 @@
-Order Deny,Allow
+# Upgrading to 2.4 from 2.2 http://httpd.apache.org/docs/2.4/upgrading.html
+# Apache 2.4
+# Require all denied
+
+# Apache 2.2
+Order deny,allow
 #Deny from all
 Allow from all
 
 <IfModule mod_rewrite.c>
     # FollowSymLinks must be enabled for turning on the rewrite engine.
     Options FollowSymlinks
-    
+
     RewriteEngine On
-    
+
     # Remove dot.
     RewriteCond %{REQUEST_URI} ^([^\.]*)\.(.*)$
     RewriteRule .* %1%2 [R=301,L]
