@@ -21,7 +21,6 @@ if (MYSQL_CON) {
         exit;
     }
 
-    $pretitle  = null;
     $pagetitle = $pagetitle_error = 'Page not found';
     $title     = $title_error     = '404 Not Found';
     $content   = $content_error   = 'Sorry, this page cannot be found.';
@@ -53,8 +52,7 @@ if (MYSQL_CON) {
             $content          = isset($row['content']) ? $row['content'] : null;
         }
 
-        $pretitle  = 'AJAX SEO';
-        $pagetitle = $meta_title . ' - ' . $pretitle;
+        $pagetitle = $meta_title . ' - AJAX SEO';
 
         // SEO page title improvement for the root page
         if (strlen($url) == 0) {
@@ -94,10 +92,17 @@ $meta_tags .= "\n<meta name=viewport content=\"width=480\">";
 // Authorship in Google Search http://support.google.com/webmasters/bin/answer.py?hl=en&answer=1408986
 //$meta_tags .= "\n<link rel=author href=https://plus.google.com/000000000000000000000/posts>";
 
-// Save page loading time on pre-resolving the CDN domain name http://html5boilerplate.com/docs/DNS-Prefetching/
+// Save page loading time with DNS prefetching https://github.com/h5bp/html5-boilerplate/blob/master/doc/extend.md#dns-prefetching
+// Prefetch own CDN
 if ($issetcdn) {
     $meta_tags .= "\n<link rel=dns-prefetch href=$assets>";
 }
+// Prefetch EdgeCast's CDN
+$meta_tags .= "\n<link rel=dns-prefetch href=http://code.jquery.com>";
+// Prefetch Google CDN
+// $meta_tags .= "\n<link rel=dns-prefetch href=//ajax.googleapis.com>";
+// Prefetch Google Analytics
+$meta_tags .= "\n<link rel=dns-prefetch href=//www.google-analytics.com>";
 
 
 
@@ -197,28 +202,39 @@ echo '    </div>
 
 if(MYSQL_CON){
 
-// code.jquery.com Edgecast's CDN has an better performance http://royal.pingdom.com/2010/05/11/cdn-performance-downloading-jquery-from-google-microsoft-and-edgecast-cdns/
-// If you use (also) HTTPS, replace jQuery CDN source with Google CDN //ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js
+// code.jquery.com EdgeCast's CDN has the best performance http://royal.pingdom.com/2012/07/24/best-cdn-for-jquery-in-2012/
+// In case you use HTTPS replace it with Google CDN //ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js
 
-echo "<script src=http://code.jquery.com/jquery-1.8.0.min.js></script>
-<script>window.jQuery || document.write('<script src=$assets/images/jquery-1.8.0.min.js><\/script>')</script>
+echo "<script src=http://code.jquery.com/jquery-1.8.1.min.js></script>
+<script>window.jQuery || document.write('<script src=$assets/images/jquery-1.8.1.min.js><\/script>')</script>
 <script src=$path_js></script>
 <script>
 (function () {
     'use strict';
 
-    var nav = $('.js-as'),
-        content = $('.js-content'),
-        init = true,
-        state = window.history.pushState !== undefined,
+
+    // Common variables
+    var pageYOffset = null,
+        nav         = $('.js-as'),
+        content     = $('.js-content'),
+        init        = true,
+        state       = window.history.pushState !== undefined,
         // Response
-        handler = function (data) {
-            document.title = data.pagetitle + '$pretitle';
+        handler     = function (data) {
+            document.title = data.pagetitle;
             content.fadeTo(20, 1).html(data.content);
 
             // GA tracking
             _gaq && _gaq.push(['_trackPageview']);
         };
+
+
+    // Hide mobile device address bar
+    if  (/mobile/i.test(navigator.userAgent) && !pageYOffset && !location.hash) {
+        window.scrollTo(0, 1);
+    }
+
+
     $.address.tracker(function () {}).crawlable(1).state('$rootpath').init(function () {
         // Initialize jQuery Address
         nav.address();
@@ -277,6 +293,7 @@ echo "<script src=http://code.jquery.com/jquery-1.8.0.min.js></script>
         }
     });
 })();
+
 
 // Optimized Google Analytics snippet, http://mathiasbynens.be/notes/async-analytics-snippet
 var _gaq = [

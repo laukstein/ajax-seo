@@ -46,9 +46,11 @@ if (mysql_num_rows($result)) {
             $fn = $meta_title;
         }
 
-        $pagetitle = $meta_title . ' - ';
+        $pagetitle = $meta_title . ' - AJAX SEO';
+
+        // SEO page title improvement for the root page
         if (strlen($url) == 0) {
-            $pagetitle = '';
+            $pagetitle = 'AJAX SEO';
         }
 
         $array = array(
