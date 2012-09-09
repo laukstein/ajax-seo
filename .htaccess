@@ -1,8 +1,8 @@
 # Without -MultiViews will be returned 404 error for a rewrite if a folder of the same name does not exist.
-# For highest performance, and no symlink protection, set FollowSymLinks everywhere, and never set SymLinksIfOwnerMatch, httpd.apache.org/docs/current/misc/perf-tuning.html#symlinks
+# For highest performance, and no symlink protection, set FollowSymLinks everywhere, and never set SymLinksIfOwnerMatch, http://httpd.apache.org/docs/current/misc/perf-tuning.html#symlinks
 # With +IncludesNOEXEC server-side includes are permitted, but the #exec cmd and #exec cgi are disabled.
 # It is still possible to #include virtual CGI scripts from ScriptAliase'd directories, httpd.apache.org/docs/trunk/mod/core.html
-Options -MultiViews +SymLinksIfOwnerMatch +IncludesNOEXEC
+Options -MultiViews -SymLinksIfOwnerMatch +IncludesNOEXEC
 
 # -Indexes will block users from browsing folders without a default document.
 <IfModule mod_autoindex.c>
@@ -12,28 +12,44 @@ Options -MultiViews +SymLinksIfOwnerMatch +IncludesNOEXEC
 ServerSignature Off
 # DirectorySlash Off
 
+# Security
 # Uncomment php_flag and php_value if you are not able to apply config/php.ini on your server.
-# php_flag display_errors 0
-# php_flag log_errors 1
+# php_flag  allow_url_fopen 0
+# php_flag  allow_url_include 0
+# php_flag  display_errors 0
+# php_flag  expose_php 0
+# php_flag  log_errors 1
+# php_flag  session.use_trans_sid 0
+# php_flag  short_open_tag 0
 # php_value error_log error_log.txt
-# php_flag session.use_trans_sid 0
-# php_flag allow_url_fopen 0
-# php_flag allow_url_include 0
-# php_flag short_open_tag 0
-# php_flag expose_php 0
 
-AddType text/cache-manifest appcache
-AddType application/javascript .js
-AddType image/x-icon .ico
-
+# UTF-8 encoding
 AddDefaultCharset utf-8
-AddCharset utf-8 .css .txt .js .xml
+AddCharset utf-8 .css .js .json .txt .xml
 
+# Proper MIME type
+AddType application/javascript         js
+AddType application/json               json
+AddType application/vnd.ms-fontobject  eot
+AddType application/x-chrome-extension crx
+AddType application/x-font-ttf         ttf
+AddType application/x-font-woff        woff
+AddType application/xml                xml
+AddType audio/ogg                      oga ogg
+AddType font/opentype                  otf
+AddType image/svg+xml                  svg
+AddType image/webp                     webp
+AddType image/x-icon                   ico
+AddType text/cache-manifest            appcache
+AddType video/mp4                      mp4
+AddType video/ogg                      ogv
+AddType video/webm                     webm
+AddType video/x-flv                    flv
 
 # Custom error pages
-ErrorDocument 403 "403 Forbidden"
-ErrorDocument 404 "404 Not Found"
-ErrorDocument 500 "500 Internal Server Error"
+# ErrorDocument 403 "403 Forbidden"
+# ErrorDocument 404 "404 Not Found"
+# ErrorDocument 500 "500 Internal Server Error"
 
 # Gzip compression
 <IfModule mod_deflate.c>
@@ -42,70 +58,73 @@ ErrorDocument 500 "500 Internal Server Error"
             SetEnvIfNoCase ^(Accept-EncodXng|X-cept-Encoding|X{15}|~{15}|-{15})$ ^((gzip|deflate)\s*,?\s*)+|[X~-]{4,13}$ HAVE_Accept-Encoding
             RequestHeader append Accept-Encoding "gzip,deflate" env=HAVE_Accept-Encoding
             BrowserMatch MSIE ie
-            Header set X-UA-Compatible "IE=Edge,chrome=1" env=ie
+            Header set X-UA-Compatible "IE=edge,chrome=1" env=ie
             Header set X-Content-Type-Options "nosniff" env=ie
             Header set X-XSS-Protection "1; mode=block" env=ie
-            <FilesMatch "\.php$">
-                Header set Imagetoolbar "no" env=ie
-            </FilesMatch>
         </IfModule>
     </IfModule>
-    <IfModule filter_module>
-        FilterDeclare   COMPRESS
-        FilterProvider  COMPRESS  DEFLATE resp=Content-Type $text/html
-        FilterProvider  COMPRESS  DEFLATE resp=Content-Type $text/css
-        FilterProvider  COMPRESS  DEFLATE resp=Content-Type $text/plain
-        FilterProvider  COMPRESS  DEFLATE resp=Content-Type $application/javascript
-        FilterProvider  COMPRESS  DEFLATE resp=Content-Type $application/json
-        FilterProvider  COMPRESS  DEFLATE resp=Content-Type $application/xml
-        FilterProvider  COMPRESS  DEFLATE resp=Content-Type $application/xhtml+xml
-        FilterProvider  COMPRESS  DEFLATE resp=Content-Type $image/svg+xml
-        FilterProvider  COMPRESS  DEFLATE resp=Content-Type $image/x-icon
-        FilterChain     COMPRESS
-        FilterProtocol  COMPRESS  DEFLATE change=yes;byteranges=no
-    </IfModule>
-    <IfModule !mod_filter.c>
-        AddOutputFilterByType DEFLATE text/html text/css text/plain
-        AddOutputFilterByType DEFLATE application/javascript application/json application/xml application/xhtml+xml
-        AddOutputFilterByType DEFLATE image/svg+xml image/x-icon
+    <IfModule mod_filter.c>
+        AddOutputFilterByType DEFLATE application/javascript \
+                                      application/json \
+                                      application/rss+xml \
+                                      application/vnd.ms-fontobject \
+                                      application/x-font-ttf \
+                                      application/xhtml+xml \
+                                      application/xml \
+                                      font/opentype \
+                                      image/svg+xml \
+                                      image/x-icon \
+                                      text/css \
+                                      text/html \
+                                      text/plain
     </IfModule>
 </IfModule>
 
 # Expires headers (for better cache control)
 <IfModule mod_expires.c>
     ExpiresActive On
-    ExpiresDefault "access plus 1 month"
-    ExpiresByType text/cache-manifest "access plus 0 seconds"
-    ExpiresByType text/html "access plus 1 minute"
-    ExpiresByType text/css "access plus 1 month"
-    ExpiresByType text/plain "access plus 1 month"
-    ExpiresByType application/javascript "access plus 1 month"
-    ExpiresByType application/json "access plus 1 minute"
-    ExpiresByType application/xml "access plus 1 minute"
-    ExpiresByType image/svg+xml "access plus 1 month"
-    ExpiresByType image/x-icon "access plus 1 week"
-    ExpiresByType image/png "access plus 1 month"
-    ExpiresByType image/jpg "access plus 1 month"
-    ExpiresByType image/gif "access plus 1 month"
+    ExpiresDefault                              "access plus 1 month"
+    ExpiresByType application/javascript        "access plus 1 year"
+    ExpiresByType application/json              "access plus 0 seconds"
+    ExpiresByType application/vnd.ms-fontobject "access plus 1 month"
+    ExpiresByType application/x-font-ttf        "access plus 1 month"
+    ExpiresByType application/x-font-woff       "access plus 1 month"
+    ExpiresByType application/xml               "access plus 0 seconds"
+    ExpiresByType audio/ogg                     "access plus 1 month"
+    ExpiresByType font/opentype                 "access plus 1 month"
+    ExpiresByType image/gif                     "access plus 1 month"
+    ExpiresByType image/jpeg                    "access plus 1 month"
+    ExpiresByType image/png                     "access plus 1 month"
+    ExpiresByType image/svg+xml                 "access plus 1 month"
+    ExpiresByType image/x-icon                  "access plus 1 week"
+    ExpiresByType text/cache-manifest           "access plus 0 seconds"
+    ExpiresByType text/css                      "access plus 1 year"
+    ExpiresByType text/html                     "access plus 0 seconds"
+    ExpiresByType text/plain                    "access plus 1 month"
+    ExpiresByType video/mp4                     "access plus 1 month"
+    ExpiresByType video/ogg                     "access plus 1 month"
+    ExpiresByType video/webm                    "access plus 1 month"
 </IfModule>
 <IfModule mod_headers.c>
-    <FilesMatch "\.php$">
-        Header set Cache-Control max-age=60
-    </FilesMatch>
-    <FilesMatch "\.(css|js|json|xml|txt)$">
-        Header set Cache-Control max-age=31536000
+    # Do not show a snippet in the search results for this files.
+    <FilesMatch "\.(css|js|json|txt|xml)$">
         Header set X-Robots-Tag nosnippet
     </FilesMatch>
-    <FilesMatch "(robots.txt|humans.txt|sitemap.xml)">
+
+    # Allow Web Fonts access from all domains.
+    <FilesMatch "\.(woff|ttf|otf|eot)$">
+        Header set Access-Control-Allow-Origin "*"
+    </FilesMatch>
+
+    # Execute this files as PHP.
+    <FilesMatch "(humans.txt|robots.txt|sitemap.xml)">
         SetHandler application/x-httpd-php
     </FilesMatch>
-    <FilesMatch "\.(png|jpg|gif|svg)$">
-        Header set Cache-Control max-age=2419200
-    </FilesMatch>
-    FileETag None
+
     Header unset ETag
-    Header unset Cache-Control
 </IfModule>
+
+FileETag None
 
 <IfModule mod_rewrite.c>
     # FollowSymLinks must be enabled for turning on the rewrite engine.
@@ -140,11 +159,11 @@ ErrorDocument 500 "500 Internal Server Error"
     RewriteCond %{REQUEST_FILENAME} -d
     RewriteRule ^.+/$ %1 [R=301,L]
 
-    # Rewrite backslash with slash. Works on FF when applied config/httpd.conf AllowEncodedSlashes On
+    # Rewrite backslash with slash. Works on FF when applied httpd.conf "AllowEncodedSlashes On".
     RewriteCond %{REQUEST_URI} ^(.*)\\(.*)$
     RewriteRule .* %1/%2 [R=301,NC,L]
 
-    # Rewrite exemptions for specific path.
+    # Rewrite exceptions for specific path.
     # RewriteRule ^images/ - [L]
 
     # Rewrite space with dash.
@@ -163,11 +182,11 @@ ErrorDocument 500 "500 Internal Server Error"
     RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /(.*).php\ HTTP/ [NC]
     RewriteRule .* http%{ENV:https}://%{HTTP_HOST}/%1 [R=301,L]
 
-    # Rewrite query string for AJAX crawling support.google.com/webmasters/bin/answer.py?hl=en&answer=174992
+    # Rewrite query string for AJAX crawling http://support.google.com/webmasters/bin/answer.py?hl=en&answer=174992
     RewriteCond %{QUERY_STRING} ^_escaped_fragment_=(.*)$
     RewriteRule .*$ %{REQUEST_URI}%1? [R=301,L]
 
-    # Remove question mark and parameters.
+    # Remove question mark and parameters http://www.webmasterworld.com/apache/4341134-2-30.htm
     RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^?#\ ]*)\?[^\ ]*\ HTTP/ [NC]
     # Query rewrite exceptions.
     # RewriteCond $1 !^images/
@@ -191,20 +210,21 @@ ErrorDocument 500 "500 Internal Server Error"
     RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /(.*)-\ HTTP/ [NC]
     RewriteRule .* http%{ENV:https}://%{HTTP_HOST}/%1 [R=301,L]
 
-    # Rewrite uppercase letter URL to lowercase with config/httpd.conf RewriteMap lc int:tolower
-    # Solution without httpd.conf RewriteMap in github.com/laukstein/ajax-seo/wiki/Lowercase-URL
+    # Rewrite uppercase letter URL to lowercase with httpd.conf "RewriteMap lc int:tolower"
+    # Solution without RewriteMap in https://github.com/laukstein/ajax-seo/wiki/Lowercase-URL
     RewriteCond %{REQUEST_URI} .+
     RewriteRule ^[^A-Z]*[A-Z] ${lc:%0} [R=301,L]
 
-    # Block access to folders that begins with a period, like .git, .svn
+    # Block access to folders that begins with a period, like directories of Subversion or Git.
     RewriteRule "(^|/)\." - [F]
 
+    # URL rewrite.
     RewriteCond %{REQUEST_FILENAME} !-d [OR]
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^api/?([^.]*)$ index.php?api&url=$1 [QSA,L]
     RewriteRule ^([^.]*)$ index.php?url=$1 [QSA,L]
 
-    # Get the headers If-Modified-Since and If-None-Match when apache_request_headers() is not available
+    # Get the headers If-Modified-Since and If-None-Match when apache_request_headers() is not available.
     RewriteRule .* - [E=HTTP_IF_MODIFIED_SINCE:%{HTTP:If-Modified-Since}]
     RewriteRule .* - [E=HTTP_IF_NONE_MATCH:%{HTTP:If-None-Match}]
 </IfModule>
