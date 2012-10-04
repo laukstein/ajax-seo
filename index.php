@@ -77,17 +77,32 @@ $meta_tags  = "<title>$pagetitle</title>";
 // 253 character description http://blogs.msdn.com/b/ie/archive/2012/05/14/sharing-links-from-ie10-on-windows-8.aspx
 $meta_tags .= "\n<meta name=description content=\"$meta_description\">";
 
+// Twitter Cards https://dev.twitter.com/docs/cards, Validator https://dev.twitter.com/docs/cards/preview
+if (stristr($_SERVER['HTTP_USER_AGENT'], 'Twitterbot')) {
+    $https      = empty($_SERVER['HTTPS']) ? null : ($_SERVER['HTTPS'] == 'on') ? 's' : null;
+    $fullurl    = 'http' . $https . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
+    $meta_tags .= "\n<meta name=twitter:card value=summary>";
+    $meta_tags .= "\n<meta name=twitter:url value=\"$fullurl\">";
+    $meta_tags .= "\n<meta name=og:title value=\"$pagetitle\">";
+    $meta_tags .= "\n<meta name=og:description value=\"$meta_description\">";
+}
+
 // Declare the family friendly content http://schema.org/WebPage
 $meta_tags .= "\n<meta itemprop=isFamilyFriendly content=true>";
 
 // Opt-out of pinning by Pinterest, save copyrights and avoid SEO impact http://pinterest.com/about/help/#linking_faqs
-$meta_tags .= "\n<meta name=pinterest content=nopin>";
+// Return the meta tag just for Pinterest, since W3C validator will return it as a unregistered specification.
+if (stripos($_SERVER['HTTP_USER_AGENT'], 'Pinterest') !== false) {
+    $meta_tags .= "\n<meta name=pinterest content=nopin>";
+}
 
 // Perform speed and security on removing referrer-header-value http://wiki.whatwg.org/wiki/Meta_referrer
 $meta_tags .= "\n<meta name=referrer content=never>";
 
-// Return on mobile width 480px with same DPI like on desktop
-$meta_tags .= "\n<meta name=viewport content=\"width=480\">";
+// Optimize mobile device viewport and return the same pixel density like on desktop
+// 2012-06-13 Dropped target-densityDpi and its translated CSS property resolution http://lists.w3.org/Archives/Public/www-style/2012Jun/0283.html, http://trac.webkit.org/changeset/119527
+$meta_tags .= "\n<meta name=viewport content=\"width=device-width, user-scalable=0\">";
 
 // Authorship in Google Search http://support.google.com/webmasters/bin/answer.py?hl=en&answer=1408986
 //$meta_tags .= "\n<link rel=author href=https://plus.google.com/000000000000000000000/posts>";
@@ -117,8 +132,11 @@ if ($debug) {
 
 
 
+// Working on Cache Manifest
+// <html itemscope itemtype=http://schema.org/WebPage manifest=manifest.appcache>
+
 echo "<!DOCTYPE html>
-<html lang=en itemscope itemtype=http://schema.org/WebPage>
+<html itemscope itemtype=http://schema.org/WebPage>
 <head>
 <meta charset=UTF-8>
 $meta_tags
@@ -136,38 +154,36 @@ if ($note !== null) {
 }
 
 
-echo "<div class=\"container center-container\">
+echo "<div class=\"ui-center container\">
 <header class=clearfix>
-    <div><a class=logo href=https://github.com/laukstein/ajax-seo rel=home>AJAX SEO{$title_installation} <small>Bring your App crawable</small></a></div>\n";
+    <div class=wrapper-logo><a class=logo href=https://github.com/laukstein/ajax-seo rel=home>AJAX SEO{$title_installation} <small>Bring your App crawable</small></a></div>\n";
 
 
 if (MYSQL_CON) {
     $result = mysql_query('SELECT url, `meta-title`, title FROM `' . MYSQL_TABLE . '` ORDER BY array ASC');
 
     if (mysql_num_rows($result)) {
-        echo "  <nav class=\"nav clearfix\">\n";
+        echo "    <div class=wrapper-nav>\n        <nav class=\"clearfix list-nav\">\n            ";
 
         while ($row = @mysql_fetch_array($result, MYSQL_ASSOC)) {
             $row[] = array(
                 'row' => array_map('htmlspecialchars', $row)
             );
-            echo '      <a';
+            echo '<a class="transition item js-as';
 
             if ($url == $row['url']) {
-                echo ' class="js-as selected"';
-            } else {
-                echo ' class=js-as';
+                echo ' selected';
             }
 
-            echo " href=\"$path{$row['url']}\"";
+            echo "\" href=\"$path{$row['url']}\"";
 
             if ((strlen($row['title']) > 0) && ($row['meta-title'] !== $row['title'])) {
                 echo " title=\"{$row['title']}\"";
             }
             $nav_fn  = (strlen($row['url']) > 0) ? $row['meta-title'] :  "<span class=home>{$row['title']}</span>";
-            echo ">$nav_fn</a>\r\n";
+            echo ">$nav_fn</a>";
         }
-        echo "    </nav>\n";
+        echo "\n        </nav>\n    </div>\n";
     }
 }
 
@@ -180,7 +196,7 @@ if (MYSQL_CON) {
     if ((strlen($title) > 0) && ($meta_title !== $title)) {
         $meta_title = $title;
     }
-    echo "      <h1>$meta_title</h1>\r\n        <p>$content</p>\r\n";
+    echo "      <h1>$meta_title</h1>\n        <p>$content</p>\n";
     mysql_close($con);
 } else {
     echo $installation;
@@ -190,10 +206,10 @@ if (MYSQL_CON) {
 echo '    </div>
 </article>
 </div>
-<footer class="footer center-container">
-    <nav itemprop=breadcrumb>
-        <a href=https://github.com/laukstein/ajax-seo title="AJAX SEO Git Repository">Contribute on github</a> >
-        <a href=https://github.com/laukstein/ajax-seo/zipball/master title="Download AJAX SEO">Download</a> >
+<footer class="ui-center footer">
+    <nav class=breadcrumb itemprop=breadcrumb>
+        <a href=https://github.com/laukstein/ajax-seo>Contribute on github</a> >
+        <a href=https://github.com/laukstein/ajax-seo/zipball/master>Download</a> >
         <a href=https://github.com/laukstein/ajax-seo/issues>Submit issue</a>
     </nav>
 </footer>
@@ -203,44 +219,69 @@ echo '    </div>
 if(MYSQL_CON){
 
 // code.jquery.com EdgeCast's CDN has the best performance http://royal.pingdom.com/2012/07/24/best-cdn-for-jquery-in-2012/
-// In case you use HTTPS replace it with Google CDN //ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js
+// In case you use HTTPS replace it with Google CDN //ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js
 
-echo "<script src=http://code.jquery.com/jquery-1.8.1.min.js></script>
-<script>window.jQuery || document.write('<script src=$assets/images/jquery-1.8.1.min.js><\/script>')</script>
+echo "<script src=http://code.jquery.com/jquery-1.8.2.min.js></script>
+<script>window.jQuery || document.write('<script src=$assets/images/jquery-1.8.2.min.js><\/script>')</script>
 <script src=$path_js></script>
 <script>
-(function () {
+(function() {
     'use strict';
 
 
+
     // Common variables
-    var pageYOffset = null,
-        nav         = $('.js-as'),
+    var nav         = $('.js-as'),
         content     = $('.js-content'),
         init        = true,
         state       = window.history.pushState !== undefined,
         // Response
-        handler     = function (data) {
+        handler     = function(data) {
             document.title = data.pagetitle;
             content.fadeTo(20, 1).html(data.content);
 
-            // GA tracking
-            _gaq && _gaq.push(['_trackPageview']);
+            // Google Analytics tracking
+            return _gaq && _gaq.push(['_trackPageview']);
         };
 
 
-    // Hide mobile device address bar
-    if  (/mobile/i.test(navigator.userAgent) && !pageYOffset && !location.hash) {
-        window.scrollTo(0, 1);
+
+    // Auto-hide mobile device address bar
+    if (/mobile/i.test(navigator.userAgent) && window.location.hash.indexOf('#') === -1) {
+        var hideAddressbar = function() {
+            var deviceHeight = screen.height,
+                bodyHeight   = document.body.clientHeight;
+
+            // Viewport height at fullscreen
+            // Android 2.3 orientationchange issue - needs for more 50px
+            if (deviceHeight >= bodyHeight) {
+                document.body.style.minHeight = deviceHeight + 'px';
+            }
+
+            // Perform autoscroll
+            setTimeout(window.scrollTo(0, 1), 100);
+        };
+
+        // Auto-hide address bar
+        hideAddressbar();
+
+        // Hide address bar on device orientationchange
+        window.addEventListener('orientationchange', function() {
+            // Hide address bar if not already scrolled
+            if (window.pageYOffset === 0) {
+                hideAddressbar();
+            }
+        });
     }
 
 
-    $.address.tracker(function () {}).crawlable(1).state('$rootpath').init(function () {
+
+    $.address.tracker(function() {}).crawlable(1).state('$rootpath').init(function() {
         // Initialize jQuery Address
         nav.address();
-    }).change(function (e) {
+    }).change(function(e) {
         // Select nav link
-        nav.each(function () {
+        nav.each(function() {
             var link = $(this);
 
             if (link.attr('href') === (($.address.state() + decodeURI(e.path)).replace(/\/\//, '/'))) {
@@ -257,25 +298,25 @@ echo "<script src=http://code.jquery.com/jquery-1.8.1.min.js></script>
 
             // Load API content
             $.ajax({
-                type: 'GET',
                 url: 'api' + (e.path.length !== 1 ? '/' + e.path.toLowerCase().substr(1) : ''),
-                dataType: 'json',
-                // jsonpCallback: 'i',
+                dataType: 'jsonp',
+                crossDomain: true,
                 cache: true,
+                jsonpCallback: 'foo',
                 timeout: 3800,
-                beforeSend: function () {
+                beforeSend: function() {
                     fadeTimer = setTimeout(function() {
                         content.fadeTo(200, 0.33);
                     }, 300);
                 },
-                success: function (data, textStatus, jqXHR) {
+                success: function(data) {
                     if (fadeTimer) {
                         clearTimeout(fadeTimer);
                     }
 
                     handler(data);
                 },
-                error: function (jqXHR, textStatus, errorThrown) {
+                error: function(jqXHR, textStatus) {
                     nav.removeClass('selected');
 
                     if (fadeTimer) {
@@ -300,7 +341,7 @@ var _gaq = [
     ['_setAccount', 'UA-XXXXX-X'],
     ['_trackPageview']
 ];
-(function (d, t) {
+(function(d, t) {
     'use strict';
     var g = d.createElement(t),
         s = d.getElementsByTagName(t)[0];
