@@ -6,14 +6,13 @@
 
 
 
-// Simulate API slow respond
+// Simulate API slow responding
 // --------------------------------------------------
 // sleep(3);
 
 
 
 header('X-Robots-Tag: nosnippet');
-header('Content-Type: application/json; charset=utf-8');
 
 
 
@@ -21,6 +20,7 @@ header('Content-Type: application/json; charset=utf-8');
 if (mysql_num_rows($result)) {
     // HTTP header caching
     include 'content/cache.php';
+
     $datemod = new datemod();
     $datemod -> date(array(
         '.htaccess',
@@ -31,6 +31,14 @@ if (mysql_num_rows($result)) {
         'content/connect.php'
     ), MYSQL_TABLE, $url);
     $datemod -> cache($datemod -> gmtime);
+
+    $isset_jsonp = isset($_GET['callback']) ? true : false;
+
+    if ($isset_jsonp) {
+        header('Content-Type: application/javascript; charset=utf-8');
+    } else {
+        header('Content-Type: application/json; charset=utf-8');
+    }
 
     while ($row = @mysql_fetch_array($result, MYSQL_ASSOC)) {
         $row[] = array(
@@ -68,10 +76,12 @@ if (mysql_num_rows($result)) {
             $json = str_replace('\\/', '/', json_encode($array));
         }
 
-        echo isset($_GET['callback']) ? $_GET['callback'] . '(' . $json . ')' : $json;
+        echo $isset_jsonp ? $_GET['callback'] . '(' . $json . ')' : $json;
     }
     mysql_close($con);
 } else {
+    header('Content-Type: text/plain');
+
     // If URL does not exist, return 404 error
     http_response_code(404);
     exit('404 Not Found');
