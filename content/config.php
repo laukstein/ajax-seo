@@ -26,7 +26,7 @@ if (in_array($_SERVER['REMOTE_ADDR'], $ip)) {
 // Add latest PHP functions
 // --------------------------------------------------
 if (version_compare(PHP_VERSION, '5.4', '<')) {
-    include 'function.http-response-code.php';
+    include './function.http-response-code.php';
 }
 
 
@@ -34,12 +34,8 @@ if (version_compare(PHP_VERSION, '5.4', '<')) {
 // Gzip
 // --------------------------------------------------
 // PHP 5.4.4 bug https://bugs.php.net/bug.php?id=55544
-//if (!ob_start('ob_gzhandler')) {
-//    ob_start();
-//}
-$zlib_oc = ini_get('zlib.output_compression');
-if(empty($zlib_oc)) {
-    @ob_start('ob_gzhandler');
+if (version_compare(PHP_VERSION, '5.4.5', '>') && !ob_start('ob_gzhandler')) {
+    ob_start();
 }
 
 
