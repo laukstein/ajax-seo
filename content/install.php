@@ -59,11 +59,15 @@ $pagetitle          = 'AJAX SEO ' . $meta_title;
 $title_installation = ' ' . $meta_title;
 $error              = (MYSQL_ERROR) ? "\n    <p class=error>Could not connect to server</p>" : null;
 $installation       = '<style>
+.installation li {
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
 .installation label {
     width: 105px;
 }
-input[type="submit"], .error {
-    margin-left: 107px;
+.button, .error {
+    margin-left: 105px;
 }
 .error {
     color: #ff2121;
@@ -78,7 +82,7 @@ input[type="submit"], .error {
         <li><label for=host>Database host</label><input id=host name=host value="' . MYSQL_HOST . '" placeholder=localhost>
         <li><label for=table>Table</label><input id=table type=text name=table value="' . MYSQL_TABLE . '">
         <li><hr><label for=cdndomain>CDN domain</label><input id=cdndomain type=text name=cdndomain value="' . CDN_DOMAIN . '">
-        <li><input type=submit name=install value=Install><input type=hidden name=submitted value=true>
+        <li><input class="transition button" type=submit name=install value=Install><input type=hidden name=submitted value=true>
     </ul>' . $error . '
 </form>
 <p>The configuration will be saved in connect.php, after you can open and edit it trough text editor.</p>';
