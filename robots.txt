@@ -43,7 +43,7 @@ echo "\n\nUser-agent: ia_archiver\nDisallow: /";
 // Disable *.domaintools.com crawler
 echo "\n\nUser-agent: SurveyBot\nDisallow: /";
 
-// Be sure your sitemap.xml path is correct.
+// Be sure your sitemap.xml path is correct
 echo "\n\nSitemap: http://{$_SERVER['SERVER_NAME']}{$path}sitemap.xml";
 
 ?>
