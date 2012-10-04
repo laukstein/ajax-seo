@@ -6,104 +6,53 @@ include 'content/config.php';
 
 
 
+// Connect to MySQL
+// --------------------------------------------------
+include 'content/connect.php';
+
+
+
 header('Content-Type: text/plain');
 
 
 
-// HTTP header caching
+// Recent version date
 // --------------------------------------------------
-class datemod
-{
-    public $gmtime;
-    public $moddate;
-    
-    function date($dir = null, $exclude = array('error_log.txt', '.git', 'cgi-bin', '.', '..'))
-    {
-        $d       = isset($dir) ? $dir : '.';
-        $exclude = array_flip($exclude);
-        if (!is_dir($d)) {
-            return;
-        }
-        
-        $dh = opendir($d);
-        if (!$dh) {
-            return;
-        }
-        
-        $stack = array(
-            $dh
-        );
-        
-        $level = 0;
-        
-        while (count($stack)) {
-            if (false !== ($file = readdir($stack[0]))) {
-                if (!isset($exclude[$file])) {
-                    //print str_repeat('  ',$level);
-                    $df = "$d/$file";
-                    if (is_dir($df)) {
-                        $dh = opendir($df);
-                        if ($dh) {
-                            $f = $file;
-                            array_unshift($stack, $dh);
-                            ++$level;
-                        }
-                    } else {
-                        $d = (isset($dir) ? $dir . '/' : null);
-                        if (isset($f) && $level > 0) {
-                            $mod = date('Y-m-d H:i:s', filemtime("$d$f/$file"));
-                        } else {
-                            $mod = date('Y-m-d H:i:s', filemtime("$d$file"));
-                        }
-                        $array[] = $mod;
-                    }
-                }
-            } else {
-                closedir(array_shift($stack));
-                --$level;
-            }
-        }
-        
-        //sort($array);
-        //print_r($array);
-        $fmod = date('D, d M Y H:i:s T', strtotime(max($array)));
-        
-        
-        
-        // Connect to MySQL
-        // --------------------------------------------------
-        include 'content/connect.php';
-        
-        $tablemod = mysql_query("SELECT DATE_FORMAT(MAX(pubdate), '%a, %d %b %Y %T') AS pubdate FROM `" . MYSQL_TABLE . "`");
-        while ($row = @mysql_fetch_array($tablemod, MYSQL_ASSOC)) {
-            $rowmod        = $row['pubdate'] . date(' T');
-            $this -> gmtime  = date('Y-m-d H:i:s', strtotime($fmod)) >= date('Y-m-d H:i:s', strtotime($rowmod)) ? $fmod : $rowmod;
-            $this -> moddate = date('Y/m/d', strtotime($this -> gmtime));
-        }
-    }
-    
-    function cache(&$gmtime)
-    {
-        if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
-            if ($_SERVER['HTTP_IF_MODIFIED_SINCE'] == $gmtime) {
-                http_response_code(304);
-                exit;
-            }
-        }
-        header("Last-Modified: $gmtime");
+$directory = new RecursiveDirectoryIterator('.');
+$iterator  = new RecursiveIteratorIterator($directory);
+$regex     = new RegexIterator($iterator, '/.+\.(appcache|css|js|php|txt|xml)/');
+$array     = array();
+foreach ($regex as $key) {
+    $array[] = $key -> getMTime();
+}
+$modfile = max($array);
+
+$query = mysql_query("SELECT UNIX_TIMESTAMP(MAX(pubdate)) AS pubdate FROM `" . MYSQL_TABLE . "`");
+while ($row = @mysql_fetch_array($query, MYSQL_ASSOC)) {
+    $moddate = $row['pubdate'];
+}
+
+$modmax = max($modfile, $moddate);
+$date   = date('Y/m/d', $modmax);
+$cache  = date('Y-m-d H:i:s T', $modmax);
+
+// HTTP header cache
+// --------------------------------------------------
+if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
+    if ($_SERVER['HTTP_IF_MODIFIED_SINCE'] == $cache) {
+        http_response_code(304);
+        exit;
     }
 }
-$datemod = new datemod();
-$datemod -> date();
-$datemod -> cache($datemod -> gmtime);
+header("Last-Modified: $cache");
 
 
 
 echo "/* SITE */
 Author:         Binyamin Laukstein
 Contact:        http://laukstein.com/contact
-Last update:    {$datemod->moddate}
-Standards:      HTML5, CSS3, Microdata, JSON
+Last update:    $date
+Standards:      HTML Living Standard - HTML5, CSS3, Microdata, JSON
 Components:     jQuery, PHP, MySQL
 Source:         https://github.com/laukstein/ajax-seo";
 
