@@ -18,19 +18,25 @@ http://snook.ca/archives/html_and_css/font-size-with-rem
 
 /* Standards
 -------------------------------------------------- */
-html, body { height: 100%; }
+html, body {
+    height: 100%;
+}
 html {
+    overflow-x: hidden;
+    overflow-y: scroll;
     font-size: 62.5%;
+    background-color: #fff;
     cursor: default;
     -webkit-user-select: none;
-       -moz-user-select: -moz-none;
+       -moz-user-select: none;
         -ms-user-select: none;
             user-select: none;
 }
 body, input, textarea {
     color: #333;
-    font-size: 13px;
-    font-size: 1.3rem;
+    font-size: 14px;
+    font-size: 1.4rem;
+    line-height: 1.5em;
     font-family: sans-serif;
 }
 ::selection {
@@ -38,52 +44,20 @@ body, input, textarea {
     text-shadow: none;
     background-color: #bbb;
 }
-:focus { outline: 0; }
-body, h3, h4, ul, ol, dl, dd , figure, input, textarea, select {
+:focus {
+    outline: 0;
+}
+body, h1, h2, h3, h4, h5, h6, ul, ol, dl, dd , figure, input, textarea, select {
     margin: auto;
 }
-ul, ol {
-    padding: 0;
-}
-li {
-    list-style: none;
-}
-img, abbr, iframe {
-    border: 0;
-}
-a, input, textarea {
-    pointer-events: auto;
-}
-a, img {
-    -webkit-user-drag: none;
-       -moz-user-drag: -moz-none;
-            user-drag: none;
-}
-a {
-    color: #2d76b9;
-    text-decoration: none;
-    cursor: default;
-}
-a:hover, a:focus {
-    text-decoration: underline;
-}
-img{
-    max-width: 100%;
-    vertical-align: middle;
-    -ms-interpolation-mode: bicubic;
-}
 h1 {
-    margin-top: 5px;
-    margin-bottom: 5px;
     font-weight: normal;
     font-size: 24px;
     font-size: 2.4rem;
 }
 h2 {
-    margin-top: 5px;
-    margin-bottom: 5px;
-    font-size: 13px;
-    font-size: 1.3rem;
+    font-size: 14px;
+    font-size: 1.4rem;
 }
 p {
     margin-top: 12px;
@@ -93,6 +67,36 @@ p {
        -moz-hyphens: auto;
         -ms-hyphens: auto;
             hyphens: auto;
+}
+ul, ol {
+    padding: 0;
+    list-style: none inside;
+}
+img, abbr, iframe {
+    border: 0;
+}
+a, input, textarea {
+    pointer-events: auto;
+}
+a, img {
+    -webkit-user-drag: none;
+       -moz-user-drag: none;
+            user-drag: none;
+}
+a {
+    color: #2d76b9;
+    text-decoration: none;
+    cursor: default;
+    outline: 0;
+}
+a:hover, a:focus {
+    color: #2f6291;
+    text-decoration: underline;
+}
+img {
+    max-width: 100%;
+    vertical-align: middle;
+    -ms-interpolation-mode: bicubic;
 }
 hr {
     height: 0;
@@ -107,56 +111,27 @@ label {
     padding-bottom: 5px;
     cursor: pointer;
 }
-input, textarea, .content {
+input, textarea {
+    width: 250px;
+    padding: 7px 12px;
+    background-color: #fff;
+    border: 1px solid #ccc;
     -webkit-user-select: text;
        -moz-user-select: text;
         -ms-user-select: text;
             user-select: text;
+    -webkit-box-sizing: border-box; /* removable at Andriod 4 */
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
 }
-input {
-    padding: 7px 10px;
-    border: 1px solid #555;
-    line-height: 20px;
-    border-radius: 3px;
-    -moz-box-sizing: border-box;
-         box-sizing: border-box;
-}
-input[type="submit"] {
-    display: inline-block;
-    padding: 4px 25px;
-    margin: 0;
-    margin-top: 2px;
-    color: #212121;
-    font-weight: bold;
-    line-height: 23px;
-    text-align: center;
-    white-space: nowrap;
-    background-color: #b0e251;
-    background-image: -webkit-linear-gradient(#d2f683, #8ece1f);
-    background-image:    -moz-linear-gradient(#d2f683, #8ece1f); /* removable at Firefox 16 */
-    background-image:      -o-linear-gradient(#d2f683, #8ece1f); /* removable at Opera 12.50 */
-    background-image:         linear-gradient(#d2f683, #8ece1f);
-    border: 1px solid #9aaa77;
-    border-radius: 3px;
-    box-shadow: 1px 1px 1px rgba(39,56,2,.4);
+input[type=submit] {
     cursor: pointer;
-}
-input[type="submit"]:hover, input[type="submit"]:focus {
-    color: #000;
-    text-decoration: none;
-    background-color: #bbe965;
-    background-image: -webkit-linear-gradient(#e1ffa0, #98d42e);
-    background-image:    -moz-linear-gradient(#e1ffa0, #98d42e); /* removable at Firefox 16 */
-    background-image:      -o-linear-gradient(#e1ffa0, #98d42e); /* removable at Opera 12.50 */
-    background-image:         linear-gradient(#e1ffa0, #98d42e);
-    border-color: #657542;
 }
 textarea {
     overflow: auto;
+    height: 135px;
     word-wrap: break-word;
     resize: vertical;
-    -moz-box-sizing: border-box;
-         box-sizing: border-box;
 }
 
 
@@ -173,13 +148,13 @@ textarea {
 .transition, .transition:before {
     -webkit-transition-duration: .14s;
        -moz-transition-duration: .14s; /* removable at Firefox 16 */
-         -o-transition-duration: .14s; /* removable at Opera 12.50 */
+         -o-transition-duration: .14s; /* removable at Opera 12.10 */
             transition-duration: .14s;
 }
 .transition:hover, .transition:hover:before {
     -webkit-transition-duration: .1s;
        -moz-transition-duration: .1s; /* removable at Firefox 16 */
-         -o-transition-duration: .1s; /* removable at Opera 12.50 */
+         -o-transition-duration: .1s; /* removable at Opera 12.10 */
             transition-duration: .1s;
 }
 /* [class*="sprites"] {
@@ -188,104 +163,167 @@ textarea {
     background-image: url(sprites.png);
     background-repeat: no-repeat;
 } */
-.center-container {
-    width: 95%;
-    min-width: 460px;
+.ui-center {
+    overflow: hidden;
+    width: 90%;
+    min-width: 320px;
     max-width: 1170px;
+    padding-right: 2.5%;
+    padding-left: 2.5%;
     margin-right: auto;
     margin-left: auto;
+    -webkit-box-sizing: border-box; /* removable at Andriod 4 */
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
 }
+
+/* Button */
+.button {
+    display: inline-block;
+    padding: 7px 12px;
+    color: #2d76b9;
+    line-height: 19px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 -30px 60px -30px #ececec, 1px 1px 0 #fff;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+.button:hover, .button:focus {
+    color: #222;
+    border-color: #ababab;
+    box-shadow: inset 0 0 0 1px #fff, inset 0 -30px 60px -30px #ececec, 1px 1px 3px #d6d6d6;
+}
+.button:active, .button.selected {
+    box-shadow: inset 0 -30px 60px -30px #d6d6d6, inset 1px 1px 3px #d6d6d6, 1px 1px 0 #fff;
+}
+
 
 
 
 /* Classification
 -------------------------------------------------- */
-.container { min-height: 100%; }
+.container {
+    min-height: 100%;
+}
 .logo {
     display: inline-block;
     margin-top: 2%;
-    color: #333;
+    color: inherit;
     font-size: 28px;
     line-height: 28px;
     text-decoration: none;
-    text-shadow: 0 0 1px #fefefe;
 }
 .logo:hover, .logo:focus {
     color: #333;
     text-decoration: none;
 }
 .logo small {
-    color: #bbb;
+    color: #aaa;
     font-size: 20px;
     vertical-align: top;
 }
 
 /* Navigation */
-.nav {
+.wrapper-nav {
     overflow: hidden;
-    display: block;
-    height: 31px;
+}
+.list-nav {
+    display: inline-block;
+    zoom: 1;
+    position: relative;
+    display:    -moz-box; /* Flexbox outdated syntax */
+    -moz-box-pack: justify; /* Flexbox outdated syntax */
+    display: -webkit-flex;
+    display:    -moz-flex;
+    display:         flex;
+    -webkit-flex-direction: row;
+       -moz-flex-direction: row;
+            flex-direction: row;
+    width:    -moz-calc(100%);
+    height: 36px;
     margin-top: 1%;
     margin-bottom: 1%;
-    float: left;
-    line-height: 29px;
-    text-overflow: ellipsis;
-    text-transform: uppercase;
+    line-height: 34px;
     white-space: nowrap;
     background-color: #f1f1f1;
     background-image: -webkit-linear-gradient(#f8f8f8, rgba(248,248,248,0));
     background-image:    -moz-linear-gradient(#f8f8f8, rgba(248,248,248,0)); /* removable at Firefox 16 */
-    background-image:      -o-linear-gradient(#f8f8f8, rgba(248,248,248,0)); /* removable at Opera 12.50 */
+    background-image:      -o-linear-gradient(#f8f8f8, rgba(248,248,248,0)); /* removable at Opera 12.10 */
     background-image:         linear-gradient(#f8f8f8, rgba(248,248,248,0));
-    box-shadow: 0 1px 1px rgba(0,0,0,.1);
-    border-radius: 3px;
-}
-.nav a {
-    overflow: hidden;
-    display: list-item;
-    list-style: none;
-    padding-right: 15px;
-    padding-left: 15px;
-    color: #333;
-    float: left;
-    text-decoration: none;
-    text-overflow: ellipsis;
-    white-space: nowrap;
     border-top: 1px solid #dcdcdc;
     border-bottom: 1px solid #dcdcdc;
     border-right: 1px solid #e9e9e9;
+    border-radius: 2px;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.1), inset 0 0 0 1px rgba(255,255,255,.5); /* removable at iOS 5 */
+            box-shadow: 0 1px 1px rgba(0,0,0,.1), inset 0 0 0 1px rgba(255,255,255,.5);
+    -webkit-box-sizing: border-box; /* removable at Andriod 4 */
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
 }
-.nav a:first-child {
+.list-nav .item {
+    overflow: hidden;
+    display: inline-block;
+    -webkit-flex: 1;
+    -moz-box-flex: 1; /* Flexbox outdated syntax */
+       -moz-flex: 1;
+            flex: 1;
+    min-width: 0; /* Implied Minimum Size of Flex Items http://dev.w3.org/csswg/css3-flexbox/#min-size-auto */
+    padding-right: 15px;
+    padding-left: 15px;
+    padding-right: -webkit-calc(2%);
+    padding-left: -webkit-calc(2%);
+    color: inherit;
+    text-align: center;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    border-right: 1px solid #e9e9e9;
+    -webkit-transition-property: background-color, background-image;
+       -moz-transition-property: background-color, background-image; /* removable at Firefox 16 */
+         -o-transition-property: background-color, background-image; /* removable at Opera 12.10 */
+            transition-property: background-color, background-image;
+}
+.list-nav .item:first-child {
     border-left: 1px solid #e9e9e9;
-    border-radius: 3px 0 0 3px;
+    border-radius: 2px 0 0 2px;
 }
-.nav a:last-child {
-    border-radius: 0 3px 3px 0;
+.list-nav .item:last-child {
+    border-right-color: transparent;
+    border-radius: 0 2px 2px 0;
 }
-.nav a:hover, .nav a:focus {
+.list-nav .item:hover, .list-nav .item:focus {
     background-color: #f8f8f8;
     background-image: -webkit-linear-gradient(#fbfbfb, rgba(251, 251, 251, 0));
     background-image:    -moz-linear-gradient(#fbfbfb, rgba(251, 251, 251, 0)); /* removable at Firefox 16 */
-    background-image:      -o-linear-gradient(#fbfbfb, rgba(251, 251, 251, 0)); /* removable at Opera 12.50 */
+    background-image:      -o-linear-gradient(#fbfbfb, rgba(251, 251, 251, 0)); /* removable at Opera 12.10 */
     background-image:         linear-gradient(#fbfbfb, rgba(251, 251, 251, 0));
 }
-.nav .selected, .nav .selected:hover, .nav .selected:focus {
-    color: #fff;
-    padding-left: 16px;
+.list-nav .item.selected {
     margin-top: -1px;
     margin-bottom: -1px;
-    margin-left: -1px;
-    line-height: 31px;
-    background-color: #08c;
+    color: #fff;
+    line-height: 36px;
+    background-color: #2d76b9;
     background-image: none;
     border-color: transparent;
     cursor: default;
+}
+.list-nav .item.selected:last-child {
+    margin-right: -1px;
 }
 .article {
     padding-top: 13px;
     padding-bottom: 65px;
 }
 .content {
+    -webkit-user-select: text;
+       -moz-user-select: text;
+        -ms-user-select: text;
+            user-select: text;
     background-color: #fff;
 }
 .note {
@@ -301,40 +339,62 @@ textarea {
     background-color: #ffe65c;
     background-image: -webkit-linear-gradient(#ffe998, #ffe65c);
     background-image:    -moz-linear-gradient(#ffe998, #ffe65c); /* removable at Firefox 16 */
-    background-image:      -o-linear-gradient(#ffe998, #ffe65c); /* removable at Opera 12.50 */
+    background-image:      -o-linear-gradient(#ffe998, #ffe65c); /* removable at Opera 12.10 */
     background-image:         linear-gradient(#ffe998, #ffe65c);
-    box-shadow: 0 0 4px rgba(0,0,0,.5);
+    -webkit-box-shadow: 0 0 4px rgba(0,0,0,.5); /* removable at iOS 5 */
+            box-shadow: 0 0 4px rgba(0,0,0,.5);
     -webkit-transform: translateY(-50px);
        -moz-transform: translateY(-50px); /* removable at Firefox 16 */
-         -o-transform: translateY(-50px); /* removable at Opera 12.50 */
+         -o-transform: translateY(-50px); /* removable at Opera 12.10 */
             transform: translateY(-50px);
     -webkit-animation: slide-down 6s linear 1.5s 1;
        -moz-animation: slide-down 6s linear 1.5s 1; /* removable at Firefox 16 */
-         -o-animation: slide-down 6s linear 1.5s 1; /* removable at Opera 12.50 */
+         -o-animation: slide-down 6s linear 1.5s 1; /* removable at Opera 12.10 */
             animation: slide-down 6s linear 1.5s 1;
 }
+/* Webkit old syntax to support also mobile devices */
 @-webkit-keyframes slide-down {
-    0% { -webkit-transform: translateY(-50px); }
-    10% { -webkit-transform: translateY(0); }
-    90% { -webkit-transform: translateY(0); }
-    99% { -webkit-transform: translateY(-50px); }
+    0% {
+        -webkit-transform: translateY(-50px);
+    }
+    10% {
+        -webkit-transform: translateY(0);
+    }
+    90% {
+        -webkit-transform: translateY(0);
+    }
+    99% {
+        -webkit-transform: translateY(-50px);
+    }
 
     /* Android 2 flicker issue http://georgehess.com/post/2054803814/css-keyframe-animation-flicker */
     100% { }
 }
 /* removable at Firefox 16 */
 @-moz-keyframes slide-down {
-    0%, 100% { -moz-transform: translateY(-50px); }
-    10%, 90% { -moz-transform: translateY(0); }
+    0%, 100% {
+        -moz-transform: translateY(-50px);
+    }
+    10%, 90% {
+        -moz-transform: translateY(0);
+    }
 }
-/* removable at Opera 12.50 */
+/* removable at Opera 12.10 */
 @-o-keyframes slide-down {
-    0%, 100% { -o-transform: translateY(-50px); }
-    10%, 90% { -o-transform: translateY(0); }
+    0%, 100% {
+        -o-transform: translateY(-50px);
+    }
+    10%, 90% {
+        -o-transform: translateY(0);
+    }
 }
 @keyframes slide-down {
-    0%, 100% { transform: translateY(-50px); }
-    10%, 90% { transform: translateY(0); }
+    0%, 100% {
+        transform: translateY(-50px);
+    }
+    10%, 90% {
+        transform: translateY(0);
+    }
 }
 .footer {
     position: relative;
@@ -342,29 +402,31 @@ textarea {
     margin-top: -50px;
     line-height: 49px;
     clear: both;
+}
+.breadcrumb {
     border-top: 1px solid #eee;
 }
-.footer a {
-    padding: 0 2px;
-    text-decoration: none;
+.breadcrumb a {
+    margin-right: 2px;
+    margin-left: 2px;
 }
-.footer a:hover, .footer a:focus { text-decoration: underline; }
 
 
 
 /* Media Queries
 -------------------------------------------------- */
-/* @viewport http://dev.w3.org/csswg/css-device-adapt/ */
+/* CSS Device Adaptation http://dev.w3.org/csswg/css-device-adapt/ */
 @viewport {
     width: device-width;
-    resolution: device;
-    zoom: 1;
+    user-zoom: fixed;
 }
 
-/* 480x640 160dpi http://www.w3.org/blog/CSS/2012/06/14/unprefix-webkit-device-pixel-ratio/ */
+/* Device resolution http://www.w3.org/blog/CSS/2012/06/14/unprefix-webkit-device-pixel-ratio/ */
+/* 480x640 160dpi */
 /* @media (-webkit-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) { } */
 /* 720x960 240dpi */
 /* @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) { } */
+
 /* @media (orientation: portrait) { } */
 /* @media (orientation: landscape) { } */
 
@@ -375,6 +437,35 @@ textarea {
         /* –ms-text-size-adjust property will be ignored where the viewport tag is present */
         /*     -ms-text-size-adjust: 100%; */
     }
+    .list-nav {
+        width: 100%;
+        -webkit-flex-direction: column;
+        -moz-box-orient: vertical;  /* Flexbox outdated syntax */
+           -moz-flex-direction: column;
+                flex-direction: column;
+        height: auto;
+        border-left: 1px solid #e9e9e9;
+    }
+    .list-nav .item {
+        display: block;
+        padding-right: -webkit-calc(5%);
+        padding-left: -webkit-calc(5%);
+        text-align: left;
+        border-top: 1px solid #dcdcdc;
+        border-right: 0;
+    }
+    .list-nav .item:first-child {
+        border: 0;
+        border-radius: 2px 2px 0 0;
+    }
+    .list-nav .item:last-child {
+        border-radius: 0 0 2px 2px;
+    }
+    .list-nav .item.selected {
+        margin-right: -1px;
+        margin-left: -1px;
+        position: relative;
+    }
 }
 
 @media print {
@@ -384,18 +475,28 @@ textarea {
         background: transparent;
     }
     a, a:visited {
-        color: #444!important;
+        color: #444;
         text-decoration: underline;
     }
-    a[href]:after { content: ' (' attr(href) ')'; }
-    abbr[title]:after { content: ' (' attr(title) ')'; }
-    img { page-break-inside: avoid; }
-    @page { margin: .5cm; }
+    a[href]:after {
+        content: ' (' attr(href) ')';
+    }
+    abbr[title]:after {
+        content: ' (' attr(title) ')';
+    }
+    img {
+        page-break-inside: avoid;
+    }
+    @page {
+        margin: .5cm;
+    }
     p, h2, h3 {
         orphans: 3;
         widows: 3;
     }
-    h2, h3 { page-break-after: avoid; }
+    h2, h3 {
+        page-break-after: avoid;
+    }
 }
 
 
@@ -404,12 +505,28 @@ textarea {
 -------------------------------------------------- */
 /* IE6-8 */
 @media \0screen\,screen\9 {
-    html { *overflow: auto; }
-    form { *margin:0; }
-    input, textarea, select { *vertical-align: middle; }
-    input { *overflow: visible; }
-    .center-container { *width: 760px; }
-    .article { width: 100%; }
+    /* http://dev.w3.org/html5/spec/single-page.html#the-hidden-attribute */
+    *[hidden] {
+        display: none;
+    }
+    html {
+        *overflow: auto;
+    }
+    form {
+        *margin: 0;
+    }
+    input, textarea, select {
+        *vertical-align: middle;
+    }
+    input {
+        *overflow: visible;
+    }
+    .ui-center {
+        *width: 760px;
+    }
+    .article {
+        width: 100%;
+    }
 }
 
 /* Webkit */
@@ -424,14 +541,23 @@ textarea {
     2.3 - unknown appearance of visibility: hidden on new DOM elements on scroll when using "-webkit-transform: translate3d(0,0,0);", "-webkit-backface-visibility: hidden;" or "-webkit-perspective: 1000;"
     */
     a {
+        /* iOS remove bubble dialog on tap-holding */
+        -webkit-touch-callout: none;
         /* Remove outline and highlight-color from click-able elements on Android and iOS */
         -webkit-tap-highlight-color: rgba(0,0,0,0);
     }
-    input {
+    input, input[type=search]::-webkit-search-cancel-button {
         -webkit-appearance: none;
     }
-    input[type="search"]::-webkit-search-cancel-button {
-        -webkit-appearance: none;
+    textarea::-webkit-scrollbar {
+        width: 8px;
+        background-color: rgba(250,250,250,0);
+    }
+    textarea::-webkit-scrollbar-thumb {
+        background-color: #8e8f91;
+    }
+    textarea::-webkit-scrollbar-thumb:hover {
+        background-color: #666;
     }
     ::-webkit-input-placeholder {
         color: #ddd;
