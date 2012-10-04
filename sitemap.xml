@@ -1,6 +1,7 @@
 <?php
 
-// Creating Sitemaps in Google Webmaster Tools - http://support.google.com/webmasters/bin/answer.py?hl=en&answer=183668
+// --------------------------------------------------
+// Creating Sitemaps in Google Webmaster Tools http://support.google.com/webmasters/bin/answer.py?hl=en&answer=183668
 // --------------------------------------------------
 
 
@@ -11,13 +12,13 @@ include 'content/config.php';
 
 
 
-header('Content-Type: application/xml');
-
-
-
 // Connect to MySQL
 // --------------------------------------------------
 include 'content/connect.php';
+
+
+
+header('Content-Type: application/xml');
 
 
 
