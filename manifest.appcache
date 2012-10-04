@@ -1,0 +1,83 @@
+<?php
+
+// --------------------------------------------------
+// Offline Web applications http://dev.w3.org/html5/spec/offline.html
+// Cache Manifest Validator http://manifest-validator.com/
+// --------------------------------------------------
+// http://appcachefacts.info/peterlubbers-owc4/index.html#18
+// http://html5-demos.appspot.com/static/html5storage/index.html#slide40
+
+
+
+// Configuration
+// --------------------------------------------------
+include 'content/config.php';
+
+
+
+// Connect to MySQL
+// --------------------------------------------------
+include 'content/connect.php';
+
+
+
+header('Content-Type: text/cache-manifest; charset=utf-8');
+
+
+
+echo 'CACHE MANIFEST';
+
+
+
+// Recent version
+// --------------------------------------------------
+$directory = new RecursiveDirectoryIterator('.');
+$iterator  = new RecursiveIteratorIterator($directory);
+$regex     = new RegexIterator($iterator, '/.+\.(appcache|css|js|php|txt|xml)/');
+$array     = array();
+foreach ($regex as $key) {
+    $array[] = $key -> getMTime();
+}
+$modfile = max($array);
+
+$query   = mysql_query("SELECT UNIX_TIMESTAMP(MAX(pubdate)) AS pubdate FROM `" . MYSQL_TABLE . "`");
+while ($row = @mysql_fetch_array($query, MYSQL_ASSOC)) {
+    $moddate = $row['pubdate'];
+}
+
+$modmax = max($modfile, $moddate);
+
+echo "\n# $modmax\n";
+
+// Explicitly cached entries
+if (MYSQL_CON) {
+    $result = mysql_query('SELECT url FROM `' . MYSQL_TABLE . '`');
+
+    if (mysql_num_rows($result)) {
+    	while ($row = @mysql_fetch_array($result, MYSQL_ASSOC)) {
+            $row[] = array(
+                'row' => array_map('htmlspecialchars', $row)
+            );
+
+    		echo "\n$path{$row['url']}";
+    	}
+    }
+}
+
+// Assets development and production minified version.
+if ($debug) {
+    $path_css = $assets.'/images/style.css';
+    $path_js  = $assets.'/images/jquery.address.js';
+} else {
+    $path_css = $assets.'/images/style.min.css';
+    $path_js  = $assets.'/images/jquery.address.min.js';
+}
+echo "\n$path_css";
+echo "\n$path_js";
+echo "\n$assets/images/jquery-1.8.2.min.js";
+
+// Resources that require the user to be online.
+// NETWORK:
+
+// FALLBACK:
+?>
