@@ -123,7 +123,7 @@ ErrorDocument 403 /ajax-seo/index.php?url=error
     </FilesMatch>
 
     # Execute this files as PHP
-    <FilesMatch "(humans.txt|robots.txt|sitemap.xml|manifest.appcache)">
+    <FilesMatch "(humans.txt|manifest.appcache|robots.txt|sitemap.xml)">
         SetHandler application/x-httpd-php
     </FilesMatch>
 
