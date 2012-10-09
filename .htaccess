@@ -50,7 +50,7 @@ AddType video/webm                     webm
 AddType video/x-flv                    flv
 
 # Custom error pages
-ErrorDocument 403 /ajax-seo/index.php?url=error
+ErrorDocument 403 /ajax-seo/?url=error
 # ErrorDocument 403 "403 Forbidden"
 # ErrorDocument 404 "404 Not Found"
 # ErrorDocument 500 "500 Internal Server Error"
