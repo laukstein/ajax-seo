@@ -175,7 +175,7 @@ FileETag None
     # Replace multiple slashes with single slash directly after the domain
     RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ //+(.*)\ HTTP/ [OR]
     RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ (.+)//\ HTTP/
-    RewriteRule .* http%{ENV:https}://%{HTTP_HOST}/%1 [R=301,NE,L]
+    RewriteRule .* http%{ENV:https}://%{HTTP_HOST}/%1 [R=301,L]
 
     # Replace multiple slashes with single slash in URL
     RewriteCond %{REQUEST_URI} (.*)//(.*)
