@@ -157,12 +157,19 @@ textarea {
          -o-transition-duration: .1s; /* removable at Opera 12.10 */
             transition-duration: .1s;
 }
-/* [class*="sprites"] {
+
+/* Sprites */
+/* [class*="beforesprites"]:before {
+    content: "";
+}
+[class*="beforesprites"]:before,
+[class|="sprites"] {
     display: inline-block;
     vertical-align: middle;
     background-image: url(sprites.png);
     background-repeat: no-repeat;
 } */
+
 .ui-center {
     overflow: hidden;
     width: 90%;
