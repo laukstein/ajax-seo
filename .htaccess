@@ -198,8 +198,8 @@ FileETag None
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule . %1-%3 [R=301,L]
 
-    # Remove dot, comma and unsafe characters RFC 1738 http://www.rfc-editor.org/rfc/rfc1738.txt
-    RewriteCond %{REQUEST_URI} (.+)(\.|\,|{|}|\||\^|~|\[|\]|`)(.*)$
+    # Remove dot, comma, equals sign and unsafe characters RFC 1738 http://www.rfc-editor.org/rfc/rfc1738.txt
+    RewriteCond %{REQUEST_URI} (.+)(\.|\,|=|{|}|\||\^|~|\[|\]|`)(.*)$
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule . %1%3 [R=301,L]
