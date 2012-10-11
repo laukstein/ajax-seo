@@ -156,7 +156,7 @@ FileETag None
     # Rewrite uppercase letters URL to lowercase. Needs for httpd.conf "RewriteMap lc int:tolower"
     # Solution without RewriteMap in https://github.com/laukstein/ajax-seo/wiki/Lowercase-URL
     RewriteCond %{REQUEST_URI} .+
-    RewriteRule .[A-Z] ${lc:%0} [R=301,L]
+    RewriteRule .*[A-Z] ${lc:%0} [R=301,L]
 
     # Apache and Firefox bug with backslash URL encoding https://issues.apache.org/bugzilla/show_bug.cgi?id=35256
     # Rewrite backslash to slash. Needs for httpd.conf "AllowEncodedSlashes On"
