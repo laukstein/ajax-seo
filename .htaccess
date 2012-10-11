@@ -165,10 +165,10 @@ FileETag None
 
     # Remove index files and extensions
     # Remove index.php and index.html
-    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /(.*)(?:index)(\.php|\.html)\ HTTP/
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /(.*)(?:index)(\.php|\.html)(.*)\ HTTP/
     RewriteRule . http%{ENV:https}://%{HTTP_HOST}/%1 [R=301,L]
     # Remove extensions php and html
-    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /(.*)(\.php|\.html)\ HTTP/
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /(.*)(\.php|\.html)(.*)\ HTTP/
     RewriteRule . http%{ENV:https}://%{HTTP_HOST}/%1 [R=301,L]
 
     # Slashes issues
