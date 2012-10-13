@@ -147,13 +147,11 @@ textarea {
 
 .transition, .transition:before {
     -webkit-transition-duration: .14s;
-       -moz-transition-duration: .14s; /* removable at Firefox 16 */
          -o-transition-duration: .14s; /* removable at Opera 12.10 */
             transition-duration: .14s;
 }
 .transition:hover, .transition:hover:before {
     -webkit-transition-duration: .1s;
-       -moz-transition-duration: .1s; /* removable at Firefox 16 */
          -o-transition-duration: .1s; /* removable at Opera 12.10 */
             transition-duration: .1s;
 }
@@ -246,10 +244,8 @@ textarea {
     display:    -moz-box; /* Flexbox outdated syntax */
     -moz-box-pack: justify; /* Flexbox outdated syntax */
     display: -webkit-flex;
-    display:    -moz-flex;
     display:         flex;
     -webkit-flex-direction: row;
-       -moz-flex-direction: row;
             flex-direction: row;
     width:    -moz-calc(100%);
     height: 36px;
@@ -259,12 +255,12 @@ textarea {
     white-space: nowrap;
     background-color: #f1f1f1;
     background-image: -webkit-linear-gradient(#f8f8f8, rgba(248,248,248,0));
-    background-image:    -moz-linear-gradient(#f8f8f8, rgba(248,248,248,0)); /* removable at Firefox 16 */
     background-image:      -o-linear-gradient(#f8f8f8, rgba(248,248,248,0)); /* removable at Opera 12.10 */
     background-image:         linear-gradient(#f8f8f8, rgba(248,248,248,0));
-    border-top: 1px solid #dcdcdc;
-    border-bottom: 1px solid #dcdcdc;
-    border-right: 1px solid #e9e9e9;
+    border-width: 1px;
+    border-style: solid;
+    border-left: 0;
+    border-color: #ddd #ddd #ccc;
     border-radius: 2px;
     -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.1), inset 0 0 0 1px rgba(255,255,255,.5); /* removable at iOS 5 */
             box-shadow: 0 1px 1px rgba(0,0,0,.1), inset 0 0 0 1px rgba(255,255,255,.5);
@@ -277,7 +273,6 @@ textarea {
     display: inline-block;
     -webkit-flex: 1;
     -moz-box-flex: 1; /* Flexbox outdated syntax */
-       -moz-flex: 1;
             flex: 1;
     min-width: 0; /* Implied Minimum Size of Flex Items http://dev.w3.org/csswg/css3-flexbox/#min-size-auto */
     padding-right: 15px;
@@ -288,9 +283,8 @@ textarea {
     text-align: center;
     text-decoration: none;
     text-overflow: ellipsis;
-    border-right: 1px solid #e9e9e9;
+    border-right: 1px solid #ddd;
     -webkit-transition-property: background-color, background-image;
-       -moz-transition-property: background-color, background-image; /* removable at Firefox 16 */
          -o-transition-property: background-color, background-image; /* removable at Opera 12.10 */
             transition-property: background-color, background-image;
 }
@@ -305,7 +299,6 @@ textarea {
 .list-nav .item:hover, .list-nav .item:focus {
     background-color: #f8f8f8;
     background-image: -webkit-linear-gradient(#fbfbfb, rgba(251, 251, 251, 0));
-    background-image:    -moz-linear-gradient(#fbfbfb, rgba(251, 251, 251, 0)); /* removable at Firefox 16 */
     background-image:      -o-linear-gradient(#fbfbfb, rgba(251, 251, 251, 0)); /* removable at Opera 12.10 */
     background-image:         linear-gradient(#fbfbfb, rgba(251, 251, 251, 0));
 }
@@ -345,17 +338,14 @@ textarea {
     text-shadow: 1px 1px 0 rgba(255,255,255,.5);
     background-color: #ffe65c;
     background-image: -webkit-linear-gradient(#ffe998, #ffe65c);
-    background-image:    -moz-linear-gradient(#ffe998, #ffe65c); /* removable at Firefox 16 */
     background-image:      -o-linear-gradient(#ffe998, #ffe65c); /* removable at Opera 12.10 */
     background-image:         linear-gradient(#ffe998, #ffe65c);
     -webkit-box-shadow: 0 0 4px rgba(0,0,0,.5); /* removable at iOS 5 */
             box-shadow: 0 0 4px rgba(0,0,0,.5);
     -webkit-transform: translateY(-50px);
-       -moz-transform: translateY(-50px); /* removable at Firefox 16 */
          -o-transform: translateY(-50px); /* removable at Opera 12.10 */
             transform: translateY(-50px);
     -webkit-animation: slide-down 6s linear 1.5s 1;
-       -moz-animation: slide-down 6s linear 1.5s 1; /* removable at Firefox 16 */
          -o-animation: slide-down 6s linear 1.5s 1; /* removable at Opera 12.10 */
             animation: slide-down 6s linear 1.5s 1;
 }
@@ -376,15 +366,6 @@ textarea {
 
     /* Android 2 flicker issue http://georgehess.com/post/2054803814/css-keyframe-animation-flicker */
     100% { }
-}
-/* removable at Firefox 16 */
-@-moz-keyframes slide-down {
-    0%, 100% {
-        -moz-transform: translateY(-50px);
-    }
-    10%, 90% {
-        -moz-transform: translateY(0);
-    }
 }
 /* removable at Opera 12.10 */
 @-o-keyframes slide-down {
@@ -451,14 +432,14 @@ textarea {
            -moz-flex-direction: column;
                 flex-direction: column;
         height: auto;
-        border-left: 1px solid #e9e9e9;
+        border-left: 1px solid #ddd;
     }
     .list-nav .item {
         display: block;
         padding-right: -webkit-calc(5%);
         padding-left: -webkit-calc(5%);
         text-align: left;
-        border-top: 1px solid #dcdcdc;
+        border-top: 1px solid #ddd;
         border-right: 0;
     }
     .list-nav .item:first-child {
