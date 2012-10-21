@@ -212,7 +212,7 @@ FileETag None
     RewriteRule .* %{REQUEST_URI}%1? [R=301,L]
 
     # Remove question mark and parameters
-    RewriteCond %{QUERY_STRING} .+
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^?#\ ]*)\?[^\ ]*\ HTTP/
     # Query rewrite exceptions
     RewriteCond %{REQUEST_FILENAME} !index.php
     RewriteCond %{REQUEST_URI}?%{QUERY_STRING} !/api(/.*)?\?callback=(\w+)$
