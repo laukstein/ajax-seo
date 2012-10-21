@@ -33,7 +33,7 @@ html {
             user-select: none;
 }
 body, input, textarea {
-    color: #333;
+    color: #222;
     font-size: 14px;
     font-size: 1.4rem;
     line-height: 1.5em;
@@ -42,7 +42,7 @@ body, input, textarea {
 ::selection {
     color: #fff;
     text-shadow: none;
-    background-color: #bbb;
+    background-color: #8f8f8f;
 }
 :focus {
     outline: 0;
@@ -164,8 +164,8 @@ textarea {
 [class|="sprites"] {
     display: inline-block;
     vertical-align: middle;
-    background-image: url(sprites.png);
     background-repeat: no-repeat;
+    background-image: url(sprites.png);
 } */
 
 .ui-center {
@@ -489,7 +489,7 @@ textarea {
 
 
 
-/* Cross-browser
+/* Cross-browser compatibility
 -------------------------------------------------- */
 /* IE6-8 */
 @media \0screen\,screen\9 {
@@ -560,7 +560,7 @@ textarea {
     ::-moz-selection {
         color: #fff;
         text-shadow: none;
-        background-color: #bbb;
+        background-color: #8f8f8f;
     }
     :-moz-placeholder {
         color: #ddd;
