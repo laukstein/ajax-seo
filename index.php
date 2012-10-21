@@ -77,16 +77,14 @@ $meta_tags  = "<title>$pagetitle</title>";
 // 253 character description http://blogs.msdn.com/b/ie/archive/2012/05/14/sharing-links-from-ie10-on-windows-8.aspx
 $meta_tags .= "\n<meta name=description content=\"$meta_description\">";
 
-// Twitter Cards https://dev.twitter.com/docs/cards, Validator https://dev.twitter.com/docs/cards/preview
-if (stristr($_SERVER['HTTP_USER_AGENT'], 'Twitterbot')) {
-    $https      = empty($_SERVER['HTTPS']) ? null : ($_SERVER['HTTPS'] == 'on') ? 's' : null;
-    $fullurl    = 'http' . $https . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-
-    $meta_tags .= "\n<meta name=twitter:card value=summary>";
-    $meta_tags .= "\n<meta name=twitter:url value=\"$fullurl\">";
-    $meta_tags .= "\n<meta name=og:title value=\"$pagetitle\">";
-    $meta_tags .= "\n<meta name=og:description value=\"$meta_description\">";
-}
+// Twitter Cards https://dev.twitter.com/docs/cards
+$meta_tags .= "\n<meta property=twitter:card content=summary>";
+// Open Graph protocol http://ogp.me
+$https      = empty($_SERVER['HTTPS']) ? null : ($_SERVER['HTTPS'] == 'on') ? 's' : null;
+$fullurl    = 'http' . $https . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+$meta_tags .= "\n<meta property=og:url content=\"$fullurl\">";
+$meta_tags .= "\n<meta property=og:title content=\"$pagetitle\">";
+$meta_tags .= "\n<meta property=og:description content=\"$meta_description\">";
 
 // Declare the family friendly content http://schema.org/WebPage
 $meta_tags .= "\n<meta itemprop=isFamilyFriendly content=true>";
