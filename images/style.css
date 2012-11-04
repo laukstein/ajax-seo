@@ -36,7 +36,7 @@ body, input, textarea {
     color: #222;
     font-size: 14px;
     font-size: 1.4rem;
-    line-height: 1.5em;
+    line-height: 1.5;
     font-family: sans-serif;
 }
 ::selection {
@@ -47,21 +47,24 @@ body, input, textarea {
 :focus {
     outline: 0;
 }
-body, h1, h2, h3, h4, h5, h6, ul, ol, dl, dd , figure, input, textarea, select {
+body, h1, h2, h3, h4, ul, ol, dl, dd , figure, select, input, textarea {
     margin: auto;
 }
-h1 {
+h1, h2 {
     font-weight: normal;
-    font-size: 24px;
-    font-size: 2.4rem;
+    font-family: Segoe UI, sans-serif;
+}
+h1 {
+    font-size: 27px;
+    font-size: 2.7rem;
 }
 h2 {
-    font-size: 14px;
-    font-size: 1.4rem;
+    font-size: 18px;
+    font-size: 1.8rem;
 }
 p {
-    margin-top: 12px;
-    margin-bottom: 12px;
+    margin-top: 1%;
+    margin-bottom: 1%;
     word-break: break-word;
     -webkit-hyphens: auto;
        -moz-hyphens: auto;
@@ -95,38 +98,52 @@ a:hover, a:focus {
 }
 img {
     max-width: 100%;
-    vertical-align: middle;
+    vertical-align: top;
     -ms-interpolation-mode: bicubic;
 }
 hr {
-    height: 0;
     margin-top: 12px;
     margin-bottom: 12px;
-    border: 1px solid #eee;
-    border-width: 1px 0 0;
+    border-width: 0;
+    border-top: 1px solid #eee;
+}
+legend {
+    /* IE line-wrapping issue */
+    display: table;
 }
 label {
     display: inline-block;
-    padding-top: 3px;
-    padding-bottom: 5px;
-    cursor: pointer;
+    padding-top: .5%;
+    padding-bottom: .5%;
+    /* cursor: pointer; */
 }
-input, textarea {
-    width: 250px;
-    padding: 7px 12px;
+input, select, textarea {
+    vertical-align: bottom;
     background-color: #fff;
     border: 1px solid #ccc;
+    -webkit-box-sizing: border-box; /* removable at Andriod 4 */
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
     -webkit-user-select: text;
        -moz-user-select: text;
         -ms-user-select: text;
             user-select: text;
-    -webkit-box-sizing: border-box; /* removable at Andriod 4 */
-       -moz-box-sizing: border-box;
-            box-sizing: border-box;
 }
-input[type=submit] {
+input:not([type]), input[type=color], input[type=date], input[type=datetime],
+input[type=datetime-local], input[type=email], input[type=month],
+input[type=number], input[type=password], input[type=tel], input[type=text],
+input[type=time], input[type=url], input[type=week], input[type=submit],
+select, textarea {
+    width: 250px;
+    padding: 7px 12px;
+}
+input:hover, input:focus, select:hover, select:focus, textarea:hover, textarea:focus  {
+    border-color: #ababab;
+    box-shadow: inset 1px 1px 3px #d6d6d6, 1px 1px 0 #fff;
+}
+/* input[type=submit] {
     cursor: pointer;
-}
+} */
 textarea {
     overflow: auto;
     height: 135px;
@@ -138,13 +155,16 @@ textarea {
 
 /* Common rules
 -------------------------------------------------- */
-/* Contain floats */
 .clearfix:after {
     content: "";
     display: table;
     clear: both;
 }
-
+/* .article a {
+    *//* Enlarge visible click area *//*
+    padding: .2%;
+    margin: -.2%;
+} */
 .transition, .transition:before {
     -webkit-transition-duration: .14s;
          -o-transition-duration: .14s; /* removable at Opera 12.10 */
@@ -155,8 +175,6 @@ textarea {
          -o-transition-duration: .1s; /* removable at Opera 12.10 */
             transition-duration: .1s;
 }
-
-/* Sprites */
 /* [class*="beforesprites"]:before {
     content: "";
 }
@@ -166,8 +184,12 @@ textarea {
     vertical-align: middle;
     background-repeat: no-repeat;
     background-image: url(sprites.png);
-} */
-
+}
+[class|=icon]{
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+}  */
 .ui-center {
     overflow: hidden;
     width: 90%;
@@ -181,8 +203,6 @@ textarea {
        -moz-box-sizing: border-box;
             box-sizing: border-box;
 }
-
-/* Button */
 .button {
     display: inline-block;
     padding: 7px 12px;
@@ -315,15 +335,16 @@ textarea {
 .list-nav .item.selected:last-child {
     margin-right: -1px;
 }
+
 .article {
-    padding-top: 13px;
+    padding-top: 1.5%;
     padding-bottom: 65px;
-}
-.content {
     -webkit-user-select: text;
        -moz-user-select: text;
         -ms-user-select: text;
             user-select: text;
+}
+.content {
     background-color: #fff;
 }
 .note {
@@ -401,6 +422,26 @@ textarea {
 
 
 
+/* Handlers
+-------------------------------------------------- */
+.hide {
+    display: none;
+}
+.show {
+    display: block;
+}
+.touchstart {
+    opacity: .55;
+}
+.disabled, .disabled a {
+    pointer-events: none;
+}
+.disabled {
+    opacity: .3;
+}
+
+
+
 /* Media Queries
 -------------------------------------------------- */
 /* CSS Device Adaptation http://dev.w3.org/csswg/css-device-adapt/ */
@@ -424,6 +465,11 @@ textarea {
         -webkit-text-size-adjust: 100%;
         /* –ms-text-size-adjust property will be ignored where the viewport tag is present */
         /*     -ms-text-size-adjust: 100%; */
+    }
+    select, textarea, input:not([type]), input[type=color], input[type=date], input[type=datetime],
+    input[type=datetime-local], input[type=email], input[type=month], input[type=number], input[type=password],
+    input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week], input[type=submit] {
+        width: 100%;
     }
     .list-nav {
         width: 100%;
@@ -491,23 +537,39 @@ textarea {
 
 /* Cross-browser compatibility
 -------------------------------------------------- */
+/* Unsupported attributes */
+/* http://dev.w3.org/html5/spec/single-page.html#the-hidden-attribute */
+*[hidden] {
+    display: none;
+}
+
 /* IE6-8 */
 @media \0screen\,screen\9 {
-    /* http://dev.w3.org/html5/spec/single-page.html#the-hidden-attribute */
-    *[hidden] {
-        display: none;
-    }
     html {
         *overflow: auto;
     }
-    form {
-        *margin: 0;
+    ul, ol {
+        *list-style-position: outside;
     }
-    input, textarea, select {
+    hr {
+        *display: block;
+        *height: auto;
+    }
+    form {
+        *margin: auto;
+    }
+    input, select, textarea {
         *vertical-align: middle;
     }
     input {
         *overflow: visible;
+    }
+    .ie-input {
+        width: 250px;
+        padding: 7px 12px;
+    }
+    .clearfix {
+        *zoom: 1;
     }
     .ui-center {
         *width: 760px;
@@ -528,11 +590,13 @@ textarea {
     2.3 - not supported flexbox updated syntax - use old and new syntax to support on all devices http://dev.w3.org/csswg/css3-flexbox/ http://css-tricks.com/old-flexbox-and-new-flexbox/
     2.3 - unknown appearance of visibility: hidden on new DOM elements on scroll when using "-webkit-transform: translate3d(0,0,0);", "-webkit-backface-visibility: hidden;" or "-webkit-perspective: 1000;"
     */
+    a, input, select, textarea {
+        /* Remove outline and highlight-color from click-able elements on Android and iOS */
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+    }
     a {
         /* iOS remove bubble dialog on tap-holding */
         -webkit-touch-callout: none;
-        /* Remove outline and highlight-color from click-able elements on Android and iOS */
-        -webkit-tap-highlight-color: rgba(0,0,0,0);
     }
     input, input[type=search]::-webkit-search-cancel-button {
         -webkit-appearance: none;
@@ -553,7 +617,12 @@ textarea {
 }
 
 /* Opera */
-/* @media (min-resolution: .001dpcm) { } */
+@media (min-resolution: .001dpcm) {
+    /* contenteditable attribute issue */
+    .clearfix:after {
+        content: " ";
+    }
+}
 
 /* Firefox */
 @-moz-document url-prefix() {
@@ -561,6 +630,10 @@ textarea {
         color: #fff;
         text-shadow: none;
         background-color: #8f8f8f;
+    }
+    input {
+        /* Bug https://bugzilla.mozilla.org/show_bug.cgi?id=649849 */
+        -moz-appearance: none;
     }
     :-moz-placeholder {
         color: #ddd;
