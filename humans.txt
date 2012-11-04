@@ -55,5 +55,3 @@ Last update:    $date
 Standards:      HTML Living Standard - HTML5, CSS3, Microdata, JSON
 Components:     jQuery, PHP, MySQL
 Source:         https://github.com/laukstein/ajax-seo";
-
-?>

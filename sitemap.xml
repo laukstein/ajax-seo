@@ -58,4 +58,3 @@ while ($row = @mysql_fetch_array($result, MYSQL_ASSOC)) {
 mysql_close($con);
 
 echo "\n</urlset>";
-?>

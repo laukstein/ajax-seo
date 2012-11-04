@@ -86,5 +86,3 @@ $installation       = '<style>
     </ul>' . $error . '
 </form>
 <p>The configuration will be saved in connect.php, after you can open and edit it trough text editor.</p>';
-
-?>

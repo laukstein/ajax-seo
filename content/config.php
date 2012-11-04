@@ -65,5 +65,3 @@ if (str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME)) 
 
 // Return root path
 $rootpath = substr($path, 0, -1);
-
-?>

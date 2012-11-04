@@ -52,5 +52,3 @@ function http_response_code($code = NULL) {
     }
     return $code;
 }
-
-?>

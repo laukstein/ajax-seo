@@ -94,5 +94,3 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
     // Installer on not reachable database
     include 'content/install.php';
 }
-
-?>

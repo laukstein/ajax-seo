@@ -86,5 +86,3 @@ if (mysql_num_rows($result)) {
     http_response_code(404);
     exit('404 Not Found');
 }
-
-?>
