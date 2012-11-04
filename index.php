@@ -74,17 +74,16 @@ $installation       = isset($installation) ? $installation : null;
 // 160 character title http://blogs.msdn.com/b/ie/archive/2012/05/14/sharing-links-from-ie10-on-windows-8.aspx
 $meta_tags  = "<title>$pagetitle</title>";
 
+// Open Graph protocol http://ogp.me
+$meta_tags .= "\n<meta property=og:title content=\"$pagetitle\">";
 // 253 character description http://blogs.msdn.com/b/ie/archive/2012/05/14/sharing-links-from-ie10-on-windows-8.aspx
 $meta_tags .= "\n<meta name=description content=\"$meta_description\">";
-
+$meta_tags .= "\n<meta property=og:description content=\"$meta_description\">";
 // Twitter Cards https://dev.twitter.com/docs/cards
-$meta_tags .= "\n<meta property=twitter:card content=summary>";
-// Open Graph protocol http://ogp.me
+// $meta_tags .= "\n<meta property=twitter:card content=summary>"; // Twitterbot will crawl as default 'summary' when twitter:card is not set
 $https      = empty($_SERVER['HTTPS']) ? null : ($_SERVER['HTTPS'] == 'on') ? 's' : null;
 $fullurl    = 'http' . $https . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 $meta_tags .= "\n<meta property=og:url content=\"$fullurl\">";
-$meta_tags .= "\n<meta property=og:title content=\"$pagetitle\">";
-$meta_tags .= "\n<meta property=og:description content=\"$meta_description\">";
 
 // Declare the family friendly content http://schema.org/WebPage
 $meta_tags .= "\n<meta itemprop=isFamilyFriendly content=true>";
@@ -118,16 +117,20 @@ $meta_tags .= "\n<link rel=dns-prefetch href=http://code.jquery.com>";
 $meta_tags .= "\n<link rel=dns-prefetch href=//www.google-analytics.com>";
 
 
+// Assets development and production minified versions
+function path($filename) {
+    global $debug, $assets;
 
-// Assets development and production minified version.
-if ($debug) {
-    $path_css = $assets.'/images/style.css';
-    $path_js  = $assets.'/images/jquery.address.js';
-} else {
-    $path_css = $assets.'/images/style.min.css';
-    $path_js  = $assets.'/images/jquery.address.min.js';
+    if ($debug) {
+        return $assets.'/images/'.$filename;
+    } else {
+        preg_match('/^(.+)\.([^\.]+)$/', $filename, $matches);
+        return $assets.'/'.$matches[1].'.min.'.$matches[2];
+    }
 }
-
+$assets_style        = path('style.css');
+$assets_address      = path('jquery.address.js');
+$assets_touchtoclick = path('jquery.touchtoclick.js');
 
 
 // Working on Cache Manifest
@@ -138,7 +141,7 @@ echo "<!DOCTYPE html>
 <head>
 <meta charset=UTF-8>
 $meta_tags
-<link rel=stylesheet href=$path_css>
+<link rel=stylesheet href=$assets_style>
 <!--[if lt IE 9]><script src=//html5shiv.googlecode.com/svn/trunk/html5.js></script><![endif]-->
 </head>
 <body class=clearfix>\n";
@@ -210,8 +213,7 @@ echo '    </div>
         <a href=https://github.com/laukstein/ajax-seo/zipball/master>Download</a> >
         <a href=https://github.com/laukstein/ajax-seo/issues>Submit issue</a>
     </nav>
-</footer>
-';
+</footer>';
 
 
 if(MYSQL_CON){
@@ -219,14 +221,13 @@ if(MYSQL_CON){
 // code.jquery.com EdgeCast's CDN has the best performance http://royal.pingdom.com/2012/07/24/best-cdn-for-jquery-in-2012/
 // In case you use HTTPS replace it with Google CDN //ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js
 
-echo "<script src=http://code.jquery.com/jquery-1.8.2.min.js></script>
+echo "\n<script src=http://code.jquery.com/jquery-1.8.2.min.js></script>
 <script>window.jQuery || document.write('<script src=$assets/images/jquery-1.8.2.min.js><\/script>')</script>
-<script src=$path_js></script>
+<script src=$assets_address></script>
+<script src=$assets_touchtoclick></script>
 <script>
 (function() {
     'use strict';
-
-
 
     // Common variables
     var nav         = $('.js-as'),
@@ -241,7 +242,6 @@ echo "<script src=http://code.jquery.com/jquery-1.8.2.min.js></script>
             // Google Analytics tracking
             return _gaq && _gaq.push(['_trackPageview']);
         };
-
 
 
     // Auto-hide mobile device address bar
@@ -271,7 +271,6 @@ echo "<script src=http://code.jquery.com/jquery-1.8.2.min.js></script>
             }
         });
     }
-
 
 
     $.address.tracker(function() {}).crawlable(1).state('$rootpath').init(function() {
@@ -351,5 +350,3 @@ var _gaq = [
 }
 
 echo "</body>\n</html>";
-
-?>
