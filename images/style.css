@@ -167,12 +167,10 @@ textarea {
 } */
 .transition, .transition:before {
     -webkit-transition-duration: .14s;
-         -o-transition-duration: .14s; /* removable at Opera 12.10 */
             transition-duration: .14s;
 }
 .transition:hover, .transition:hover:before {
     -webkit-transition-duration: .1s;
-         -o-transition-duration: .1s; /* removable at Opera 12.10 */
             transition-duration: .1s;
 }
 /* [class*="beforesprites"]:before {
@@ -275,7 +273,6 @@ textarea {
     white-space: nowrap;
     background-color: #f1f1f1;
     background-image: -webkit-linear-gradient(#f8f8f8, rgba(248,248,248,0));
-    background-image:      -o-linear-gradient(#f8f8f8, rgba(248,248,248,0)); /* removable at Opera 12.10 */
     background-image:         linear-gradient(#f8f8f8, rgba(248,248,248,0));
     border-width: 1px;
     border-style: solid;
@@ -305,7 +302,6 @@ textarea {
     text-overflow: ellipsis;
     border-right: 1px solid #ddd;
     -webkit-transition-property: background-color, background-image;
-         -o-transition-property: background-color, background-image; /* removable at Opera 12.10 */
             transition-property: background-color, background-image;
 }
 .list-nav .item:first-child {
@@ -319,7 +315,6 @@ textarea {
 .list-nav .item:hover, .list-nav .item:focus {
     background-color: #f8f8f8;
     background-image: -webkit-linear-gradient(#fbfbfb, rgba(251, 251, 251, 0));
-    background-image:      -o-linear-gradient(#fbfbfb, rgba(251, 251, 251, 0)); /* removable at Opera 12.10 */
     background-image:         linear-gradient(#fbfbfb, rgba(251, 251, 251, 0));
 }
 .list-nav .item.selected {
@@ -359,15 +354,12 @@ textarea {
     text-shadow: 1px 1px 0 rgba(255,255,255,.5);
     background-color: #ffe65c;
     background-image: -webkit-linear-gradient(#ffe998, #ffe65c);
-    background-image:      -o-linear-gradient(#ffe998, #ffe65c); /* removable at Opera 12.10 */
     background-image:         linear-gradient(#ffe998, #ffe65c);
     -webkit-box-shadow: 0 0 4px rgba(0,0,0,.5); /* removable at iOS 5 */
             box-shadow: 0 0 4px rgba(0,0,0,.5);
     -webkit-transform: translateY(-50px);
-         -o-transform: translateY(-50px); /* removable at Opera 12.10 */
             transform: translateY(-50px);
     -webkit-animation: slide-down 6s linear 1.5s 1;
-         -o-animation: slide-down 6s linear 1.5s 1; /* removable at Opera 12.10 */
             animation: slide-down 6s linear 1.5s 1;
 }
 /* Webkit old syntax to support also mobile devices */
@@ -381,21 +373,12 @@ textarea {
     90% {
         -webkit-transform: translateY(0);
     }
-    99% {
+    /* Android 2.3 flicker issue, final frame less than 100% http://georgehess.com/post/2054803814/css-keyframe-animation-flicker */
+    99.99% {
         -webkit-transform: translateY(-50px);
     }
-
-    /* Android 2 flicker issue http://georgehess.com/post/2054803814/css-keyframe-animation-flicker */
-    100% { }
-}
-/* removable at Opera 12.10 */
-@-o-keyframes slide-down {
-    0%, 100% {
-        -o-transform: translateY(-50px);
-    }
-    10%, 90% {
-        -o-transform: translateY(0);
-    }
+    /* Do not remove, otherwise will not work on Android 2.3 */
+    100% {}
 }
 @keyframes slide-down {
     0%, 100% {
