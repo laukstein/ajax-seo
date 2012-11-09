@@ -295,7 +295,7 @@ echo "\n<script src=http://code.jquery.com/jquery-1.8.2.min.js></script>
 
             // Load API content
             $.ajax({
-                url: 'api' + (e.path.length !== 1 ? '/' + e.path.toLowerCase().substr(1) : ''),
+                url: 'api' + (e.path.length !== 1 ? '/' + e.path.substr(1) : ''),
                 dataType: 'jsonp',
                 crossDomain: true,
                 cache: true,
