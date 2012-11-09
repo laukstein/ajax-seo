@@ -192,20 +192,16 @@ if (MYSQL_CON) {
 echo "    </header>\n<article class=article>\n    <div class=\"content js-content\">\n";
 
 
-// Check if Apache mod_rewrite is enabled
-if (in_array('rewrite_module', apache_get_modules())) {
-    if (MYSQL_CON) {
-        $meta_title = isset($meta_title) ? $meta_title : null;
-        if ((strlen($title) > 0) && ($meta_title !== $title)) {
-            $meta_title = $title;
-        }
-        echo "      <h1>$meta_title</h1>\n        <p>$content</p>\n";
-        mysql_close($con);
-    } else {
-        echo $installation;
+//$warning_rewrite_module;
+if (MYSQL_CON) {
+    $meta_title = isset($meta_title) ? $meta_title : null;
+    if ((strlen($title) > 0) && ($meta_title !== $title)) {
+        $meta_title = $title;
     }
+    echo "      <h1>$meta_title</h1>\n        <p>$content</p>\n";
+    mysql_close($con);
 } else {
-    echo 'To use the framework you need to enable at least Apache mod_rewrite. Fallow the configuration in config/httpd.conf';
+    echo $installation;
 }
 
 

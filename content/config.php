@@ -6,6 +6,16 @@
 
 
 
+// Check if Apache mod_rewrite is enabled
+//$warning_rewrite_module = null;
+//if (function_exists('apache_get_modules')) {
+//    if (!in_array('rewrite_module', apache_get_modules())) {
+//        $warning_rewrite_module = '<p>To use the framework you need to enable at least Apache mod_rewrite. Fallow the configuration in config/httpd.conf</p>';
+//    }
+//}
+
+
+
 // date.timezone settings required since PHP 5.3.0
 if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
     if (!ini_get('date.timezone')) {
