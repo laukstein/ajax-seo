@@ -26,7 +26,7 @@ if (in_array($_SERVER['REMOTE_ADDR'], $ip)) {
 // Add latest PHP functions
 // --------------------------------------------------
 if (version_compare(PHP_VERSION, '5.4', '<')) {
-    include './function.http-response-code.php';
+    include 'content/function.http-response-code.php';
 }
 
 
