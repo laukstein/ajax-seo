@@ -173,21 +173,23 @@ textarea {
     -webkit-transition-duration: .1s;
             transition-duration: .1s;
 }
-/* [class*="beforesprites"]:before {
+/* .beforesprites {
+    position: relative;
+}
+[class*="beforesprites"]:before {
     content: "";
 }
 [class*="beforesprites"]:before,
 [class|="sprites"] {
     display: inline-block;
-    vertical-align: middle;
-    background-repeat: no-repeat;
-    background-image: url(sprites.png);
+    vertical-align: top;
+    background: no-repeat url(sprites.png);
 }
 [class|=icon]{
     display: inline-block;
     width: 24px;
     height: 24px;
-}  */
+} */
 .ui-center {
     overflow: hidden;
     width: 90%;
