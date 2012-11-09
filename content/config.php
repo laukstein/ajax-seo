@@ -6,7 +6,12 @@
 
 
 
-//date_default_timezone_set('Etc/GMT');
+// date.timezone settings required since PHP 5.3.0
+if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
+    if (!ini_get('date.timezone')) {
+        date_default_timezone_set('Etc/GMT');
+    }
+}
 
 
 
