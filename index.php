@@ -107,7 +107,7 @@ $meta_tags .= "\n<meta name=viewport content=\"width=device-width, user-scalable
 // Save page loading time with DNS prefetching https://github.com/h5bp/html5-boilerplate/blob/master/doc/extend.md#dns-prefetching
 // Prefetch own CDN
 if ($issetcdn) {
-    $meta_tags .= "\n<link rel=dns-prefetch href=$assets>";
+    $meta_tags .= "\n<link rel=dns-prefetch href=" . parse_url($assets, PHP_URL_HOST) . '>';
 }
 // Prefetch EdgeCast's CDN
 $meta_tags .= "\n<link rel=dns-prefetch href=http://code.jquery.com>";
@@ -121,16 +121,21 @@ $meta_tags .= "\n<link rel=dns-prefetch href=//www.google-analytics.com>";
 function path($filename) {
     global $debug, $assets;
 
-    if ($debug) {
-        return $assets.'/images/'.$filename;
-    } else {
-        preg_match('/^(.+)\.([^\.]+)$/', $filename, $matches);
-        return $assets.'/'.$matches[1].'.min.'.$matches[2];
+    preg_match('/^(.+)\.([^\.]+)$/', $filename, $matches);
+    $extension = $matches[2];
+
+    $source = $debug ? $assets . $filename : $assets . $matches[1] . '.min.' . $extension;
+
+    if ($extension == 'css') {
+        return "<link rel=stylesheet href=$source>";
+    }
+    if ($extension == 'js') {
+        return "<script src=$source></script>";
     }
 }
-$assets_style        = path('style.css');
-$assets_address      = path('jquery.address.js');
-$assets_touchtoclick = path('jquery.touchtoclick.js');
+$assets_style   = path('style.css');
+$assets_address = path('jquery.address.js');
+
 
 
 // Working on Cache Manifest
@@ -141,7 +146,7 @@ echo "<!DOCTYPE html>
 <head>
 <meta charset=UTF-8>
 $meta_tags
-<link rel=stylesheet href=$assets_style>
+$assets_style
 <!--[if lt IE 9]><script src=//html5shiv.googlecode.com/svn/trunk/html5.js></script><![endif]-->
 </head>
 <body class=clearfix>\n";
@@ -222,21 +227,21 @@ if(MYSQL_CON){
 // code.jquery.com EdgeCast's CDN has the best performance http://royal.pingdom.com/2012/07/24/best-cdn-for-jquery-in-2012/
 // In case you use HTTPS replace it with Google CDN //ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js
 
-echo "\n<script src=http://code.jquery.com/jquery-1.8.2.min.js></script>
-<script>window.jQuery || document.write('<script src=$assets/images/jquery-1.8.2.min.js><\/script>')</script>
-<script src=$assets_address></script>
-<script src=$assets_touchtoclick></script>
+echo "\n<script src=http://code.jquery.com/jquery-1.8.3.min.js></script>
+$assets_address
 <script>
 (function() {
     'use strict';
 
     // Common variables
-    var nav         = $('.js-as'),
-        content     = $('.js-content'),
-        init        = true,
-        state       = window.history.pushState !== undefined,
+    // --------------------------------------------------
+    var pointer = 'click', // Cross-device pointer event
+        nav     = $('.js-as'),
+        content = $('.js-content'),
+        init    = true,
+        state   = window.history.pushState !== undefined,
         // Response
-        handler     = function(data) {
+        handler = function(data) {
             document.title = data.pagetitle;
             content.fadeTo(20, 1).html(data.content);
 
@@ -246,6 +251,7 @@ echo "\n<script src=http://code.jquery.com/jquery-1.8.2.min.js></script>
 
 
     // Auto-hide mobile device address bar
+    // --------------------------------------------------
     if (/mobile/i.test(navigator.userAgent) && window.location.hash.indexOf('#') === -1) {
         var hideAddressbar = function() {
             var deviceHeight = screen.height,
@@ -271,6 +277,13 @@ echo "\n<script src=http://code.jquery.com/jquery-1.8.2.min.js></script>
                 hideAddressbar();
             }
         });
+    }
+
+
+    // Mobile device pointer event (click replacement with touchstart, removes 300ms of click delay)
+    // --------------------------------------------------
+    if ((/iPhone|iPod|iPad|Android|BlackBerry/).test(navigator.userAgent)) {
+        pointer = 'touchstart';
     }
 
 
@@ -331,10 +344,13 @@ echo "\n<script src=http://code.jquery.com/jquery-1.8.2.min.js></script>
             });
         }
     });
-})();
+})();\n\n\n";
 
+} else {
+    echo "\n<script>\n";
+}
 
-// Optimized Google Analytics snippet, http://mathiasbynens.be/notes/async-analytics-snippet
+echo "// Optimized Google Analytics snippet, http://mathiasbynens.be/notes/async-analytics-snippet
 var _gaq = [
     ['_setAccount', 'UA-XXXXX-X'],
     ['_trackPageview']
@@ -346,8 +362,6 @@ var _gaq = [
     g.src = '//www.google-analytics.com/ga.js';
     s.parentNode.insertBefore(g, s);
 }(document, 'script'));
-</script>\n";
+</script>";
 
-}
-
-echo "</body>\n</html>";
+echo "\n</body>\n</html>";
