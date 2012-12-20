@@ -16,7 +16,14 @@ define('MYSQL_ERROR', false);
 // --------------------------------------------------
 define('CDN_PATH', null);
 $issetcdn = CDN_PATH ? true : false;
-$assets   = $issetcdn ? '//' . CDN_PATH : $rootpath . '/images/';
+
+// PHP 5.4.7 has fixed host recognition when scheme is ommitted
+$protocol = null;
+if (version_compare(PHP_VERSION, '5.4.7', '<')) {
+    $protocol = 'http:';
+}
+
+$assets   = !$debug && $issetcdn ? $protocol . '//' . CDN_PATH : $rootpath . '/images/';
 
 
 
