@@ -106,7 +106,7 @@ $meta_tags .= "\n<meta name=viewport content=\"width=device-width, user-scalable
 
 // Save page loading time with DNS prefetching https://github.com/h5bp/html5-boilerplate/blob/master/doc/extend.md#dns-prefetching
 // Prefetch own CDN
-if ($issetcdn) {
+if (!$debug && $issetcdn) {
     $meta_tags .= "\n<link rel=dns-prefetch href=" . parse_url($assets, PHP_URL_HOST) . '>';
 }
 // Prefetch EdgeCast's CDN
