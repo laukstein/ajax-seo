@@ -14,11 +14,9 @@ define('MYSQL_ERROR', false);
 
 // Path for static assets
 // --------------------------------------------------
-define('CDN_DOMAIN', null);
-$cdndomain = CDN_DOMAIN;
-
-$issetcdn = isset($cdndomain) ? true : false;
-$assets   = $issetcdn ? '//' . $cdndomain : $rootpath;
+define('CDN_PATH', null);
+$issetcdn = CDN_PATH ? true : false;
+$assets   = $issetcdn ? '//' . CDN_PATH : $rootpath . '/images/';
 
 
 
