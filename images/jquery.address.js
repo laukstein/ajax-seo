@@ -10,6 +10,13 @@
  */
 (function ($) {
 
+    // Mobile device pointer event (click replacement with touchstart, removes 300ms of click delay)
+    // --------------------------------------------------
+    var pointer = 'click'; // Cross-device pointer event
+    if ((/iPhone|iPod|iPad|Android|BlackBerry/).test(navigator.userAgent)) {
+        pointer = 'touchstart';
+    }
+
     $.address = (function () {
 
         var _trigger = function(name) {
@@ -667,7 +674,7 @@
                     $.address.value(value);
                 }
             };
-            $(sel ? sel : this).on('click', f).on('submit', function(e) {
+            $(sel ? sel : this).on(pointer, f).on('submit', function(e) {
                 if ($(this).is('form')) {
                     e.preventDefault();
                     var action = $(this).attr('action'),
