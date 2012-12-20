@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $change = preg_replace("/define\('(MYSQL_DB)', '(.*)'\);/", "define('$1', '" . trim($_POST['db']) . "');", $change);
     $change = preg_replace("/define\('(MYSQL_TABLE)', '(.*)'\);/", "define('$1', '" . trim($_POST['table']) . "');", $change);
     $change = preg_replace("/define\('(MYSQL_ERROR)', false\);/", "define('$1', true);", $change);
-    $change = preg_replace("/define\('(CDN_DOMAIN)', null\);/", "define('$1', " . ((strlen($_POST['cdndomain']) > 0) ? "'". trim($_POST['cdndomain']) . "'"  : 'null') . ");", $change);
+    $change = preg_replace("/define\('(CDN_PATH)', null\);/", "define('$1', " . ((strlen($_POST['cdnpath']) > 0) ? "'". trim($_POST['cdnpath']) . "'"  : 'null') . ");", $change);
 
     // Change connect.php file permissions if needed
     if (!@is_writable($f)) {
@@ -57,8 +57,13 @@ header('X-Robots-Tag: none');
 $meta_title         = 'Installation';
 $pagetitle          = 'AJAX SEO ' . $meta_title;
 $title_installation = ' ' . $meta_title;
-$error              = (MYSQL_ERROR) ? "\n    <p class=error>Could not connect to server</p>" : null;
+$error              = MYSQL_ERROR ? "\n    <p class=error>Could not connect to server</p>" : null;
+// Chrome CSS3 transition explode bug when form has three or more input elements http://lab.laukstein.com/bug/input, status http://crbug.com/167083
 $installation       = '<style>
+form {
+    display: block;
+    width: 100%;
+}
 .installation li {
     padding-top: 2px;
     padding-bottom: 2px;
@@ -76,13 +81,16 @@ $installation       = '<style>
 <form method=post>
     <ul class=installation>
         <li><p><b>MySQL connection details</b></p>
-        <li><label for=db>Database name</label><input id=db type=text name=db value="' . MYSQL_DB . '" placeholder=ajax_seo>
-        <li><label for=user>User name</label><input id=user type=text name=user value="' . MYSQL_USER . '">
-        <li><label for=pass>Password</label><input id=pass type=password name=pass>
-        <li><label for=host>Database host</label><input id=host name=host value="' . MYSQL_HOST . '" placeholder=localhost>
-        <li><label for=table>Table</label><input id=table type=text name=table value="' . MYSQL_TABLE . '">
-        <li><hr><label for=cdndomain>CDN domain</label><input id=cdndomain type=text name=cdndomain value="' . CDN_DOMAIN . '">
-        <li><input class="transition button" type=submit name=install value=Install><input type=hidden name=submitted value=true>
+        <li><label for=db>Database name</label><input class="transition ie-input" id=db name=db value="' . MYSQL_DB . '">
+        <li><label for=user>User name</label><input class="transition ie-input" id=user placeholder=root name=user value="' . MYSQL_USER . '">
+        <li><label for=pass>Password</label><input class="transition ie-input" id=pass type=password name=pass>
+        <li><label for=host>Database host</label><input class="transition ie-input" id=host placeholder=localhost name=host value="' . MYSQL_HOST . '">
+        <li><label for=table>Table</label><input class="transition ie-input" id=table name=table value="' . MYSQL_TABLE . '">
+        <li>
+            <hr><p>CDN assets path like <b>cdn.' . $_SERVER['SERVER_NAME'] . '/assets/</b> without http:// or https://</p>
+            <label for=cdnpath>CDN path</label><input class="transition ie-input" id=cdnpath placeholder=Optional name=cdnpath value="' . CDN_PATH . '">
+        </li>
+        <li><input class="transition ie-input button" type=submit name=install value=Install><input type=hidden name=submitted value=true>
     </ul>' . $error . '
 </form>
 <p>The configuration will be saved in connect.php, after you can open and edit it trough text editor.</p>';
