@@ -10,11 +10,7 @@ http://www.markdotto.com/2011/12/06/formatting-vendor-prefixed-css/
 
 Avoid IDs
 http://screwlewse.com/2010/07/dont-use-id-selectors-in-css/
-http://screwlewse.com/2010/08/different-css-techniques-and-their-performance/
-
-Font-size with REM
-http://snook.ca/archives/html_and_css/font-size-with-rem
-*/
+http://screwlewse.com/2010/08/different-css-techniques-and-their-performance/ */
 
 /* Standards
 -------------------------------------------------- */
@@ -35,7 +31,10 @@ html {
 body, input, textarea {
     color: #222;
     font-size: 14px;
+
+    /* Font-size with REM http://snook.ca/archives/html_and_css/font-size-with-rem */
     font-size: 1.4rem;
+
     line-height: 1.5;
     font-family: sans-serif;
 }
@@ -47,7 +46,7 @@ body, input, textarea {
 :focus {
     outline: 0;
 }
-body, h1, h2, h3, h4, ul, ol, dl, dd , figure, select, input, textarea {
+body, h1, h2, h3, h4, ul, ol, dl, dd, blockquote, figure, select, input, textarea {
     margin: auto;
 }
 h1, h2 {
@@ -64,8 +63,10 @@ h2 {
 }
 p {
     margin-top: 1%;
+    margin-top: 1rem;
     margin-bottom: 1%;
-    word-break: break-word;
+    margin-bottom: 1rem;
+    /* word-break: break-all; */
     -webkit-hyphens: auto;
        -moz-hyphens: auto;
         -ms-hyphens: auto;
@@ -135,7 +136,7 @@ input[type=number], input[type=password], input[type=tel], input[type=text],
 input[type=time], input[type=url], input[type=week], input[type=submit],
 select, textarea {
     width: 250px;
-    padding: 7px 12px;
+    padding: .8% 1%;
 }
 input:hover, input:focus, select:hover, select:focus, textarea:hover, textarea:focus  {
     border-color: #ababab;
@@ -165,11 +166,11 @@ textarea {
     padding: .2%;
     margin: -.2%;
 } */
-.transition, .transition:before {
+.transition:before, .transition {
     -webkit-transition-duration: .14s;
             transition-duration: .14s;
 }
-.transition:hover, .transition:hover:before {
+.transition:hover:before, .transition:hover {
     -webkit-transition-duration: .1s;
             transition-duration: .1s;
 }
@@ -202,6 +203,14 @@ textarea {
     -webkit-box-sizing: border-box; /* removable at Andriod 4 */
        -moz-box-sizing: border-box;
             box-sizing: border-box;
+}
+.absolute {
+    position: absolute;
+    z-index: 200;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
 }
 .button {
     display: inline-block;
@@ -409,11 +418,12 @@ textarea {
 
 /* Handlers
 -------------------------------------------------- */
-.hide {
-    display: none;
+.visible {
+    visibility: visible;
 }
-.show {
-    display: block;
+.hidden {
+    visibility: hidden;
+    pointer-events: none;
 }
 .touchstart {
     opacity: .55;
@@ -573,8 +583,7 @@ textarea {
     2.3 - screen flash on scroll issue http://georgehess.com/post/2054803814/css-keyframe-animation-flicker
     2.3 - overflow issue on <a> elements
     2.3 - not supported flexbox updated syntax - use old and new syntax to support on all devices http://dev.w3.org/csswg/css3-flexbox/ http://css-tricks.com/old-flexbox-and-new-flexbox/
-    2.3 - unknown appearance of visibility: hidden on new DOM elements on scroll when using "-webkit-transform: translate3d(0,0,0);", "-webkit-backface-visibility: hidden;" or "-webkit-perspective: 1000;"
-    */
+    2.3 - unknown appearance of visibility: hidden on new DOM elements on scroll when using "-webkit-transform: translate3d(0,0,0);", "-webkit-backface-visibility: hidden;" or "-webkit-perspective: 1000;" */
     a, input, select, textarea {
         /* Remove outline and highlight-color from click-able elements on Android and iOS */
         -webkit-tap-highlight-color: rgba(0,0,0,0);
