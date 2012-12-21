@@ -23,7 +23,7 @@ if (version_compare(PHP_VERSION, '5.4.7', '<')) {
     $protocol = 'http:';
 }
 
-$assets   = !$debug && $issetcdn ? $protocol . '//' . CDN_PATH : $rootpath . '/images/';
+$assets   = !$debug && $issetcdn ? $protocol . '//' . CDN_PATH : $rootpath . '/assets/';
 
 
 
