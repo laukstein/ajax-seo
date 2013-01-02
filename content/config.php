@@ -38,6 +38,15 @@ if (in_array($_SERVER['REMOTE_ADDR'], $ip)) {
 
 
 
+// Common variables
+// --------------------------------------------------
+$scheme = $_SERVER['SERVER_PORT'] == 443 ? 'https' : 'http';
+$host   = $_SERVER['SERVER_NAME'];
+$path   = $_SERVER['REQUEST_URI'];
+$uri    = $scheme . '://' . $host . $path;
+
+
+
 // Add latest PHP functions
 // --------------------------------------------------
 if (version_compare(PHP_VERSION, '5.4', '<')) {
