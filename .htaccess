@@ -127,6 +127,9 @@ ErrorDocument 403 /ajax-seo/?url=error
         SetHandler application/x-httpd-php
     </FilesMatch>
 
+    # Prevent clickjacking
+    Header always append X-Frame-Options DENY
+
     Header unset ETag
 </IfModule>
 
