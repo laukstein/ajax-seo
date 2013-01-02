@@ -81,9 +81,7 @@ $meta_tags .= "\n<meta name=description content=\"$meta_description\">";
 $meta_tags .= "\n<meta property=og:description content=\"$meta_description\">";
 // Twitter Cards https://dev.twitter.com/docs/cards
 // $meta_tags .= "\n<meta property=twitter:card content=summary>"; // Twitterbot will crawl as default 'summary' when twitter:card is not set
-$https      = empty($_SERVER['HTTPS']) ? null : ($_SERVER['HTTPS'] == 'on') ? 's' : null;
-$fullurl    = 'http' . $https . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-$meta_tags .= "\n<meta property=og:url content=\"$fullurl\">";
+$meta_tags .= "\n<meta property=og:url content=\"$uri\">";
 
 // Declare the family friendly content http://schema.org/WebPage
 $meta_tags .= "\n<meta itemprop=isFamilyFriendly content=true>";
@@ -139,6 +137,7 @@ $assets_address = path('jquery.address.js');
 
 
 // Working on Cache Manifest
+// Chrome Application Cache manifest .appcache issue http://crbug.com/167918
 // <html itemscope itemtype=http://schema.org/WebPage manifest=manifest.appcache>
 
 echo "<!DOCTYPE html>
@@ -229,7 +228,7 @@ if(MYSQL_CON){
 
 echo "\n<script src=http://code.jquery.com/jquery-1.8.3.min.js></script>
 $assets_address
-<script>
+<script async>
 (function() {
     'use strict';
 
@@ -347,11 +346,11 @@ $assets_address
 })();\n\n\n";
 
 } else {
-    echo "\n<script>\n";
+    echo "\n<script async>\n";
 }
 
-echo "// Optimized Google Analytics snippet, http://mathiasbynens.be/notes/async-analytics-snippet
-var _gaq = [
+// Optimized Google Analytics snippet, http://mathiasbynens.be/notes/async-analytics-snippet
+echo "var _gaq = [
     ['_setAccount', 'UA-XXXXX-X'],
     ['_trackPageview']
 ];
@@ -359,7 +358,8 @@ var _gaq = [
     'use strict';
     var g = d.createElement(t),
         s = d.getElementsByTagName(t)[0];
-    g.src = '//www.google-analytics.com/ga.js';
+    g.src = '//www.google-analytics.com/ga.js',
+    g.async = true;
     s.parentNode.insertBefore(g, s);
 }(document, 'script'));
 </script>";
