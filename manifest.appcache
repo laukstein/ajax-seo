@@ -23,10 +23,7 @@ include 'content/connect.php';
 
 header('Content-Type: text/cache-manifest; charset=utf-8');
 
-
-
 echo 'CACHE MANIFEST';
-
 
 
 // Recent version
@@ -66,17 +63,17 @@ if (MYSQL_CON) {
 
 // Assets development and production minified version.
 if ($debug) {
-    $path_css = $assets.'/images/style.css';
-    $path_js  = $assets.'/images/jquery.address.js';
+    $path_css = $assets . 'style.css';
+    $path_js  = $assets . 'jquery.address.js';
 } else {
-    $path_css = $assets.'/images/style.min.css';
-    $path_js  = $assets.'/images/jquery.address.min.js';
+    $path_css = $assets . 'style.min.css';
+    $path_js  = $assets . 'jquery.address.min.js';
 }
 echo "\n$path_css";
 echo "\n$path_js";
-echo "\n$assets/images/jquery-1.8.2.min.js";
+echo "\nhttp://code.jquery.com/jquery-1.8.3.min.js";
 
-// Resources that require the user to be online.
-// NETWORK:
+// Resources that requires user to be online
+echo "\n\nNETWORK:\n//www.google-analytics.com/ga.js";
 
 // FALLBACK:
