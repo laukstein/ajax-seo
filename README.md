@@ -35,7 +35,7 @@ The source code is build on latest Web technology, HTML Living Standard - HTML5,
 ## Speed performance
 
 * Performance tuning on Apache, PHP, MySQL
-* Protocol-relative URL, <http://paulirish.com/2010/the-protocol-relative-url/>
+* Relative URL, [RFC 3986](http://tools.ietf.org/html/rfc3986#section-4.2)
 * [jsPerf](http://jsperf.com/jquery-ajax-jsonp-timeout-performormance) `jQuery $.ajax() timeout` vs `window.setTimeout()`
 * [jsPerf](http://jsperf.com/ajax-jsonp-vs-ajax-json) `AJAX JSONP` vs `AJAX JSON`
 * [jsPerf](http://jsperf.com/getjson-vs-ajax-json) `$.ajax() json` vs `$.getJSON()`
