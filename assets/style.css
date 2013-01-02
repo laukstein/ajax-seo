@@ -14,6 +14,17 @@ http://screwlewse.com/2010/08/different-css-techniques-and-their-performance/ */
 
 /* Standards
 -------------------------------------------------- */
+::selection {
+    color: #fff;
+    text-shadow: none;
+    background-color: #8f8f8f;
+}
+
+/* Hide the outline http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#element-level-focus-apis http://outlinenone.com */
+:link:focus, :visited:focus {
+    outline: none;
+}
+
 html, body {
     height: 100%;
 }
@@ -37,14 +48,6 @@ body, input, textarea {
 
     line-height: 1.5;
     font-family: sans-serif;
-}
-::selection {
-    color: #fff;
-    text-shadow: none;
-    background-color: #8f8f8f;
-}
-:focus {
-    outline: 0;
 }
 body, h1, h2, h3, h4, ul, ol, dl, dd, blockquote, figure, select, input, textarea {
     margin: auto;
@@ -270,8 +273,8 @@ textarea {
     display: inline-block;
     zoom: 1;
     position: relative;
-    display:    -moz-box; /* Flexbox outdated syntax */
-    -moz-box-pack: justify; /* Flexbox outdated syntax */
+    display:    -moz-box; /* Flexbox outdated syntax, removable at Firefox 20 */
+    -moz-box-pack: justify; /* Flexbox outdated syntax, removable at Firefox 20 */
     display: -webkit-flex;
     display:         flex;
     -webkit-flex-direction: row;
@@ -300,7 +303,7 @@ textarea {
     overflow: hidden;
     display: inline-block;
     -webkit-flex: 1;
-    -moz-box-flex: 1; /* Flexbox outdated syntax */
+    -moz-box-flex: 1; /* Flexbox outdated syntax, removable at Firefox 20 */
             flex: 1;
     min-width: 0; /* Implied Minimum Size of Flex Items http://dev.w3.org/csswg/css3-flexbox/#min-size-auto */
     padding-right: 15px;
@@ -469,8 +472,8 @@ textarea {
     .list-nav {
         width: 100%;
         -webkit-flex-direction: column;
-        -moz-box-orient: vertical;  /* Flexbox outdated syntax */
-           -moz-flex-direction: column;
+        -moz-box-orient: vertical;  /* Flexbox outdated syntax, removable at Firefox 20 */
+           -moz-flex-direction: column;  /* removable at Firefox 20 */
                 flex-direction: column;
         height: auto;
         border-left: 1px solid #ddd;
