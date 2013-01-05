@@ -62,11 +62,14 @@ ErrorDocument 403 /ajax-seo/?url=error
             SetEnvIfNoCase ^(Accept-EncodXng|X-cept-Encoding|X{15}|~{15}|-{15})$ ^((gzip|deflate)\s*,?\s*)+|[X~-]{4,13}$ HAVE_Accept-Encoding
             RequestHeader append Accept-Encoding "gzip,deflate" env=HAVE_Accept-Encoding
 
+            # Force IE to render in the most recent mode http://expression.microsoft.com/en-us/dd835379.aspx
+            # and run Google Chrome Frame http://www.chromium.org/developers/how-tos/chrome-frame-getting-started#TOC-Making-Your-Pages-Work-With-Google-Chrome-Frame
             BrowserMatch MSIE ie
-            # Force IE to render in the most recent mode http://expression.microsoft.com/en-us/dd835379.aspx and run Google Chrome Frame http://www.chromium.org/developers/how-tos/chrome-frame-getting-started#TOC-Making-Your-Pages-Work-With-Google-Chrome-Frame
             Header set X-UA-Compatible "IE=edge,chrome=1" env=ie
-            # Remove cross-site scripting attacks on IE8 and above http://technet.microsoft.com/en-us/security/bulletin/MS10-002#section6
-            Header set X-XSS-Protection "1; mode=block" env=ie
+
+            # Remove cross-site scripting attacks on IE8 and IE9 http://technet.microsoft.com/en-us/security/bulletin/MS10-002#section6
+            BrowserMatch "MSIE [8-9]" ie89
+            Header set X-XSS-Protection "1; mode=block" env=ie89
         </IfModule>
     </IfModule>
     <IfModule mod_filter.c>
