@@ -21,8 +21,8 @@ The source code is build on latest Web technology, HTML Living Standard - HTML5,
 
 * Schema.org Microdata markup
 * HTML5 history API with crawlable SEO fallback for < IE10
-* AJAX crawling scheme with Apache Rewrite, <https://developers.google.com/webmasters/ajax-crawling/docs/getting-started>
-* Rewrite www to no-www domain, <http://no-www.org>
+* AJAX crawling scheme with Apache Rewrite <https://developers.google.com/webmasters/ajax-crawling/docs/getting-started>
+* Rewrite www to no-www domain <http://no-www.org>
 * Handle HTTP/HTTPS protocol
 * Slash and backslash issues
 * Rewrite uppercase URLs to lowercase
@@ -35,7 +35,7 @@ The source code is build on latest Web technology, HTML Living Standard - HTML5,
 ## Speed performance
 
 * Performance tuning on Apache, PHP, MySQL
-* Relative URL, [RFC 3986](http://tools.ietf.org/html/rfc3986#section-4.2)
+* Relative URL [RFC 3986](http://tools.ietf.org/html/rfc3986#section-4.2)
 * [jsPerf](http://jsperf.com/jquery-ajax-jsonp-timeout-performormance) `jQuery $.ajax() timeout` vs `window.setTimeout()`
 * [jsPerf](http://jsperf.com/ajax-jsonp-vs-ajax-json) `AJAX JSONP` vs `AJAX JSON`
 * [jsPerf](http://jsperf.com/getjson-vs-ajax-json) `$.ajax() json` vs `$.getJSON()`
