@@ -72,47 +72,50 @@ $installation       = isset($installation) ? $installation : null;
 
 
 // 160 character title http://blogs.msdn.com/b/ie/archive/2012/05/14/sharing-links-from-ie10-on-windows-8.aspx
-$meta_tags  = "<title>$pagetitle</title>";
+$metadata  = "<title>$pagetitle</title>";
 
 // Open Graph protocol http://ogp.me
-$meta_tags .= "\n<meta property=og:title content=\"$pagetitle\">";
+$metadata .= "\n<meta property=og:title content=\"$pagetitle\">";
 // 253 character description http://blogs.msdn.com/b/ie/archive/2012/05/14/sharing-links-from-ie10-on-windows-8.aspx
-$meta_tags .= "\n<meta name=description content=\"$meta_description\">";
-$meta_tags .= "\n<meta property=og:description content=\"$meta_description\">";
+$metadata .= "\n<meta name=description content=\"$meta_description\">";
+$metadata .= "\n<meta property=og:description content=\"$meta_description\">";
 // Twitter Cards https://dev.twitter.com/docs/cards
-// $meta_tags .= "\n<meta property=twitter:card content=summary>"; // Twitterbot will crawl as default 'summary' when twitter:card is not set
-$meta_tags .= "\n<meta property=og:url content=\"$uri\">";
+// $metadata .= "\n<meta property=twitter:card content=summary>"; // Twitterbot will crawl as default 'summary' when twitter:card is not set
+$metadata .= "\n<meta property=og:url content=\"$uri\">";
 
 // Declare the family friendly content http://schema.org/WebPage
-$meta_tags .= "\n<meta itemprop=isFamilyFriendly content=true>";
+$metadata .= "\n<meta itemprop=isFamilyFriendly content=true>";
 
 // Opt-out of pinning by Pinterest, save copyrights and avoid SEO impact http://pinterest.com/about/help/#linking_faqs
 // Return the meta tag just for Pinterest, since W3C validator will return it as a unregistered specification.
 if (stripos($_SERVER['HTTP_USER_AGENT'], 'Pinterest') !== false) {
-    $meta_tags .= "\n<meta name=pinterest content=nopin>";
+    $metadata .= "\n<meta name=pinterest content=nopin>";
 }
 
 // Perform speed and security on removing referrer-header-value http://wiki.whatwg.org/wiki/Meta_referrer
-$meta_tags .= "\n<meta name=referrer content=never>";
+$metadata .= "\n<meta name=referrer content=never>";
 
 // Optimize mobile device viewport and return the same pixel density like on desktop
 // 2012-06-13 Dropped target-densityDpi and its translated CSS property resolution http://lists.w3.org/Archives/Public/www-style/2012Jun/0283.html, http://trac.webkit.org/changeset/119527
-$meta_tags .= "\n<meta name=viewport content=\"width=device-width, user-scalable=0\">";
+$metadata .= "\n<meta name=viewport content=\"width=device-width, user-scalable=0\">";
 
 // Authorship in Google Search http://support.google.com/webmasters/bin/answer.py?hl=en&answer=1408986
-//$meta_tags .= "\n<link rel=author href=https://plus.google.com/000000000000000000000/posts>";
+//$metadata .= "\n<link rel=author href=https://plus.google.com/000000000000000000000/posts>";
 
 // Save page loading time with DNS prefetching https://github.com/h5bp/html5-boilerplate/blob/master/doc/extend.md#dns-prefetching
 // Prefetch own CDN
 if (!$debug && $issetcdn) {
-    $meta_tags .= "\n<link rel=dns-prefetch href=" . parse_url($assets, PHP_URL_HOST) . '>';
+    $metadata .= "\n<link rel=dns-prefetch href=" . parse_url($assets, PHP_URL_HOST) . '>';
 }
 // Prefetch EdgeCast's CDN
-$meta_tags .= "\n<link rel=dns-prefetch href=http://code.jquery.com>";
+$metadata .= "\n<link rel=dns-prefetch href=http://code.jquery.com>";
 // Prefetch Google CDN
-// $meta_tags .= "\n<link rel=dns-prefetch href=//ajax.googleapis.com>";
+// $metadata .= "\n<link rel=dns-prefetch href=//ajax.googleapis.com>";
 // Prefetch Google Analytics
-$meta_tags .= "\n<link rel=dns-prefetch href=//www.google-analytics.com>";
+$metadata .= "\n<link rel=dns-prefetch href=//www.google-analytics.com>";
+
+// Website copyright license
+$metadata .= "\n<link rel=license href=//creativecommons.org/licenses/by/3.0/>";
 
 
 // Assets development and production minified versions
@@ -144,7 +147,7 @@ echo "<!DOCTYPE html>
 <html itemscope itemtype=http://schema.org/WebPage>
 <head>
 <meta charset=UTF-8>
-$meta_tags
+$metadata
 $assets_style
 <!--[if lt IE 9]><script src=//html5shiv.googlecode.com/svn/trunk/html5.js></script><![endif]-->
 </head>
