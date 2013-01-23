@@ -21,7 +21,7 @@ http://screwlewse.com/2010/08/different-css-techniques-and-their-performance/ */
 }
 
 /* Hide the outline http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#element-level-focus-apis http://outlinenone.com */
-:link:focus, :visited:focus {
+:link:focus, :visited:focus, input:focus {
     outline: none;
 }
 
@@ -94,7 +94,6 @@ a {
     color: #2d76b9;
     text-decoration: none;
     cursor: default;
-    outline: 0;
 }
 a:hover, a:focus {
     color: #2f6291;
