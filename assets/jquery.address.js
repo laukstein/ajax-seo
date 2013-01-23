@@ -2,20 +2,13 @@
  * jQuery Address Plugin v${version}
  * http://www.asual.com/jquery/address/
  *
- * Copyright (c) 2009-2010 Rostislav Hristov
+ * Copyright (c) 2009-2013 Rostislav Hristov
  * Dual licensed under the MIT or GPL Version 2 licenses.
  * http://jquery.org/license
  *
  * Date: ${timestamp}
  */
 (function ($) {
-
-    // Mobile device pointer event (click replacement with touchstart, removes 300ms of click delay)
-    // --------------------------------------------------
-    var pointer = 'click'; // Cross-device pointer event
-    if ((/iPhone|iPod|iPad|Android|BlackBerry/).test(navigator.userAgent)) {
-        pointer = 'touchstart';
-    }
 
     $.address = (function () {
 
@@ -61,7 +54,7 @@
             },
             _hrefHash = function() {
                 var index = _l.href.indexOf('#');
-                return index != -1 ? _crawl(_l.href.substr(index + 1), FALSE) : '';
+                return index != -1 ? _l.href.substr(index + 1) : '';
             },
             _href = function() {
                 return _supportsState() ? _hrefState() : _hrefHash();
@@ -80,17 +73,9 @@
                 value = value.toString();
                 return (_opts.strict && value.substr(0, 1) != '/' ? '/' : '') + value;
             },
-            _crawl = function(value, direction) {
-                if (_opts.crawlable && direction) {
-                    return (value !== '' ? '!' : '') + value;
-                }
-                return value.replace(/^\!/, '');
-            },
             _cssint = function(el, value) {
                 return parseInt(el.css(value), 10);
             },
-
-            // Hash Change Callback
             _listen = function() {
                 if (!_silent) {
                     var hash = _href(),
@@ -109,36 +94,31 @@
                     }
                 }
             },
-
             _update = function(internal) {
                 var changeEv = _trigger(CHANGE),
                     xChangeEv = _trigger(internal ? INTERNAL_CHANGE : EXTERNAL_CHANGE);
-
                 _st(_track, 10);
-
-                if (changeEv.isDefaultPrevented() || xChangeEv.isDefaultPrevented()){
-                  _preventDefault();
+                if (changeEv.isDefaultPrevented() || xChangeEv.isDefaultPrevented()) {
+                    _preventDefault();
                 }
             },
-
-            _preventDefault = function(){
+            _preventDefault = function() {
               _value = _old;
-
               if (_supportsState()) {
                   _h.popState({}, '', _opts.state.replace(/\/$/, '') + (_value === '' ? '/' : _value));
               } else {
                   _silent = TRUE;
                   if (_webkit) {
                       if (_opts.history) {
-                          _l.hash = '#' + _crawl(_value, TRUE);
+                          _l.hash = '#' + _value;
                       } else {
-                          _l.replace('#' + _crawl(_value, TRUE));
+                          _l.replace('#' + _value);
                       }
                   } else if (_value != _href()) {
                       if (_opts.history) {
-                          _l.hash = '#' + _crawl(_value, TRUE);
+                          _l.hash = '#' + _value;
                       } else {
-                          _l.replace('#' + _crawl(_value, TRUE));
+                          _l.replace('#' + _value);
                       }
                   }
                   if ((_msie && !_hashchange) && _opts.history) {
@@ -150,9 +130,7 @@
                       _silent = FALSE;
                   }
               }
-
             },
-
             _track = function() {
                 if (_opts.tracker !== 'null' && _opts.tracker !== NULL) {
                     var fn = $.isFunction(_opts.tracker) ? _opts.tracker : _t[_opts.tracker],
@@ -186,7 +164,7 @@
                     var i, param, params = _url.substr(_qi + 1).split('&');
                     for (i = 0; i < params.length; i++) {
                         param = params[i].split('=');
-                        if (/^(autoUpdate|crawlable|history|strict|wrap)$/.test(param[0])) {
+                        if (/^(autoUpdate|history|strict|wrap)$/.test(param[0])) {
                             _opts[param[0]] = (isNaN(param[1]) ? /^(true|yes)$/i.test(param[1]) : (parseInt(param[1], 10) !== 0));
                         }
                         if (/^(state|tracker)$/.test(param[0])) {
@@ -202,11 +180,11 @@
                 if (!_loaded) {
                     _loaded = TRUE;
                     _options();
-                    var complete = function() {
+                    var body = $('body'),
+                        complete = function() {
                             _enable.call(this);
-                            _unescape.call(this);
-                        },
-                        body = $('body').ajaxComplete(complete);
+                        };
+                    $(document).ajaxComplete(complete);
                     complete();
                     if (_opts.wrap) {
                         var wrap = $('body > *')
@@ -253,7 +231,7 @@
                                 _value = win[ID] !== UNDEFINED ? win[ID] : '';
                                 if (_value != _href()) {
                                     _update(FALSE);
-                                    _l.hash = _crawl(_value, TRUE);
+                                    _l.hash = _value;
                                 }
                             });
                             if (_frame.contentWindow[ID] === UNDEFINED) {
@@ -313,20 +291,32 @@
                     _t.detachEvent('on' + HASH_CHANGE, _listen);
                 }
             },
-            _unescape = function() {
-                if (_opts.crawlable) {
-                    var base = _l.pathname.replace(/\/$/, ''),
-                        fragment = '_escaped_fragment_';
-                    if ($('body').html().indexOf(fragment) != -1) {
-                        $('a[href]:not([href^=http]), a[href*="' + document.domain + '"]').each(function() {
-                            var href = $(this).attr('href').replace(/^http:/, '').replace(new RegExp(base + '/?$'), '');
-                            if (href === '' || href.indexOf(fragment) != -1) {
-                                $(this).attr('href', '#' + encodeURI(decodeURIComponent(href.replace(new RegExp('/(.*)\\?' +
-                                    fragment + '=(.*)$'), '!$2'))));
-                            }
-                        });
-                    }
+            _uaMatch = function(ua) {
+                ua = ua.toLowerCase();
+                var match = /(chrome)[ \/]([\w.]+)/.exec( ua ) ||
+                    /(webkit)[ \/]([\w.]+)/.exec( ua ) ||
+                    /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
+                    /(msie) ([\w.]+)/.exec( ua ) ||
+                    ua.indexOf('compatible') < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) ||
+                    [];
+                return {
+                    browser: match[ 1 ] || '',
+                    version: match[ 2 ] || '0'
+                };
+            },
+            _detectBrowser = function() {
+                var browser = {},
+                    matched = _uaMatch(navigator.userAgent);
+                if (matched.browser) {
+                    browser[matched.browser] = true;
+                    browser.version = matched.version;
                 }
+                if (browser.chrome) {
+                    browser.webkit = true;
+                } else if (browser.webkit) {
+                    browser.safari = true;
+                }
+                return browser;
             },
             UNDEFINED,
             NULL = null,
@@ -341,15 +331,14 @@
             FALSE = false,
             _opts = {
                 autoUpdate: TRUE,
-                crawlable: FALSE,
                 history: TRUE,
                 strict: TRUE,
                 wrap: FALSE
             },
-            _browser = $.browser,
+            _browser = _detectBrowser(),
             _version = parseFloat(_browser.version),
-            _msie = !$.support.opacity,
             _webkit = _browser.webkit || _browser.safari,
+            _msie = !$.support.opacity,
             _t = _window(),
             _d = _t.document,
             _h = _t.history,
@@ -440,13 +429,6 @@
                 }
                 return _opts.autoUpdate;
             },
-            crawlable: function(value) {
-                if (value !== UNDEFINED) {
-                    _opts.crawlable = value;
-                    return this;
-                }
-                return _opts.crawlable;
-            },
             history: function(value) {
                 if (value !== UNDEFINED) {
                     _opts.history = value;
@@ -533,15 +515,15 @@
                             _silent = TRUE;
                             if (_webkit) {
                                 if (_opts.history) {
-                                    _l.hash = '#' + _crawl(_value, TRUE);
+                                    _l.hash = '#' + _value;
                                 } else {
-                                    _l.replace('#' + _crawl(_value, TRUE));
+                                    _l.replace('#' + _value);
                                 }
                             } else if (_value != _href()) {
                                 if (_opts.history) {
-                                    _l.hash = '#' + _crawl(_value, TRUE);
+                                    _l.hash = '#' + _value;
                                 } else {
-                                    _l.replace('#' + _crawl(_value, TRUE));
+                                    _l.replace('#' + _value);
                                 }
                             }
                             if ((_msie && !_hashchange) && _opts.history) {
@@ -664,22 +646,22 @@
                 if (e.shiftKey || e.ctrlKey || e.metaKey || e.which == 2) {
                     return true;
                 }
-                if ($(this).is('a')) {
+                if ($(e.target).is('a')) {
                     e.preventDefault();
-                    var value = fn ? fn.call(this) :
-                        /address:/.test($(this).attr('rel')) ? $(this).attr('rel').split('address:')[1].split(' ')[0] :
+                    var value = fn ? fn.call(e.target) :
+                        /address:/.test($(e.target).attr('rel')) ? $(e.target).attr('rel').split('address:')[1].split(' ')[0] :
                         $.address.state() !== undefined && !/^\/?$/.test($.address.state()) ?
-                                $(this).attr('href').replace(new RegExp('^(.*' + $.address.state() + '|\\.)'), '') :
-                                $(this).attr('href').replace(/^(#\!?|\.)/, '');
+                                $(e.target).attr('href').replace(new RegExp('^(.*' + $.address.state() + '|\\.)'), '') :
+                                $(e.target).attr('href').replace(/^(#\!?|\.)/, '');
                     $.address.value(value);
                 }
             };
-            $(sel ? sel : this).on(pointer, f).on('submit', function(e) {
-                if ($(this).is('form')) {
+            $(document).on('click', sel ? sel : this.selector, f).on('submit', sel ? sel : this.selector, function(e) {
+                if ($(e.target).is('form')) {
                     e.preventDefault();
-                    var action = $(this).attr('action'),
-                        value = fn ? fn.call(this) : (action.indexOf('?') != -1 ? action.replace(/&$/, '') : action + '?') +
-                            $(this).serialize();
+                    var action = $(e.target).attr('action'),
+                        value = fn ? fn.call(e.target) : (action.indexOf('?') != -1 ? action.replace(/&$/, '') : action + '?') +
+                            $(e.target).serialize();
                     $.address.value(value);
                 }
             }).attr('address', true);

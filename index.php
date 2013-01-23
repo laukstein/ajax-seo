@@ -227,9 +227,9 @@ echo '    </div>
 if(MYSQL_CON){
 
 // code.jquery.com EdgeCast's CDN has the best performance http://royal.pingdom.com/2012/07/24/best-cdn-for-jquery-in-2012/
-// In case you use HTTPS replace it with Google CDN //ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js
+// In case you use HTTPS replace it with Google CDN //ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js
 
-echo "\n<script src=http://code.jquery.com/jquery-1.8.3.min.js></script>
+echo "\n<script src=http://code.jquery.com/jquery-1.9.0.min.js></script>
 $assets_address
 <script async>
 (function() {
@@ -284,12 +284,13 @@ $assets_address
 
     // Mobile device pointer event (click replacement with touchstart, removes 300ms of click delay)
     // --------------------------------------------------
+    // Usage: $(selector).on(pointer, (function() { });
     if ((/iPhone|iPod|iPad|Android|BlackBerry/).test(navigator.userAgent)) {
         pointer = 'touchstart';
     }
 
 
-    $.address.tracker(function() {}).crawlable(1).state('$rootpath').init(function() {
+    $.address.tracker(function() {}).state('$rootpath').init(function() {
         // Initialize jQuery Address
         nav.address();
     }).change(function(e) {
