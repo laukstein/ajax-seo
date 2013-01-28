@@ -1,38 +1,26 @@
-/*
- * jQuery Address Plugin v${version}
- * http://www.asual.com/jquery/address/
- *
- * Copyright (c) 2009-2013 Rostislav Hristov
- * Dual licensed under the MIT or GPL Version 2 licenses.
- * http://jquery.org/license
- *
- * Date: ${timestamp}
- */
+/*! jQuery Address v${version} | (c) 2009, 2013 Rostislav Hristov | jquery.org/license */
 (function ($) {
 
     $.address = (function () {
 
         var _trigger = function(name) {
-               var ev = $.extend($.Event(name),
-                 (function() {
-                            var parameters = {},
-                                parameterNames = $.address.parameterNames();
-                            for (var i = 0, l = parameterNames.length; i < l; i++) {
-                                parameters[parameterNames[i]] = $.address.parameter(parameterNames[i]);
-                            }
-                            return {
-                                value: $.address.value(),
-                                path: $.address.path(),
-                                pathNames: $.address.pathNames(),
-                                parameterNames: parameterNames,
-                                parameters: parameters,
-                                queryString: $.address.queryString()
-                            };
-                        }).call($.address)
-                    );
-
-               $($.address).trigger(ev);
-               return ev;
+               var e = $.extend($.Event(name), (function() {
+                    var parameters = {},
+                        parameterNames = $.address.parameterNames();
+                    for (var i = 0, l = parameterNames.length; i < l; i++) {
+                        parameters[parameterNames[i]] = $.address.parameter(parameterNames[i]);
+                    }
+                    return {
+                        value: $.address.value(),
+                        path: $.address.path(),
+                        pathNames: $.address.pathNames(),
+                        parameterNames: parameterNames,
+                        parameters: parameters,
+                        queryString: $.address.queryString()
+                    };
+                }).call($.address));
+                $($.address).trigger(e);
+                return e;
             },
             _array = function(obj) {
                 return Array.prototype.slice.call(obj);
@@ -87,7 +75,6 @@
                             if (_msie && !_hashchange && _opts.history) {
                                 _st(_html, 50);
                             }
-                            _old = _value;
                             _value = hash;
                             _update(FALSE);
                         }
@@ -95,41 +82,9 @@
                 }
             },
             _update = function(internal) {
-                var changeEv = _trigger(CHANGE),
-                    xChangeEv = _trigger(internal ? INTERNAL_CHANGE : EXTERNAL_CHANGE);
                 _st(_track, 10);
-                if (changeEv.isDefaultPrevented() || xChangeEv.isDefaultPrevented()) {
-                    _preventDefault();
-                }
-            },
-            _preventDefault = function() {
-              _value = _old;
-              if (_supportsState()) {
-                  _h.popState({}, '', _opts.state.replace(/\/$/, '') + (_value === '' ? '/' : _value));
-              } else {
-                  _silent = TRUE;
-                  if (_webkit) {
-                      if (_opts.history) {
-                          _l.hash = '#' + _value;
-                      } else {
-                          _l.replace('#' + _value);
-                      }
-                  } else if (_value != _href()) {
-                      if (_opts.history) {
-                          _l.hash = '#' + _value;
-                      } else {
-                          _l.replace('#' + _value);
-                      }
-                  }
-                  if ((_msie && !_hashchange) && _opts.history) {
-                      _st(_html, 50);
-                  }
-                  if (_webkit) {
-                      _st(function(){ _silent = FALSE; }, 1);
-                  } else {
-                      _silent = FALSE;
-                  }
-              }
+                return _trigger(CHANGE).isDefaultPrevented() ||
+                    _trigger(internal ? INTERNAL_CHANGE : EXTERNAL_CHANGE).isDefaultPrevented();
             },
             _track = function() {
                 if (_opts.tracker !== 'null' && _opts.tracker !== NULL) {
@@ -173,29 +128,24 @@
                     }
                     _url = NULL;
                 }
-                _old = _value;
                 _value = _href();
             },
             _load = function() {
                 if (!_loaded) {
                     _loaded = TRUE;
                     _options();
-                    var body = $('body'),
-                        complete = function() {
-                            _enable.call(this);
-                        };
-                    $(document).ajaxComplete(complete);
-                    complete();
+                    $('a[rel*="address:"]').address();
                     if (_opts.wrap) {
-                        var wrap = $('body > *')
-                            .wrapAll('<div style="padding:' +
-                                (_cssint(body, 'marginTop') + _cssint(body, 'paddingTop')) + 'px ' +
-                                (_cssint(body, 'marginRight') + _cssint(body, 'paddingRight')) + 'px ' +
-                                (_cssint(body, 'marginBottom') + _cssint(body, 'paddingBottom')) + 'px ' +
-                                (_cssint(body, 'marginLeft') + _cssint(body, 'paddingLeft')) + 'px;" />')
-                            .parent()
-                            .wrap('<div id="' + ID + '" style="height:100%;overflow:auto;position:relative;' +
-                                (_webkit && !window.statusbar.visible ? 'resize:both;' : '') + '" />');
+                        var body = $('body'),
+                            wrap = $('body > *')
+                                .wrapAll('<div style="padding:' +
+                                    (_cssint(body, 'marginTop') + _cssint(body, 'paddingTop')) + 'px ' +
+                                    (_cssint(body, 'marginRight') + _cssint(body, 'paddingRight')) + 'px ' +
+                                    (_cssint(body, 'marginBottom') + _cssint(body, 'paddingBottom')) + 'px ' +
+                                    (_cssint(body, 'marginLeft') + _cssint(body, 'paddingLeft')) + 'px;" />')
+                                .parent()
+                                .wrap('<div id="' + ID + '" style="height:100%;overflow:auto;position:relative;' +
+                                    (_webkit && !window.statusbar.visible ? 'resize:both;' : '') + '" />');
                         $('html, body')
                             .css({
                                 height: '100%',
@@ -227,7 +177,6 @@
                         _st(function() {
                             $(_frame).on('load', function() {
                                 var win = _frame.contentWindow;
-                                _old = _value;
                                 _value = win[ID] !== UNDEFINED ? win[ID] : '';
                                 if (_value != _href()) {
                                     _update(FALSE);
@@ -259,27 +208,8 @@
                     }
                 }
             },
-            _enable = function() {
-                var el,
-                    elements = $('a'),
-                    length = elements.size(),
-                    delay = 1,
-                    index = -1,
-                    sel = '[rel*="address:"]',
-                    fn = function() {
-                        if (++index != length) {
-                            el = $(elements.get(index));
-                            if (el.is(sel)) {
-                                el.address(sel);
-                            }
-                            _st(fn, delay);
-                        }
-                    };
-                _st(fn, delay);
-            },
             _popstate = function() {
                 if (decodeURI(_value) != decodeURI(_href())) {
-                    _old = _value;
                     _value = _href();
                     _update(FALSE);
                 }
@@ -359,7 +289,6 @@
             _updating = FALSE,
             _listeners = {},
             _value = _href();
-            _old = _value;
 
         if (_msie) {
             _version = parseFloat(_agent.substr(_agent.indexOf('MSIE') + 4));
@@ -504,10 +433,11 @@
                     if (_value == value && !_updating) {
                         return;
                     }
-                    _old = _value;
                     _value = value;
                     if (_opts.autoUpdate || _updating) {
-                        _update(TRUE);
+                        if (_update(TRUE)) {
+                            return this;
+                        }
                         if (_supportsState()) {
                             _h[_opts.history ? 'pushState' : 'replaceState']({}, '',
                                     _opts.state.replace(/\/$/, '') + (_value === '' ? '/' : _value));
@@ -636,35 +566,31 @@
     })();
 
     $.fn.address = function(fn) {
-        var sel;
-        if (typeof fn == 'string') {
-            sel = fn;
-            fn = undefined;
-        }
-        if (!$(this).attr('address')) {
-            var f = function(e) {
+        if (!this.data('address')) {
+            this.on('click', function(e) {
                 if (e.shiftKey || e.ctrlKey || e.metaKey || e.which == 2) {
                     return true;
                 }
-                if ($(e.target).is('a')) {
+                var target = e.currentTarget;
+                if ($(target).is('a')) {
                     e.preventDefault();
-                    var value = fn ? fn.call(e.target) :
-                        /address:/.test($(e.target).attr('rel')) ? $(e.target).attr('rel').split('address:')[1].split(' ')[0] :
+                    var value = fn ? fn.call(target) :
+                        /address:/.test($(target).attr('rel')) ? $(target).attr('rel').split('address:')[1].split(' ')[0] :
                         $.address.state() !== undefined && !/^\/?$/.test($.address.state()) ?
-                                $(e.target).attr('href').replace(new RegExp('^(.*' + $.address.state() + '|\\.)'), '') :
-                                $(e.target).attr('href').replace(/^(#\!?|\.)/, '');
+                                $(target).attr('href').replace(new RegExp('^(.*' + $.address.state() + '|\\.)'), '') :
+                                $(target).attr('href').replace(/^(#\!?|\.)/, '');
                     $.address.value(value);
                 }
-            };
-            $(document).on('click', sel ? sel : this.selector, f).on('submit', sel ? sel : this.selector, function(e) {
-                if ($(e.target).is('form')) {
+            }).on('submit', function(e) {
+                var target = e.currentTarget;
+                if ($(target).is('form')) {
                     e.preventDefault();
-                    var action = $(e.target).attr('action'),
-                        value = fn ? fn.call(e.target) : (action.indexOf('?') != -1 ? action.replace(/&$/, '') : action + '?') +
-                            $(e.target).serialize();
+                    var action = $(target).attr('action'),
+                        value = fn ? fn.call(target) : (action.indexOf('?') != -1 ? action.replace(/&$/, '') : action + '?') +
+                            $(target).serialize();
                     $.address.value(value);
                 }
-            }).attr('address', true);
+            }).data('address', true);
         }
         return this;
     };
