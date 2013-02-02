@@ -1,4 +1,4 @@
-/*! jQuery Address v${version} | (c) 2009, 2013 Rostislav Hristov | jquery.org/license */
+/*! Modified jQuery Address | (c) 2013 Rostislav Hristov | jquery.org/license */
 (function ($) {
 
     $.address = (function () {
@@ -38,11 +38,11 @@
             },
             _hrefState = function() {
                 return ('/' + _l.pathname.replace(new RegExp(_opts.state), '') +
-                    _l.search + (_hrefHash() ? '#' + _hrefHash() : '')).replace(_re, '/');
+                    _l.search + (_hrefHash() ? '#!' + _hrefHash() : '')).replace(_re, '/');
             },
             _hrefHash = function() {
-                var index = _l.href.indexOf('#');
-                return index != -1 ? _l.href.substr(index + 1) : '';
+                var index = _l.href.indexOf('#!');
+                return index != -1 ? _crawl(_l.href.substr(index + 1), FALSE) : '';
             },
             _href = function() {
                 return _supportsState() ? _hrefState() : _hrefHash();
@@ -60,6 +60,12 @@
             _strict = function(value) {
                 value = value.toString();
                 return (_opts.strict && value.substr(0, 1) != '/' ? '/' : '') + value;
+            },
+            _crawl = function(value, direction) {
+                if (_opts.crawlable && direction) {
+                    return (value !== '' ? '!' : '') + value;
+                }
+                return value.replace(/^\!/, '');
             },
             _cssint = function(el, value) {
                 return parseInt(el.css(value), 10);
@@ -119,7 +125,7 @@
                     var i, param, params = _url.substr(_qi + 1).split('&');
                     for (i = 0; i < params.length; i++) {
                         param = params[i].split('=');
-                        if (/^(autoUpdate|history|strict|wrap)$/.test(param[0])) {
+                        if (/^(autoUpdate|crawlable|history|strict|wrap)$/.test(param[0])) {
                             _opts[param[0]] = (isNaN(param[1]) ? /^(true|yes)$/i.test(param[1]) : (parseInt(param[1], 10) !== 0));
                         }
                         if (/^(state|tracker)$/.test(param[0])) {
@@ -180,7 +186,7 @@
                                 _value = win[ID] !== UNDEFINED ? win[ID] : '';
                                 if (_value != _href()) {
                                     _update(FALSE);
-                                    _l.hash = _value;
+                                    _l.hash = _crawl(_value, TRUE);
                                 }
                             });
                             if (_frame.contentWindow[ID] === UNDEFINED) {
@@ -261,6 +267,7 @@
             FALSE = false,
             _opts = {
                 autoUpdate: TRUE,
+                crawlable: TRUE,
                 history: TRUE,
                 strict: TRUE,
                 wrap: FALSE
@@ -358,6 +365,13 @@
                 }
                 return _opts.autoUpdate;
             },
+            crawlable: function(value) {
+                if (value.length !== UNDEFINED) {
+                    _opts.crawlable = value;
+                    return this;
+                }
+                return _opts.crawlable;
+            },
             history: function(value) {
                 if (value !== UNDEFINED) {
                     _opts.history = value;
@@ -371,12 +385,12 @@
                     var hrefState = _hrefState();
                     if (_opts.state !== UNDEFINED) {
                         if (_h.pushState) {
-                            if (hrefState.substr(0, 3) == '/#/') {
+                            if (hrefState.substr(0, 3) == '/#!/') {
                                 _l.replace(_opts.state.replace(/^\/$/, '') + hrefState.substr(2));
                             }
-                        } else if (hrefState != '/' && hrefState.replace(/^\/#/, '') != _hrefHash()) {
+                        } else if (hrefState != '/' && hrefState.replace(/^\/#!/, '') != _hrefHash()) {
                             _st(function() {
-                                _l.replace(_opts.state.replace(/^\/$/, '') + '/#' + hrefState);
+                                _l.replace(_opts.state.replace(/^\/$/, '') + '/#!' + hrefState);
                             }, 1);
                         }
                     }
@@ -444,16 +458,18 @@
                         } else {
                             _silent = TRUE;
                             if (_webkit) {
+                                _value = _value.length ? '#' + _crawl(_value, TRUE) : '';
                                 if (_opts.history) {
-                                    _l.hash = '#' + _value;
+                                    _l.hash = _value;
                                 } else {
-                                    _l.replace('#' + _value);
+                                    _l.replace(_value);
                                 }
                             } else if (_value != _href()) {
+                                _value = _value.length ? '#' + _crawl(_value, TRUE) : '';
                                 if (_opts.history) {
-                                    _l.hash = '#' + _value;
+                                    _l.hash = _value;
                                 } else {
-                                    _l.replace('#' + _value);
+                                    _l.replace(_value);
                                 }
                             }
                             if ((_msie && !_hashchange) && _opts.history) {
