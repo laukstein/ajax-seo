@@ -44,7 +44,7 @@ while ($row = @mysql_fetch_array($query, MYSQL_ASSOC)) {
 
 $modmax = max($modfile, $moddate);
 
-echo "\n# $modmax\n";
+echo "\n# Version $modmax\n";
 
 // Explicitly cached entries
 if (MYSQL_CON) {
