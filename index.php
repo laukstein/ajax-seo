@@ -254,7 +254,7 @@ $assets_address
 
     // Mobile optimization
     // --------------------------------------------------
-    if (/mobile/i.test(navigator.userAgent.toLowerCase()) {
+    if (/mobile/i.test(navigator.userAgent.toLowerCase())) {
         // Remove 300ms click delay and use touchstart event
         // Usage: $(selector).on(pointer, (function() { });
         pointer = 'touchstart';
