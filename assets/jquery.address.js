@@ -38,7 +38,7 @@
             },
             _hrefState = function() {
                 return ('/' + _l.pathname.replace(new RegExp(_opts.state), '') +
-                    _l.search + (_hrefHash() ? '#!' + _hrefHash() : '')).replace(_re, '/');
+                    _l.search + (_hrefHash() ? '#' + _hrefHash() : '')).replace(_re, '/');
             },
             _hrefHash = function() {
                 var index = _l.href.indexOf('#!');
@@ -307,7 +307,7 @@
                 if (pc) {
                     pc.call(_d);
                 }
-                if (_d.title != _title && _d.title.indexOf('#' + _href()) != -1) {
+                if (_d.title != _title && _d.title.indexOf('#!' + _href()) != -1) {
                     _d.title = _title;
                 }
             };
@@ -384,11 +384,13 @@
                     _opts.state = value;
                     var hrefState = _hrefState();
                     if (_opts.state !== UNDEFINED) {
-                        if (_h.pushState) {
-                            if (hrefState.substr(0, 3) == '/#!/') {
+                        if (_supportsState()) {
+                            // Redirect /#!/url to /url
+                            if (hrefState.substr(0, 3) == '/#/') {
                                 _l.replace(_opts.state.replace(/^\/$/, '') + hrefState.substr(2));
                             }
-                        } else if (hrefState != '/' && hrefState.replace(/^\/#!/, '') != _hrefHash()) {
+                        } else if (hrefState != '/' && hrefState.replace(/^\/#/, '') != _hrefHash()) {
+                            // Redirect /url to /!#/url
                             _st(function() {
                                 _l.replace(_opts.state.replace(/^\/$/, '') + '/#!' + hrefState);
                             }, 1);

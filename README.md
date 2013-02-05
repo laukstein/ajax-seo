@@ -46,11 +46,10 @@ The source code is build on latest Web technology, HTML Living Standard - HTML5,
 
 ## Known bugs
 
-* jQuery Address - rewrite `/#/url` to `/#!/url`
 * W3C standards does not accept [vendor prefixes](//www.w3.org/Bugs/Public/show_bug.cgi?id=11989)
 
 
 ## License
 
-AJAX SEO is released under MIT license.
+AJAX SEO released under MIT license.
 jQuery and jQuery Address Plugin dual licensed under the MIT and GPL licenses.
