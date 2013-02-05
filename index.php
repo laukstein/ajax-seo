@@ -102,7 +102,7 @@ $metadata .= "\n<meta name=viewport content=\"width=device-width, user-scalable=
 // Authorship in Google Search http://support.google.com/webmasters/bin/answer.py?hl=en&answer=1408986
 //$metadata .= "\n<link rel=author href=https://plus.google.com/000000000000000000000/posts>";
 
-// Save page loading time with DNS prefetching https://github.com/h5bp/html5-boilerplate/blob/master/doc/extend.md#dns-prefetching
+// Save DNS resolution time with DNS prefetching https://github.com/h5bp/html5-boilerplate/blob/master/doc/extend.md#dns-prefetching
 // Prefetch own CDN
 if (!$debug && $issetcdn) {
     $metadata .= "\n<link rel=dns-prefetch href=" . parse_url($assets, PHP_URL_HOST) . '>';
@@ -227,9 +227,9 @@ echo '    </div>
 if(MYSQL_CON){
 
 // code.jquery.com EdgeCast's CDN has the best performance http://royal.pingdom.com/2012/07/24/best-cdn-for-jquery-in-2012/
-// In case you use HTTPS replace it with Google CDN //ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js
+// In case you use HTTPS replace it with Google CDN //ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
 
-echo "\n<script src=http://code.jquery.com/jquery-1.9.0.min.js></script>
+echo "\n<script src=http://code.jquery.com/jquery-1.9.1.min.js></script>
 $assets_address
 <script async>
 (function() {
@@ -252,41 +252,40 @@ $assets_address
         };
 
 
-    // Auto-hide mobile device address bar
+    // Mobile optimization
     // --------------------------------------------------
-    if (/mobile/i.test(navigator.userAgent) && window.location.hash.indexOf('#') === -1) {
-        var hideAddressbar = function() {
-            var deviceHeight = screen.height,
-                bodyHeight   = document.body.clientHeight;
-
-            // Viewport height at fullscreen
-            // Android 2.3 orientationchange issue - needs for more 50px
-            if (deviceHeight >= bodyHeight) {
-                document.body.style.minHeight = deviceHeight + 'px';
-            }
-
-            // Perform autoscroll
-            setTimeout(window.scrollTo(0, 1), 100);
-        };
-
-        // Auto-hide address bar
-        hideAddressbar();
-
-        // Hide address bar on device orientationchange
-        window.addEventListener('orientationchange', function() {
-            // Hide address bar if not already scrolled
-            if (window.pageYOffset === 0) {
-                hideAddressbar();
-            }
-        });
-    }
-
-
-    // Mobile device pointer event (click replacement with touchstart, removes 300ms of click delay)
-    // --------------------------------------------------
-    // Usage: $(selector).on(pointer, (function() { });
-    if ((/iPhone|iPod|iPad|Android|BlackBerry/).test(navigator.userAgent)) {
+    if (/mobile/i.test(navigator.userAgent.toLowerCase()) {
+        // Remove 300ms click delay and use touchstart event
+        // Usage: $(selector).on(pointer, (function() { });
         pointer = 'touchstart';
+
+        // Auto-hide mobile device address bar
+        if (window.location.hash.indexOf('#') === -1) {
+            var hideAddressbar = function() {
+                var deviceHeight = screen.height,
+                    bodyHeight   = document.body.clientHeight;
+
+                // Viewport height at fullscreen
+                // Android 2.3 orientationchange issue - needs for more 50px
+                if (deviceHeight >= bodyHeight) {
+                    document.body.style.minHeight = deviceHeight + 'px';
+                }
+
+                // Perform autoscroll
+                setTimeout(window.scrollTo(0, 1), 100);
+            };
+
+            // Auto-hide address bar
+            hideAddressbar();
+
+            // Hide address bar on device orientationchange
+            window.addEventListener('orientationchange', function() {
+                // Hide address bar if not already scrolled
+                if (window.pageYOffset === 0) {
+                    hideAddressbar();
+                }
+            });
+        }
     }
 
 
