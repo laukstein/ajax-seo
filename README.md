@@ -44,11 +44,6 @@ The source code is build on latest Web technology, HTML Living Standard - HTML5,
 * [jsPerf](http://jsperf.com/decodeuri-vs-decodeuricomponent) `decodeURI()` vs `decodeURIComponent()`
 
 
-## Known bugs
-
-* W3C standards does not accept [vendor prefixes](//www.w3.org/Bugs/Public/show_bug.cgi?id=11989)
-
-
 ## License
 
 AJAX SEO released under MIT license.
