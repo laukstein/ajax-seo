@@ -311,7 +311,7 @@ $assets_address
 
             // Load API content
             $.ajax({
-                url: 'api' + (e.path.length !== 1 ? '/' + e.path.substr(1) : ''),
+                url: '$rootpath/api' + (e.path.length !== 1 ? '/' + e.path.substr(1) : ''),
                 dataType: 'jsonp',
                 crossDomain: true,
                 cache: true,
