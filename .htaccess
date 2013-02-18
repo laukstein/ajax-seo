@@ -227,11 +227,8 @@ FileETag None
     # URL rewrite
     RewriteCond %{REQUEST_FILENAME} !-d [OR]
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^api(?:/([^/]*))?$ index.php?api&url=$1 [QSA,L]
+    RewriteRule ^api(?:/([^.]*))?$ index.php?api&url=$1 [QSA,L]
     RewriteRule ^([^.]*)$ index.php?url=$1 [QSA,L]
-    # Implement for nested URLs
-    #RewriteRule ^api(?:/([^/]*))?/?([^\./]*)/?([^\./]*)$ index.php?api&url=$1&prop=$2&id=$3 [QSA,L]
-    #RewriteRule ^/?([^\./]*)/?([^\./]*)/?([^\./]*)$ index.php?url=$1&prop=$2&id=$3 [QSA,L]
 
     # Get the headers If-Modified-Since and If-None-Match when apache_request_headers() is not available
     # Save bandwidth and overhead with If-Modified-Since, and help to Google Search crawler http://support.google.com/webmasters/bin/answer.py?hl=en&answer=35769#2
