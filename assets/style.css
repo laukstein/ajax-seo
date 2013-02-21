@@ -265,19 +265,13 @@ textarea {
 }
 
 /* Navigation */
-.wrapper-nav {
-    overflow: hidden;
-}
 .list-nav {
     display: inline-block;
     zoom: 1;
     position: relative;
     display:    -moz-box; /* Flexbox outdated syntax, removable at Firefox 20 */
-    -moz-box-pack: justify; /* Flexbox outdated syntax, removable at Firefox 20 */
     display: -webkit-flex;
     display:         flex;
-    -webkit-flex-direction: row;
-            flex-direction: row;
     width:    -moz-calc(100%);
     height: 36px;
     margin-top: 1%;
