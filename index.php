@@ -26,7 +26,7 @@ if (MYSQL_CON) {
     $content   = $content_error   = 'Sorry, this page cannot be found.';
 
     // Check if url exist
-    if (mysql_num_rows($result)) {
+    if (@mysql_num_rows($result)) {
         // HTTP header caching
         include 'content/cache.php';
         $datemod = new datemod();
@@ -170,8 +170,8 @@ echo "<div class=\"ui-center container\">
 if (MYSQL_CON) {
     $result = mysql_query('SELECT url, `meta-title`, title FROM `' . MYSQL_TABLE . '` ORDER BY array ASC');
 
-    if (mysql_num_rows($result)) {
-        echo "    <div class=wrapper-nav>\n        <nav class=\"clearfix list-nav\">\n            ";
+    if (@mysql_num_rows($result)) {
+        echo "    <nav class=\"clearfix list-nav\">\n        ";
 
         while ($row = @mysql_fetch_array($result, MYSQL_ASSOC)) {
             $row[] = array(
@@ -191,7 +191,7 @@ if (MYSQL_CON) {
             $nav_fn  = (strlen($row['url']) > 0) ? $row['meta-title'] :  "<span class=home>{$row['title']}</span>";
             echo ">$nav_fn</a>";
         }
-        echo "\n        </nav>\n    </div>\n";
+        echo "\n    </nav>\n";
     }
 }
 
@@ -316,7 +316,6 @@ $assets_address
                 crossDomain: true,
                 cache: true,
                 jsonpCallback: 'foo',
-                timeout: 3800,
                 beforeSend: function() {
                     fadeTimer = setTimeout(function() {
                         content.fadeTo(200, 0.33);
