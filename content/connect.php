@@ -61,33 +61,36 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
     $url   = isset($_GET['url']) ? $_GET['url'] : null;
     $urlid = isset($urlid) ? $urlid : null;
 
-    $sql = 'SELECT * FROM `' . MYSQL_TABLE .'`';
-    if (!mysql_query($sql)) {
-        // Set the global server time zone, needs for SUPER privileges
-        mysql_query("SET GLOBAL time_zone = '" . date('T') . "'");
+    if (!mysql_query('SELECT * FROM `' . MYSQL_TABLE .'`')) {
+        // Set the global server timezone to GMT, needs for SUPER privileges
+        mysql_query("SET GLOBAL time_zone = '+00:00'");
 
         // Create table
         mysql_query('CREATE TABLE IF NOT EXISTS `' . MYSQL_TABLE . '` (
-              id mediumint(8) NOT NULL AUTO_INCREMENT,
-              array mediumint(8) NOT NULL,
-              url varchar(70) NOT NULL,
-              `meta-title` varchar(70) NOT NULL,
-              `meta-description` varchar(154) NOT NULL,
-              title varchar(70) NOT NULL,
+              id int AUTO_INCREMENT PRIMARY KEY,
+              array int NOT NULL,
+              url char(70) NOT NULL,
+              `meta-title` char(70) NOT NULL,
+              `meta-description` char(154) NOT NULL,
+              title char(70) NOT NULL,
               content text NOT NULL,
-              pubdate timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-              PRIMARY KEY (id)
-            ) ENGINE=MyISAM;');
+              updated datetime NOT NULL,
+              created timestamp DEFAULT current_timestamp
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci');
+
+        // Create trigger
+        mysql_query('CREATE TRIGGER updated BEFORE
+            UPDATE ON `' . MYSQL_TABLE . '`
+              FOR EACH ROW SET new.updated=NOW()');
 
         // Insert data
-        $now = date('Y-m-d H:i:s');
         mysql_query("INSERT INTO `" . MYSQL_TABLE . "` (array, url, `meta-title`, `meta-description`, title, content) VALUES
             (1, '', '', 'AJAX SEO is crawlable framework for AJAX applications.', 'Home', 'AJAX SEO is crawlable framework for AJAX applications that applies the latest SEO standards, Page Speed and YSlow rules, Google HTML/CSS Style Guide, etc. to improve maximal performance, speed, accessibility and usability.<br>\nThe source code is build on latest Web technology, HTML Living Standard - HTML5, CSS3, Microdata, etc.'),
             (2, 'about', 'About', '', '', 'About content'),
-            (3, 'portfolio', 'Portfolio', '', 'Portfolio', 'Portfolio content'),
+            (3, 'test/url/nested-url', 'Nested URL', '', 'Nested URL', 'Nested URL example'),
             (4, 'contact', 'Contact us', '', 'Contact', 'Contact content'),
             (5, 'контакты', 'Контакты', '', '', 'Содержание контактом'),
-            (6, 'צור-קשר', 'צור קשר', '', '', 'תוכן לצור קשר');");
+            (6, 'צור-קשר', 'צור קשר', '', '', 'תוכן לצור קשר')");
 
         if (is_writable($f)) {
             chmod($f, 0600);
