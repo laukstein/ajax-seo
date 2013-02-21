@@ -13,7 +13,6 @@ The source code is build on latest Web technology, HTML Living Standard - HTML5,
 * Apply Apache settings from content/httpd.conf
 * Apply PHP settings from content/php.ini or uncomment .htaccess `php_flag` and `php_value`
 * Apply MySQL settings from content/connect.php
-* For MySQL UPDATE use SET `pubdate=NOW()` to affected cache
 * Add robots.txt and humans.txt in website root
 
 
