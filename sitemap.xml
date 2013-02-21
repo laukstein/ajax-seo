@@ -1,5 +1,4 @@
 <?php
-
 // --------------------------------------------------
 // Creating Sitemaps in Google Webmaster Tools http://support.google.com/webmasters/bin/answer.py?hl=en&answer=183668
 // --------------------------------------------------
@@ -24,10 +23,9 @@ header('Content-Type: application/xml');
 
 // HTTP header caching
 // --------------------------------------------------
-$tablemod = mysql_query("SELECT DATE_FORMAT(MAX(pubdate), '%a, %d %b %Y %T %Z') AS pubdate FROM `" . MYSQL_TABLE . "`");
+$tablemod = mysql_query("SELECT CONCAT(DATE_FORMAT(MAX(GREATEST(updated, created)), '%a, %d %b %Y %T '), @@global.time_zone) AS date FROM `" . MYSQL_TABLE . "`");
 while ($row = @mysql_fetch_array($tablemod, MYSQL_ASSOC)) {
-    function cache(&$gmtime)
-    {
+    function cache(&$gmtime) {
         if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
             if ($_SERVER['HTTP_IF_MODIFIED_SINCE'] == $gmtime) {
                 http_response_code(304);
@@ -36,7 +34,7 @@ while ($row = @mysql_fetch_array($tablemod, MYSQL_ASSOC)) {
         }
         header("Last-Modified: $gmtime");
     }
-    cache($row['pubdate']);
+    cache($row['date']);
 }
 
 echo '<?xml version="1.0" encoding="UTF-8"?>
@@ -47,12 +45,12 @@ echo '<?xml version="1.0" encoding="UTF-8"?>
 
 
 
-$result = mysql_query("SELECT url, DATE_FORMAT(pubdate, '%Y-%m-%dT%H:%i:%sZ') AS pubdate FROM `" . MYSQL_TABLE . "` ORDER BY array ASC");
+$result = mysql_query("SELECT url, CONCAT(DATE_FORMAT(GREATEST(updated, created), '%Y-%m-%dT%H:%i:%s'), @@global.time_zone) AS date FROM `" . MYSQL_TABLE . "` ORDER BY array ASC");
 while ($row = @mysql_fetch_array($result, MYSQL_ASSOC)) {
     $row[] = array(
         'row' => array_map('htmlspecialchars', $row)
     );
-    echo "    <url>\n        <loc>http://{$_SERVER['SERVER_NAME']}$path{$row['url']}</loc>\n        <lastmod>{$row['pubdate']}</lastmod>\n    </url>";
+    echo "    <url>\n        <loc>http://{$_SERVER['SERVER_NAME']}$path{$row['url']}</loc>\n        <lastmod>{$row['date']}</lastmod>\n    </url>";
 }
 
 mysql_close($con);

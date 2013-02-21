@@ -2,13 +2,11 @@
 
 // HTTP header caching
 // --------------------------------------------------
-class datemod
-{
+class datemod {
     public $gmtime;
 
-    function date($files, $dbtable, $url)
-    {
-        $result = mysql_query("SELECT DATE_FORMAT(pubdate, '%a, %d %b %Y %T') AS pubdate FROM `" . MYSQL_TABLE . "` WHERE url = '$url'");
+    function date($files, $dbtable, $url) {
+        $result = mysql_query("SELECT CONCAT(DATE_FORMAT(GREATEST(updated, created), '%a, %d %b %Y %T '), @@global.time_zone) AS date FROM `" . MYSQL_TABLE . "` WHERE url = '$url'");
         if ($result) {
             foreach ($files as $val) {
                 $mod     = date('D, d M Y H:i:s T', filemtime($val));
@@ -21,15 +19,13 @@ class datemod
                 $row[]   = array(
                     'row' => array_map('htmlspecialchars', $row)
                 );
-                $pubdate = $row['pubdate'] . date(' T');
+                $date = $row['date'];
             }
-            $this->gmtime = date('Y-m-d H:i:s', strtotime($fmod)) >= date('Y-m-d H:i:s', strtotime($pubdate)) ? $fmod : $pubdate;
+            $this->gmtime = date('Y-m-d H:i:s', strtotime($fmod)) >= date('Y-m-d H:i:s', strtotime($date)) ? $fmod : $date;
         }
     }
 
-
-    function cache(&$gmtime)
-    {
+    function cache(&$gmtime) {
         if (isset($gmtime)) {
             if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
                 if ($_SERVER['HTTP_IF_MODIFIED_SINCE'] == $gmtime) {

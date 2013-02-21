@@ -37,9 +37,9 @@ foreach ($regex as $key) {
 }
 $modfile = max($array);
 
-$query   = mysql_query("SELECT UNIX_TIMESTAMP(MAX(pubdate)) AS pubdate FROM `" . MYSQL_TABLE . "`");
+$query   = mysql_query("SELECT UNIX_TIMESTAMP(GREATEST(updated, created)) AS date FROM `" . MYSQL_TABLE . "`");
 while ($row = @mysql_fetch_array($query, MYSQL_ASSOC)) {
-    $moddate = $row['pubdate'];
+    $moddate = $row['date'];
 }
 
 $modmax = max($modfile, $moddate);
