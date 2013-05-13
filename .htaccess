@@ -26,8 +26,10 @@ ServerSignature Off
 # Use UTF-8 encoding for anything served as text/plain or text/html
 AddDefaultCharset utf-8
 
-# Force UTF-8 for other file types
-AddCharset utf-8 .css .js .json .xml .vtt
+# Force UTF-8 for certain file types
+<IfModule mod_mime.c>
+    AddCharset utf-8 .css .js .json .xml .vtt
+</IfModule>
 
 # Define proper MIME type
 AddType application/javascript         js
@@ -140,7 +142,7 @@ FileETag None
 
 <IfModule mod_rewrite.c>
     # FollowSymLinks must be enabled for turning on the rewrite engine
-    Options FollowSymlinks
+    Options +FollowSymlinks
 
     RewriteEngine On
 
@@ -163,6 +165,7 @@ FileETag None
     # Solution without RewriteMap in https://github.com/laukstein/ajax-seo/wiki/Lowercase-URL
     RewriteCond %{REQUEST_URI} .+
     RewriteRule .*[A-Z] ${lc:%0} [R=301,L]
+    #RewriteRule .*/[A-Z\u0410-\u042f\u00c0-\u00de\u0150\u0170袗-携]+/g ${lc:%0} [R=301,L]
 
     # Apache and Firefox bug with backslash URL encoding https://issues.apache.org/bugzilla/show_bug.cgi?id=35256
     # Rewrite backslash to slash. Needs for httpd.conf "AllowEncodedSlashes On"
@@ -221,7 +224,7 @@ FileETag None
     RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^?#\ ]*)\?[^\ ]*\ HTTP/
     # Query rewrite exceptions
     RewriteCond %{REQUEST_FILENAME} !index.php
-    RewriteCond %{REQUEST_URI}?%{QUERY_STRING} !/api(/.*)?\?callback=(\w+)$
+    RewriteCond %{REQUEST_URI}?%{QUERY_STRING} !/api(/.*)?\?callback=([^&]*)
     RewriteRule .* %{REQUEST_URI}? [R=301,L]
 
     # URL rewrite
