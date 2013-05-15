@@ -21,7 +21,7 @@ http://screwlewse.com/2010/08/different-css-techniques-and-their-performance/ */
 }
 
 /* Hide the outline http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#element-level-focus-apis http://outlinenone.com */
-:link:focus, :visited:focus, input:focus {
+:link:focus, :visited:focus, input:focus, textarea:focus {
     outline: none;
 }
 
@@ -48,6 +48,7 @@ body, input, textarea {
 
     line-height: 1.5;
     font-family: sans-serif;
+    word-wrap: break-word;
 }
 body, h1, h2, h3, h4, ul, ol, dl, dd, blockquote, figure, select, input, textarea {
     margin: auto;
@@ -124,9 +125,8 @@ input, select, textarea {
     vertical-align: bottom;
     background-color: #fff;
     border: 1px solid #ccc;
-    -webkit-box-sizing: border-box; /* removable at Andriod 4 */
-       -moz-box-sizing: border-box;
-            box-sizing: border-box;
+    -moz-box-sizing: border-box;
+         box-sizing: border-box;
     -webkit-user-select: text;
        -moz-user-select: text;
         -ms-user-select: text;
@@ -147,6 +147,9 @@ input:hover, input:focus, select:hover, select:focus, textarea:hover, textarea:f
 /* input[type=submit] {
     cursor: pointer;
 } */
+:-ms-input-placeholder {
+    color: #ddd;
+}
 textarea {
     overflow: auto;
     height: 135px;
@@ -159,7 +162,7 @@ textarea {
 /* Common rules
 -------------------------------------------------- */
 .clearfix:after {
-    content: "";
+    content: '';
     display: table;
     clear: both;
 }
@@ -169,30 +172,13 @@ textarea {
     margin: -.2%;
 } */
 .transition:before, .transition {
-    -webkit-transition-duration: .14s;
+    -webkit-transition-duration: .14s; /* Safari, iOS and Android fallback */
             transition-duration: .14s;
 }
 .transition:hover:before, .transition:hover {
-    -webkit-transition-duration: .1s;
+    -webkit-transition-duration: .1s; /* Safari, iOS and Android fallback */
             transition-duration: .1s;
 }
-/* .beforesprites {
-    position: relative;
-}
-[class*="beforesprites"]:before {
-    content: "";
-}
-[class*="beforesprites"]:before,
-[class|="sprites"] {
-    display: inline-block;
-    vertical-align: top;
-    background: no-repeat url(sprites.png);
-}
-[class|=icon]{
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-} */
 .ui-center {
     overflow: hidden;
     width: 90%;
@@ -202,9 +188,8 @@ textarea {
     padding-left: 2.5%;
     margin-right: auto;
     margin-left: auto;
-    -webkit-box-sizing: border-box; /* removable at Andriod 4 */
-       -moz-box-sizing: border-box;
-            box-sizing: border-box;
+    -moz-box-sizing: border-box;
+         box-sizing: border-box;
 }
 .absolute {
     position: absolute;
@@ -279,18 +264,16 @@ textarea {
     line-height: 34px;
     white-space: nowrap;
     background-color: #f1f1f1;
-    background-image: -webkit-linear-gradient(#f8f8f8, rgba(248,248,248,0));
+    background-image: -webkit-linear-gradient(#f8f8f8, rgba(248,248,248,0)); /* Safari, iOS and Android fallback */
     background-image:         linear-gradient(#f8f8f8, rgba(248,248,248,0));
     border-width: 1px;
     border-style: solid;
     border-left: 0;
     border-color: #ddd #ddd #ccc;
     border-radius: 2px;
-    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.1), inset 0 0 0 1px rgba(255,255,255,.5); /* removable at iOS 5 */
-            box-shadow: 0 1px 1px rgba(0,0,0,.1), inset 0 0 0 1px rgba(255,255,255,.5);
-    -webkit-box-sizing: border-box; /* removable at Andriod 4 */
-       -moz-box-sizing: border-box;
-            box-sizing: border-box;
+    box-shadow: 0 1px 1px rgba(0,0,0,.1), inset 0 0 0 1px rgba(255,255,255,.5);
+    -moz-box-sizing: border-box;
+         box-sizing: border-box;
 }
 .list-nav .item {
     overflow: hidden;
@@ -321,7 +304,7 @@ textarea {
 }
 .list-nav .item:hover, .list-nav .item:focus {
     background-color: #f8f8f8;
-    background-image: -webkit-linear-gradient(#fbfbfb, rgba(251, 251, 251, 0));
+    background-image: -webkit-linear-gradient(#fbfbfb, rgba(251, 251, 251, 0)); /* Safari, iOS and Android fallback */
     background-image:         linear-gradient(#fbfbfb, rgba(251, 251, 251, 0));
 }
 .list-nav .item.selected {
@@ -360,14 +343,13 @@ textarea {
     text-align: center;
     text-shadow: 1px 1px 0 rgba(255,255,255,.5);
     background-color: #ffe65c;
-    background-image: -webkit-linear-gradient(#ffe998, #ffe65c);
+    background-image: -webkit-linear-gradient(#ffe998, #ffe65c); /* Safari, iOS and Android fallback */
     background-image:         linear-gradient(#ffe998, #ffe65c);
-    -webkit-box-shadow: 0 0 4px rgba(0,0,0,.5); /* removable at iOS 5 */
-            box-shadow: 0 0 4px rgba(0,0,0,.5);
+    box-shadow: 0 0 4px rgba(0,0,0,.5);
     -webkit-transform: translateY(-50px);
             transform: translateY(-50px);
-    -webkit-animation: slide-down 6s linear 1.5s 1;
-            animation: slide-down 6s linear 1.5s 1;
+    -webkit-animation: slide-down 7s ease-out .1s 1;
+            animation: slide-down 6s linear .5s 1;
 }
 /* Webkit old syntax to support also mobile devices */
 @-webkit-keyframes slide-down {
@@ -579,7 +561,7 @@ textarea {
     2.3 - screen flash on scroll issue http://georgehess.com/post/2054803814/css-keyframe-animation-flicker
     2.3 - overflow issue on <a> elements
     2.3 - not supported flexbox updated syntax - use old and new syntax to support on all devices http://dev.w3.org/csswg/css3-flexbox/ http://css-tricks.com/old-flexbox-and-new-flexbox/
-    2.3 - unknown appearance of visibility: hidden on new DOM elements on scroll when using "-webkit-transform: translate3d(0,0,0);", "-webkit-backface-visibility: hidden;" or "-webkit-perspective: 1000;" */
+    2.3 - unknown appearance of visibility: hidden on new DOM elements on scroll when using -webkit-transform:translate3d(0,0,0), -webkit-backface-visibility:hidden or -webkit-perspective:1000 */
     a, input, select, textarea {
         /* Remove outline and highlight-color from click-able elements on Android and iOS */
         -webkit-tap-highlight-color: rgba(0,0,0,0);
@@ -610,7 +592,7 @@ textarea {
 @media (min-resolution: .001dpcm) {
     /* contenteditable attribute issue */
     .clearfix:after {
-        content: " ";
+        content: ' ';
     }
 }
 
