@@ -15,15 +15,11 @@ define('MYSQL_ERROR', false);
 // Path for static assets
 // --------------------------------------------------
 define('CDN_PATH', null);
-$issetcdn = CDN_PATH ? true : false;
-
-// PHP 5.4.7 has fixed host recognition when scheme is ommitted
-$protocol = null;
-if (version_compare(PHP_VERSION, '5.4.7', '<')) {
-    $protocol = 'http:';
-}
-
-$assets   = !$debug && $issetcdn ? $protocol . '//' . CDN_PATH : $rootpath . '/assets/';
+$issetcdn   = CDN_PATH ? true : false;
+$cdn_host   = parse_url(CDN_PATH, PHP_URL_HOST);
+$cdn_scheme = parse_url(CDN_PATH, PHP_URL_SCHEME);
+$cdn_scheme = isset($cdn_scheme) ? $cdn_scheme . '://' : '//';
+$assets      = $issetcdn ? CDN_PATH : $rootpath . '/assets/';
 
 
 
@@ -85,12 +81,12 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
 
         // Insert data
         mysql_query("INSERT INTO `" . MYSQL_TABLE . "` (array, url, `meta-title`, `meta-description`, title, content) VALUES
-            (1, '', '', 'AJAX SEO is crawlable framework for AJAX applications.', 'Home', 'AJAX SEO is crawlable framework for AJAX applications that applies the latest SEO standards, Page Speed and YSlow rules, Google HTML/CSS Style Guide, etc. to improve maximal performance, speed, accessibility and usability.<br>\nThe source code is build on latest Web technology, HTML Living Standard - HTML5, CSS3, Microdata, etc.'),
-            (2, 'about', 'About', '', '', 'About content'),
-            (3, 'test/url/nested-url', 'Nested URL', '', 'Nested URL', 'Nested URL example'),
-            (4, 'contact', 'Contact us', '', 'Contact', 'Contact content'),
-            (5, 'контакты', 'Контакты', '', '', 'Содержание контактом'),
-            (6, 'צור-קשר', 'צור קשר', '', '', 'תוכן לצור קשר')");
+            (1, '', '', 'AJAX SEO is crawlable framework for AJAX applications.', 'Home', '<p>AJAX SEO is crawlable framework for AJAX applications that applies the latest SEO standards, Page Speed and YSlow rules, Google HTML/CSS Style Guide, etc. to improve maximal performance, speed, accessibility and usability.<br>\nThe source code is build on latest Web technology, HTML Living Standard - HTML5, CSS3, Microdata, etc.</p>\n<p>Check <a class=js-as href=history>history</a> feature and after <a href=javascript:history.forward()><var>history.forward()</var></a>.</p>'),
+            (2, 'history', 'History', '', 'Manage history', '<p>Try <a href=javascript:history.back()><var>history.back()</var></a> and check <a class=js-as href=bind>bind event</a>.</p>'),
+            (3, 'bind', 'Bind', '', 'Bind event', '<p>Bind on AJAX loaded <a class=js-as href=test/nested>content</a> with <var>class=js-as</var>.</p>'),
+            (4, 'test/nested', 'Nested', '', 'Nested URL', '<p>This is nested URL example. Try <a class=js-as href=кириллица>Cyrillic URL</a>.</p>'),
+            (5, 'кириллица', 'Cyrillic', '', 'Кириллический URL', '<p>This is Cyrillic URL example. Try <a class=js-as dir=rtl href=עברית>RTL עברית</a>.</p>'),
+            (6, 'עברית', 'RTL text', '', 'RTL text', '<p>This is RTL example <span dir=rtl>טקסט בעברית</span>. Try <a class=js-as href=no-page>not existing page</a>.</p>')");
 
         if (is_writable($f)) {
             chmod($f, 0600);
