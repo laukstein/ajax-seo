@@ -65,7 +65,7 @@ if (mysql_num_rows($result)) {
             'url' => $urlid,
             'pagetitle' => $pagetitle,
             'title' => $meta_title,
-            'content' => "<h1>$fn</h1>\n<p>{$row['content']}</p>\n"
+            'content' => "<h1>$fn</h1>\n{$row['content']}\n"
         );
 
         // Use for latest PHP standards for http://php.net/json-encode
