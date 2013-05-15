@@ -14,7 +14,7 @@ The source code is build on latest Web technology, HTML Living Standard - HTML5,
 * Apply PHP settings from content/php.ini or uncomment .htaccess `php_flag` and `php_value`
 * Apply MySQL settings from content/connect.php
 * Add robots.txt and humans.txt in website root
-* In order to disable Ajax cache, remove `cache: true` from [index.php](https://github.com/laukstein/ajax-seo/blob/master/index.php)
+* In order to disable Ajax cache, set `cache: false` in [index.php](https://github.com/laukstein/ajax-seo/blob/master/index.php)
 
 
 ## Search engine optimization
