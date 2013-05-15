@@ -246,19 +246,20 @@ $assets_address
         content = $('.js-content'),
         init    = true,
         state   = window.history.pushState !== undefined,
+        // Google Universal Analytics tracking
+        tracker = function() {
+            if (typeof ga === 'function') {
+                return ga && ga('send', 'pageview', {
+                    // window.location.pathname + window.location.search + window.location.hash
+                    page: decodeURI(window.location.pathname)
+                });
+            }
+        },
         // Response
         handler = function(data) {
             document.title = data.pagetitle;
             content.fadeTo(20, 1).html(data.content);
-
-            // Google Analytics tracking
-            if (typeof ga === 'function') {
-                return ga && ga('send', 'pageview', {
-                    // window.location.pathname + window.location.search + window.location.hash
-                    page: decodeURI(window.location.pathname),
-                    title: data.pagetitle
-                });
-            }
+            tracker();
         };
 
 
@@ -344,13 +345,13 @@ $assets_address
                     if (fadeTimer) {
                         clearTimeout(fadeTimer);
                     }
-
                     if (textStatus === 'timeout') {
                         content.html('Loading seems to be taking a while...');
                     }
 
                     document.title = '$pagetitle_error';
                     content.fadeTo(20, 1).html('<h1>$title_error</h1><p>$content_error</p>');
+                    tracker();
                 }
             });
         }
