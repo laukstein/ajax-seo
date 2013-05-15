@@ -30,6 +30,7 @@ The source code is build on latest Web technology, HTML Living Standard - HTML5,
 * Remove index.php and .php extension
 * Remove dot and comma
 * Custom 404 error page
+* Google Universal Analytics
 
 
 ## Speed performance
