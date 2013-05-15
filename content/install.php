@@ -87,8 +87,8 @@ form {
         <li><label for=host>Database host</label><input class="transition ie-input" id=host placeholder=localhost name=host value="' . MYSQL_HOST . '">
         <li><label for=table>Table</label><input class="transition ie-input" id=table name=table value="' . MYSQL_TABLE . '">
         <li>
-            <hr><p>CDN assets path like <b>cdn.' . $_SERVER['SERVER_NAME'] . '/assets/</b> without http:// or https://</p>
-            <label for=cdnpath>CDN path</label><input class="transition ie-input" id=cdnpath placeholder=Optional name=cdnpath value="' . CDN_PATH . '">
+            <hr><p>CDN assets URL like protocol-less <b>//cdn.' . $_SERVER['SERVER_NAME'] . '/</b> or with HTTP/HTTPS</p>
+            <label for=cdnpath>CDN URL</label><input class="transition ie-input" id=cdnpath placeholder=Optional name=cdnpath value="' . CDN_PATH . '">
         </li>
         <li><input class="transition ie-input button" type=submit name=install value=Install><input type=hidden name=submitted value=true>
     </ul>' . $error . '
