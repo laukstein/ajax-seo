@@ -42,7 +42,7 @@ if (in_array($_SERVER['REMOTE_ADDR'], $ip)) {
 // --------------------------------------------------
 $scheme = $_SERVER['SERVER_PORT'] == 443 ? 'https' : 'http';
 $host   = $_SERVER['SERVER_NAME'];
-$path   = $_SERVER['REQUEST_URI'];
+$path   = rawurldecode($_SERVER['REQUEST_URI']);
 $uri    = $scheme . '://' . $host . $path;
 
 
