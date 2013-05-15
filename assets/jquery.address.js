@@ -1,4 +1,4 @@
-/*! Modified jQuery Address | (c) 2013 Rostislav Hristov | jquery.org/license */
+/*! jQuery Address v1.6 | (c) 2013 Rostislav Hristov | jquery.org/license */
 (function ($) {
 
     $.address = (function () {
@@ -88,26 +88,8 @@
                 }
             },
             _update = function(internal) {
-                _st(_track, 10);
                 return _trigger(CHANGE).isDefaultPrevented() ||
                     _trigger(internal ? INTERNAL_CHANGE : EXTERNAL_CHANGE).isDefaultPrevented();
-            },
-            _track = function() {
-                if (_opts.tracker !== 'null' && _opts.tracker !== NULL) {
-                    var fn = $.isFunction(_opts.tracker) ? _opts.tracker : _t[_opts.tracker],
-                        value = (_l.pathname + _l.search +
-                                ($.address && !_supportsState() ? $.address.value() : ''))
-                                .replace(/\/\//, '/').replace(/^\/$/, '');
-                    if ($.isFunction(fn)) {
-                        fn(value);
-                    } else if ($.isFunction(_t.urchinTracker)) {
-                        _t.urchinTracker(value);
-                    } else if (_t.pageTracker !== UNDEFINED && $.isFunction(_t.pageTracker._trackPageview)) {
-                        _t.pageTracker._trackPageview(value);
-                    } else if (_t._gaq !== UNDEFINED && $.isFunction(_t._gaq.push)) {
-                        _t._gaq.push(['_trackPageview', decodeURI(value)]);
-                    }
-                }
             },
             _html = function() {
                 var src = _js() + ':' + FALSE + ';document.open();document.writeln(\'<html><head><title>' +
@@ -128,7 +110,7 @@
                         if (/^(autoUpdate|crawlable|history|strict|wrap)$/.test(param[0])) {
                             _opts[param[0]] = (isNaN(param[1]) ? /^(true|yes)$/i.test(param[1]) : (parseInt(param[1], 10) !== 0));
                         }
-                        if (/^(state|tracker)$/.test(param[0])) {
+                        if (/^(state)$/.test(param[0])) {
                             _opts[param[0]] = param[1];
                         }
                     }
@@ -407,13 +389,6 @@
                 }
                 return _opts.strict;
             },
-            tracker: function(value) {
-                if (value !== UNDEFINED) {
-                    _opts.tracker = value;
-                    return this;
-                }
-                return _opts.tracker;
-            },
             wrap: function(value) {
                 if (value !== UNDEFINED) {
                     _opts.wrap = value;
@@ -584,33 +559,31 @@
     })();
 
     $.fn.address = function(fn) {
-        if (!this.data('address')) {
-            this.on('click', function(e) {
-                if (e.shiftKey || e.ctrlKey || e.metaKey || e.which == 2) {
-                    return true;
-                }
-                var target = e.currentTarget;
-                if ($(target).is('a')) {
-                    e.preventDefault();
-                    var value = fn ? fn.call(target) :
-                        /address:/.test($(target).attr('rel')) ? $(target).attr('rel').split('address:')[1].split(' ')[0] :
-                        $.address.state() !== undefined && !/^\/?$/.test($.address.state()) ?
-                                $(target).attr('href').replace(new RegExp('^(.*' + $.address.state() + '|\\.)'), '') :
-                                $(target).attr('href').replace(/^(#\!?|\.)/, '');
-                    $.address.value(value);
-                }
-            }).on('submit', function(e) {
-                var target = e.currentTarget;
-                if ($(target).is('form')) {
-                    e.preventDefault();
-                    var action = $(target).attr('action'),
-                        value = fn ? fn.call(target) : (action.indexOf('?') != -1 ? action.replace(/&$/, '') : action + '?') +
-                            $(target).serialize();
-                    $.address.value(value);
-                }
-            }).data('address', true);
-        }
-        return this;
-    };
+        $(document).on('click', this.selector, function(e) {
+            if (e.shiftKey || e.ctrlKey || e.metaKey || e.which == 2) {
+                return true;
+            }
+            var target = e.currentTarget;
+            if ($(target).is('a')) {
+                e.preventDefault();
+                var value = fn ? fn.call(target) :
+                    /address:/.test($(target).attr('rel')) ? $(target).attr('rel').split('address:')[1].split(' ')[0] :
+                    $.address.state() !== undefined && !/^\/?$/.test($.address.state()) ?
+                            $(target).attr('href').replace(new RegExp('^(.*' + $.address.state() + '|\\.)'), '') :
+                            $(target).attr('href').replace(/^(#\!?|\.)/, '');
+                $.address.value(value);
+            }
+        }).on('submit', function(e) {
+            var target = e.currentTarget;
+            if ($(target).is('form')) {
+                e.preventDefault();
+                var action = $(target).attr('action'),
+                    value = fn ? fn.call(target) : (action.indexOf('?') != -1 ? action.replace(/&$/, '') : action + '?') +
+                        $(target).serialize();
+                $.address.value(value);
+            }
+        });
+    }
+    return this;
 
 })(jQuery);
