@@ -14,6 +14,7 @@ The source code is build on latest Web technology, HTML Living Standard - HTML5,
 * Apply PHP settings from content/php.ini or uncomment .htaccess `php_flag` and `php_value`
 * Apply MySQL settings from content/connect.php
 * Add robots.txt and humans.txt in website root
+* In order to disable Ajax cache, remove `cache: true` from [index.php](https://github.com/laukstein/ajax-seo/blob/master/index.php)
 
 
 ## Search engine optimization
@@ -22,7 +23,7 @@ The source code is build on latest Web technology, HTML Living Standard - HTML5,
 * HTML5 history API with crawlable SEO fallback for < IE10
 * AJAX crawling scheme with Apache Rewrite <https://developers.google.com/webmasters/ajax-crawling/docs/getting-started>
 * Rewrite www to no-www domain <http://no-www.org>
-* Handle HTTP/HTTPS protocol
+* Handle HTTP/HTTPS protocol, protocol-less URL
 * Slash and backslash issues
 * Rewrite uppercase URLs to lowercase
 * Rewrite space and underscore with dash
