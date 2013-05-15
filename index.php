@@ -10,6 +10,11 @@ include 'content/config.php';
 // --------------------------------------------------
 include 'content/connect.php';
 
+// Avoid XSS attacks with Content Security Policy (CSP) https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html
+header("Content-Security-Policy: script-src 'self' 'unsafe-inline' 'unsafe-eval' " . ($issetcdn ? $cdn_host . ' ' : null) . "code.jquery.com www.google-analytics.com");
+
+
+
 $meta_description = null;
 
 if (MYSQL_CON) {
@@ -104,8 +109,8 @@ $metadata .= "\n<meta name=viewport content=\"width=device-width, user-scalable=
 
 // Save DNS resolution time with DNS prefetching https://github.com/h5bp/html5-boilerplate/blob/master/doc/extend.md#dns-prefetching
 // Prefetch own CDN
-if (!$debug && $issetcdn) {
-    $metadata .= "\n<link rel=dns-prefetch href=" . parse_url($assets, PHP_URL_HOST) . '>';
+if ($issetcdn) {
+    $metadata .= "\n<link rel=dns-prefetch href=" . $cdn_scheme . $cdn_host . '>';
 }
 // Prefetch EdgeCast's CDN
 $metadata .= "\n<link rel=dns-prefetch href=http://code.jquery.com>";
@@ -124,8 +129,7 @@ function path($filename) {
 
     preg_match('/^(.+)\.([^\.]+)$/', $filename, $matches);
     $extension = $matches[2];
-
-    $source = $debug ? $assets . $filename : $assets . $matches[1] . '.min.' . $extension;
+    $source    = $debug ? $assets . $filename : $assets . $matches[1] . '.min.' . $extension;
 
     if ($extension == 'css') {
         return "<link rel=stylesheet href=$source>";
@@ -136,8 +140,7 @@ function path($filename) {
 }
 $assets_style   = path('style.css');
 $assets_address = path('jquery.address.js');
-
-
+$assets_migrate = $debug ? "\n<script src=http://code.jquery.com/jquery-migrate-1.2.1.js></script>" : null;
 
 // Working on Cache Manifest
 // Chrome Application Cache manifest .appcache issue http://crbug.com/167918
@@ -227,9 +230,10 @@ echo '    </div>
 if(MYSQL_CON){
 
 // code.jquery.com EdgeCast's CDN has the best performance http://royal.pingdom.com/2012/07/24/best-cdn-for-jquery-in-2012/
-// In case you use HTTPS replace it with Google CDN //ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js
+// In case you use HTTPS replace it with Google CDN //ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js
 
-echo "\n<script src=http://code.jquery.com/jquery-1.9.1.min.js></script>
+echo "\n<!--[if lt IE 9]><script src=http://code.jquery.com/jquery-1.9.1.min.js></script><![endif]-->
+<!--[if gte IE 9]><!--><script src=http://code.jquery.com/jquery-2.0.0.min.js></script>$assets_migrate<!--<![endif]-->
 $assets_address
 <script async>
 (function() {
@@ -248,13 +252,19 @@ $assets_address
             content.fadeTo(20, 1).html(data.content);
 
             // Google Analytics tracking
-            return _gaq && _gaq.push(['_trackPageview']);
+            if (typeof ga === 'function') {
+                return ga && ga('send', 'pageview', {
+                    // window.location.pathname + window.location.search + window.location.hash
+                    page: decodeURI(window.location.pathname),
+                    title: data.pagetitle
+                });
+            }
         };
 
 
     // Mobile optimization
     // --------------------------------------------------
-    if (/mobile/i.test(navigator.userAgent.toLowerCase())) {
+    if (/mobile|android/i.test(navigator.userAgent.toLowerCase())) {
         // Remove 300ms click delay and use touchstart event
         // Usage: $(selector).on(pointer, (function() { });
         pointer = 'touchstart';
@@ -289,7 +299,7 @@ $assets_address
     }
 
 
-    $.address.tracker(function() {}).state('$rootpath').init(function() {
+    $.address.state('$rootpath').init(function() {
         // Initialize jQuery Address
         nav.address();
     }).change(function(e) {
@@ -351,19 +361,10 @@ $assets_address
     echo "\n<script async>\n";
 }
 
-// Optimized Google Analytics snippet, http://mathiasbynens.be/notes/async-analytics-snippet
-echo "var _gaq = [
-    ['_setAccount', 'UA-XXXXX-X'],
-    ['_trackPageview']
-];
-(function(d, t) {
-    'use strict';
-    var g = d.createElement(t),
-        s = d.getElementsByTagName(t)[0];
-    g.src = '//www.google-analytics.com/ga.js',
-    g.async = true;
-    s.parentNode.insertBefore(g, s);
-}(document, 'script'));
+// Optimized Google Analytics snippet http://mathiasbynens.be/notes/async-analytics-snippet
+echo "(function(G,o,O,g,l){G.GoogleAnalyticsObject=O;G[O]||(G[O]=function(){(G[O].q=G[O].q||[]).push(arguments)});G[O].l=+new Date;g=o.createElement('script'),l=o.scripts[0];g.src='//www.google-analytics.com/analytics.js';l.parentNode.insertBefore(g,l)}(this,document,'ga'));
+ga('create','UA-XXXX-Y');
+ga('send','pageview');
 </script>";
 
 echo "\n</body>\n</html>";
