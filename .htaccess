@@ -224,7 +224,7 @@ FileETag None
     RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^?#\ ]*)\?[^\ ]*\ HTTP/
     # Query rewrite exceptions
     RewriteCond %{REQUEST_FILENAME} !index.php
-    RewriteCond %{REQUEST_URI}?%{QUERY_STRING} !/api(/.*)?\?callback=([^&]*)
+    RewriteCond %{REQUEST_URI}?%{QUERY_STRING} !/api(/.*)?\?[callback|_]=([^&]*)
     RewriteRule .* %{REQUEST_URI}? [R=301,L]
 
     # URL rewrite
