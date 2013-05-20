@@ -1,20 +1,20 @@
 # [AJAX SEO](http://lab.laukstein.com/ajax-seo/)
 
-AJAX SEO is crawlable framework for AJAX applications that applies the latest SEO standards, Page Speed and YSlow rules, Google HTML/CSS Style Guide, etc. to improve maximal performance, speed, accessibility and usability.
-The source code is build on latest Web technology, HTML Living Standard - HTML5, CSS3, Microdata, etc.
+AJAX SEO is crawlable framework for AJAX applications that uses the latest SEO standards, Page Speed and YSlow rules, Google HTML/CSS Style Guide, etc. to improve and maximize performance, security, accessibility, usability and user experience.
+The source code is build on latest W3C standards, HTML Living Standard HTML5, CSS3, Microdata, etc.
 
 [See the demo](<http://lab.laukstein.com/ajax-seo/>)
 
 
 ## How to use
 
-* Server requirements: Apache 2, PHP 5.3, MySQL 5
+* Minimum server requirements: Apache 2, PHP 5.3, MySQL 5
 * [Download the source code](https://github.com/laukstein/ajax-seo/zipball/master) and extract on your web server
 * Apply Apache settings from content/httpd.conf
 * Apply PHP settings from content/php.ini or uncomment .htaccess `php_flag` and `php_value`
 * Apply MySQL settings from content/connect.php
 * Add robots.txt and humans.txt in website root
-* In order to disable Ajax cache, set `cache: false` in [index.php](https://github.com/laukstein/ajax-seo/blob/master/index.php)
+* In order to disable Ajax cache, set `cache: false` in **index.php**
 
 
 ## Search engine optimization
