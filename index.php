@@ -28,7 +28,7 @@ if (MYSQL_CON) {
 
     $pagetitle = $pagetitle_error = 'Page not found';
     $title     = $title_error     = '404 Not Found';
-    $content   = $content_error   = 'Sorry, this page cannot be found.';
+    $content   = $content_error   = '<p>Sorry, this page cannot be found.</p>';
 
     // Check if url exist
     if (@mysql_num_rows($result)) {
@@ -167,31 +167,36 @@ if ($note !== null) {
 
 echo "<div class=\"ui-center container\">
 <header class=clearfix>
-    <div class=wrapper-logo><a class=logo href=https://github.com/laukstein/ajax-seo rel=home>AJAX SEO{$title_installation} <small>Bring your App crawable</small></a></div>\n";
+    <a class=logo href=https://github.com/laukstein/ajax-seo rel=home>AJAX SEO{$title_installation}<small>Make Apps crawlable</small></a>\n";
 
 
 if (MYSQL_CON) {
     $result = mysql_query('SELECT url, `meta-title`, title FROM `' . MYSQL_TABLE . '` ORDER BY array ASC');
 
     if (@mysql_num_rows($result)) {
-        echo "    <nav class=\"clearfix list-nav\">\n        ";
+        echo "    <nav class=list>";
 
         while ($row = @mysql_fetch_array($result, MYSQL_ASSOC)) {
             $row[] = array(
                 'row' => array_map('htmlspecialchars', $row)
             );
-            echo '<a class="transition item js-as';
+            echo "\n        <a class=\"transition item js-as";
 
-            if ($url == $row['url']) {
+            $data_url       = $row['url'];
+            $data_title     = $row['title'];
+            $data_metatitle = $row['meta-title'];
+
+            if ($url == $data_url) {
                 echo ' selected';
             }
 
-            echo "\" href=\"$path{$row['url']}\"";
+            echo "\" href=\"$path$data_url\"";
 
-            if ((strlen($row['title']) > 0) && ($row['meta-title'] !== $row['title'])) {
-                echo " title=\"{$row['title']}\"";
+            if (strlen($data_title) > 0 && $data_metatitle !== $data_title) {
+                echo " title=\"{$data_title}\"";
             }
-            $nav_fn  = (strlen($row['url']) > 0) ? $row['meta-title'] :  "<span class=home>{$row['title']}</span>";
+
+            $nav_fn = strlen($data_url) > 0 ? $data_metatitle :  "<span class=home>$data_metatitle</span>";
             echo ">$nav_fn</a>";
         }
         echo "\n    </nav>\n";
@@ -199,24 +204,22 @@ if (MYSQL_CON) {
 }
 
 
-echo "    </header>\n<article class=article>\n    <div class=\"content js-content\">\n";
+echo "</header>\n<main role=main class=\"main js-content\">\n";
 
 
-//$warning_rewrite_module;
 if (MYSQL_CON) {
     $meta_title = isset($meta_title) ? $meta_title : null;
     if ((strlen($title) > 0) && ($meta_title !== $title)) {
         $meta_title = $title;
     }
-    echo "      <h1>$meta_title</h1>\n        <p>$content</p>\n";
+    echo "      <h1>$meta_title</h1>\n      $content\n";
     mysql_close($con);
 } else {
     echo $installation;
 }
 
 
-echo '    </div>
-</article>
+echo '</main>
 </div>
 <footer class="ui-center footer">
     <nav class=breadcrumb itemprop=breadcrumb>
@@ -235,19 +238,19 @@ if(MYSQL_CON){
 echo "\n<!--[if lt IE 9]><script src=http://code.jquery.com/jquery-1.9.1.min.js></script><![endif]-->
 <!--[if gte IE 9]><!--><script src=http://code.jquery.com/jquery-2.0.0.min.js></script>$assets_migrate<!--<![endif]-->
 $assets_address
-<script async>
+<script>
 (function() {
     'use strict';
 
     // Common variables
     // --------------------------------------------------
-    var pointer = 'click', // Cross-device pointer event
-        nav     = $('.js-as'),
-        content = $('.js-content'),
-        init    = true,
-        state   = window.history.pushState !== undefined,
+    var pointer  = 'click', // Cross-device pointer event
+        \$nav     = $('.js-as'),
+        \$content = $('.js-content'),
+        init     = true,
+        state    = window.history.pushState !== undefined,
         // Google Universal Analytics tracking
-        tracker = function() {
+        tracker  = function() {
             if (typeof ga === 'function') {
                 return ga && ga('send', 'pageview', {
                     // window.location.pathname + window.location.search + window.location.hash
@@ -255,10 +258,15 @@ $assets_address
                 });
             }
         },
+        \$this, request, fadeTimer,
         // Response
         handler = function(data) {
+            if (fadeTimer) {
+                clearTimeout(fadeTimer);
+            }
+
             document.title = data.pagetitle;
-            content.fadeTo(20, 1).html(data.content);
+            \$content.fadeTo(20, 1).html(data.content);
             tracker();
         };
 
@@ -299,63 +307,67 @@ $assets_address
         }
     }
 
-
     $.address.state('$rootpath').init(function() {
         // Initialize jQuery Address
-        nav.address();
+        \$nav.address();
     }).change(function(e) {
-        // Select nav link
-        nav.each(function() {
-            var link = $(this);
-
-            if (link.attr('href') === (($.address.state() + decodeURI(e.path)).replace(/\/\//, '/'))) {
-                link.addClass('selected').focus();
-            } else {
-                link.removeClass('selected');
-            }
-        });
-
         if (state && init) {
             init = false;
         } else {
-            var fadeTimer;
+            // Halt previously created request
+            if (request && request.readyState !== 4) {
+                request.abort();
+            }
+
+            // Select link
+            \$nav.each(function() {
+                \$this = $(this);
+
+                if (\$this.attr('href') === (($.address.state() + decodeURI(e.path)).replace(/\/\//, '/'))) {
+                    \$this.addClass('selected').focus();
+                } else {
+                    \$this.removeClass('selected');
+                }
+            });
 
             // Load API content
-            $.ajax({
+            request = $.ajax({
                 url: '$rootpath/api' + (e.path.length !== 1 ? '/' + e.path.substr(1) : ''),
-                dataType: 'jsonp',
+                //dataType: 'jsonp',
                 crossDomain: true,
                 cache: true,
                 jsonpCallback: 'foo',
                 beforeSend: function() {
                     fadeTimer = setTimeout(function() {
-                        content.fadeTo(200, 0.33);
+                        \$content.fadeTo(200, 0.33);
                     }, 300);
                 },
-                success: function(data) {
-                    if (fadeTimer) {
-                        clearTimeout(fadeTimer);
-                    }
-
-                    handler(data);
-                },
+                success: handler,
                 error: function(jqXHR, textStatus) {
-                    nav.removeClass('selected');
-
                     if (fadeTimer) {
                         clearTimeout(fadeTimer);
                     }
-                    if (textStatus === 'timeout') {
-                        content.html('Loading seems to be taking a while...');
-                    }
+                    if (textStatus !== 'abort') {
+                        console.log(textStatus);
 
-                    document.title = '$pagetitle_error';
-                    content.fadeTo(20, 1).html('<h1>$title_error</h1><p>$content_error</p>');
-                    tracker();
+                        if (textStatus === 'timeout') {
+                            content.html('Loading seems to be taking a while...');
+                        }
+
+                        \$nav.removeClass('selected');
+                        document.title = '$pagetitle_error';
+                        \$content.fadeTo(20, 1).html('<h1>$title_error</h1>$content_error');
+                        tracker();
+                    }
                 }
             });
         }
     });
+
+    // Bind whatever event to Ajax loaded content
+    //$(document).on('click', '.js-as', function(e) {
+    //    console.log(e.target);
+    //});
 })();\n\n\n";
 
 } else {
