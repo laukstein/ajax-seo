@@ -55,7 +55,7 @@ if (version_compare(PHP_VERSION, '5.4', '<')) {
 
 
 
-// Gzip
+// Compress output with Gzip
 // --------------------------------------------------
 // PHP 5.4.4 bug https://bugs.php.net/bug.php?id=55544
 if (version_compare(PHP_VERSION, '5.4.5', '>') && !ob_start('ob_gzhandler')) {
