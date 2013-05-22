@@ -74,7 +74,7 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
               created timestamp DEFAULT current_timestamp
             ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci');
 
-        // Create trigger
+        // Create trigger (needs TRIGGER global privilege)
         mysql_query('CREATE TRIGGER updated BEFORE
             UPDATE ON `' . MYSQL_TABLE . '`
               FOR EACH ROW SET new.updated=NOW()');
