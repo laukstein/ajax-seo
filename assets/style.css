@@ -105,8 +105,9 @@ img {
     -ms-interpolation-mode: bicubic;
 }
 hr {
-    margin-top: 1.2em;
-    margin-bottom: 1.2em;
+    margin-top: auto;
+    margin-bottom: auto;
+    clear: both;
     border-width: 0;
     border-top: 1px solid #eee;
 }
@@ -116,8 +117,6 @@ legend {
 }
 label {
     display: inline-block;
-    padding-top: .5%;
-    padding-bottom: .5%;
     /* cursor: pointer; */
 }
 input, select, textarea {
@@ -139,8 +138,8 @@ input[type=datetime-local], input[type=email], input[type=month],
 input[type=number], input[type=password], input[type=tel], input[type=text],
 input[type=time], input[type=url], input[type=week], input[type=submit],
 select, textarea {
-    width: 25em;
-    padding: .8% 1%;
+    width: 20em;
+    padding: .6em .7em;
 }
 input:hover, input:focus, select:hover, select:focus, textarea:hover, textarea:focus  {
     border-color: #ababab;
@@ -538,8 +537,8 @@ textarea {
         *overflow: visible;
     }
     .ie-input {
-        width: 25em;
-        padding: .7em 1.2em;
+        width: 20em;
+        padding: .6em .7em;
     }
     .clearfix {
         *zoom: 1;
