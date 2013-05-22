@@ -12,69 +12,68 @@ Avoid IDs
 http://screwlewse.com/2010/07/dont-use-id-selectors-in-css/
 http://screwlewse.com/2010/08/different-css-techniques-and-their-performance/ */
 
-/* Standards
+/* Normalization
 -------------------------------------------------- */
 ::selection {
     color: #fff;
     text-shadow: none;
     background-color: #8f8f8f;
 }
-
-/* Hide the outline http://www.whatwg.org/specs/web-apps/current-work/multipage/editing.html#element-level-focus-apis http://outlinenone.com */
-:link:focus, :visited:focus, input:focus, textarea:focus {
-    outline: none;
-}
-
 html, body {
     height: 100%;
 }
-html {
-    overflow-x: hidden;
-    overflow-y: scroll;
-    font-size: 62.5%;
-    background-color: #fff;
-    cursor: default;
+html, form {
+    /* Remove user-select for easer developing processes */
     -webkit-user-select: none;
        -moz-user-select: none;
         -ms-user-select: none;
             user-select: none;
 }
-body, input, textarea {
-    color: #222;
-    font-size: 14px;
+html {
+    font-size: 62.45%; /* Make 1em = 10px = 2.5rem */
+    background-color: #fff;
 
-    /* Font-size with REM http://snook.ca/archives/html_and_css/font-size-with-rem */
-    font-size: 1.4rem;
+    /* Old Safari smooth text rendering issue */
+    -webkit-font-smoothing: antialiased;
+            font-smoothing: antialiased;
 
-    line-height: 1.5;
-    font-family: sans-serif;
-    word-wrap: break-word;
+    -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+
+    cursor: default;
 }
-body, h1, h2, h3, h4, ul, ol, dl, dd, blockquote, figure, select, input, textarea {
+body {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    font-size: 1.55em; /* The optional font-size REM http://snook.ca/archives/html_and_css/font-size-with-rem, buggy on various browsers */
+    word-wrap: break-word;
+    -webkit-hyphens: auto;
+       -moz-hyphens: auto;
+        -ms-hyphens: auto;
+            hyphens: auto;
+}
+body, h1, h2, h3, h4, p, ul, ol, dl, dd, blockquote, figure, select, input, textarea {
     margin: auto;
+}
+body, input, select, textarea {
+    color: #222;
+    line-height: 1.45;
+    font-family: sans-serif;
 }
 h1, h2 {
     font-weight: normal;
     font-family: Segoe UI, sans-serif;
 }
 h1 {
-    font-size: 27px;
-    font-size: 2.7rem;
+    font-size: 2.2em;
 }
 h2 {
-    font-size: 18px;
-    font-size: 1.8rem;
+    color: #999;
+    font-size: 1.8em;
 }
 p {
-    margin-top: 1%;
-    margin-top: 1rem;
-    margin-bottom: 1%;
-    margin-bottom: 1rem;
-    /* word-break: break-all; */
-    -webkit-hyphens: auto;
-       -moz-hyphens: auto;
-        -ms-hyphens: auto;
-            hyphens: auto;
+    padding-top: .8em;
+    padding-bottom: .8em;
 }
 ul, ol {
     padding: 0;
@@ -84,11 +83,11 @@ img, abbr, iframe {
     border: 0;
 }
 a, input, textarea {
+    outline: none;
     pointer-events: auto;
 }
 a, img {
     -webkit-user-drag: none;
-       -moz-user-drag: none;
             user-drag: none;
 }
 a {
@@ -106,8 +105,8 @@ img {
     -ms-interpolation-mode: bicubic;
 }
 hr {
-    margin-top: 12px;
-    margin-bottom: 12px;
+    margin-top: 1.2em;
+    margin-bottom: 1.2em;
     border-width: 0;
     border-top: 1px solid #eee;
 }
@@ -122,11 +121,14 @@ label {
     /* cursor: pointer; */
 }
 input, select, textarea {
+    font-size: 1em;
     vertical-align: bottom;
     background-color: #fff;
     border: 1px solid #ccc;
     -moz-box-sizing: border-box;
          box-sizing: border-box;
+}
+input, textarea {
     -webkit-user-select: text;
        -moz-user-select: text;
         -ms-user-select: text;
@@ -137,7 +139,7 @@ input[type=datetime-local], input[type=email], input[type=month],
 input[type=number], input[type=password], input[type=tel], input[type=text],
 input[type=time], input[type=url], input[type=week], input[type=submit],
 select, textarea {
-    width: 250px;
+    width: 25em;
     padding: .8% 1%;
 }
 input:hover, input:focus, select:hover, select:focus, textarea:hover, textarea:focus  {
@@ -152,7 +154,7 @@ input:hover, input:focus, select:hover, select:focus, textarea:hover, textarea:f
 }
 textarea {
     overflow: auto;
-    height: 135px;
+    height: 13.5em;
     word-wrap: break-word;
     resize: vertical;
 }
@@ -166,11 +168,6 @@ textarea {
     display: table;
     clear: both;
 }
-/* .article a {
-    *//* Enlarge visible click area *//*
-    padding: .2%;
-    margin: -.2%;
-} */
 .transition:before, .transition {
     -webkit-transition-duration: .14s; /* Safari, iOS and Android fallback */
             transition-duration: .14s;
@@ -182,8 +179,7 @@ textarea {
 .ui-center {
     overflow: hidden;
     width: 90%;
-    min-width: 320px;
-    max-width: 1170px;
+    min-width: 21.4em;
     padding-right: 2.5%;
     padding-left: 2.5%;
     margin-right: auto;
@@ -201,14 +197,14 @@ textarea {
 }
 .button {
     display: inline-block;
-    padding: 7px 12px;
+    padding: .7em 1.2em;
     color: #2d76b9;
-    line-height: 19px;
+    line-height: 1.9;
     white-space: nowrap;
     text-overflow: ellipsis;
     background-color: #fff;
     border: 1px solid #ccc;
-    box-shadow: inset 0 -30px 60px -30px #ececec, 1px 1px 0 #fff;
+    box-shadow: inset 0 -3em 6em -3em #ececec, 1px 1px 0 #fff;
     -webkit-user-select: none;
        -moz-user-select: none;
         -ms-user-select: none;
@@ -217,12 +213,39 @@ textarea {
 .button:hover, .button:focus {
     color: #222;
     border-color: #ababab;
-    box-shadow: inset 0 0 0 1px #fff, inset 0 -30px 60px -30px #ececec, 1px 1px 3px #d6d6d6;
+    box-shadow: inset 0 0 0 1px #fff, inset 0 -3em 6em -3em #ececec, 1px 1px .3em #d6d6d6;
 }
 .button:active, .button.selected {
-    box-shadow: inset 0 -30px 60px -30px #d6d6d6, inset 1px 1px 3px #d6d6d6, 1px 1px 0 #fff;
+    box-shadow: inset 0 -3em 6em -3em #d6d6d6, inset 1px 1px .3em #d6d6d6, 1px 1px 0 #fff;
 }
 
+/* Motions */
+/* Webkit old syntax to support also mobile devices */
+@-webkit-keyframes slide-down {
+    0% {
+        -webkit-transform: translateY(-5em);
+    }
+    10% {
+        -webkit-transform: translateY(0);
+    }
+    90% {
+        -webkit-transform: translateY(0);
+    }
+    /* Android 2.3 flicker issue, final frame less than 100% http://georgehess.com/post/2054803814/css-keyframe-animation-flicker */
+    99.99% {
+        -webkit-transform: translateY(-5em);
+    }
+    /* Do not remove, otherwise will not work on Android 2.3 */
+    100% {}
+}
+@keyframes slide-down {
+    0%, 100% {
+        transform: translateY(-5em);
+    }
+    10%, 90% {
+        transform: translateY(0);
+    }
+}
 
 
 
@@ -233,35 +256,36 @@ textarea {
 }
 .logo {
     display: inline-block;
-    margin-top: 2%;
+    margin-top: .5em;
     color: inherit;
-    font-size: 28px;
-    line-height: 28px;
+    font-size: 1.7em;
     text-decoration: none;
+    white-space: nowrap;
 }
 .logo:hover, .logo:focus {
     color: #333;
     text-decoration: none;
 }
 .logo small {
+    display: inline-block;
     color: #aaa;
-    font-size: 20px;
-    vertical-align: top;
+    font-size: .8em;
+    text-indent: .4em;
 }
 
 /* Navigation */
-.list-nav {
+.list {
     display: inline-block;
     zoom: 1;
     position: relative;
-    display:    -moz-box; /* Flexbox outdated syntax, removable at Firefox 20 */
     display: -webkit-flex;
+    display:     -moz-box; /* Flexbox outdated syntax, removable at Firefox 20 */
+    display: -ms-flexbox;
     display:         flex;
-    width:    -moz-calc(100%);
-    height: 36px;
-    margin-top: 1%;
-    margin-bottom: 1%;
-    line-height: 34px;
+    height: 2.5em;
+    margin-top: .5em;
+    margin-bottom: .5em;
+    line-height: 2.3;
     white-space: nowrap;
     background-color: #f1f1f1;
     background-image: -webkit-linear-gradient(#f8f8f8, rgba(248,248,248,0)); /* Safari, iOS and Android fallback */
@@ -270,67 +294,67 @@ textarea {
     border-style: solid;
     border-left: 0;
     border-color: #ddd #ddd #ccc;
-    border-radius: 2px;
+    border-radius: .2em;
     box-shadow: 0 1px 1px rgba(0,0,0,.1), inset 0 0 0 1px rgba(255,255,255,.5);
     -moz-box-sizing: border-box;
          box-sizing: border-box;
 }
-.list-nav .item {
+.item {
     overflow: hidden;
     display: inline-block;
     -webkit-flex: 1;
     -moz-box-flex: 1; /* Flexbox outdated syntax, removable at Firefox 20 */
+        -ms-flex: 1;
             flex: 1;
     min-width: 0; /* Implied Minimum Size of Flex Items http://dev.w3.org/csswg/css3-flexbox/#min-size-auto */
-    padding-right: 15px;
-    padding-left: 15px;
-    padding-right: -webkit-calc(2%);
-    padding-left: -webkit-calc(2%);
+
+    /* Firefox flexbox padding percentage issue https://bugzilla.mozilla.org/show_bug.cgi?id=529761 */
+    padding-right: 1em;
+    padding-left: 1em;
+
     color: inherit;
     text-align: center;
-    text-decoration: none;
     text-overflow: ellipsis;
     border-right: 1px solid #ddd;
     -webkit-transition-property: background-color, background-image;
             transition-property: background-color, background-image;
 }
-.list-nav .item:first-child {
+.item:first-child {
     border-left: 1px solid #e9e9e9;
-    border-radius: 2px 0 0 2px;
+    border-radius: .2em 0 0 .2em;
 }
-.list-nav .item:last-child {
+.item:last-child {
     border-right-color: transparent;
-    border-radius: 0 2px 2px 0;
+    border-radius: 0 .2em .2em 0;
 }
-.list-nav .item:hover, .list-nav .item:focus {
+.item, .item:hover, .item:focus {
+    text-decoration: none;
+}
+.item:hover, .item:focus {
     background-color: #f8f8f8;
     background-image: -webkit-linear-gradient(#fbfbfb, rgba(251, 251, 251, 0)); /* Safari, iOS and Android fallback */
     background-image:         linear-gradient(#fbfbfb, rgba(251, 251, 251, 0));
 }
-.list-nav .item.selected {
+.item.selected {
     margin-top: -1px;
     margin-bottom: -1px;
     color: #fff;
-    line-height: 36px;
+    line-height: 2.5;
     background-color: #2d76b9;
     background-image: none;
     border-color: transparent;
     cursor: default;
 }
-.list-nav .item.selected:last-child {
+.item.selected:last-child {
     margin-right: -1px;
 }
-
-.article {
-    padding-top: 1.5%;
-    padding-bottom: 65px;
+.main {
+    padding-top: .5em;
+    padding-bottom: 4.5em;
     -webkit-user-select: text;
        -moz-user-select: text;
         -ms-user-select: text;
             user-select: text;
-}
-.content {
-    background-color: #fff;
 }
 .note {
     overflow: hidden;
@@ -345,51 +369,25 @@ textarea {
     background-color: #ffe65c;
     background-image: -webkit-linear-gradient(#ffe998, #ffe65c); /* Safari, iOS and Android fallback */
     background-image:         linear-gradient(#ffe998, #ffe65c);
-    box-shadow: 0 0 4px rgba(0,0,0,.5);
-    -webkit-transform: translateY(-50px);
-            transform: translateY(-50px);
+    box-shadow: 0 0 .4em rgba(0,0,0,.5);
+    -webkit-transform: translateY(-5em);
+            transform: translateY(-5em);
     -webkit-animation: slide-down 7s ease-out .1s 1;
             animation: slide-down 6s linear .5s 1;
 }
-/* Webkit old syntax to support also mobile devices */
-@-webkit-keyframes slide-down {
-    0% {
-        -webkit-transform: translateY(-50px);
-    }
-    10% {
-        -webkit-transform: translateY(0);
-    }
-    90% {
-        -webkit-transform: translateY(0);
-    }
-    /* Android 2.3 flicker issue, final frame less than 100% http://georgehess.com/post/2054803814/css-keyframe-animation-flicker */
-    99.99% {
-        -webkit-transform: translateY(-50px);
-    }
-    /* Do not remove, otherwise will not work on Android 2.3 */
-    100% {}
-}
-@keyframes slide-down {
-    0%, 100% {
-        transform: translateY(-50px);
-    }
-    10%, 90% {
-        transform: translateY(0);
-    }
-}
 .footer {
     position: relative;
-    height: 49px;
-    margin-top: -50px;
-    line-height: 49px;
+    height: 3em;
+    margin-top: -3em;
+    line-height: 3;
     clear: both;
 }
 .breadcrumb {
     border-top: 1px solid #eee;
 }
 .breadcrumb a {
-    margin-right: 2px;
-    margin-left: 2px;
+    padding-right: .2em;
+    padding-left: .2em;
 }
 
 
@@ -444,31 +442,33 @@ textarea {
     input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week], input[type=submit] {
         width: 100%;
     }
-    .list-nav {
+    .list {
         width: 100%;
         -webkit-flex-direction: column;
         -moz-box-orient: vertical;  /* Flexbox outdated syntax, removable at Firefox 20 */
-           -moz-flex-direction: column;  /* removable at Firefox 20 */
+           -moz-flex-direction: column;  /* Removable at Firefox 20 */
+            -ms-flex-direction: column;
                 flex-direction: column;
         height: auto;
         border-left: 1px solid #ddd;
     }
-    .list-nav .item {
+    .item {
         display: block;
-        padding-right: -webkit-calc(5%);
-        padding-left: -webkit-calc(5%);
+         -ms-flex: none;
+        padding-right: 1.3em;
+        padding-left: 1.3em;
         text-align: left;
         border-top: 1px solid #ddd;
         border-right: 0;
     }
-    .list-nav .item:first-child {
+    .item:first-child {
         border: 0;
-        border-radius: 2px 2px 0 0;
+        border-radius: .2em .2em 0 0;
     }
-    .list-nav .item:last-child {
-        border-radius: 0 0 2px 2px;
+    .item:last-child {
+        border-radius: 0 0 .2em .2em;
     }
-    .list-nav .item.selected {
+    .item.selected {
         margin-right: -1px;
         margin-left: -1px;
         position: relative;
@@ -538,16 +538,16 @@ textarea {
         *overflow: visible;
     }
     .ie-input {
-        width: 250px;
-        padding: 7px 12px;
+        width: 25em;
+        padding: .7em 1.2em;
     }
     .clearfix {
         *zoom: 1;
     }
     .ui-center {
-        *width: 760px;
+        *width: 76em;
     }
-    .article {
+    .main {
         width: 100%;
     }
 }
@@ -574,7 +574,7 @@ textarea {
         -webkit-appearance: none;
     }
     textarea::-webkit-scrollbar {
-        width: 8px;
+        width: .8em;
         background-color: rgba(250,250,250,0);
     }
     textarea::-webkit-scrollbar-thumb {
@@ -609,5 +609,9 @@ textarea {
     }
     :-moz-placeholder {
         color: #ddd;
+    }
+    /* Firefox width issue */
+    .list {
+        width: 100%;
     }
 }
