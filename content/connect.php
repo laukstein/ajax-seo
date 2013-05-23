@@ -83,9 +83,9 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
         mysql_query("INSERT INTO `" . MYSQL_TABLE . "` (array, url, `meta-title`, `meta-description`, title, content) VALUES
             (1, '', 'Home', 'AJAX SEO is crawlable framework for AJAX applications.', 'Make Apps crawable', '<h2>and improve your user experience</h2>\n<p>AJAX SEO is crawlable framework for AJAX applications that uses the latest SEO standards, Page Speed and YSlow rules, Google HTML/CSS Style Guide, etc. to improve and maximize performance, security, accessibility, usability and user experience.</p>\n<p>The source code is build on latest W3C standards, HTML Living Standard HTML5, CSS3, Microdata, etc.<br>\nCheck <a class=js-as href=history>history</a> feature and after <a href=javascript:history.forward()><var>history.forward()</var></a>.</p>'),
             (2, 'history', 'History', '', 'Manage history', '<p>Try <a href=javascript:history.back()><var>history.back()</var></a> and check <a class=js-as href=bind>bind event</a>.</p>'),
-            (3, 'bind', 'Bind', '', 'Bind event', '<p>Bind on AJAX loaded <a class=js-as href=test/nested>content</a> with <var>class=js-as</var>.</p>'),
-            (4, 'test/nested', 'Nested', '', 'Nested URL', '<p>This is nested URL example. Try <a class=js-as href=кириллица>Cyrillic URL</a>.</p>'),
-            (5, 'кириллица', 'Cyrillic', '', 'Кириллический URL', '<p>This is Cyrillic URL example. Try <a class=js-as dir=rtl href=עברית>RTL עברית</a>.</p>'),
+            (3, 'bind', 'Bind', '', 'Bind event', '<p>Bind on AJAX loaded <a class=js-as href=test/nested.html>content</a> with <var>class=js-as</var>.</p>'),
+            (4, 'test/nested.html', 'Nested', '', 'Nested URL', '<p>This is nested URL example with <b>.html</b> ending. Try <a class=js-as href=кириллица.html>Cyrillic URL</a>.</p>'),
+            (5, 'кириллица.html', 'Cyrillic', '', 'Кириллический URL', '<p>This is Cyrillic URL example. Try <a class=js-as dir=rtl href=עברית>RTL עברית</a>.</p>'),
             (6, 'עברית', 'RTL text', '', 'RTL text', '<p>This is RTL example <span dir=rtl>טקסט בעברית</span>. Try <a class=js-as href=no-page>not existing page</a>.</p>')");
 
         if (is_writable($f)) {
