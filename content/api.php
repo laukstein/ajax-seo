@@ -32,9 +32,10 @@ if (mysql_num_rows($result)) {
     ), MYSQL_TABLE, $url);
     $datemod -> cache($datemod -> gmtime);
 
-    $isset_jsonp = isset($_GET['callback']) ? true : false;
+    $callback      = isset($_GET['callback']) ? $_GET['callback'] : null;
+    $issetcallback = strlen($callback) > 0 ? true : false;
 
-    if ($isset_jsonp) {
+    if ($issetcallback) {
         header('Content-Type: application/javascript; charset=utf-8');
     } else {
         header('Content-Type: application/json; charset=utf-8');
@@ -71,12 +72,12 @@ if (mysql_num_rows($result)) {
         // Use for latest PHP standards for http://php.net/json-encode
         if (version_compare(PHP_VERSION, '5.4', '>=')) {
             // Add option "JSON_PRETTY_PRINT" in case you care more readability than to save some bits
-            $json = json_encode($array, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            $data = json_encode($array, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         } else {
-            $json = str_replace('\\/', '/', json_encode($array));
+            $data = str_replace('\\/', '/', json_encode($array));
         }
 
-        echo $isset_jsonp ? $_GET['callback'] . '(' . $json . ')' : $json;
+        echo $issetcallback ? $callback . '(' . $data . ')' : $data;
     }
     mysql_close($con);
 } else {
