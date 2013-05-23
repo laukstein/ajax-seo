@@ -52,10 +52,10 @@ AddType video/webm                     webm
 AddType video/x-flv                    flv
 
 # Custom error pages
-ErrorDocument 403 /ajax-seo/?url=error
-# ErrorDocument 403 "403 Forbidden"
-# ErrorDocument 404 "404 Not Found"
-# ErrorDocument 500 "500 Internal Server Error"
+# ErrorDocument 403 /?url=error
+ErrorDocument 403 "403 Forbidden"
+ErrorDocument 404 "404 Not Found"
+ErrorDocument 500 "500 Internal Server Error"
 
 # Gzip compression
 <IfModule mod_deflate.c>
@@ -172,12 +172,11 @@ FileETag None
     RewriteCond %{REQUEST_URI} (.*)\\(.*)
     RewriteRule . %1/%3 [R=301,L]
 
-    # Remove index files and extensions
-    # Remove index.php and index.html
+    # Redirect index.php, index.html URLs
     RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /(.*)index\.(php|html)/?(.*)\ HTTP/
     RewriteRule . http%{ENV:https}://%{HTTP_HOST}/%1%3 [R=301,L]
-    # Remove extensions php and html
-    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /(.*)\.(php|html)(.*)\ HTTP/
+    # Remove URL ending .php
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /(.*)\.php(.*)\ HTTP/
     RewriteRule . http%{ENV:https}://%{HTTP_HOST}/%1%3 [R=301,L]
 
     # Slashes issues
@@ -211,6 +210,8 @@ FileETag None
     RewriteCond %{REQUEST_URI} (.+)(\.|\,|=|{|}|\||\^|~|\[|\]|`)(.*)$
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
+    # Allow URL ending .html
+    RewriteCond %{REQUEST_URI} !\.html$
     RewriteRule . %1%3 [R=301,L]
 
     # Block access to folders that begins with a period, like Subversion and Git directories
@@ -224,14 +225,14 @@ FileETag None
     RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^?#\ ]*)\?[^\ ]*\ HTTP/
     # Query rewrite exceptions
     RewriteCond %{REQUEST_FILENAME} !index.php
-    RewriteCond %{REQUEST_URI}?%{QUERY_STRING} !/api(/.*)?\?[callback|_]=([^&]*)
+    RewriteCond %{REQUEST_URI}?%{QUERY_STRING} !/api(/.*)?\?(callback|_)=([^&]*)
     RewriteRule .* %{REQUEST_URI}? [R=301,L]
 
     # URL rewrite
     RewriteCond %{REQUEST_FILENAME} !-d [OR]
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^api(?:/([^.]*))?$ index.php?api&url=$1 [QSA,L]
-    RewriteRule ^([^.]*)$ index.php?url=$1 [QSA,L]
+    RewriteRule ^api(?:/(.*))?$ index.php?api&url=$1 [QSA,L]
+    RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
 
     # Get the headers If-Modified-Since and If-None-Match when apache_request_headers() is not available
     # Save bandwidth and overhead with If-Modified-Since, and help to Google Search crawler http://support.google.com/webmasters/bin/answer.py?hl=en&answer=35769#2
