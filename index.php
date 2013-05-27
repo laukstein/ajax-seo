@@ -167,7 +167,7 @@ if ($note !== null) {
 
 echo "<div class=\"ui-center container\">
 <header class=clearfix>
-    <a class=logo href=https://github.com/laukstein/ajax-seo rel=home>AJAX SEO{$title_installation}<small>Make Apps crawlable</small></a>\n";
+    <a class=logo href=https://github.com/laukstein/ajax-seo rel=home>AJAX SEO{$title_installation}</a>\n";
 
 
 if (MYSQL_CON) {
@@ -233,10 +233,10 @@ echo '</main>
 if(MYSQL_CON){
 
 // code.jquery.com EdgeCast's CDN has the best performance http://royal.pingdom.com/2012/07/24/best-cdn-for-jquery-in-2012/
-// In case you use HTTPS replace it with Google CDN //ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js
+// In case you use HTTPS replace it with Google CDN //ajax.googleapis.com/ajax/libs/jquery/2.0.1/jquery.min.js
 
-echo "\n<!--[if lt IE 9]><script src=http://code.jquery.com/jquery-1.9.1.min.js></script><![endif]-->
-<!--[if gte IE 9]><!--><script src=http://code.jquery.com/jquery-2.0.0.min.js></script>$assets_migrate<!--<![endif]-->
+echo "\n<!--[if lt IE 9]><script src=http://code.jquery.com/jquery-1.10.0.min.js></script><![endif]-->
+<!--[if gte IE 9]><!--><script src=http://code.jquery.com/jquery-2.0.1.min.js></script>$assets_migrate<!--<![endif]-->
 $assets_address
 <script>
 (function() {
