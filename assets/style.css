@@ -45,7 +45,7 @@ html {
 body {
     overflow-x: hidden;
     overflow-y: scroll;
-    font-size: 1.55em; /* The optional font-size REM http://snook.ca/archives/html_and_css/font-size-with-rem, buggy on various browsers */
+    font-size: 1.7em; /* The optional font-size REM http://snook.ca/archives/html_and_css/font-size-with-rem, buggy on various browsers */
     word-wrap: break-word;
     -webkit-hyphens: auto;
        -moz-hyphens: auto;
@@ -57,7 +57,7 @@ body, h1, h2, h3, h4, p, ul, ol, dl, dd, blockquote, figure, select, input, text
 }
 body, input, select, textarea {
     color: #222;
-    line-height: 1.45;
+    line-height: 1.6;
     font-family: sans-serif;
 }
 h1, h2 {
@@ -265,12 +265,6 @@ textarea {
     color: #333;
     text-decoration: none;
 }
-.logo small {
-    display: inline-block;
-    color: #aaa;
-    font-size: .8em;
-    text-indent: .4em;
-}
 
 /* Navigation */
 .list {
@@ -412,7 +406,7 @@ textarea {
 
 
 
-/* Media Queries
+/* Device optimization
 -------------------------------------------------- */
 /* CSS Device Adaptation http://dev.w3.org/csswg/css-device-adapt/ */
 @viewport {
@@ -421,16 +415,17 @@ textarea {
 }
 
 /* Device resolution http://www.w3.org/blog/CSS/2012/06/14/unprefix-webkit-device-pixel-ratio/ */
-/* 480x640 160dpi */
-/* @media (-webkit-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) { } */
-/* 720x960 240dpi */
+@media (-webkit-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
+    html {
+        font-size: 80%;
+    }
+}
 /* @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) { } */
-
 /* @media (orientation: portrait) { } */
 /* @media (orientation: landscape) { } */
 
 /* Small devices */
-@media (max-width: 480px) {
+@media (max-width: 540px) {
     html {
         -webkit-text-size-adjust: 100%;
         /* –ms-text-size-adjust property will be ignored where the viewport tag is present */
@@ -471,6 +466,11 @@ textarea {
         margin-right: -1px;
         margin-left: -1px;
         position: relative;
+    }
+}
+@media (max-width: 320px) {
+    html {
+        font-size: 53.5%;
     }
 }
 
