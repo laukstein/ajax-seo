@@ -45,31 +45,33 @@ html {
 body {
     overflow-x: hidden;
     overflow-y: scroll;
-    font-size: 1.7em; /* The optional font-size REM http://snook.ca/archives/html_and_css/font-size-with-rem, buggy on various browsers */
+    font-size: 1.8em; /* The optional font-size REM http://snook.ca/archives/html_and_css/font-size-with-rem, buggy on various browsers */
     word-wrap: break-word;
     -webkit-hyphens: auto;
        -moz-hyphens: auto;
         -ms-hyphens: auto;
             hyphens: auto;
 }
-body, h1, h2, h3, h4, p, ul, ol, dl, dd, blockquote, figure, select, input, textarea {
+body, h3, h4, p, ul, ol, dl, dd, blockquote, figure, select, input, textarea {
     margin: auto;
 }
 body, input, select, textarea {
     color: #222;
-    line-height: 1.6;
-    font-family: sans-serif;
+    line-height: 1.5;
+    font-family: Cambria, Georgia, serif;
 }
 h1, h2 {
+    margin-top: .2em;
+    margin-bottom: .2em;
     font-weight: normal;
-    font-family: Segoe UI, sans-serif;
+    line-height: 1.2;
 }
 h1 {
-    font-size: 2.2em;
+    font-size: 2em;
 }
 h2 {
-    color: #999;
-    font-size: 1.8em;
+    color: #aaa;
+    font-size: 1.4em;
 }
 p {
     padding-top: .8em;
@@ -98,6 +100,10 @@ a {
 a:hover, a:focus {
     color: #2f6291;
     text-decoration: underline;
+}
+a:active {
+    /* Avoid IE10 gray background-color */
+    background-color: inherit;
 }
 img {
     max-width: 100%;
@@ -178,7 +184,7 @@ textarea {
 .ui-center {
     overflow: hidden;
     width: 90%;
-    min-width: 21.4em;
+    min-width: 19em;
     padding-right: 2.5%;
     padding-left: 2.5%;
     margin-right: auto;
@@ -254,10 +260,9 @@ textarea {
     min-height: 100%;
 }
 .logo {
-    display: inline-block;
-    margin-top: .5em;
+    display: table-row;
     color: inherit;
-    font-size: 1.7em;
+    font-size: 1.8em;
     text-decoration: none;
     white-space: nowrap;
 }
@@ -269,16 +274,14 @@ textarea {
 /* Navigation */
 .list {
     display: inline-block;
-    zoom: 1;
     position: relative;
+    display: -webkit-box; /* Android 2.3 Flexbox fallback */
     display: -webkit-flex;
     display:     -moz-box; /* Flexbox outdated syntax, removable at Firefox 20 */
     display: -ms-flexbox;
     display:         flex;
-    height: 2.5em;
-    margin-top: .5em;
-    margin-bottom: .5em;
-    line-height: 2.3;
+    line-height: 2.2;
+    font-family: Meiryo, sans-serif;
     white-space: nowrap;
     background-color: #f1f1f1;
     background-image: -webkit-linear-gradient(#f8f8f8, rgba(248,248,248,0)); /* Safari, iOS and Android fallback */
@@ -294,7 +297,12 @@ textarea {
 }
 .item {
     overflow: hidden;
-    display: inline-block;
+    position: relative; /* Old Webkit visibility issue */
+    display: block;
+
+    /* Android 2.3 Flexbox fallback */
+    -webkit-box-flex: 1;
+
     -webkit-flex: 1;
     -moz-box-flex: 1; /* Flexbox outdated syntax, removable at Firefox 20 */
         -ms-flex: 1;
@@ -302,9 +310,10 @@ textarea {
     min-width: 0; /* Implied Minimum Size of Flex Items http://dev.w3.org/csswg/css3-flexbox/#min-size-auto */
 
     /* Firefox flexbox padding percentage issue https://bugzilla.mozilla.org/show_bug.cgi?id=529761 */
-    padding-right: 1em;
-    padding-left: 1em;
+    padding-right: .4em;
+    padding-left: .4em;
 
+    float: left;
     color: inherit;
     text-align: center;
     text-overflow: ellipsis;
@@ -321,6 +330,7 @@ textarea {
     border-radius: 0 .2em .2em 0;
 }
 .item, .item:hover, .item:focus {
+    color: inherit;
     text-decoration: none;
 }
 .item:hover, .item:focus {
@@ -332,7 +342,7 @@ textarea {
     margin-top: -1px;
     margin-bottom: -1px;
     color: #fff;
-    line-height: 2.5;
+    line-height: 2.3;
     background-color: #2d76b9;
     background-image: none;
     border-color: transparent;
@@ -342,7 +352,7 @@ textarea {
     margin-right: -1px;
 }
 .main {
-    padding-top: .5em;
+    padding-top: 1em;
     padding-bottom: 4.5em;
     -webkit-user-select: text;
        -moz-user-select: text;
@@ -373,9 +383,11 @@ textarea {
     height: 3em;
     margin-top: -3em;
     line-height: 3;
-    clear: both;
 }
 .breadcrumb {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     border-top: 1px solid #eee;
 }
 .breadcrumb a {
@@ -414,18 +426,16 @@ textarea {
     user-zoom: fixed;
 }
 
-/* Device resolution http://www.w3.org/blog/CSS/2012/06/14/unprefix-webkit-device-pixel-ratio/ */
-@media (-webkit-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
-    html {
-        font-size: 80%;
-    }
-}
-/* @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) { } */
+/* HiDPI @2x double-resolution */
+/* @media print, (-o-min-device-pixel-ratio: 5/4), (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) { } */
 /* @media (orientation: portrait) { } */
 /* @media (orientation: landscape) { } */
-
-/* Small devices */
-@media (max-width: 540px) {
+@media (-webkit-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
+    html {
+        font-size: 62.5%;
+    }
+}
+@media (max-width: 532px) {
     html {
         -webkit-text-size-adjust: 100%;
         /* –ms-text-size-adjust property will be ignored where the viewport tag is present */
@@ -437,20 +447,16 @@ textarea {
         width: 100%;
     }
     .list {
+        display: block;
         width: 100%;
-        -webkit-flex-direction: column;
-        -moz-box-orient: vertical;  /* Flexbox outdated syntax, removable at Firefox 20 */
-           -moz-flex-direction: column;  /* Removable at Firefox 20 */
-            -ms-flex-direction: column;
-                flex-direction: column;
         height: auto;
         border-left: 1px solid #ddd;
     }
     .item {
         display: block;
-         -ms-flex: none;
         padding-right: 1.3em;
         padding-left: 1.3em;
+        float: none;
         text-align: left;
         border-top: 1px solid #ddd;
         border-right: 0;
@@ -470,7 +476,7 @@ textarea {
 }
 @media (max-width: 320px) {
     html {
-        font-size: 53.5%;
+        font-size: 50.5%;
     }
 }
 
