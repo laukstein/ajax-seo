@@ -11,7 +11,7 @@ include 'content/config.php';
 include 'content/connect.php';
 
 // Avoid XSS attacks with Content Security Policy (CSP) https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html
-header("Content-Security-Policy: script-src 'self' 'unsafe-inline' 'unsafe-eval' " . ($issetcdn ? $cdn_host . ' ' : null) . "code.jquery.com www.google-analytics.com");
+header("Content-Security-Policy: script-src 'self' 'unsafe-inline' 'unsafe-eval' " . ($issetcdn ? $cdn_host . ' ' : null) . "cdnjs.cloudflare.com www.google-analytics.com");
 
 
 
@@ -113,7 +113,7 @@ if ($issetcdn) {
     $metadata .= "\n<link rel=dns-prefetch href=" . $cdn_scheme . $cdn_host . '>';
 }
 // Prefetch EdgeCast's CDN
-$metadata .= "\n<link rel=dns-prefetch href=http://code.jquery.com>";
+$metadata .= "\n<link rel=dns-prefetch href=//cdnjs.cloudflare.com>";
 // Prefetch Google CDN
 // $metadata .= "\n<link rel=dns-prefetch href=//ajax.googleapis.com>";
 // Prefetch Google Analytics
@@ -140,7 +140,6 @@ function path($filename) {
 }
 $assets_style   = path('style.css');
 $assets_address = path('jquery.address.js');
-$assets_migrate = $debug ? "\n<script src=http://code.jquery.com/jquery-migrate-1.2.1.js></script>" : null;
 
 // Working on Cache Manifest
 // Chrome Application Cache manifest .appcache issue http://crbug.com/167918
@@ -174,7 +173,7 @@ if (MYSQL_CON) {
     $result = mysql_query('SELECT url, `meta-title`, title FROM `' . MYSQL_TABLE . '` ORDER BY array ASC');
 
     if (@mysql_num_rows($result)) {
-        echo "    <nav class=list>";
+        echo '    <nav class="clearfix list">';
 
         while ($row = @mysql_fetch_array($result, MYSQL_ASSOC)) {
             $row[] = array(
@@ -204,7 +203,8 @@ if (MYSQL_CON) {
 }
 
 
-echo "</header>\n<main role=main class=\"main js-content\">\n";
+echo "</header>
+<div class=\"main js-content\"><main role=main>\n";
 
 
 if (MYSQL_CON) {
@@ -219,7 +219,7 @@ if (MYSQL_CON) {
 }
 
 
-echo '</main>
+echo '</main></div>
 </div>
 <footer class="ui-center footer">
     <nav class=breadcrumb itemprop=breadcrumb>
@@ -232,11 +232,12 @@ echo '</main>
 
 if(MYSQL_CON){
 
-// code.jquery.com EdgeCast's CDN has the best performance http://royal.pingdom.com/2012/07/24/best-cdn-for-jquery-in-2012/
-// In case you use HTTPS replace it with Google CDN //ajax.googleapis.com/ajax/libs/jquery/2.0.1/jquery.min.js
+// Comparing CDNs
+// Cloudflare's cdnJS is better than Google CDN http://www.baldnerd.com/make-your-site-faster-cloudflares-cdnjs-vs-google-hosted-libraries-shocking-results/
+// jQuery EdgeCast's CDN better than Google, Microsoft and Media Temple CDN http://royal.pingdom.com/2012/07/24/best-cdn-for-jquery-in-2012/
 
-echo "\n<!--[if lt IE 9]><script src=http://code.jquery.com/jquery-1.10.0.min.js></script><![endif]-->
-<!--[if gte IE 9]><!--><script src=http://code.jquery.com/jquery-2.0.1.min.js></script>$assets_migrate<!--<![endif]-->
+echo "\n<!--[if lt IE 9]><script src=//cdnjs.cloudflare.com/ajax/libs/jquery/1.10.1/jquery.min.js></script><![endif]-->
+<!--[if gte IE 9]><!--><script src=//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js></script><!--<![endif]-->
 $assets_address
 <script>
 (function() {
@@ -244,7 +245,12 @@ $assets_address
 
     // Common variables
     // --------------------------------------------------
-    var pointer  = 'click', // Cross-device pointer event
+    var isDevice = /mobile|android/i.test(navigator.userAgent.toLowerCase()),
+
+        // Remove 300ms click delay on mobile devices by using touchstart event
+        // Usage: $(selector).on(pointer, (function() { });
+        pointer  = isDevice ? 'touchstart' : 'click',
+
         \$nav     = $('.js-as'),
         \$content = $('.js-content'),
         init     = true,
@@ -271,13 +277,19 @@ $assets_address
         };
 
 
+
+    // Avoid console on devices and not supported browsers
+    if (!window.console || isDevice) {
+        console = {
+            log: function() {}
+        };
+    }
+
+
+
     // Mobile optimization
     // --------------------------------------------------
-    if (/mobile|android/i.test(navigator.userAgent.toLowerCase())) {
-        // Remove 300ms click delay and use touchstart event
-        // Usage: $(selector).on(pointer, (function() { });
-        pointer = 'touchstart';
-
+    if (isDevice) {
         // Auto-hide mobile device address bar
         if (window.location.hash.indexOf('#') === -1) {
             var hideAddressbar = function() {
