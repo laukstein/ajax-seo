@@ -114,8 +114,6 @@ if ($issetcdn) {
 }
 // Prefetch EdgeCast's CDN
 $metadata .= "\n<link rel=dns-prefetch href=//cdnjs.cloudflare.com>";
-// Prefetch Google CDN
-// $metadata .= "\n<link rel=dns-prefetch href=//ajax.googleapis.com>";
 // Prefetch Google Analytics
 $metadata .= "\n<link rel=dns-prefetch href=//www.google-analytics.com>";
 
