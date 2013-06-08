@@ -1,6 +1,6 @@
-# [AJAX SEO](http://lab.laukstein.com/ajax-seo/)
+# [Ajax SEO](http://lab.laukstein.com/ajax-seo/)
 
-AJAX SEO is crawlable framework for AJAX applications that uses the latest SEO standards, Page Speed and YSlow rules, Google HTML/CSS Style Guide, etc. to improve and maximize performance, security, accessibility, usability and user experience.
+Ajax SEO is crawlable framework for Ajax applications that uses the latest SEO standards, Page Speed and YSlow rules, Google HTML/CSS Style Guide, etc. to improve and maximize performance, security, accessibility, usability and user experience.
 The source code is build on latest W3C standards, HTML Living Standard HTML5, CSS3, Microdata, etc.
 
 [See the demo](<http://lab.laukstein.com/ajax-seo/>)
@@ -21,7 +21,7 @@ The source code is build on latest W3C standards, HTML Living Standard HTML5, CS
 
 * Schema.org Microdata markup
 * HTML5 history API with crawlable SEO fallback for < IE10
-* AJAX crawling scheme with Apache Rewrite <https://developers.google.com/webmasters/ajax-crawling/docs/getting-started>
+* Ajax crawling scheme with Apache Rewrite <https://developers.google.com/webmasters/ajax-crawling/docs/getting-started>
 * Rewrite www to no-www domain <http://no-www.org>
 * Handle HTTP/HTTPS protocol, protocol-less URL
 * Slash and backslash issues
@@ -38,7 +38,7 @@ The source code is build on latest W3C standards, HTML Living Standard HTML5, CS
 * Performance tuning on Apache, PHP, MySQL
 * Relative URL [RFC 3986](http://tools.ietf.org/html/rfc3986#section-4.2)
 * [jsPerf](http://jsperf.com/jquery-ajax-jsonp-timeout-performormance) `jQuery $.ajax() timeout` vs `window.setTimeout()`
-* [jsPerf](http://jsperf.com/ajax-jsonp-vs-ajax-json) `AJAX JSONP` vs `AJAX JSON`
+* [jsPerf](http://jsperf.com/ajax-jsonp-vs-ajax-json) `Ajax JSONP` vs `Ajax JSON`
 * [jsPerf](http://jsperf.com/getjson-vs-ajax-json) `$.ajax() json` vs `$.getJSON()`
 * [jsPerf](http://jsperf.com/rename-title) `document.title=data.title` vs `$('title').html(data.title)`
 * [jsPerf](http://jsperf.com/encodeuri-vs-encodeuricomponent) `encodeURIComponent()` vs `encodeURI()`
@@ -47,5 +47,5 @@ The source code is build on latest W3C standards, HTML Living Standard HTML5, CS
 
 ## License
 
-AJAX SEO released under MIT license.
+Ajax SEO released under MIT license.
 jQuery and jQuery Address Plugin dual licensed under the MIT and GPL licenses.
