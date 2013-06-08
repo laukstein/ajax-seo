@@ -104,7 +104,7 @@ input,
         <li><input class="transition ie-input" id=host placeholder=localhost name=host value="' . MYSQL_HOST . '"><label for=host>Database host</label>
         <li><input class="transition ie-input" id=table name=table value="' . MYSQL_TABLE . '"><label for=table>Table</label>
         <li>
-            <hr>' . $error . '<p>CDN assets URL like protocol-less <b>//cdn.' . $_SERVER['SERVER_NAME'] . '/</b> or with HTTP/HTTPS</p>
+            <hr>' . $error . '<p>CDN assets URL like protocol-less //cdn.' . $_SERVER['SERVER_NAME'] . '/ or with HTTP/HTTPS</p>
             <input class="transition ie-input" id=cdnpath placeholder=Optional name=cdnpath value="' . CDN_PATH . '"><label for=cdnpath>CDN URL</label>
         </li>
         <li><input class="transition ie-input button" type=submit name=install value=Install>
