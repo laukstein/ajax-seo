@@ -15,6 +15,7 @@ header("Content-Security-Policy: script-src 'self' 'unsafe-inline' 'unsafe-eval'
 
 
 
+$fn               = 'Ajax SEO';
 $meta_description = null;
 
 if (MYSQL_CON) {
@@ -57,11 +58,11 @@ if (MYSQL_CON) {
             $content          = isset($row['content']) ? $row['content'] : null;
         }
 
-        $pagetitle = $meta_title . ' - AJAX SEO';
+        $pagetitle = $meta_title . ' - ' . $fn;
 
         // SEO page title improvement for the root page
         if (strlen($url) == 0) {
-            $pagetitle = 'AJAX SEO';
+            $pagetitle = $fn;
         }
     } else {
         // If URL does not exist, return 404 error
@@ -164,7 +165,7 @@ if ($note !== null) {
 
 echo "<div class=\"ui-center container\">
 <header class=clearfix>
-    <a class=logo href=https://github.com/laukstein/ajax-seo rel=home>AJAX SEO{$title_installation}</a>\n";
+    <a class=logo href=https://github.com/laukstein/ajax-seo rel=home>$fn$title_installation</a>\n";
 
 
 if (MYSQL_CON) {
