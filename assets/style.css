@@ -22,7 +22,7 @@ http://screwlewse.com/2010/08/different-css-techniques-and-their-performance/ */
 html, body {
     height: 100%;
 }
-html, form {
+html, form, .button {
     /* Remove user-select for easer developing processes */
     -webkit-user-select: none;
        -moz-user-select: none;
@@ -46,7 +46,6 @@ body {
     overflow-x: hidden;
     overflow-y: scroll;
     font-size: 1.8em; /* The optional font-size REM http://snook.ca/archives/html_and_css/font-size-with-rem, buggy on various browsers */
-    word-wrap: break-word;
     -webkit-hyphens: auto;
        -moz-hyphens: auto;
         -ms-hyphens: auto;
@@ -64,10 +63,11 @@ h1, h2 {
     margin-top: .2em;
     margin-bottom: .2em;
     font-weight: normal;
+    font-family: serif;
     line-height: 1.2;
 }
 h1 {
-    font-size: 2em;
+    font-size: 2.1em;
 }
 h2 {
     color: #aaa;
@@ -111,8 +111,8 @@ img {
     -ms-interpolation-mode: bicubic;
 }
 hr {
-    margin-top: auto;
-    margin-bottom: auto;
+    margin-top: 1em;
+    margin-bottom: 1em;
     clear: both;
     border-width: 0;
     border-top: 1px solid #eee;
@@ -202,21 +202,14 @@ textarea {
 }
 .button {
     display: inline-block;
-    padding: .7em 1.2em;
-    color: #2d76b9;
-    line-height: 1.9;
+    color: inherit;
     white-space: nowrap;
     text-overflow: ellipsis;
     background-color: #fff;
     border: 1px solid #ccc;
     box-shadow: inset 0 -3em 6em -3em #ececec, 1px 1px 0 #fff;
-    -webkit-user-select: none;
-       -moz-user-select: none;
-        -ms-user-select: none;
-            user-select: none;
 }
 .button:hover, .button:focus {
-    color: #222;
     border-color: #ababab;
     box-shadow: inset 0 0 0 1px #fff, inset 0 -3em 6em -3em #ececec, 1px 1px .3em #d6d6d6;
 }
@@ -263,6 +256,7 @@ textarea {
     display: table-row;
     color: inherit;
     font-size: 1.8em;
+    font-family: serif;
     text-decoration: none;
     white-space: nowrap;
 }
@@ -280,8 +274,11 @@ textarea {
     display:     -moz-box; /* Flexbox outdated syntax, removable at Firefox 20 */
     display: -ms-flexbox;
     display:         flex;
-    line-height: 2.2;
+    margin-top: .2em;
+    margin-bottom: .2em;
+    line-height: 2.1;
     font-family: Meiryo, sans-serif;
+    font-family: "Open Sans", Meiryo, "Segoe UI", sans-serif;
     white-space: nowrap;
     background-color: #f1f1f1;
     background-image: -webkit-linear-gradient(#f8f8f8, rgba(248,248,248,0)); /* Safari, iOS and Android fallback */
@@ -339,10 +336,11 @@ textarea {
     background-image:         linear-gradient(#fbfbfb, rgba(251, 251, 251, 0));
 }
 .item.selected {
+    z-index: 1;
     margin-top: -1px;
     margin-bottom: -1px;
     color: #fff;
-    line-height: 2.3;
+    line-height: 2.2;
     background-color: #2d76b9;
     background-image: none;
     border-color: transparent;
