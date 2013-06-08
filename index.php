@@ -361,7 +361,7 @@ $assets_address
                         console.log(textStatus);
 
                         if (textStatus === 'timeout') {
-                            content.html('Loading seems to be taking a while...');
+                            \$content.html('Loading seems to be taking a while...');
                         }
 
                         \$nav.removeClass('selected');
