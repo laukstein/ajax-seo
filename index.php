@@ -19,7 +19,7 @@ $fn               = 'Ajax SEO';
 $meta_description = null;
 
 if (MYSQL_CON) {
-    $result = mysql_query("SELECT url, `meta-title`, `meta-description`, title, content FROM `" . MYSQL_TABLE . "` WHERE url = '$url'");
+    $result = mysql_query("SELECT url, `meta-title`, `meta-description`, title, content FROM `" . MYSQL_TABLE . "` WHERE url = '$url' LIMIT 1");
 
     // JSON/JSONP respond
     if (isset($_GET['api'])) {
@@ -71,9 +71,9 @@ if (MYSQL_CON) {
 }
 
 // Avoid undefined variables
-$note               = isset($note) ? $note : null;
-$title_installation = isset($title_installation) ? $title_installation : null;
-$installation       = isset($installation) ? $installation : null;
+$note           = isset($note) ? $note : null;
+$optional_title = isset($optional_title) ? $optional_title : null;
+$content        = isset($content) ? $content : null;
 
 
 
@@ -165,7 +165,7 @@ if ($note !== null) {
 
 echo "<div class=\"ui-center container\">
 <header class=clearfix>
-    <a class=logo href=https://github.com/laukstein/ajax-seo rel=home>$fn$title_installation</a>\n";
+    <a class=logo href=https://github.com/laukstein/ajax-seo rel=home>$fn$optional_title</a>\n";
 
 
 if (MYSQL_CON) {
@@ -214,7 +214,7 @@ if (MYSQL_CON) {
     echo "      <h1>$meta_title</h1>\n      $content\n";
     mysql_close($con);
 } else {
-    echo $installation;
+    echo $content;
 }
 
 

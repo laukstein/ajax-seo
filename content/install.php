@@ -72,11 +72,11 @@ header('X-Robots-Tag: none');
 
 // Installer setup
 // --------------------------------------------------
-$meta_title         = 'Installation';
-$pagetitle          = 'AJAX SEO ' . $meta_title;
-$title_installation = ' ' . $meta_title;
+$meta_title     = 'Installation';
+$pagetitle      = 'Ajax SEO' . $meta_title;
+$optional_title = ' ' . $meta_title;
 // Chrome CSS3 transition explode bug when form has three or more input elements http://lab.laukstein.com/bug/input, status http://crbug.com/167083
-$installation       = '<style>
+$content   = '<style>
 .installation {
     display: inline-block;
 }
