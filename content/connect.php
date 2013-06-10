@@ -61,6 +61,15 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
         // Set the global server timezone to GMT, needs for SUPER privileges
         mysql_query("SET GLOBAL time_zone = '+00:00'");
 
+        // MySQL backward compatibility
+        $ver = preg_replace('#[^0-9\.]#', '', mysql_get_server_info());
+        if (version_compare($ver, '5.5.3', '>=')) {
+            $char = 'CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci';
+        } else {
+            mysql_query('SET NAMES utf8');
+            $char = 'CHARSET=utf8 COLLATE=utf8_unicode_ci';
+        }
+
         // Create table
         mysql_query('CREATE TABLE IF NOT EXISTS `' . MYSQL_TABLE . '` (
               id int AUTO_INCREMENT PRIMARY KEY,
@@ -72,7 +81,7 @@ if (@mysql_select_db(MYSQL_DB, $con)) {
               content text NOT NULL,
               updated datetime NOT NULL,
               created timestamp DEFAULT current_timestamp
-            ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci');
+            ) ENGINE=MyISAM DEFAULT ' . $char);
 
         // Create trigger (needs TRIGGER global privilege)
         mysql_query('CREATE TRIGGER updated BEFORE

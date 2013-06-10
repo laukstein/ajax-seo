@@ -8,7 +8,7 @@ The source code is build on latest W3C standards, HTML Living Standard HTML5, CS
 
 ## How to use
 
-* Minimum server requirements: Apache 2, PHP 5.3, MySQL 5
+* Minimum server requirements: Apache 2 with mod_rewrite, PHP 5.2, MySQL 5
 * [Download the source code](https://github.com/laukstein/ajax-seo/zipball/master) and extract on your web server
 * Apply Apache settings from content/httpd.conf
 * Apply PHP settings from content/php.ini or uncomment .htaccess `php_flag` and `php_value`
