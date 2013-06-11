@@ -277,9 +277,10 @@ $assets_address
 
 
 
-    // Avoid console on devices and not supported browsers
+    // Avoid console.log on devices and not supported browsers
+    // --------------------------------------------------
     if (!window.console || isDevice) {
-        console = {
+        window.console = {
             log: function() {}
         };
     }
