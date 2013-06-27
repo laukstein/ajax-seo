@@ -275,13 +275,11 @@ textarea {
     position: relative;
     display: -webkit-box; /* Android 2.3 Flexbox fallback */
     display: -webkit-flex;
-    display:     -moz-box; /* Flexbox outdated syntax, removable at Firefox 20 */
     display: -ms-flexbox;
     display:         flex;
     margin-top: .2em;
     margin-bottom: .2em;
     line-height: 2.1;
-    font-family: Meiryo, sans-serif;
     font-family: "Open Sans", Meiryo, "Segoe UI", sans-serif;
     white-space: nowrap;
     background-color: #f1f1f1;
@@ -293,8 +291,6 @@ textarea {
     border-color: #ddd #ddd #ccc;
     border-radius: .2em;
     box-shadow: 0 1px 1px rgba(0,0,0,.1), inset 0 0 0 1px rgba(255,255,255,.5);
-    -moz-box-sizing: border-box;
-         box-sizing: border-box;
 }
 .item {
     overflow: hidden;
@@ -305,7 +301,6 @@ textarea {
     -webkit-box-flex: 1;
 
     -webkit-flex: 1;
-    -moz-box-flex: 1; /* Flexbox outdated syntax, removable at Firefox 20 */
         -ms-flex: 1;
             flex: 1;
     min-width: 0; /* Implied Minimum Size of Flex Items http://dev.w3.org/csswg/css3-flexbox/#min-size-auto */
@@ -617,9 +612,5 @@ textarea {
     }
     :-moz-placeholder {
         color: #ddd;
-    }
-    /* Firefox width issue */
-    .list {
-        width: 100%;
     }
 }
