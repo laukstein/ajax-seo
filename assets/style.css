@@ -59,7 +59,7 @@ body, input, select, textarea {
     line-height: 1.5;
     font-family: Cambria, Georgia, serif;
 }
-h1, h2 {
+h1, h2, h3 {
     margin-top: .2em;
     margin-bottom: .2em;
     font-weight: normal;
@@ -70,8 +70,12 @@ h1 {
     font-size: 2.1em;
 }
 h2 {
-    color: #aaa;
-    font-size: 1.4em;
+    color: #777;
+    font-size: 1.65em;
+}
+h3 {
+    color: #bbb;
+    font-size: 1.35em;
 }
 p {
     padding-top: .8em;
@@ -551,7 +555,8 @@ textarea {
         *width: 76em;
     }
     .main {
-        width: 100%;
+        /* Avoid crispy text rendering while applying opacity */
+        background-color: #fff;
     }
 }
 
