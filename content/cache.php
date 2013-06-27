@@ -30,11 +30,11 @@ class datemod {
             if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
                 if ($_SERVER['HTTP_IF_MODIFIED_SINCE'] == $gmtime) {
                     http_response_code(304);
+                    ob_end_clean(); // Empty the response body
                     exit;
                 }
             }
             header("Last-Modified: $gmtime");
         }
     }
-
 }
