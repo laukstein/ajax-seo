@@ -128,7 +128,7 @@ function path($filename) {
 
     preg_match('/^(.+)\.([^\.]+)$/', $filename, $matches);
     $extension = $matches[2];
-    $source    = $debug ? $assets . $filename : $assets . $matches[1] . '.min.' . $extension;
+    $source    = $debug ? $assets . $filename . '?' . rand() : $assets . $matches[1] . '.min.' . $extension;
 
     if ($extension == 'css') {
         return "<link rel=stylesheet href=$source>";
@@ -248,7 +248,7 @@ $assets_address
 
         // Remove 300ms click delay on mobile devices by using touchstart event
         // Usage: $(selector).on(pointer, (function() { });
-        pointer  = isDevice ? 'touchstart' : 'click',
+        //pointer  = isDevice ? 'touchstart' : 'click',
 
         \$nav     = $('.js-as'),
         \$content = $('.js-content'),
@@ -256,7 +256,7 @@ $assets_address
         state    = window.history.pushState !== undefined,
         // Google Universal Analytics tracking
         tracker  = function() {
-            if (typeof ga === 'function') {
+            if (typeof ga !== 'undefined') {
                 return ga && ga('send', 'pageview', {
                     // window.location.pathname + window.location.search + window.location.hash
                     page: decodeURI(window.location.pathname)
@@ -266,10 +266,6 @@ $assets_address
         \$this, request, fadeTimer,
         // Response
         handler = function(data) {
-            if (fadeTimer) {
-                clearTimeout(fadeTimer);
-            }
-
             document.title = data.pagetitle;
             \$content.fadeTo(20, 1).html(data.content);
             tracker();
@@ -335,7 +331,7 @@ $assets_address
             \$nav.each(function() {
                 \$this = $(this);
 
-                if (\$this.attr('href') === (($.address.state() + decodeURI(e.path)).replace(/\/\//, '/'))) {
+                if (\$this.attr('href') === decodeURI($.address.state() + e.path).replace(/\/\//, '/')) {
                     \$this.addClass('selected').focus();
                 } else {
                     \$this.removeClass('selected');
@@ -344,15 +340,12 @@ $assets_address
 
             // Load API content
             request = $.ajax({
-                url: '$rootpath/api' + (e.path.length !== 1 ? '/' + e.path.substr(1) : ''),
+                url: '$rootpath/api' + (e.path.length !== 1 ? '/' + encodeURI(e.path.substr(1)) : ''),
                 //dataType: 'jsonp',
-                crossDomain: true,
-                cache: true,
-                jsonpCallback: 'foo',
+                //jsonpCallback: 'foo',
+                //cache: true,
                 beforeSend: function() {
-                    fadeTimer = setTimeout(function() {
-                        \$content.fadeTo(200, 0.33);
-                    }, 300);
+                    \$content.fadeTo(200, 0.33);
                 },
                 success: handler,
                 error: function(jqXHR, textStatus) {
