@@ -1,25 +1,17 @@
 <?php
 
-// Configuration
-// --------------------------------------------------
-include 'content/config.php';
-
-
-
-// Connect to MySQL
-// --------------------------------------------------
-include 'content/connect.php';
+include 'content/config.php';  // Configuration
+include 'content/connect.php'; // Connect to MySQL
 
 // Avoid XSS attacks with Content Security Policy (CSP) https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html
-header("Content-Security-Policy: script-src 'self' 'unsafe-inline' 'unsafe-eval' " . ($issetcdn ? $cdn_host . ' ' : null) . "cdnjs.cloudflare.com www.google-analytics.com");
-
-
+header("Content-Security-Policy: script-src 'self' 'unsafe-inline' 'unsafe-eval' "
+    . ($issetcdn ? $cdn_host . ' ' : null) . "cdnjs.cloudflare.com apis.google.com www.google-analytics.com");
 
 $fn               = 'Ajax SEO';
 $meta_description = null;
 
-if (MYSQL_CON) {
-    $result = mysql_query("SELECT url, `meta-title`, `meta-description`, title, content FROM `" . MYSQL_TABLE . "` WHERE url = '$url' LIMIT 1");
+if (connection) {
+    $result = mysql_query("SELECT url, `meta-title`, `meta-description`, title, content FROM `" . table . "` WHERE url = '$url' LIMIT 1");
 
     // JSON/JSONP respond
     if (isset($_GET['api'])) {
@@ -33,9 +25,10 @@ if (MYSQL_CON) {
 
     // Check if url exist
     if (@mysql_num_rows($result)) {
-        // HTTP header caching
-        include 'content/cache.php';
+        include 'content/cache.php'; // HTTP header caching
+
         $datemod = new datemod();
+
         $datemod -> date(array(
             '.htaccess',
             'index.php',
@@ -43,14 +36,11 @@ if (MYSQL_CON) {
             'content/connect.php',
             'content/api.php',
             'content/cache.php'
-        ), MYSQL_TABLE, $url);
+        ), table, $url);
         $datemod->cache($datemod->gmtime);
 
         while ($row = @mysql_fetch_array($result, MYSQL_ASSOC)) {
-            $row[]     = array(
-                'row' => array_map('htmlspecialchars', $row)
-            );
-
+            $row[]            = array('row' => array_map('htmlspecialchars', $row));
             $urlid            = $row['url'];
             $title            = isset($row['title']) ? $row['title'] : null;
             $meta_title       = isset($row['meta-title']) ? $row['meta-title'] : $title;
@@ -64,8 +54,7 @@ if (MYSQL_CON) {
         if (strlen($url) == 0) {
             $pagetitle = $fn;
         }
-    } else {
-        // If URL does not exist, return 404 error
+    } else { // If URL does not exist, return 404 error
         http_response_code(404);
     }
 }
@@ -76,18 +65,18 @@ $optional_title = isset($optional_title) ? $optional_title : null;
 $content        = isset($content) ? $content : null;
 
 
-
 // 160 character title http://blogs.msdn.com/b/ie/archive/2012/05/14/sharing-links-from-ie10-on-windows-8.aspx
 $metadata  = "<title>$pagetitle</title>";
 
 // Open Graph protocol http://ogp.me
 $metadata .= "\n<meta property=og:title content=\"$pagetitle\">";
 // 253 character description http://blogs.msdn.com/b/ie/archive/2012/05/14/sharing-links-from-ie10-on-windows-8.aspx
-$metadata .= "\n<meta name=description content=\"$meta_description\">";
-$metadata .= "\n<meta property=og:description content=\"$meta_description\">";
+if (!empty($meta_description)) {
+    $metadata .= "\n<meta property=og:description name=description content=\"$meta_description\">";
+}
 // Twitter Cards https://dev.twitter.com/docs/cards
-// $metadata .= "\n<meta property=twitter:card content=summary>"; // Twitterbot will crawl as default 'summary' when twitter:card is not set
-$metadata .= "\n<meta property=og:url content=\"$uri\">";
+$metadata .= "\n<meta property=twitter:card content=summary>"; // Twitterbot will crawl as default 'summary' when twitter:card is not set
+//$metadata .= "\n<meta property=og:url content=\"$uri\">"; // No more requred
 
 // Declare the family friendly content http://schema.org/WebPage
 $metadata .= "\n<meta itemprop=isFamilyFriendly content=true>";
@@ -111,10 +100,12 @@ $metadata .= "\n<meta name=viewport content=\"width=device-width, user-scalable=
 // Save DNS resolution time with DNS prefetching https://github.com/h5bp/html5-boilerplate/blob/master/doc/extend.md#dns-prefetching
 // Prefetch own CDN
 if ($issetcdn) {
-    $metadata .= "\n<link rel=dns-prefetch href=" . $cdn_scheme . $cdn_host . '>';
+    $metadata .= "\n<link rel=dns-prefetch href=$cdn_uri>";
 }
-// Prefetch EdgeCast's CDN
+// Prefetch CloudFlare
 $metadata .= "\n<link rel=dns-prefetch href=//cdnjs.cloudflare.com>";
+// Prefetch Google+ button
+$metadata .= "\n<link rel=dns-prefetch href=https://apis.google.com>";
 // Prefetch Google Analytics
 $metadata .= "\n<link rel=dns-prefetch href=//www.google-analytics.com>";
 
@@ -122,34 +113,16 @@ $metadata .= "\n<link rel=dns-prefetch href=//www.google-analytics.com>";
 $metadata .= "\n<link rel=license href=//creativecommons.org/licenses/by/3.0/>";
 
 
-// Assets development and production minified versions
-function path($filename) {
-    global $debug, $assets;
-
-    preg_match('/^(.+)\.([^\.]+)$/', $filename, $matches);
-    $extension = $matches[2];
-    $source    = $debug ? $assets . $filename . '?' . rand() : $assets . $matches[1] . '.min.' . $extension;
-
-    if ($extension == 'css') {
-        return "<link rel=stylesheet href=$source>";
-    }
-    if ($extension == 'js') {
-        return "<script src=$source></script>";
-    }
-}
-$assets_style   = path('style.css');
-$assets_address = path('jquery.address.js');
-
 // Working on Cache Manifest
 // Chrome Application Cache manifest .appcache issue http://crbug.com/167918
 // <html itemscope itemtype=http://schema.org/WebPage manifest=manifest.appcache>
 
 echo "<!DOCTYPE html>
-<html itemscope itemtype=http://schema.org/WebPage>
+<html itemscope itemtype=http://schema.org/WebPage prefix=\"og: http://ogp.me/ns#\">
 <head>
 <meta charset=UTF-8>
 $metadata
-$assets_style
+<link rel=stylesheet href={$assets}assets/$css>
 <!--[if lt IE 9]><script src=//html5shiv.googlecode.com/svn/trunk/html5.js></script><![endif]-->
 </head>
 <body class=clearfix>\n";
@@ -158,7 +131,6 @@ $assets_style
 if ($note !== null) {
     // Yahoo since 2007 seems to be supporting the feature to exclude content from search engine's index with class=robots-nocontent http://www.ysearchblog.com/2007/05/02/introducing-robots-nocontent-for-page-sections/
     // Yandex supports the same feature on using HTML non standard element <noindex>to exclude content from indexing</noindex> and <!--noindex-->to do the same<!--/noindex--> http://help.yandex.ru/webmaster/?id=1111858
-
     echo "<!--noindex--><div class=note>$note</div><!--/noindex-->\n";
 }
 
@@ -168,8 +140,8 @@ echo "<div class=\"ui-center container\">
     <a class=logo href=https://github.com/laukstein/ajax-seo rel=home>$fn$optional_title</a>\n";
 
 
-if (MYSQL_CON) {
-    $result = mysql_query('SELECT url, `meta-title`, title FROM `' . MYSQL_TABLE . '` ORDER BY array ASC');
+if (connection) {
+    $result = mysql_query('SELECT url, `meta-title`, title FROM `' . table . '` ORDER BY array ASC');
 
     if (@mysql_num_rows($result)) {
         echo '    <nav class="clearfix list">';
@@ -178,6 +150,7 @@ if (MYSQL_CON) {
             $row[] = array(
                 'row' => array_map('htmlspecialchars', $row)
             );
+
             echo "\n        <a class=\"transition item js-as";
 
             $data_url       = $row['url'];
@@ -195,6 +168,7 @@ if (MYSQL_CON) {
             }
 
             $nav_fn = strlen($data_url) > 0 ? $data_metatitle :  "<span class=home>$data_metatitle</span>";
+
             echo ">$nav_fn</a>";
         }
         echo "\n    </nav>\n";
@@ -202,23 +176,25 @@ if (MYSQL_CON) {
 }
 
 
-echo "</header>
-<div class=\"main js-content\"><main role=main>\n";
+echo "</header>\n<main class=\"main js-content\" role=main>\n";
 
 
-if (MYSQL_CON) {
+if (connection) {
     $meta_title = isset($meta_title) ? $meta_title : null;
+
     if ((strlen($title) > 0) && ($meta_title !== $title)) {
         $meta_title = $title;
     }
+
     echo "      <h1>$meta_title</h1>\n      $content\n";
+
     mysql_close($con);
 } else {
     echo $content;
 }
 
 
-echo '</main></div>
+echo '</main>
 </div>
 <footer class="ui-center footer">
     <nav class=breadcrumb itemprop=breadcrumb>
@@ -229,16 +205,16 @@ echo '</main></div>
 </footer>';
 
 
-if(MYSQL_CON){
+if(connection){
 
 // Comparing CDNs
-// Cloudflare's cdnJS is better than Google CDN http://www.baldnerd.com/make-your-site-faster-cloudflares-cdnjs-vs-google-hosted-libraries-shocking-results/
+// CloudFlare's cdnJS is better than Google CDN http://www.baldnerd.com/make-your-site-faster-cloudflares-cdnjs-vs-google-hosted-libraries-shocking-results/
 // jQuery EdgeCast's CDN better than Google, Microsoft and Media Temple CDN http://royal.pingdom.com/2012/07/24/best-cdn-for-jquery-in-2012/
 
 echo "\n<!--[if lt IE 9]><script src=//cdnjs.cloudflare.com/ajax/libs/jquery/1.10.1/jquery.min.js></script><![endif]-->
 <!--[if gte IE 9]><!--><script src=//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js></script><!--<![endif]-->
-$assets_address
-<script>
+<script src={$assets}assets/$js></script>
+<script async>
 (function() {
     'use strict';
 
@@ -271,8 +247,6 @@ $assets_address
             tracker();
         };
 
-
-
     // Avoid console.log on devices and not supported browsers
     // --------------------------------------------------
     if (!window.console || isDevice) {
@@ -280,8 +254,6 @@ $assets_address
             log: function() {}
         };
     }
-
-
 
     // Mobile optimization
     // --------------------------------------------------
@@ -315,7 +287,7 @@ $assets_address
         }
     }
 
-    $.address.state('$rootpath').init(function() {
+    $.address.state('$dir').init(function() {
         // Initialize jQuery Address
         \$nav.address();
     }).change(function(e) {
@@ -340,7 +312,7 @@ $assets_address
 
             // Load API content
             request = $.ajax({
-                url: '$rootpath/api' + (e.path.length !== 1 ? '/' + encodeURI(e.path.substr(1)) : ''),
+                url: '$dir/api' + (e.path.length !== 1 ? '/' + encodeURI(e.path.substr(1)) : ''),
                 //dataType: 'jsonp',
                 //jsonpCallback: 'foo',
                 //cache: true,
@@ -373,14 +345,14 @@ $assets_address
     //$(document).on('click', '.js-as', function(e) {
     //    console.log(e.target);
     //});
-})();\n\n\n";
+})();\n";
 
 } else {
-    echo "\n<script async>\n";
+    echo "\n<script async>";
 }
 
 // Optimized Google Analytics snippet http://mathiasbynens.be/notes/async-analytics-snippet
-echo "(function(G,o,O,g,l){G.GoogleAnalyticsObject=O;G[O]||(G[O]=function(){(G[O].q=G[O].q||[]).push(arguments)});G[O].l=+new Date;g=o.createElement('script'),l=o.scripts[0];g.src='//www.google-analytics.com/analytics.js';l.parentNode.insertBefore(g,l)}(this,document,'ga'));
+echo "\n(function(G,o,O,g,l){G.GoogleAnalyticsObject=O;G[O]||(G[O]=function(){(G[O].q=G[O].q||[]).push(arguments)});G[O].l=+new Date;g=o.createElement('script'),l=o.scripts[0];g.src='//www.google-analytics.com/analytics.js';l.parentNode.insertBefore(g,l)}(this,document,'ga'));
 ga('create','UA-XXXX-Y');
 ga('send','pageview');
 </script>";
