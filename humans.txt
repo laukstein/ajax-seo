@@ -1,19 +1,9 @@
 <?php
 
-// Configuration
-// --------------------------------------------------
-include 'content/config.php';
-
-
-
-// Connect to MySQL
-// --------------------------------------------------
-include 'content/connect.php';
-
-
+include 'content/config.php';  // Configuration
+include 'content/connect.php'; // Connect to MySQL
 
 header('Content-Type: text/plain');
-
 
 
 // Recent version date
@@ -22,12 +12,14 @@ $directory = new RecursiveDirectoryIterator('.');
 $iterator  = new RecursiveIteratorIterator($directory);
 $regex     = new RegexIterator($iterator, '/.+\.(appcache|css|js|php|txt|xml)/');
 $array     = array();
+
 foreach ($regex as $key) {
     $array[] = $key -> getMTime();
 }
-$modfile = max($array);
 
-$query = mysql_query("SELECT UNIX_TIMESTAMP(GREATEST(updated, created)) AS date FROM `" . MYSQL_TABLE . "`");
+$modfile = max($array);
+$query   = mysql_query("SELECT UNIX_TIMESTAMP(GREATEST(updated, created)) AS date FROM `" . table . "`");
+
 while ($row = @mysql_fetch_array($query, MYSQL_ASSOC)) {
     $moddate = $row['date'];
 }
@@ -35,6 +27,7 @@ while ($row = @mysql_fetch_array($query, MYSQL_ASSOC)) {
 $modmax = max($modfile, $moddate);
 $date   = date('Y/m/d', $modmax);
 $cache  = date('Y-m-d H:i:s T', $modmax);
+
 
 // HTTP header cache
 // --------------------------------------------------
@@ -44,8 +37,8 @@ if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MA
         exit;
     }
 }
-header("Last-Modified: $cache");
 
+header("Last-Modified: $cache");
 
 
 echo "/* SITE */
