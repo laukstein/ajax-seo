@@ -4,24 +4,16 @@
 // API
 // --------------------------------------------------
 
-
-
-// Simulate API slow responding
-// --------------------------------------------------
-// sleep(3);
-
-
+// sleep(3); // Simulate API slow responding
 
 header('X-Robots-Tag: nosnippet');
 
-
-
 // Check if url exist
-if (mysql_num_rows($result)) {
-    // HTTP header caching
-    include 'content/cache.php';
+if (@mysql_num_rows($result)) {
+    include 'content/cache.php'; // HTTP header caching
 
     $datemod = new datemod();
+
     $datemod -> date(array(
         '.htaccess',
         'index.php',
@@ -29,7 +21,7 @@ if (mysql_num_rows($result)) {
         'content/api.php',
         'content/cache.php',
         'content/connect.php'
-    ), MYSQL_TABLE, $url);
+    ), table, $url);
     $datemod -> cache($datemod -> gmtime);
 
     $callback      = isset($_GET['callback']) ? $_GET['callback'] : null;
@@ -42,12 +34,10 @@ if (mysql_num_rows($result)) {
     }
 
     while ($row = @mysql_fetch_array($result, MYSQL_ASSOC)) {
-        $row[] = array(
-            'row' => array_map('htmlspecialchars', $row)
-        );
-        $urlid = strip_tags($row['url']);
+        $row[]       = array('row' => array_map('htmlspecialchars', $row));
+        $urlid       = strip_tags($row['url']);
         $meta_title  = strip_tags($row['meta-title']);
-        $title = strip_tags($row['title']);
+        $title       = strip_tags($row['title']);
 
         if (strlen($title) > 0) {
             $fn = ($meta_title !== $title) ? $title : $meta_title;
@@ -81,10 +71,8 @@ if (mysql_num_rows($result)) {
         echo $issetcallback ? $callback . '(' . $data . ')' : $data;
     }
     mysql_close($con);
-} else {
-    header('Content-Type: text/plain');
-
-    // If URL does not exist, return 404 error
+} else { // If URL does not exist, return 404 error
     http_response_code(404);
+    header('Content-Type: text/plain');
     exit('404 Not Found');
 }
