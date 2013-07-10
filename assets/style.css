@@ -12,7 +12,7 @@ Avoid IDs
 http://screwlewse.com/2010/07/dont-use-id-selectors-in-css/
 http://screwlewse.com/2010/08/different-css-techniques-and-their-performance/ */
 
-/* Normalization
+/* Stabilization
 -------------------------------------------------- */
 ::selection {
     color: #fff;
@@ -21,6 +21,12 @@ http://screwlewse.com/2010/08/different-css-techniques-and-their-performance/ */
 }
 html, body {
     height: 100%;
+}
+html, input, select, textarea {
+    color: #222;
+    line-height: 1.5;
+    font-family: Cambria, Georgia, serif;
+    word-spacing: .1em;
 }
 html, form, .button {
     /* Remove user-select for easer developing processes */
@@ -42,6 +48,9 @@ html {
 
     cursor: default;
 }
+body, h3, h4, p, ul, ol, dl, dd, blockquote, figure, input, select, textarea {
+    margin: auto;
+}
 body {
     overflow-x: hidden;
     overflow-y: scroll;
@@ -51,19 +60,14 @@ body {
         -ms-hyphens: auto;
             hyphens: auto;
 }
-body, h3, h4, p, ul, ol, dl, dd, blockquote, figure, select, input, textarea {
-    margin: auto;
-}
-body, input, select, textarea {
-    color: #222;
-    line-height: 1.5;
-    font-family: Cambria, Georgia, serif;
+main {
+    display: block; /* Browser compatibility */
 }
 h1, h2, h3 {
     margin-top: .2em;
     margin-bottom: .2em;
     font-weight: normal;
-    font-family: serif;
+    font-family: "Times New Roman", serif; /* IE fallback "Times New Roman" */
     line-height: 1.2;
 }
 h1 {
@@ -81,11 +85,15 @@ p {
     padding-top: .8em;
     padding-bottom: .8em;
 }
+code {
+    font-family: Consolas, 'Liberation Mono', Courier, monospace;
+    white-space: pre-wrap;
+}
 ul, ol {
     padding: 0;
     list-style: none inside;
 }
-img, abbr, iframe {
+a img, abbr, iframe {
     border: 0;
 }
 a, input, textarea {
@@ -110,7 +118,10 @@ a:active {
     background-color: inherit;
 }
 img {
+    /* Image scaling http://www.456bereastreet.com/lab/scaling-images-proportionally/ */
+    width: auto;
     max-width: 100%;
+    height: auto;
     vertical-align: top;
     -ms-interpolation-mode: bicubic;
 }
@@ -127,9 +138,10 @@ legend {
 }
 label {
     display: inline-block;
-    /* cursor: pointer; */
 }
 input, select, textarea {
+    margin-top: .4em;
+    margin-bottom: .4em;
     font-size: 1em;
     vertical-align: bottom;
     background-color: #fff;
@@ -137,17 +149,15 @@ input, select, textarea {
     -moz-box-sizing: border-box;
          box-sizing: border-box;
 }
-input, textarea {
+input, textarea, main {
     -webkit-user-select: text;
        -moz-user-select: text;
         -ms-user-select: text;
             user-select: text;
 }
-input:not([type]), input[type=color], input[type=date], input[type=datetime],
-input[type=datetime-local], input[type=email], input[type=month],
-input[type=number], input[type=password], input[type=tel], input[type=text],
-input[type=time], input[type=url], input[type=week], input[type=submit],
-select, textarea {
+input:not([type]), [type^=date], [type=email], [type=month], 
+[type=number], [type=password], [type=tel], [type=text], [type=time], 
+[type=url], [type=week], [type=submit], select, textarea {
     width: 20em;
     padding: .6em .7em;
 }
@@ -155,19 +165,133 @@ input:hover, input:focus, select:hover, select:focus, textarea:hover, textarea:f
     border-color: #ababab;
     box-shadow: inset 1px 1px 3px #d6d6d6, 1px 1px 0 #fff;
 }
-/* input[type=submit] {
-    cursor: pointer;
-} */
 :-ms-input-placeholder {
     color: #ddd;
 }
 textarea {
     overflow: auto;
-    height: 13.5em;
+    min-height: 7.5em;
     word-wrap: break-word;
+    vertical-align: top;
     resize: vertical;
 }
 
+
+/* Cross-browser compatibility
+-------------------------------------------------- */
+@media \0screen\,screen\9 { /* IE6-8 */
+    /* Remove IE7 black border on converting any black color to transparent.
+       Be sure that input[type=submit] has not specified #000000 for any property.
+       Unfortunately it is casing remove properties filter:progid:DXImageTransform.Microsoft.gradient(), box-shadow.
+    input[type=submit], input[type=submit]:hover {
+        *filter: chroma(color=#000000);
+    } */
+    html {
+        *overflow: auto;
+    }
+    ul, ol {
+        *list-style-position: outside;
+    }
+    hr {
+        *display: block;
+        *height: auto;
+    }
+    form {
+        *margin: auto;
+    }
+    input, select, textarea {
+        *vertical-align: middle;
+        width: 20em;
+        padding: .6em .7em;
+    }
+    input {
+        *overflow: visible;
+    }
+    .clearfix {
+        *zoom: 1;
+    }
+}
+@media (-webkit-min-device-pixel-ratio: 0) { /* Webkit */
+    /* Android version issues
+    --------------------------------------------------
+    all - slow click/hover state on any element except <a>
+    all - flicker issue http://georgehess.com/post/2054803814/css-keyframe-animation-flicker
+    2.3 - screen flash on scroll issue http://georgehess.com/post/2054803814/css-keyframe-animation-flicker
+    2.3 - overflow issue on <a> elements
+    2.3 - not supported flexbox updated syntax - use old and new syntax to support on all devices http://dev.w3.org/csswg/css3-flexbox/ http://css-tricks.com/old-flexbox-and-new-flexbox/
+    2.3 - unknown appearance of visibility: hidden on new DOM elements on scroll when using -webkit-transform:translate3d(0,0,0), -webkit-backface-visibility:hidden or -webkit-perspective:1000 */
+    /* Activate the GPU acceleration to prevent Chrome rendering bug with window overflow and border-radius */
+    /* body {
+        -webkit-transform: translate3d(0,0,0);
+    } */
+    a, input, select, textarea {
+        /* <select> shadow DOM issue https://code.google.com/p/chromium/issues/detail?id=234871 */
+        /* Remove outline and highlight-color from click-able elements on Android and iOS */
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+    }
+    a {
+        /* iOS remove bubble dialog on tap-holding */
+        -webkit-touch-callout: none;
+    }
+    [type=search],
+    input::-webkit-clear-button,
+    input::-webkit-inner-spin-button,
+    input::-webkit-file-upload-button,
+    input::-webkit-search-cancel-button {
+        -webkit-appearance: none; /* Firefox issue https://bugzilla.mozilla.org/show_bug.cgi?id=605985 */
+    }
+    input::-webkit-inner-spin-button {
+        height: inherit;
+    }
+    input::-webkit-file-upload-button {
+        margin: auto;
+        font: inherit;
+        border: 0;
+    }
+    textarea::-webkit-scrollbar {
+        width: 8px;
+        background-color: rgba(250,250,250,0);
+    }
+    textarea::-webkit-scrollbar-thumb {
+        background-color: #8e8f91;
+    }
+    textarea::-webkit-scrollbar-thumb:hover {
+        background-color: #666;
+    }
+    ::-webkit-input-placeholder {
+        color: #ddd;
+    }
+}
+@media (min-resolution: .001dpcm) { /* Opera till version 15 */
+    /* contenteditable attribute issue */
+    .clearfix:after {
+        content: ' ';
+    }
+}
+@-moz-document url-prefix() { /* Firefox */
+    ::-moz-selection {
+        color: #fff;
+        text-shadow: none;
+        background-color: #8f8f8f;
+    }
+    html {
+        /* Firefox FF4+ slow rendering repeating-linear-gradient with background-size https://bugzilla.mozilla.org/show_bug.cgi?id=644444 */
+        background-size: auto auto;
+    }
+    input {
+        /* Bug https://bugzilla.mozilla.org/show_bug.cgi?id=649849 */
+        -moz-appearance: none;
+    }
+    input::-moz-focus-inner {
+        /* Firefox input height issue http://davidwalsh.name/firefox-buttons,
+           line-height issue https://bugzilla.mozilla.org/show_bug.cgi?id=697451 */
+        padding: 0;
+        border: 0;
+    }
+    :-moz-placeholder {
+        color: #ddd;
+    }
+}
 
 
 /* Common rules
@@ -222,8 +346,7 @@ textarea {
 }
 
 /* Motions */
-/* Webkit old syntax to support also mobile devices */
-@-webkit-keyframes slide-down {
+@-webkit-keyframes slide-down { /* Webkit legacy outdated syntax for mobile devices */
     0% {
         -webkit-transform: translateY(-5em);
     }
@@ -250,8 +373,7 @@ textarea {
 }
 
 
-
-/* Classification
+/* Design
 -------------------------------------------------- */
 .container {
     min-height: 100%;
@@ -296,10 +418,7 @@ textarea {
     overflow: hidden;
     position: relative; /* Old Webkit visibility issue */
     display: block;
-
-    /* Android 2.3 Flexbox fallback */
-    -webkit-box-flex: 1;
-
+    -webkit-box-flex: 1; /* Android 2.3 Flexbox fallback */
     -webkit-flex: 1;
         -ms-flex: 1;
             flex: 1;
@@ -393,9 +512,11 @@ textarea {
 }
 
 
-
 /* Handlers
 -------------------------------------------------- */
+[hidden] { /* Unsupported attribute http://dev.w3.org/html5/spec/single-page.html#the-hidden-attribute */
+    display: none;
+}
 .visible {
     visibility: visible;
 }
@@ -414,7 +535,6 @@ textarea {
 }
 
 
-
 /* Device optimization
 -------------------------------------------------- */
 /* CSS Device Adaptation http://dev.w3.org/csswg/css-device-adapt/ */
@@ -422,9 +542,8 @@ textarea {
     width: device-width;
     user-zoom: fixed;
 }
-
 /* HiDPI @2x double-resolution */
-/* @media print, (-o-min-device-pixel-ratio: 5/4), (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) { } */
+/* @media (-o-min-device-pixel-ratio: 5/4), (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) { } */
 /* @media (orientation: portrait) { } */
 /* @media (orientation: landscape) { } */
 @media (-webkit-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
@@ -438,9 +557,9 @@ textarea {
         /* –ms-text-size-adjust property will be ignored where the viewport tag is present */
         /*     -ms-text-size-adjust: 100%; */
     }
-    select, textarea, input:not([type]), input[type=color], input[type=date], input[type=datetime],
-    input[type=datetime-local], input[type=email], input[type=month], input[type=number], input[type=password],
-    input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week], input[type=submit] {
+    input:not([type]), [type^=date], [type=email], [type=month], 
+    [type=number], [type=password], [type=tel], [type=text], [type=time], 
+    [type=url], [type=week], [type=submit], select, textarea {
         width: 100%;
     }
     .list {
@@ -454,7 +573,8 @@ textarea {
         padding-right: 1.3em;
         padding-left: 1.3em;
         float: none;
-        text-align: left;
+        text-align: left; /* IE fallback */
+        text-align: start;
         border-top: 1px solid #ddd;
         border-right: 0;
     }
@@ -476,9 +596,8 @@ textarea {
         font-size: 50.5%;
     }
 }
-
 @media print {
-    * {
+    *, h2 {
         color: #000;
         text-shadow: none;
         background: transparent;
@@ -487,7 +606,10 @@ textarea {
         color: #444;
         text-decoration: underline;
     }
-    a[href]:after {
+    [href]:after, abbr[title]:after {
+        color: #999;
+    }
+    [href]:after {
         content: ' (' attr(href) ')';
     }
     abbr[title]:after {
@@ -506,111 +628,10 @@ textarea {
     h2, h3 {
         page-break-after: avoid;
     }
-}
-
-
-
-/* Cross-browser compatibility
--------------------------------------------------- */
-/* Unsupported attributes */
-/* http://dev.w3.org/html5/spec/single-page.html#the-hidden-attribute */
-*[hidden] {
-    display: none;
-}
-
-/* IE6-8 */
-@media \0screen\,screen\9 {
-    html {
-        *overflow: auto;
+    header, footer {
+        display: none;
     }
-    ul, ol {
-        *list-style-position: outside;
-    }
-    hr {
-        *display: block;
-        *height: auto;
-    }
-    form {
-        *margin: auto;
-    }
-    input, select, textarea {
-        *vertical-align: middle;
-    }
-    input {
-        *overflow: visible;
-    }
-    .ie-input {
-        width: 20em;
-        padding: .6em .7em;
-    }
-    .clearfix {
-        *zoom: 1;
-    }
-    .ui-center {
-        *width: 76em;
-    }
-    .main {
-        /* Avoid crispy text rendering while applying opacity */
-        background-color: #fff;
-    }
-}
-
-/* Webkit */
-@media (-webkit-min-device-pixel-ratio: 0) {
-    /* Android version issues
-    --------------------------------------------------
-    all - slow click/hover state on any element except <a>
-    all - flicker issue http://georgehess.com/post/2054803814/css-keyframe-animation-flicker
-    2.3 - screen flash on scroll issue http://georgehess.com/post/2054803814/css-keyframe-animation-flicker
-    2.3 - overflow issue on <a> elements
-    2.3 - not supported flexbox updated syntax - use old and new syntax to support on all devices http://dev.w3.org/csswg/css3-flexbox/ http://css-tricks.com/old-flexbox-and-new-flexbox/
-    2.3 - unknown appearance of visibility: hidden on new DOM elements on scroll when using -webkit-transform:translate3d(0,0,0), -webkit-backface-visibility:hidden or -webkit-perspective:1000 */
-    a, input, select, textarea {
-        /* Remove outline and highlight-color from click-able elements on Android and iOS */
-        -webkit-tap-highlight-color: rgba(0,0,0,0);
-    }
-    a {
-        /* iOS remove bubble dialog on tap-holding */
-        -webkit-touch-callout: none;
-    }
-    input, input[type=search]::-webkit-search-cancel-button {
-        -webkit-appearance: none;
-    }
-    textarea::-webkit-scrollbar {
-        width: .8em;
-        background-color: rgba(250,250,250,0);
-    }
-    textarea::-webkit-scrollbar-thumb {
-        background-color: #8e8f91;
-    }
-    textarea::-webkit-scrollbar-thumb:hover {
-        background-color: #666;
-    }
-    ::-webkit-input-placeholder {
-        color: #ddd;
-    }
-}
-
-/* Opera */
-@media (min-resolution: .001dpcm) {
-    /* contenteditable attribute issue */
-    .clearfix:after {
-        content: ' ';
-    }
-}
-
-/* Firefox */
-@-moz-document url-prefix() {
-    ::-moz-selection {
-        color: #fff;
-        text-shadow: none;
-        background-color: #8f8f8f;
-    }
-    input {
-        /* Bug https://bugzilla.mozilla.org/show_bug.cgi?id=649849 */
-        -moz-appearance: none;
-    }
-    :-moz-placeholder {
-        color: #ddd;
+    html, body {
+        background: inherit;
     }
 }
