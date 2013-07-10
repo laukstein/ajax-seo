@@ -5,23 +5,16 @@
 // https://developers.google.com/webmasters/control-crawl-index/docs/robots_txt
 // --------------------------------------------------
 
-
-
-// Configuration
-// --------------------------------------------------
-include 'content/config.php';
-
-
+include 'content/config.php'; // Configuration
 
 header('Content-Type: text/plain');
 
 
-
 // HTTP header caching
 // --------------------------------------------------
-function cache(&$file, $timestamp)
-{
+function cache(&$file, $timestamp) {
     $gmtime = gmdate('D, d M Y H:i:s T', $timestamp);
+
     if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
         if ($_SERVER['HTTP_IF_MODIFIED_SINCE'] == $gmtime || str_replace('"', '', stripslashes($_SERVER['HTTP_IF_NONE_MATCH'])) == md5($timestamp . $file)) {
             http_response_code(304);
@@ -30,18 +23,15 @@ function cache(&$file, $timestamp)
     }
     header("Last-Modified: $gmtime");
 }
-cache($_SERVER['SCRIPT_FILENAME'], filemtime($_SERVER['SCRIPT_FILENAME']));
 
+cache($_SERVER['SCRIPT_FILENAME'], filemtime($_SERVER['SCRIPT_FILENAME']));
 
 
 // Global rules
 echo "User-agent: *\nDisallow:";
-
 // Removing Documents From the Wayback Machine archive.org
 echo "\n\nUser-agent: ia_archiver\nDisallow: /";
-
 // Disable *.domaintools.com crawler
 echo "\n\nUser-agent: SurveyBot\nDisallow: /";
-
 // Be sure your sitemap.xml path is correct
 echo "\n\nSitemap: http://{$_SERVER['SERVER_NAME']}{$path}sitemap.xml";
