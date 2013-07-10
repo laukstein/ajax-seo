@@ -7,19 +7,8 @@
 // http://appcachefacts.info/peterlubbers-owc4/index.html#18
 // http://html5-demos.appspot.com/static/html5storage/index.html#slide40
 
-
-
-// Configuration
-// --------------------------------------------------
-include 'content/config.php';
-
-
-
-// Connect to MySQL
-// --------------------------------------------------
-include 'content/connect.php';
-
-
+include 'content/config.php';  // Configuration
+include 'content/connect.php'; // Connect to MySQL
 
 header('Content-Type: text/cache-manifest; charset=utf-8');
 
@@ -32,12 +21,14 @@ $directory = new RecursiveDirectoryIterator('.');
 $iterator  = new RecursiveIteratorIterator($directory);
 $regex     = new RegexIterator($iterator, '/.+\.(appcache|css|js|php|txt|xml)/');
 $array     = array();
+
 foreach ($regex as $key) {
     $array[] = $key -> getMTime();
 }
-$modfile = max($array);
 
-$query   = mysql_query("SELECT UNIX_TIMESTAMP(GREATEST(updated, created)) AS date FROM `" . MYSQL_TABLE . "`");
+$modfile = max($array);
+$query   = mysql_query("SELECT UNIX_TIMESTAMP(GREATEST(updated, created)) AS date FROM `" . table . "`");
+
 while ($row = @mysql_fetch_array($query, MYSQL_ASSOC)) {
     $moddate = $row['date'];
 }
@@ -47,30 +38,21 @@ $modmax = max($modfile, $moddate);
 echo "\n# Version $modmax\n";
 
 // Explicitly cached entries
-if (MYSQL_CON) {
-    $result = mysql_query('SELECT url FROM `' . MYSQL_TABLE . '`');
+if (connection) {
+    $result = mysql_query('SELECT url FROM `' . table . '`');
 
     if (mysql_num_rows($result)) {
     	while ($row = @mysql_fetch_array($result, MYSQL_ASSOC)) {
-            $row[] = array(
-                'row' => array_map('htmlspecialchars', $row)
-            );
+            $row[] = array('row' => array_map('htmlspecialchars', $row));
 
     		echo "\n$path{$row['url']}";
     	}
     }
 }
 
-// Assets development and production minified version.
-if ($debug) {
-    $path_css = $assets . 'style.css';
-    $path_js  = $assets . 'jquery.address.js';
-} else {
-    $path_css = $assets . 'style.min.css';
-    $path_js  = $assets . 'jquery.address.min.js';
-}
-echo "\n$path_css";
-echo "\n$path_js";
+
+echo "\n{$assets}assets/$css";
+echo "\n{$assets}assets/$js";
 echo "\nhttp://code.jquery.com/jquery-1.8.3.min.js";
 
 // Resources that requires user to be online
