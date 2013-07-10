@@ -2,16 +2,18 @@
 
 // Define MySQL connection status
 // --------------------------------------------------
-if ($_SERVER['REQUEST_METHOD'] == 'GET' && MYSQL_CON) {
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && connection) {
     $change = file_get_contents($f);
-    $change = preg_replace("/define\('(MYSQL_CON)', true\);/", "define('$1', false);", $change);
-    $change = preg_replace("/define\('(MYSQL_ERROR)', true\);/", "define('$1', false);", $change);
+    $change = preg_replace("/define\('(connection)', true\);/", "define('$1', false);", $change);
+    $change = preg_replace("/define\('(error)', true\);/", "define('$1', false);", $change);
 
     // Change connect.php file permissions if needed
     if (!@is_writable($f)) {
         @chmod($f, 0755);
     }
+
     $fopen = fopen($f, 'w');
+
     fwrite($fopen, $change);
     fclose($fopen);
 
@@ -25,25 +27,25 @@ $error = null;
 // --------------------------------------------------
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $change = file_get_contents($f);
-
-    $db   = trim($_POST['db']);
-    $host = trim($_POST['host']);
-    $user = trim($_POST['user']);
-    $pass = trim($_POST['pass']);
-
-    $change = preg_replace("/define\('(MYSQL_DB)', '(.*)'\);/", "define('$1', '" . $db . "');", $change);
-    $change = preg_replace("/define\('(MYSQL_HOST)', '(.*)'\);/", "define('$1', '" . $host . "');", $change);
-    $change = preg_replace("/define\('(MYSQL_USER)', '(.*)'\);/", "define('$1', '" . $user . "');", $change);
-    $change = preg_replace("/define\('(MYSQL_PASS)', '(.*)'\);/", "define('$1', '" . $pass . "');", $change);
-    $change = preg_replace("/define\('(MYSQL_TABLE)', '(.*)'\);/", "define('$1', '" . trim($_POST['table']) . "');", $change);
-    $change = preg_replace("/define\('(MYSQL_ERROR)', false\);/", "define('$1', true);", $change);
-    $change = preg_replace("/define\('(CDN_PATH)', null\);/", "define('$1', " . ((strlen($_POST['cdnpath']) > 0) ? "'". trim($_POST['cdnpath']) . "'"  : 'null') . ");", $change);
+    $db     = trim($_POST['db']);
+    $host   = trim($_POST['host']);
+    $user   = trim($_POST['user']);
+    $pass   = trim($_POST['pass']);
+    $change = preg_replace("/define\('(database)', '(.*)'\);/", "define('$1', '" . $db . "');", $change);
+    $change = preg_replace("/define\('(hostname)', '(.*)'\);/", "define('$1', '" . $host . "');", $change);
+    $change = preg_replace("/define\('(username)', '(.*)'\);/", "define('$1', '" . $user . "');", $change);
+    $change = preg_replace("/define\('(password)', '(.*)'\);/", "define('$1', '" . $pass . "');", $change);
+    $change = preg_replace("/define\('(table)', '(.*)'\);/", "define('$1', '" . trim($_POST['table']) . "');", $change);
+    $change = preg_replace("/define\('(error)', false\);/", "define('$1', true);", $change);
+    $change = preg_replace("/define\('(cdn)', null\);/", "define('$1', " . ((strlen($_POST['cdn']) > 0) ? "'". trim($_POST['cdn']) . "'"  : 'null') . ");", $change);
 
     // Change connect.php file permissions if needed
     if (!@is_writable($f)) {
         @chmod($f, 0755);
     }
+
     $fopen = fopen($f, 'w');
+
     fwrite($fopen, $change);
     fclose($fopen);
 
@@ -58,16 +60,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 
-
 // SEO friendly blackout status, http://googlewebmastercentral.blogspot.com/2011/01/how-to-deal-with-planned-site-downtime.html
 // --------------------------------------------------
 // Website outages and blackouts the right way - https://plus.google.com/115984868678744352358/posts/Gas8vjZ5fmB
 http_response_code(503);
-// Try to reach server after 1 minute
-header('Retry-After: 60');
+header('Retry-After: 60'); // Try to reach server after 1 minute
 // Valid indexing & serving directives, https://developers.google.com/webmasters/control-crawl-index/docs/robots_meta_tag
 header('X-Robots-Tag: none');
-
 
 
 // Installer setup
@@ -81,12 +80,15 @@ $content   = '<style>
     display: inline-block;
 }
 .installation li {
-    display: block;
-    padding-top: 1em;
-    padding-bottom: 1em;
+    clear: both;
 }
-input,
-.error {
+label {
+    padding-top: .6em;
+    padding-bottom: .6em;
+    margin-top: .4em;
+    margin-bottom: .4em;
+}
+input, .error {
     float: right;
 }
 .error {
@@ -98,16 +100,16 @@ input,
 <form method=post>
     <ol class=installation>
         <li><h1>MySQL connection details</h1>
-        <li><input class="transition ie-input" id=db name=db value="' . MYSQL_DB . '"><label for=db>Database name</label>
-        <li><input class="transition ie-input" id=user placeholder=root name=user value="' . MYSQL_USER . '"><label for=user>User name</label>
-        <li><input class="transition ie-input" id=pass type=password name=pass><label for=pass>Password</label>
-        <li><input class="transition ie-input" id=host placeholder=localhost name=host value="' . MYSQL_HOST . '"><label for=host>Database host</label>
-        <li><input class="transition ie-input" id=table name=table value="' . MYSQL_TABLE . '"><label for=table>Table</label>
+        <li><input class=transition id=db name=db value="' . database . '"><label for=db>Database name</label>
+        <li><input class=transition id=user placeholder=root name=user value="' . username . '"><label for=user>User name</label>
+        <li><input class=transition id=pass type=password name=pass><label for=pass>Password</label>
+        <li><input class=transition id=host placeholder=localhost name=host value="' . hostname . '"><label for=host>Database host</label>
+        <li><input class=transition id=table name=table value="' . table . '"><label for=table>Table</label>
         <li>
-            <hr>' . $error . '<p>CDN assets URL like protocol-less //cdn.' . $_SERVER['SERVER_NAME'] . '/ or with HTTP/HTTPS</p>
-            <input class="transition ie-input" id=cdnpath placeholder=Optional name=cdnpath value="' . CDN_PATH . '"><label for=cdnpath>CDN URL</label>
+            <hr>' . $error . '<p>CDN assets URL like protocol-less //cdn.' . $host . '/ or with HTTP/HTTPS</p>
+            <input class=transition id=cdn placeholder=Optional name=cdn value="' . cdn . '"><label for=cdn>CDN URL</label>
         </li>
-        <li><input class="transition ie-input button" type=submit name=install value=Install>
+        <li><input class="transition button" type=submit name=install value=Install>
     </ol>
 </form>
 <p>The configuration will be saved in connect.php, after you can open and edit it trough text editor.</p>';
