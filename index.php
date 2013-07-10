@@ -4,8 +4,10 @@ include 'content/config.php';  // Configuration
 include 'content/connect.php'; // Connect to MySQL
 
 // Avoid XSS attacks with Content Security Policy (CSP) https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html
-header("Content-Security-Policy: script-src 'self' 'unsafe-inline' 'unsafe-eval' "
-    . ($issetcdn ? $cdn_host . ' ' : null) . "cdnjs.cloudflare.com apis.google.com www.google-analytics.com");
+header("Content-Security-Policy: script-src 'self' 'unsafe-inline' 'unsafe-eval'"
+    . ($issetcdn ? ' ' . $cdn_host : null) . ' cdnjs.cloudflare.com '
+    // . ' apis.google.com'
+    . ' www.google-analytics.com');
 
 $fn               = 'Ajax SEO';
 $meta_description = null;
@@ -105,7 +107,7 @@ if ($issetcdn) {
 // Prefetch CloudFlare
 $metadata .= "\n<link rel=dns-prefetch href=//cdnjs.cloudflare.com>";
 // Prefetch Google+ button
-$metadata .= "\n<link rel=dns-prefetch href=https://apis.google.com>";
+// $metadata .= "\n<link rel=dns-prefetch href=https://apis.google.com>";
 // Prefetch Google Analytics
 $metadata .= "\n<link rel=dns-prefetch href=//www.google-analytics.com>";
 
