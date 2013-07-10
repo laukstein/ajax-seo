@@ -19,7 +19,7 @@ $cdn_scheme = isset($cdn_scheme) ? $cdn_scheme . '://' : '//';
 $cdn_uri    = $cdn_scheme . $cdn_host;
 $debug      = isset($debug) ? $debug : null;
 $path       = isset($path) ? $path : null;
-$assets     = $debug ? $path : ($issetcdn ? cdn : $path);
+$assets     = $debug ? $path . 'assets/' : ($issetcdn ? cdn : $path . 'assets/');
 
 $con = @mysql_connect(hostname, username, password); // Connect to db
 $f   = 'content/connect.php';

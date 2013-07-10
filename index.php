@@ -124,7 +124,7 @@ echo "<!DOCTYPE html>
 <head>
 <meta charset=UTF-8>
 $metadata
-<link rel=stylesheet href={$assets}assets/$css>
+<link rel=stylesheet href=$assets$css>
 <!--[if lt IE 9]><script src=//html5shiv.googlecode.com/svn/trunk/html5.js></script><![endif]-->
 </head>
 <body class=clearfix>\n";
@@ -215,7 +215,7 @@ if(connection){
 
 echo "\n<!--[if lt IE 9]><script src=//cdnjs.cloudflare.com/ajax/libs/jquery/1.10.1/jquery.min.js></script><![endif]-->
 <!--[if gte IE 9]><!--><script src=//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js></script><!--<![endif]-->
-<script src={$assets}assets/$js></script>
+<script src=$assets$js></script>
 <script async>
 (function() {
     'use strict';
