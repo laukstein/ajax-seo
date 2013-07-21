@@ -87,5 +87,5 @@ if (!$compatible) {
 $scheme = $_SERVER['SERVER_PORT'] == 443 ? 'https' : 'http';
 $uri    = $scheme . '://' . $host . rawurldecode($_SERVER['REQUEST_URI']);
 // Absolute path
-$dir    = str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME));
-$path   = $dir == '/' ? $dir : $dir . '/';
+$path = str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME));
+$path = $path == '/' ? $path : $path . '/';

@@ -78,12 +78,12 @@ if (!empty($meta_description)) {
 }
 // Twitter Cards https://dev.twitter.com/docs/cards
 $metadata .= "\n<meta property=twitter:card content=summary>"; // Twitterbot will crawl as default 'summary' when twitter:card is not set
-//$metadata .= "\n<meta property=og:url content=\"$uri\">"; // No more requred
+//$metadata .= "\n<meta property=og:url content=\"$uri\">"; // No more required
 
 // Declare the family friendly content http://schema.org/WebPage
 $metadata .= "\n<meta itemprop=isFamilyFriendly content=true>";
 
-// Opt-out of pinning by Pinterest, save copyrights and avoid SEO impact http://pinterest.com/about/help/#linking_faqs
+// Opt-out of pinning by Pinterest, save copyrights and avoid SEO impact https://en.help.pinterest.com/entries/21063792-Prevent-pinning-from-your-site
 // Return the meta tag just for Pinterest, since W3C validator will return it as a unregistered specification.
 if (stripos($_SERVER['HTTP_USER_AGENT'], 'Pinterest') !== false) {
     $metadata .= "\n<meta name=pinterest content=nopin>";
@@ -99,25 +99,24 @@ $metadata .= "\n<meta name=viewport content=\"width=device-width, user-scalable=
 // Authorship in Google Search http://support.google.com/webmasters/bin/answer.py?hl=en&answer=1408986
 //$metadata .= "\n<link rel=author href=https://plus.google.com/000000000000000000000>";
 
-// Save DNS resolution time with DNS prefetching https://github.com/h5bp/html5-boilerplate/blob/master/doc/extend.md#dns-prefetching
-// Prefetch own CDN
+// Prefetch CDN by saving DNS resolution time https://github.com/h5bp/html5-boilerplate/blob/master/doc/extend.md#dns-prefetching
 if ($issetcdn) {
-    $metadata .= "\n<link rel=dns-prefetch href=$cdn_uri>";
+    $metadata .= "\n<link rel=dns-prefetch href=$cdn_uri>"; // Own DNS
 }
-// Prefetch CloudFlare
-$metadata .= "\n<link rel=dns-prefetch href=//cdnjs.cloudflare.com>";
-// Prefetch Google+ button
-// $metadata .= "\n<link rel=dns-prefetch href=https://apis.google.com>";
-// Prefetch Google Analytics
-$metadata .= "\n<link rel=dns-prefetch href=//www.google-analytics.com>";
+$metadata .= "\n<link rel=dns-prefetch href=//cdnjs.cloudflare.com>";     // CloudFlare
+// $metadata .= "\n<link rel=dns-prefetch href=https://apis.google.com>";    // Google+ button
+$metadata .= "\n<link rel=dns-prefetch href=//www.google-analytics.com>"; // Google Analytics
+
+// Favicon 16x16, 32x32 4-bit 16 color /favicon.ico on website root or base64 inline dataURI when project not in root http://zoompf.com/2012/04/instagram-and-optimizing-favicons
+if ($path !== '/') {
+    $metadata .= "\n<link rel=\"shortcut icon\" href=data:image/x-icon;base64,AAABAAIAICAQAAEABADoAgAAJgAAABAQEAABAAQAKAEAAA4DAAAoAAAAIAAAAEAAAAABAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAmlMaAK5cEgC8YwwAjk0gAJ9dKgCnZTIAwW4fALaBXgDIilUA262IANKpkADcsZMA37ynAOG9pgDpzLwAAAAAACIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIi7iIiIiIiIiIiIiIiIiJrYu4mliIiIiIiIiIiIiIivtnunekiIiIiIiIiIiIiIk3u7u7UIiIiIiIiIiIiIiIq7nfuoiIiIiIiIiIiIiIu7ucRfu7iIiIiIiIiIiIiLu7oIo7u4iIiIiIiIiIiIiM67ojuozIiIiIiIiIiIiIibe7u7tYiIiIiIiIiIiIiIp7a7rzrIiIiIiIiIiIiIiJaQO4EtSIiIiIiIiIiIiIiIADuAAIiIiIiIiIiIiIiIi7g7g7iIiIiIiIiIiIiIiIu4O4O4iIiIiIiIiIiIiIiIiDuDuIiIiIiIiIiIiIiIiIg7g7iIiIiIiIiIiIiIiIiIiIO4iIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoAAAAEAAAACAAAAABAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAmVIaALxjDACOTSAAn10qAKdlMgDBbh8AtoFeAMiKVQDbrYgA0qmQANyxkwDfvKcA4b2mAOXEsQDqzb0AAAAAABERER7hERERERWlHuFYURERGuyO6M6BERETvu7u7DERERGe1m3pERER7u5hBu7uERHu7nEX7u4RESKe133pIhERFc7u7uxREREY657pzqERERSTDuA6QREREQAO4AARERER7g7g7hERERHuDuDuEREREREO4O4REREREQ7g7hERAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==>";
+}
 
 // Website copyright license
 $metadata .= "\n<link rel=license href=//creativecommons.org/licenses/by/3.0/>";
 
-
-// Working on Cache Manifest
-// Chrome Application Cache manifest .appcache issue http://crbug.com/167918
-// <html itemscope itemtype=http://schema.org/WebPage manifest=manifest.appcache>
+// Cache manifest (Chrome external domain hosting issue http://crbug.com/167918)
+// <html itemscope itemtype=http://schema.org/WebPage prefix="og: http://ogp.me/ns#" manifest=manifest.appcache>
 
 echo "<!DOCTYPE html>
 <html itemscope itemtype=http://schema.org/WebPage prefix=\"og: http://ogp.me/ns#\">
@@ -129,18 +128,15 @@ $metadata
 </head>
 <body class=clearfix>\n";
 
-
 if ($note !== null) {
     // Yahoo since 2007 seems to be supporting the feature to exclude content from search engine's index with class=robots-nocontent http://www.ysearchblog.com/2007/05/02/introducing-robots-nocontent-for-page-sections/
     // Yandex supports the same feature on using HTML non standard element <noindex>to exclude content from indexing</noindex> and <!--noindex-->to do the same<!--/noindex--> http://help.yandex.ru/webmaster/?id=1111858
     echo "<!--noindex--><div class=note>$note</div><!--/noindex-->\n";
 }
 
-
 echo "<div class=\"ui-center container\">
 <header class=clearfix>
-    <a class=logo href=https://github.com/laukstein/ajax-seo rel=home>$fn$optional_title</a>\n";
-
+    <a class=logo href=https://github.com/laukstein/ajax-seo rel=home><h2>$fn$optional_title</h2></a>\n";
 
 if (connection) {
     $result = mysql_query('SELECT url, `meta-title`, title FROM `' . table . '` ORDER BY array ASC');
@@ -177,9 +173,7 @@ if (connection) {
     }
 }
 
-
 echo "</header>\n<main class=\"main js-content\" role=main>\n";
-
 
 if (connection) {
     $meta_title = isset($meta_title) ? $meta_title : null;
@@ -195,7 +189,6 @@ if (connection) {
     echo $content;
 }
 
-
 echo '</main>
 </div>
 <footer class="ui-center footer">
@@ -206,15 +199,14 @@ echo '</main>
     </nav>
 </footer>';
 
-
 if(connection){
 
 // Comparing CDNs
 // CloudFlare's cdnJS is better than Google CDN http://www.baldnerd.com/make-your-site-faster-cloudflares-cdnjs-vs-google-hosted-libraries-shocking-results/
 // jQuery EdgeCast's CDN better than Google, Microsoft and Media Temple CDN http://royal.pingdom.com/2012/07/24/best-cdn-for-jquery-in-2012/
 
-echo "\n<!--[if lt IE 9]><script src=//cdnjs.cloudflare.com/ajax/libs/jquery/1.10.1/jquery.min.js></script><![endif]-->
-<!--[if gte IE 9]><!--><script src=//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js></script><!--<![endif]-->
+echo "\n<!--[if lt IE 9]><script src=//cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js></script><![endif]-->
+<!--[if gte IE 9]><!--><script src=//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js></script><!--<![endif]-->
 <script src=$assets$js></script>
 <script async>
 (function() {
@@ -226,7 +218,7 @@ echo "\n<!--[if lt IE 9]><script src=//cdnjs.cloudflare.com/ajax/libs/jquery/1.1
 
         // Remove 300ms click delay on mobile devices by using touchstart event
         // Usage: $(selector).on(pointer, (function() { });
-        //pointer  = isDevice ? 'touchstart' : 'click',
+        //pointer  = (('ontouchstart' in window) || window.DocumentTouch && document instanceof window.DocumentTouch) ? 'touchstart' : 'click',
 
         \$nav     = $('.js-as'),
         \$content = $('.js-content'),
@@ -289,7 +281,7 @@ echo "\n<!--[if lt IE 9]><script src=//cdnjs.cloudflare.com/ajax/libs/jquery/1.1
         }
     }
 
-    $.address.state('$dir').init(function() {
+    $.address.state('$path').init(function() {
         // Initialize jQuery Address
         \$nav.address();
     }).change(function(e) {
@@ -314,7 +306,7 @@ echo "\n<!--[if lt IE 9]><script src=//cdnjs.cloudflare.com/ajax/libs/jquery/1.1
 
             // Load API content
             request = $.ajax({
-                url: '$dir/api' + (e.path.length !== 1 ? '/' + encodeURI(e.path.substr(1)) : ''),
+                url: '{$path}api' + (e.path.length !== 1 ? '/' + encodeURI(e.path.substr(1)) : ''),
                 //dataType: 'jsonp',
                 //jsonpCallback: 'foo',
                 //cache: true,
