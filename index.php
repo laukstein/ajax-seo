@@ -124,7 +124,7 @@ echo "<!DOCTYPE html>
 <meta charset=UTF-8>
 $metadata
 <link rel=stylesheet href=$assets$css>
-<!--[if lt IE 9]><script src=//html5shiv.googlecode.com/svn/trunk/html5.js></script><![endif]-->
+<!--[if lt IE 9]><script src=//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.min.js></script><![endif]-->
 </head>
 <body class=clearfix>\n";
 
