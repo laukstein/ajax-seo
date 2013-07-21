@@ -54,14 +54,14 @@ body, h3, h4, p, ul, ol, dl, dd, blockquote, figure, input, select, textarea {
 body {
     overflow-x: hidden;
     overflow-y: scroll;
-    font-size: 1.8em; /* The optional font-size REM http://snook.ca/archives/html_and_css/font-size-with-rem, buggy on various browsers */
+    font-size: 1.9em; /* The optional font-size REM http://snook.ca/archives/html_and_css/font-size-with-rem, buggy on various browsers */
     -webkit-hyphens: auto;
        -moz-hyphens: auto;
         -ms-hyphens: auto;
             hyphens: auto;
 }
 main {
-    display: block; /* Browser compatibility */
+    display: block; /* IE10, Opera 12.16 and old WebKit compatibility */
 }
 h1, h2, h3 {
     margin-top: .2em;
@@ -105,12 +105,12 @@ a, img {
             user-drag: none;
 }
 a {
-    color: #2d76b9;
+    color: #0c63bc;
     text-decoration: none;
     cursor: default;
 }
 a:hover, a:focus {
-    color: #2f6291;
+    color: #204e92;
     text-decoration: underline;
 }
 a:active {
@@ -312,7 +312,7 @@ textarea {
 .ui-center {
     overflow: hidden;
     width: 90%;
-    min-width: 19em;
+    min-width: 18em;
     padding-right: 2.5%;
     padding-left: 2.5%;
     margin-right: auto;
@@ -380,9 +380,6 @@ textarea {
 }
 .logo {
     display: table-row;
-    color: inherit;
-    font-size: 1.8em;
-    font-family: serif;
     text-decoration: none;
     white-space: nowrap;
 }
@@ -459,7 +456,7 @@ textarea {
     margin-bottom: -1px;
     color: #fff;
     line-height: 2.2;
-    background-color: #2d76b9;
+    background-color: #0c63bc;
     background-image: none;
     border-color: transparent;
     cursor: default;
@@ -564,7 +561,6 @@ textarea {
     }
     .list {
         display: block;
-        width: 100%;
         height: auto;
         border-left: 1px solid #ddd;
     }
