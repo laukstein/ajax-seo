@@ -97,7 +97,7 @@ $metadata .= "\n<meta name=referrer content=never>";
 $metadata .= "\n<meta name=viewport content=\"width=device-width, user-scalable=0\">";
 
 // Authorship in Google Search http://support.google.com/webmasters/bin/answer.py?hl=en&answer=1408986
-//$metadata .= "\n<link rel=author href=https://plus.google.com/000000000000000000000>";
+// $metadata .= "\n<link rel=author href=https://plus.google.com/000000000000000000000>";
 
 // Prefetch CDN by saving DNS resolution time https://github.com/h5bp/html5-boilerplate/blob/master/doc/extend.md#dns-prefetching
 if ($issetcdn) {
