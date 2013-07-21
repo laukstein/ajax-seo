@@ -13,9 +13,9 @@ if (in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1'))) {
     $debug = true;
 
     // Assets for development
-    $rand = '?' . rand();
-    $css  = 'style.css' . $rand;
-    $js   = 'jquery.address.js' . $rand;
+    $rand = rand();
+    $css  = 'style.' . $rand . '.css';
+    $js   = 'jquery.address.' . $rand . '.js';
 } else {
     error_reporting(0);
 
