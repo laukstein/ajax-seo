@@ -23,39 +23,40 @@ ServerSignature Off
 # php_flag  short_open_tag 0
 # php_value error_log error_log.txt
 
-# Use UTF-8 encoding for anything served as text/plain or text/html
-AddDefaultCharset utf-8
-
-# Force UTF-8 for certain file types
-<IfModule mod_mime.c>
-    AddCharset utf-8 .css .js .json .xml .vtt
-</IfModule>
-
-# Define proper MIME type
-AddType application/javascript         js
-AddType application/json               json
-AddType application/vnd.ms-fontobject  eot
-AddType application/x-chrome-extension crx
-AddType application/x-font-ttf         ttf
-AddType application/x-font-woff        woff
-AddType application/xml                xml
-AddType audio/ogg                      oga ogg
-AddType font/opentype                  otf
-AddType image/svg+xml                  svg
-AddType image/webp                     webp
-AddType image/x-icon                   ico
-AddType text/cache-manifest            appcache
-AddType text/vtt                       vtt
-AddType video/mp4                      mp4
-AddType video/ogg                      ogv
-AddType video/webm                     webm
-AddType video/x-flv                    flv
-
 # Custom error pages
 # ErrorDocument 403 /?url=error
 ErrorDocument 403 "403 Forbidden"
 ErrorDocument 404 "404 Not Found"
 ErrorDocument 500 "500 Internal Server Error"
+
+# Use UTF-8 encoding for anything served as text/plain or text/html
+AddDefaultCharset utf-8
+
+<IfModule mod_mime.c>
+    # Force UTF-8 for certain file types
+    AddCharset utf-8 .css .js .json .vtt .webapp .xml
+
+    # Define proper MIME type
+    AddType application/font-woff               woff
+    AddType application/javascript              js jsonp
+    AddType application/json                    json
+    AddType application/vnd.ms-fontobject       eot
+    AddType application/x-chrome-extension      crx
+    AddType application/x-font-ttf              ttf
+    AddType application/x-web-app-manifest+json webapp
+    AddType application/xml                     xml
+    AddType audio/ogg                           oga ogg
+    AddType font/opentype                       otf
+    AddType image/svg+xml                       svg
+    AddType image/webp                          webp
+    AddType image/x-icon                        ico
+    AddType text/cache-manifest                 appcache
+    AddType text/vtt                            vtt
+    AddType text/x-vcard                        vcf
+    AddType video/mp4                           mp4
+    AddType video/ogg                           ogv
+    AddType video/webm                          webm
+</IfModule>
 
 # Gzip compression
 <IfModule mod_deflate.c>
@@ -64,10 +65,12 @@ ErrorDocument 500 "500 Internal Server Error"
             SetEnvIfNoCase ^(Accept-EncodXng|X-cept-Encoding|X{15}|~{15}|-{15})$ ^((gzip|deflate)\s*,?\s*)+|[X~-]{4,13}$ HAVE_Accept-Encoding
             RequestHeader append Accept-Encoding "gzip,deflate" env=HAVE_Accept-Encoding
 
-            # Force IE to render in the most recent mode http://expression.microsoft.com/en-us/dd835379.aspx
-            # and run Google Chrome Frame http://www.chromium.org/developers/how-tos/chrome-frame-getting-started#TOC-Making-Your-Pages-Work-With-Google-Chrome-Frame
+            # Force IE in highest available mode http://expression.microsoft.com/en-us/dd835379.aspx
             BrowserMatch MSIE ie
-            Header set X-UA-Compatible "IE=edge,chrome=1" env=ie
+            Header set X-UA-Compatible IE=edge env=ie
+            <FilesMatch "\.(appcache|crx|css|eot|gif|ico|jpe?g|js|mp4|oga|ogg|ogv|otf|pdf|png|svg|ttf|vcf|webapp|webm|webp|woff|xml)$">
+                Header unset X-UA-Compatible env=ie
+            </FilesMatch>
 
             # Remove cross-site scripting attacks on IE8 and IE9 http://technet.microsoft.com/en-us/security/bulletin/MS10-002#section6
             BrowserMatch "MSIE [8-9]" ie89
@@ -80,6 +83,7 @@ ErrorDocument 500 "500 Internal Server Error"
                                       application/rss+xml \
                                       application/vnd.ms-fontobject \
                                       application/x-font-ttf \
+                                      application/x-web-app-manifest+json \
                                       application/xhtml+xml \
                                       application/xml \
                                       font/opentype \
@@ -94,27 +98,29 @@ ErrorDocument 500 "500 Internal Server Error"
 # Improve better cache control
 <IfModule mod_expires.c>
     ExpiresActive On
-    ExpiresDefault                              "access plus 1 month"
-    ExpiresByType application/javascript        "access plus 1 year"
-    ExpiresByType application/json              "access plus 0 seconds"
-    ExpiresByType application/vnd.ms-fontobject "access plus 1 month"
-    ExpiresByType application/x-font-ttf        "access plus 1 month"
-    ExpiresByType application/x-font-woff       "access plus 1 month"
-    ExpiresByType application/xml               "access plus 0 seconds"
-    ExpiresByType audio/ogg                     "access plus 1 month"
-    ExpiresByType font/opentype                 "access plus 1 month"
-    ExpiresByType image/gif                     "access plus 1 month"
-    ExpiresByType image/jpeg                    "access plus 1 month"
-    ExpiresByType image/png                     "access plus 1 month"
-    ExpiresByType image/svg+xml                 "access plus 1 month"
-    ExpiresByType image/x-icon                  "access plus 1 week"
-    ExpiresByType text/cache-manifest           "access plus 0 seconds"
-    ExpiresByType text/css                      "access plus 1 year"
-    ExpiresByType text/html                     "access plus 0 seconds"
-    ExpiresByType text/plain                    "access plus 1 month"
-    ExpiresByType video/mp4                     "access plus 1 month"
-    ExpiresByType video/ogg                     "access plus 1 month"
-    ExpiresByType video/webm                    "access plus 1 month"
+    ExpiresDefault                                    "access plus 1 month"
+    ExpiresByType application/font-woff               "access plus 1 month"
+    ExpiresByType application/javascript              "access plus 1 year"
+    ExpiresByType application/json                    "access plus 0 seconds"
+    ExpiresByType application/rss+xml                 "access plus 1 hour"
+    ExpiresByType application/vnd.ms-fontobject       "access plus 1 month"
+    ExpiresByType application/x-font-ttf              "access plus 1 month"
+    ExpiresByType application/x-web-app-manifest+json "access plus 0 seconds"
+    ExpiresByType application/xml                     "access plus 0 seconds"
+    ExpiresByType audio/ogg                           "access plus 1 month"
+    ExpiresByType font/opentype                       "access plus 1 month"
+    ExpiresByType image/gif                           "access plus 1 month"
+    ExpiresByType image/jpeg                          "access plus 1 month"
+    ExpiresByType image/png                           "access plus 1 month"
+    ExpiresByType image/svg+xml                       "access plus 1 month"
+    ExpiresByType image/x-icon                        "access plus 1 week"
+    ExpiresByType text/cache-manifest                 "access plus 0 seconds"
+    ExpiresByType text/css                            "access plus 1 year"
+    ExpiresByType text/html                           "access plus 0 seconds"
+    ExpiresByType text/plain                          "access plus 1 month"
+    ExpiresByType video/mp4                           "access plus 1 month"
+    ExpiresByType video/ogg                           "access plus 1 month"
+    ExpiresByType video/webm                          "access plus 1 month"
 </IfModule>
 <IfModule mod_headers.c>
     # Do not show a snippet in the search results for this files
@@ -122,10 +128,13 @@ ErrorDocument 500 "500 Internal Server Error"
         Header set X-Robots-Tag nosnippet
     </FilesMatch>
 
-    # Allow Web Fonts access from all domains
-    <FilesMatch "\.(woff|ttf|otf|eot)$">
-        Header set Access-Control-Allow-Origin "*"
-    </FilesMatch>
+    # CORS file access from all domains
+    # <IfModule mod_setenvif.c>
+    #     <FilesMatch "\.(eot|gif|ico|jpe?g|otf|png|svg|ttf|webp|woff)$">
+    #         SetEnvIf Origin ":" IS_CORS
+    #         Header set Access-Control-Allow-Origin "*" env=IS_CORS
+    #     </FilesMatch>
+    # </IfModule>
 
     # Execute this files as PHP
     <FilesMatch "(humans.txt|manifest.appcache|robots.txt|sitemap.xml)">
