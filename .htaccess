@@ -34,15 +34,16 @@ AddDefaultCharset utf-8
 
 <IfModule mod_mime.c>
     # Force UTF-8 for certain file types
-    AddCharset utf-8 .css .js .json .vtt .webapp .xml
+    AddCharset utf-8 .css .js .json .vtt .nex .webapp .xml
 
     # Define proper MIME type
     AddType application/font-woff               woff
-    AddType application/javascript              js jsonp
+    AddType application/javascript              js
     AddType application/json                    json
     AddType application/vnd.ms-fontobject       eot
     AddType application/x-chrome-extension      crx
     AddType application/x-font-ttf              ttf
+    AddType application/x-navigator-extension   nex
     AddType application/x-web-app-manifest+json webapp
     AddType application/xml                     xml
     AddType audio/ogg                           oga ogg
@@ -68,7 +69,7 @@ AddDefaultCharset utf-8
             # Force IE in highest available mode http://expression.microsoft.com/en-us/dd835379.aspx
             BrowserMatch MSIE ie
             Header set X-UA-Compatible IE=edge env=ie
-            <FilesMatch "\.(appcache|crx|css|eot|gif|ico|jpe?g|js|mp4|oga|ogg|ogv|otf|pdf|png|svg|ttf|vcf|webapp|webm|webp|woff|xml)$">
+            <FilesMatch "\.(appcache|crx|css|eot|gif|ico|jpe?g|js|mp4|oga|ogg|ogv|otf|pdf|png|svg|ttf|vcf|nex|webapp|webm|webp|woff|xml)$">
                 Header unset X-UA-Compatible env=ie
             </FilesMatch>
 
@@ -83,6 +84,7 @@ AddDefaultCharset utf-8
                                       application/rss+xml \
                                       application/vnd.ms-fontobject \
                                       application/x-font-ttf \
+                                      application/x-navigator-extension \
                                       application/x-web-app-manifest+json \
                                       application/xhtml+xml \
                                       application/xml \
@@ -105,6 +107,7 @@ AddDefaultCharset utf-8
     ExpiresByType application/rss+xml                 "access plus 1 hour"
     ExpiresByType application/vnd.ms-fontobject       "access plus 1 month"
     ExpiresByType application/x-font-ttf              "access plus 1 month"
+    ExpiresByType application/x-navigator-extension   "access plus 0 seconds"
     ExpiresByType application/x-web-app-manifest+json "access plus 0 seconds"
     ExpiresByType application/xml                     "access plus 0 seconds"
     ExpiresByType audio/ogg                           "access plus 1 month"
@@ -113,7 +116,7 @@ AddDefaultCharset utf-8
     ExpiresByType image/jpeg                          "access plus 1 month"
     ExpiresByType image/png                           "access plus 1 month"
     ExpiresByType image/svg+xml                       "access plus 1 month"
-    ExpiresByType image/x-icon                        "access plus 1 week"
+    ExpiresByType image/x-icon                        "access plus 1 month"
     ExpiresByType text/cache-manifest                 "access plus 0 seconds"
     ExpiresByType text/css                            "access plus 1 year"
     ExpiresByType text/html                           "access plus 0 seconds"
