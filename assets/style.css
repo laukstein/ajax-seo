@@ -60,6 +60,12 @@ body {
         -ms-hyphens: auto;
             hyphens: auto;
 }
+main, input, textarea {
+    -webkit-user-select: text;
+       -moz-user-select: text;
+        -ms-user-select: text;
+            user-select: text;
+}
 main {
     display: block; /* IE10, Opera 12.16 and old WebKit compatibility */
 }
@@ -149,14 +155,8 @@ input, select, textarea {
     -moz-box-sizing: border-box;
          box-sizing: border-box;
 }
-input, textarea, main {
-    -webkit-user-select: text;
-       -moz-user-select: text;
-        -ms-user-select: text;
-            user-select: text;
-}
-input:not([type]), [type^=date], [type=email], [type=month], 
-[type=number], [type=password], [type=tel], [type=text], [type=time], 
+input:not([type]), [type^=date], [type=email], [type=month],
+[type=number], [type=password], [type=tel], [type=text], [type=time],
 [type=url], [type=week], [type=submit], select, textarea {
     width: 20em;
     padding: .6em .7em;
@@ -467,10 +467,6 @@ textarea {
 .main {
     padding-top: 1em;
     padding-bottom: 4.5em;
-    -webkit-user-select: text;
-       -moz-user-select: text;
-        -ms-user-select: text;
-            user-select: text;
 }
 .note {
     overflow: hidden;
@@ -554,8 +550,8 @@ textarea {
         /* –ms-text-size-adjust property will be ignored where the viewport tag is present */
         /*     -ms-text-size-adjust: 100%; */
     }
-    input:not([type]), [type^=date], [type=email], [type=month], 
-    [type=number], [type=password], [type=tel], [type=text], [type=time], 
+    input:not([type]), [type^=date], [type=email], [type=month],
+    [type=number], [type=password], [type=tel], [type=text], [type=time],
     [type=url], [type=week], [type=submit], select, textarea {
         width: 100%;
     }
