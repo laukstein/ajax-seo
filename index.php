@@ -311,9 +311,17 @@ echo "\n<!--[if lt IE 9]><script src=//cdnjs.cloudflare.com/ajax/libs/jquery/1.1
                 //jsonpCallback: 'foo',
                 //cache: true,
                 beforeSend: function() {
-                    \$content.fadeTo(200, 0.33);
+                    fadeTimer = setTimeout(function() {
+                        \$content.fadeTo(200, 0.33);
+                    }, 300);
                 },
-                success: handler,
+                success: function(data) {
+                    if (fadeTimer) {
+                        clearTimeout(fadeTimer);
+                    }
+
+                    handler(data);
+                },
                 error: function(jqXHR, textStatus) {
                     if (fadeTimer) {
                         clearTimeout(fadeTimer);
