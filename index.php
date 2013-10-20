@@ -136,7 +136,7 @@ if ($note !== null) {
 
 echo "<div class=\"ui-center container\">
 <header class=clearfix>
-    <a class=logo href=https://github.com/laukstein/ajax-seo rel=home><h2>$fn$optional_title<small>Version 1.0</small></h2></a>\n";
+    <a class=logo href=https://github.com/laukstein/ajax-seo rel=home><h2>$fn$optional_title <small>Version 1.0</small></h2></a>\n";
 
 if (connection) {
     $result = mysql_query('SELECT url, `meta-title`, title FROM `' . table . '` ORDER BY array ASC');
