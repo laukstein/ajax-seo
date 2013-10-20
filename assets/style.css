@@ -83,6 +83,9 @@ h2 {
     color: #777;
     font-size: 1.65em;
 }
+h2 small {
+    font-size: 60%;
+}
 h3 {
     color: #bbb;
     font-size: 1.35em;
