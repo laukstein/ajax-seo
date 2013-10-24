@@ -103,13 +103,16 @@ AddDefaultCharset utf-8
     ExpiresDefault                                    "access plus 1 month"
     ExpiresByType application/font-woff               "access plus 1 month"
     ExpiresByType application/javascript              "access plus 1 year"
-    ExpiresByType application/json                    "access plus 0 seconds"
+
+    # Cache Ajax http://developer.yahoo.com/performance/rules.html#cacheajax
+    ExpiresByType application/json                    "access plus 1 hour"
+
     ExpiresByType application/rss+xml                 "access plus 1 hour"
     ExpiresByType application/vnd.ms-fontobject       "access plus 1 month"
     ExpiresByType application/x-font-ttf              "access plus 1 month"
     ExpiresByType application/x-navigator-extension   "access plus 0 seconds"
     ExpiresByType application/x-web-app-manifest+json "access plus 0 seconds"
-    ExpiresByType application/xml                     "access plus 0 seconds"
+    ExpiresByType application/xml                     "access plus 1 hour"
     ExpiresByType audio/ogg                           "access plus 1 month"
     ExpiresByType font/opentype                       "access plus 1 month"
     ExpiresByType image/gif                           "access plus 1 month"
@@ -119,7 +122,7 @@ AddDefaultCharset utf-8
     ExpiresByType image/x-icon                        "access plus 1 month"
     ExpiresByType text/cache-manifest                 "access plus 0 seconds"
     ExpiresByType text/css                            "access plus 1 year"
-    ExpiresByType text/html                           "access plus 0 seconds"
+    ExpiresByType text/html                           "access plus 1 hour"
     ExpiresByType text/plain                          "access plus 1 month"
     ExpiresByType video/mp4                           "access plus 1 month"
     ExpiresByType video/ogg                           "access plus 1 month"
@@ -139,13 +142,13 @@ AddDefaultCharset utf-8
     #     </FilesMatch>
     # </IfModule>
 
-    # Execute this files as PHP
+    # Execute files as a PHP
     <FilesMatch "(humans.txt|manifest.appcache|robots.txt|sitemap.xml)">
         SetHandler application/x-httpd-php
     </FilesMatch>
 
     # Prevent clickjacking
-    Header always append X-Frame-Options DENY
+    Header set X-Frame-Options DENY
 
     Header unset ETag
 </IfModule>
