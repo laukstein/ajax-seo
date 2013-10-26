@@ -6,6 +6,8 @@ Based on W3C, Google, Yahoo, etc. rules to deliver innovative user experience.
 
 See the demo <http://lab.laukstein.com/ajax-seo/>
 
+Releases <https://github.com/laukstein/ajax-seo/releases>
+
 
 ## How to use
 
