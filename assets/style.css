@@ -26,18 +26,19 @@ html, input, select, textarea {
     color: #222;
     line-height: 1.5;
     font-family: Cambria, Georgia, serif;
-    word-spacing: .1em;
 }
 html, form, .button {
-    /* Remove user-select for easer developing processes */
+    /* Remove user-select for easer debugging */
     -webkit-user-select: none;
        -moz-user-select: none;
         -ms-user-select: none;
             user-select: none;
 }
 html {
+    overflow-x: hidden;
+    overflow-y: scroll;
     font-size: 62.45%; /* Make 1em = 10px = 2.5rem */
-    background-color: #fff;
+    background-color: #f8f9fa;
 
     /* Old Safari smooth text rendering issue */
     -webkit-font-smoothing: antialiased;
@@ -48,13 +49,12 @@ html {
 
     cursor: default;
 }
-body, h3, h4, p, ul, ol, dl, dd, blockquote, figure, input, select, textarea {
+body, h4, ul, ol, dl, dd, blockquote, figure, input, select, textarea {
     margin: auto;
 }
 body {
-    overflow-x: hidden;
-    overflow-y: scroll;
     font-size: 1.9em; /* The optional font-size REM http://snook.ca/archives/html_and_css/font-size-with-rem, buggy on various browsers */
+    /* CSS4 hyphenation http://generatedcontent.org/post/44751461516/finer-grained-control-of-hyphenation-with-css4-text */
     -webkit-hyphens: auto;
        -moz-hyphens: auto;
         -ms-hyphens: auto;
@@ -67,36 +67,38 @@ main, input, textarea {
             user-select: text;
 }
 main {
-    display: block; /* IE10, Opera 12.16 and old WebKit compatibility */
+    display: block; /* IE10, Opera 12.16 and old WebKit legacy */
+}
+h1, h2 {
+    font-family: 'Times New Roman', serif; /* IE fallback 'Times New Roman' */
 }
 h1, h2, h3 {
-    margin-top: .2em;
-    margin-bottom: .2em;
     font-weight: normal;
-    font-family: "Times New Roman", serif; /* IE fallback "Times New Roman" */
-    line-height: 1.2;
+    line-height: 1.15;
 }
 h1 {
+    margin-top: .35em;
     font-size: 2.1em;
+}
+h1 small {
+    font-size: 60%;
+}
+h1 + h2 {
+    margin-top: -.8em;
 }
 h2 {
     color: #777;
-    font-size: 1.65em;
-}
-h2 small {
-    font-size: 60%;
+    font-size: 1.7em;
 }
 h3 {
-    color: #bbb;
-    font-size: 1.35em;
+    color: #aaa;
+    font-size: 1.4em;
 }
-p {
-    padding-top: .8em;
-    padding-bottom: .8em;
-}
-code {
+code, pre {
     font-family: Consolas, 'Liberation Mono', Courier, monospace;
     white-space: pre-wrap;
+    -moz-tab-size: 4;
+         tab-size: 4;
 }
 ul, ol {
     padding: 0;
@@ -121,10 +123,6 @@ a {
 a:hover, a:focus {
     color: #204e92;
     text-decoration: underline;
-}
-a:active {
-    /* Avoid IE10 gray background-color */
-    background-color: inherit;
 }
 img {
     /* Image scaling http://www.456bereastreet.com/lab/scaling-images-proportionally/ */
@@ -160,9 +158,12 @@ input, select, textarea {
 }
 input:not([type]), [type^=date], [type=email], [type=month],
 [type=number], [type=password], [type=tel], [type=text], [type=time],
-[type=url], [type=week], [type=submit], select, textarea {
+[type=url], [type=week], [type=submit], select, textarea,
+input.button {
     width: 20em;
     padding: .6em .7em;
+    margin: auto;
+    line-height: inherit;
 }
 input:hover, input:focus, select:hover, select:focus, textarea:hover, textarea:focus  {
     border-color: #ababab;
@@ -177,6 +178,218 @@ textarea {
     word-wrap: break-word;
     vertical-align: top;
     resize: vertical;
+}
+
+
+/* Design
+-------------------------------------------------- */
+body, .tab {
+    margin: auto 1em;
+}
+.progress {
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    width: 0%; /* IE transition issue */
+    height: 3px;
+    background-color: #29d;
+}
+.status.start .progress {
+    width: 70%;
+    -webkit-transition-duration: 5s; /* Safari and Android legacy */
+            transition-duration: 5s;
+}
+.status.done .progress {
+    width: 100%;
+    background-color: rgba(34,153,221,0);
+    -webkit-transition-duration: .2s; /* Safari and Android legacy */
+            transition-duration: .2s;
+}
+.tab {
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    right: 0;
+    left: 0;
+    line-height: 1.2;
+    font-family: 'Open Sans', Meiryo, 'Segoe UI', sans-serif;
+    text-align: center;
+    white-space: nowrap;
+}
+.tab a, .footer a {
+    color: inherit;
+    text-decoration: none;
+}
+.item {
+    display: none;
+}
+.header, .main, .footer {
+    width: 70%;
+    min-width: 26em;
+    -moz-box-sizing: border-box;
+         box-sizing: border-box;
+}
+.header {
+    display: inline-block;
+    position: relative;
+    padding: 0 .4em;
+    margin: auto;
+    background-color: #fff;
+    background-clip: content-box;
+}
+.header:after {
+    content: '';
+    position: absolute;
+    left: .4em;
+    right: .4em;
+    height: 1.5em;
+    background-image: -webkit-linear-gradient(#fff, rgba(255,255,255,0));
+    background-image:         linear-gradient(#fff, rgba(255,255,255,0));
+    pointer-events: none;
+}
+.nav, .footer {
+    line-height: 2.1;
+}
+.nav {
+    display: inline-block;
+    display: -webkit-box; /* Android 2.3 legacy */
+    display: -ms-flexbox;
+    display: flex;
+    position: relative;
+    margin: .2em auto;
+    vertical-align: middle;
+    background-color: #f1f1f1;
+    background-image: -webkit-linear-gradient(#f8f8f8, rgba(248,248,248,0)); /* Safari and Android legacy */
+    background-image:         linear-gradient(#f8f8f8, rgba(248,248,248,0));
+    border-width: 1px;
+    border-style: solid;
+    border-color: #ddd #ddd #ccc;
+    border-radius: .2em;
+    box-shadow: 0 1px 1px rgba(0,0,0,.1), inset 0 0 0 1px rgba(255,255,255,.5);
+    -moz-box-sizing: border-box;
+         box-sizing: border-box;
+}
+.nav a {
+    overflow: hidden;
+    display: block;
+    position: relative; /* Old Webkit visibility issue */
+    -webkit-box-flex: 1; /* Android 2.3 legacy */
+    -ms-flex: 1;
+        flex: 1;
+    min-width: 0; /* Implied Minimum Size of Flex Items http://dev.w3.org/csswg/css3-flexbox/#min-size-auto */
+    max-height: 2.2em; /* Old Webkit legacy */
+    padding: 0 .4em; /* Firefox flexbox padding percentage issue https://bugzilla.mozilla.org/show_bug.cgi?id=529761 */
+    text-overflow: ellipsis;
+    border: 0 solid #ddd;
+    border-left-width: 1px;
+}
+.nav a:first-child {
+    border-left: none;
+    border-radius: .2em 0 0 .2em;
+}
+.nav a:last-child {
+    border-radius: 0 .2em .2em 0;
+}
+.nav a:hover, .nav a:focus {
+    color: #000;
+}
+.footer a:hover, .footer a:focus {
+    color: #555;
+    text-decoration: underline;
+}
+.nav a:hover, .nav a:focus,
+.item:hover, .item:focus {
+    background-color: #fcfcfc;
+}
+.footer a {
+    display: inline-block;
+    color: #777;
+    padding: 0 .4em;
+}
+.nav a.selected {
+    background-color: #ebebeb;
+}
+.nav a.active {
+    position: relative;
+    z-index: 1;
+    margin: -1px auto;
+    color: #fff;
+    line-height: 2.2;
+    background-color: #0c63bc;
+    border-color: transparent;
+    cursor: default;
+}
+.nav a.active + a {
+    border-color: transparent;
+}
+.main, .footer {
+    position: relative;
+    padding: 0 5%;
+    margin: auto;
+}
+.main {
+    overflow: auto;
+    display: block; /* lagacy issue, Webkit */
+    min-height: 100%;
+    padding-top: 3.3em;
+    padding-bottom: 3.3em;
+    background-color: #fff;
+    border: 0 solid #d9e0e2;
+    border-width: 0 1px;
+    box-shadow: 2px 0 8px #ddd;
+}
+.button {
+    overflow: hidden;
+    display: inline-block;
+    padding: 0 .7em;
+    margin: .6em auto;
+    color: inherit;
+    line-height: 2.66em;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 -3em 6em -3em #ececec, 1px 1px 0 #fff;
+}
+.button:hover, .button:focus {
+    color: inherit;
+    text-decoration: none;
+    border-color: #ababab;
+    box-shadow: inset 0 0 0 1px #fff, inset 0 -3em 6em -3em #ececec, 1px 1px .3em #d6d6d6;
+}
+.button:active, .button.selected {
+    box-shadow: inset 0 -3em 6em -3em #d6d6d6, inset 1px 1px .3em #d6d6d6, 1px 1px 0 #fff;
+}
+.footer {
+    overflow: hidden;
+    height: 2.1em; /* IE11 issue */
+    margin-top: -2.1em;
+    line-height: 2.1;
+    text-overflow: ellipsis;
+    border-top: 1px solid #eee;
+}
+
+
+/* Handlers
+-------------------------------------------------- */
+[hidden], template { /* Unsupported attribute http://www.w3.org/html/wg/drafts/html/master/single-page.html#the-hidden-attribute */
+    display: none;
+}
+.visible {
+    visibility: visible;
+}
+.hidden {
+    visibility: hidden;
+    pointer-events: none;
+}
+.touchstart {
+    opacity: .55;
+}
+.disabled, .disabled a {
+    pointer-events: none;
+}
+.disabled {
+    opacity: .3;
 }
 
 
@@ -210,23 +423,47 @@ textarea {
     input {
         *overflow: visible;
     }
-    .clearfix {
-        *zoom: 1;
+    .tab:before {
+        background-color: #f7f7f7;
+    }
+    .header {
+        overflow: hidden;
+    }
+    .nav a {
+        display: table-cell;
+    }
+}
+@media (min-width:0\0) { /* IE9-10 http://www.impressivewebs.com/ie10-css-hacks/ */
+    a {
+        background-color: inherit; /* Remove IE10 :active gray background-color */
+    }
+    .tab:before {
+        background-color: #f7f7f7;
+    }
+    .header {
+        overflow: hidden;
+    }
+    .nav a {
+        display: table-cell;
+    }
+    .show .nav a {
+        display: block;
+    }
+}
+@media (-ms-high-contrast: active), (-ms-high-contrast: none) { /* IE10+ */
+    .tab:before {
+        background-color: rgba(247,247,247,0);
+    }
+    .nav a {
+        display: block;
     }
 }
 @media (-webkit-min-device-pixel-ratio: 0) { /* Webkit */
     /* Android version issues
     --------------------------------------------------
     all - slow click/hover state on any element except <a>
-    all - flicker issue http://georgehess.com/post/2054803814/css-keyframe-animation-flicker
-    2.3 - screen flash on scroll issue http://georgehess.com/post/2054803814/css-keyframe-animation-flicker
-    2.3 - overflow issue on <a> elements
-    2.3 - not supported flexbox updated syntax - use old and new syntax to support on all devices http://dev.w3.org/csswg/css3-flexbox/ http://css-tricks.com/old-flexbox-and-new-flexbox/
-    2.3 - unknown appearance of visibility: hidden on new DOM elements on scroll when using -webkit-transform:translate3d(0,0,0), -webkit-backface-visibility:hidden or -webkit-perspective:1000 */
-    /* Activate the GPU acceleration to prevent Chrome rendering bug with window overflow and border-radius */
-    /* body {
-        -webkit-transform: translate3d(0,0,0);
-    } */
+    2.3 - @keyframes flicker http://georgehess.com/post/2054803814/css-keyframe-animation-flicker
+    2.3 - unknown appearance of visibility:hidden on new DOM elements on scroll while using -webkit-transform:translate3d(0,0,0), -webkit-backface-visibility:hidden or -webkit-perspective:1000 */
     a, input, select, textarea {
         /* <select> shadow DOM issue https://code.google.com/p/chromium/issues/detail?id=234871 */
         /* Remove outline and highlight-color from click-able elements on Android and iOS */
@@ -265,12 +502,7 @@ textarea {
         color: #ddd;
     }
 }
-@media (min-resolution: .001dpcm) { /* Opera till version 15 */
-    /* contenteditable attribute issue */
-    .clearfix:after {
-        content: ' ';
-    }
-}
+@media (min-resolution: .001dpcm) { /* Opera <= 15 */ }
 @-moz-document url-prefix() { /* Firefox */
     ::-moz-selection {
         color: #fff;
@@ -282,8 +514,11 @@ textarea {
         background-size: auto auto;
     }
     input {
-        /* Bug https://bugzilla.mozilla.org/show_bug.cgi?id=649849 */
         -moz-appearance: none;
+
+        /* Hack for appearance:none https://bugzilla.mozilla.org/show_bug.cgi?id=649849 */
+        text-indent: .01px;
+        text-overflow: '';
     }
     input::-moz-focus-inner {
         /* Firefox input height issue http://davidwalsh.name/firefox-buttons,
@@ -297,240 +532,6 @@ textarea {
 }
 
 
-/* Common rules
--------------------------------------------------- */
-.clearfix:after {
-    content: '';
-    display: table;
-    clear: both;
-}
-.transition:before, .transition {
-    -webkit-transition-duration: .14s; /* Safari, iOS and Android fallback */
-            transition-duration: .14s;
-}
-.transition:hover:before, .transition:hover {
-    -webkit-transition-duration: .1s; /* Safari, iOS and Android fallback */
-            transition-duration: .1s;
-}
-.ui-center {
-    overflow: hidden;
-    width: 90%;
-    min-width: 18em;
-    padding-right: 2.5%;
-    padding-left: 2.5%;
-    margin-right: auto;
-    margin-left: auto;
-    -moz-box-sizing: border-box;
-         box-sizing: border-box;
-}
-.absolute {
-    position: absolute;
-    z-index: 200;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-}
-.button {
-    display: inline-block;
-    color: inherit;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    box-shadow: inset 0 -3em 6em -3em #ececec, 1px 1px 0 #fff;
-}
-.button:hover, .button:focus {
-    border-color: #ababab;
-    box-shadow: inset 0 0 0 1px #fff, inset 0 -3em 6em -3em #ececec, 1px 1px .3em #d6d6d6;
-}
-.button:active, .button.selected {
-    box-shadow: inset 0 -3em 6em -3em #d6d6d6, inset 1px 1px .3em #d6d6d6, 1px 1px 0 #fff;
-}
-
-/* Motions */
-@-webkit-keyframes slide-down { /* Webkit legacy outdated syntax for mobile devices */
-    0% {
-        -webkit-transform: translateY(-5em);
-    }
-    10% {
-        -webkit-transform: translateY(0);
-    }
-    90% {
-        -webkit-transform: translateY(0);
-    }
-    /* Android 2.3 flicker issue, final frame less than 100% http://georgehess.com/post/2054803814/css-keyframe-animation-flicker */
-    99.99% {
-        -webkit-transform: translateY(-5em);
-    }
-    /* Do not remove, otherwise will not work on Android 2.3 */
-    100% {}
-}
-@keyframes slide-down {
-    0%, 100% {
-        transform: translateY(-5em);
-    }
-    10%, 90% {
-        transform: translateY(0);
-    }
-}
-
-
-/* Design
--------------------------------------------------- */
-.container {
-    min-height: 100%;
-}
-.logo {
-    display: table-row;
-    text-decoration: none;
-    white-space: nowrap;
-}
-.logo:hover, .logo:focus {
-    color: #333;
-    text-decoration: none;
-}
-
-/* Navigation */
-.list {
-    display: inline-block;
-    position: relative;
-    display: -webkit-box; /* Android 2.3 Flexbox fallback */
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display:         flex;
-    margin-top: .2em;
-    margin-bottom: .2em;
-    line-height: 2.1;
-    font-family: "Open Sans", Meiryo, "Segoe UI", sans-serif;
-    white-space: nowrap;
-    background-color: #f1f1f1;
-    background-image: -webkit-linear-gradient(#f8f8f8, rgba(248,248,248,0)); /* Safari, iOS and Android fallback */
-    background-image:         linear-gradient(#f8f8f8, rgba(248,248,248,0));
-    border-width: 1px;
-    border-style: solid;
-    border-left: 0;
-    border-color: #ddd #ddd #ccc;
-    border-radius: .2em;
-    box-shadow: 0 1px 1px rgba(0,0,0,.1), inset 0 0 0 1px rgba(255,255,255,.5);
-}
-.item {
-    overflow: hidden;
-    position: relative; /* Old Webkit visibility issue */
-    display: block;
-    -webkit-box-flex: 1; /* Android 2.3 Flexbox fallback */
-    -webkit-flex: 1;
-        -ms-flex: 1;
-            flex: 1;
-    min-width: 0; /* Implied Minimum Size of Flex Items http://dev.w3.org/csswg/css3-flexbox/#min-size-auto */
-
-    /* Firefox flexbox padding percentage issue https://bugzilla.mozilla.org/show_bug.cgi?id=529761 */
-    padding-right: .4em;
-    padding-left: .4em;
-
-    float: left;
-    color: inherit;
-    text-align: center;
-    text-overflow: ellipsis;
-    border-right: 1px solid #ddd;
-    -webkit-transition-property: background-color, background-image;
-            transition-property: background-color, background-image;
-}
-.item:first-child {
-    border-left: 1px solid #e9e9e9;
-    border-radius: .2em 0 0 .2em;
-}
-.item:last-child {
-    border-right-color: transparent;
-    border-radius: 0 .2em .2em 0;
-}
-.item, .item:hover, .item:focus {
-    color: inherit;
-    text-decoration: none;
-}
-.item:hover, .item:focus {
-    background-color: #f8f8f8;
-    background-image: -webkit-linear-gradient(#fbfbfb, rgba(251, 251, 251, 0)); /* Safari, iOS and Android fallback */
-    background-image:         linear-gradient(#fbfbfb, rgba(251, 251, 251, 0));
-}
-.item.selected {
-    z-index: 1;
-    margin-top: -1px;
-    margin-bottom: -1px;
-    color: #fff;
-    line-height: 2.2;
-    background-color: #0c63bc;
-    background-image: none;
-    border-color: transparent;
-    cursor: default;
-}
-.item.selected:last-child {
-    margin-right: -1px;
-}
-.main {
-    padding-top: 1em;
-    padding-bottom: 4.5em;
-}
-.note {
-    overflow: hidden;
-    position: absolute;
-    z-index: 10000;
-    top: 0;
-    left: 0;
-    right: 0;
-    line-height: 2.5;
-    text-align: center;
-    text-shadow: 1px 1px 0 rgba(255,255,255,.5);
-    background-color: #ffe65c;
-    background-image: -webkit-linear-gradient(#ffe998, #ffe65c); /* Safari, iOS and Android fallback */
-    background-image:         linear-gradient(#ffe998, #ffe65c);
-    box-shadow: 0 0 .4em rgba(0,0,0,.5);
-    -webkit-transform: translateY(-5em);
-            transform: translateY(-5em);
-    -webkit-animation: slide-down 7s ease-out .1s 1;
-            animation: slide-down 6s linear .5s 1;
-}
-.footer {
-    position: relative;
-    height: 3em;
-    margin-top: -3em;
-    line-height: 3;
-}
-.breadcrumb {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    border-top: 1px solid #eee;
-}
-.breadcrumb a {
-    padding-right: .2em;
-    padding-left: .2em;
-}
-
-
-/* Handlers
--------------------------------------------------- */
-[hidden] { /* Unsupported attribute http://dev.w3.org/html5/spec/single-page.html#the-hidden-attribute */
-    display: none;
-}
-.visible {
-    visibility: visible;
-}
-.hidden {
-    visibility: hidden;
-    pointer-events: none;
-}
-.touchstart {
-    opacity: .55;
-}
-.disabled, .disabled a {
-    pointer-events: none;
-}
-.disabled {
-    opacity: .3;
-}
-
-
 /* Device optimization
 -------------------------------------------------- */
 /* CSS Device Adaptation http://dev.w3.org/csswg/css-device-adapt/ */
@@ -540,59 +541,204 @@ textarea {
 }
 /* HiDPI @2x double-resolution */
 /* @media (-o-min-device-pixel-ratio: 5/4), (-webkit-min-device-pixel-ratio: 1.25), (min-resolution: 120dpi) { } */
-/* @media (orientation: portrait) { } */
-/* @media (orientation: landscape) { } */
-@media (-webkit-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
-    html {
-        font-size: 62.5%;
+@media (max-width: 1280px) {
+    .header, .main, .footer {
+        width: 80%;
+        -webkit-transition: width .21s; /* Safari and Android legacy */
+                transition: width .21s;
     }
 }
-@media (max-width: 532px) {
+@media (max-width: 540px) {
     html {
+        background-color: #fff;
         -webkit-text-size-adjust: 100%;
         /* –ms-text-size-adjust property will be ignored where the viewport tag is present */
-        /*     -ms-text-size-adjust: 100%; */
+        /*    -ms-text-size-adjust: 100%; */
+    }
+    body {
+        margin: auto;
     }
     input:not([type]), [type^=date], [type=email], [type=month],
     [type=number], [type=password], [type=tel], [type=text], [type=time],
     [type=url], [type=week], [type=submit], select, textarea {
         width: 100%;
     }
-    .list {
-        display: block;
-        height: auto;
-        border-left: 1px solid #ddd;
+    .tab:before {
+        position: absolute;
+        content: '';
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        background-image: -webkit-linear-gradient(#f7f7f7, rgba(241,241,241,.9));
+        background-image:         linear-gradient(#f7f7f7, rgba(241,241,241,.9));
+        border-bottom: 1px solid rgba(255,255,255,.1);
+        box-shadow: 0 0 4px #888;
+    }
+    .tab, .main {
+        background-color: transparent;
+        -webkit-transition: 0; /* Safari and Android legacy */
+                transition: 0;
+    }
+    .tab {
+        margin: auto;
     }
     .item {
-        display: block;
-        padding-right: 1.3em;
-        padding-left: 1.3em;
-        float: none;
-        text-align: left; /* IE fallback */
-        text-align: start;
-        border-top: 1px solid #ddd;
-        border-right: 0;
-    }
-    .item:first-child {
-        border: 0;
-        border-radius: .2em .2em 0 0;
-    }
-    .item:last-child {
-        border-radius: 0 0 .2em .2em;
-    }
-    .item.selected {
-        margin-right: -1px;
-        margin-left: -1px;
         position: relative;
+        z-index: 1;
+        display: inline-block;
+        font-weight: bold;
+        font-size: 2em;
+        text-shadow: 1px 1px 0 #fff;
+        width: 50%;
+        float: left;
+    }
+    .item-header {
+        text-align: left;
+        text-indent: -.1em;
+    }
+    .item-footer {
+        font-family: serif;
+        text-align: right;
+    }
+    .header, .main, .footer {
+        min-width: 13.6em;
+    }
+    .header, .main, .footer {
+        -webkit-backface-visibility: hidden;
+        -webkit-perspective: 1000;
+    }
+    .header, .footer {
+        visibility: hidden;
+        position: fixed;
+        z-index: -1;
+        top: 0;
+        bottom: 0;
+        width: 85%;
+        padding: 0;
+        margin: auto;
+        right: auto;
+        text-align: left;
+        text-align: start;
+        -webkit-transition: -webkit-transform .21s, box-shadow .1s; /* Safari and Android legacy */
+                transition:         transform .21s, box-shadow .1s;
+    }
+    .header {
+        left: 0;
+        -webkit-transform: translateX(-100%); /* Webkit legacy */
+                transform: translateX(-100%);
+    }
+    .footer {
+        z-index: 99;
+        right: 0;
+        padding-top: 2.35em;
+        font-family: 'Open Sans', Meiryo, 'Segoe UI', sans-serif;
+        text-align: start;
+        border-left: 1px solid #ddd;
+        -webkit-transform: translateX(100%); /* Webkit legacy */
+                transform: translateX(100%);
+    }
+    .header:after {
+        display: none;
+    }
+    .nav, .footer {
+        overflow: auto;
+        height: 100%;
+        background-color: #f8f8f8;
+    }
+    .nav {
+        display: block;
+        padding-top: 2.2em;
+        background-image: none;
+        border-width: 0;
+        border-right-width: 1px;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .nav a, .footer a {
+        display: block;
+        padding: 0 1.2em;
+        float: none; /* IE lagacy issue */
+    }
+    .nav a {
+        -webkit-box-flex: 0; /* Android 2.3 legacy */
+        -webkit-flex: 0;
+            -ms-flex: 0;
+                flex: 0;
+        border-top-width: 1px;
+        border-left-width: 0;
+    }
+    .footer a {
+        overflow: hidden;
+        color: inherit;
+        text-overflow: ellipsis;
+        border-top: 1px solid #ddd;
+    }
+    .nav a[href] {
+        border-radius: 0;
+    }
+    .nav a:first-child, .footer a:first-child {
+        border-top-width: 0;
+    }
+    .footer a:hover, .footer a:focus {
+        color: #000;
+        text-decoration: none;
+        background-color: #fcfcfc;
+    }
+    .main {
+        width: 95%;
+        padding-bottom: 1em;
+        margin: auto;
+        border-width: 0;
+        box-shadow: none;
+        -webkit-transition: -webkit-transform .21s; /* Safari and Android legacy */
+                transition:         transform .21s;
+    }
+    .status.show-header .header,
+    .status.show-footer .footer {
+        visibility: visible;
+        box-shadow: 0 0 1.2em rgba(0,0,0,.2);
+        -webkit-transform: translateX(0); /* Webkit legacy */
+                transform: translateX(0);
+    }
+    .status.show-header .item-header,
+    .status.show-footer .item-footer {
+        background-color: #ebebeb;
+    }
+    .status.show .main {
+        pointer-events: none;
+        -webkit-user-select: none;
+           -moz-user-select: none;
+            -ms-user-select: none;
+                user-select: none;
+    }
+    .status.show-header .main {
+        -webkit-transform: translateX(92%); /* Webkit legacy */
+                transform: translateX(92%);
+    }
+    .status.show-footer .main {
+        -webkit-transform: translateX(-92%); /* Webkit legacy */
+                transform: translateX(-92%);
     }
 }
 @media (max-width: 320px) {
     html {
-        font-size: 50.5%;
+        font-size: 58%;
+        -webkit-transition: font-size .2s; /* Safari and Android legacy */
+                transition: font-size .2s;
+    }
+    h1 {
+        font-size: 2em;
+    }
+    h2 {
+        font-size: 1.6em;
+    }
+    h3 {
+        font-size: 1.3em;
     }
 }
 @media print {
-    *, h2 {
+    *, h2, h3 {
         color: #000;
         text-shadow: none;
         background: transparent;
@@ -601,7 +747,7 @@ textarea {
         color: #444;
         text-decoration: underline;
     }
-    [href]:after, abbr[title]:after {
+    /*[href]:after, abbr[title]:after {
         color: #999;
     }
     [href]:after {
@@ -609,7 +755,7 @@ textarea {
     }
     abbr[title]:after {
         content: ' (' attr(title) ')';
-    }
+    }*/
     img {
         page-break-inside: avoid;
     }
@@ -623,10 +769,24 @@ textarea {
     h2, h3 {
         page-break-after: avoid;
     }
-    header, footer {
+    .tab, .footer {
         display: none;
     }
-    html, body {
+    html, .main {
         background: inherit;
+    }
+    .main {
+        border-width: 0;
+        box-shadow: none;
+    }
+    .button {
+        text-decoration: none;
+        border-color: #444;
+        box-shadow: none;
+    }
+    @media (max-width: 532px) {
+        .main {
+            padding-top: 1em;
+        }
     }
 }

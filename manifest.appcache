@@ -1,61 +1,39 @@
 <?php
 
-// --------------------------------------------------
 // Offline Web applications http://dev.w3.org/html5/spec/offline.html
 // Cache Manifest Validator http://manifest-validator.com/
 // --------------------------------------------------
 // http://appcachefacts.info/peterlubbers-owc4/index.html#18
 // http://html5-demos.appspot.com/static/html5storage/index.html#slide40
 
-include 'content/config.php';  // Configuration
-include 'content/connect.php'; // Connect to MySQL
+include 'content/config.php';
+include 'content/connect.php';
+include 'content/cache.php';
 
 header('Content-Type: text/cache-manifest; charset=utf-8');
 
-echo 'CACHE MANIFEST';
-
-
-// Recent version
-// --------------------------------------------------
-$directory = new RecursiveDirectoryIterator('.');
-$iterator  = new RecursiveIteratorIterator($directory);
-$regex     = new RegexIterator($iterator, '/.+\.(appcache|css|js|php|txt|xml)/');
-$array     = array();
-
-foreach ($regex as $key) {
-    $array[] = $key -> getMTime();
-}
-
-$modfile = max($array);
-$query   = mysql_query("SELECT UNIX_TIMESTAMP(GREATEST(updated, created)) AS date FROM `" . table . "`");
-
-while ($row = @mysql_fetch_array($query, MYSQL_ASSOC)) {
-    $moddate = $row['date'];
-}
-
-$modmax = max($modfile, $moddate);
-
-echo "\n# Version $modmax\n";
+echo 'CACHE MANIFEST
+# Version ' . datemod::date() . "\n" . $path;
 
 // Explicitly cached entries
-if (connection) {
-    $result = mysql_query('SELECT url FROM `' . table . '`');
+if ($stmt = $mysqli->prepare('SELECT url FROM `' . table . '`')) {
+    $stmt->execute();
+    $stmt->bind_result($url);
 
-    if (mysql_num_rows($result)) {
-    	while ($row = @mysql_fetch_array($result, MYSQL_ASSOC)) {
-            $row[] = array('row' => array_map('htmlspecialchars', $row));
-
-    		echo "\n$path{$row['url']}";
-    	}
+    while ($stmt->fetch()) {
+        echo "\n{$path}api" . (!empty($url) ? '/' : null) . $url;
     }
+
+    $stmt->free_result();
+    $stmt->close();
 }
+$mysqli->close();
 
-
-echo "\n{$assets}assets/$css";
-echo "\n{$assets}assets/$js";
-echo "\nhttp://code.jquery.com/jquery-1.8.3.min.js";
+echo "\n{$assets}assets/$css
+{$assets}assets/$js
+//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js";
 
 // Resources that requires user to be online
-echo "\n\nNETWORK:\n//www.google-analytics.com/ga.js";
+echo "\n\nNETWORK:\n//www.google-analytics.com/analytics.js";
 
 // FALLBACK:

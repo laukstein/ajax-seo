@@ -1,46 +1,31 @@
 <?php
-// --------------------------------------------------
-// Creating Sitemaps in Google Webmaster Tools http://support.google.com/webmasters/bin/answer.py?hl=en&answer=183668
-// --------------------------------------------------
+//
+// Sitemaps https://support.google.com/webmasters/answer/183668?hl=en
+//
 
-include 'content/config.php';  // Configuration
-include 'content/connect.php'; // Connect to MySQL
+include 'content/config.php';
+include 'content/connect.php';
+include 'content/cache.php';
 
 header('Content-Type: application/xml');
 
-
-// HTTP header caching
-// --------------------------------------------------
-$tablemod = mysql_query("SELECT CONCAT(DATE_FORMAT(MAX(GREATEST(updated, created)), '%a, %d %b %Y %T '), @@global.time_zone) AS date FROM `" . table . "`");
-while ($row = @mysql_fetch_array($tablemod, MYSQL_ASSOC)) {
-    function cache(&$gmtime) {
-        if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
-            if ($_SERVER['HTTP_IF_MODIFIED_SINCE'] == $gmtime) {
-                http_response_code(304);
-                exit;
-            }
-        }
-
-        header('Last-Modified: ' . $gmtime);
-    }
-
-    cache($row['date']);
-}
-
 echo '<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="http://www.sitemaps.org/schemas/sitemap-image/1.1"
-        xmlns:video="http://www.sitemaps.org/schemas/sitemap-video/1.1">
-';
+    xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+    xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">';
 
-$result = mysql_query("SELECT url, CONCAT(DATE_FORMAT(GREATEST(updated, created), '%Y-%m-%dT%H:%i:%s'), @@global.time_zone) AS date FROM `" . table . "` ORDER BY array ASC");
-while ($row = @mysql_fetch_array($result, MYSQL_ASSOC)) {
-    $row[] = array(
-        'row' => array_map('htmlspecialchars', $row)
-    );
-    echo "    <url>\n        <loc>http://{$_SERVER['SERVER_NAME']}$path{$row['url']}</loc>\n        <lastmod>{$row['date']}</lastmod>\n    </url>";
+if ($stmt = $mysqli->prepare("SELECT url, GREATEST(updated, created) AS date FROM `" . table . "` ORDER BY array ASC")) {
+    $stmt->execute();
+    $stmt->bind_result($url, $date);
+
+    while ($stmt->fetch()) {
+        echo "\n    <url>\n        <loc>http://$host$path$url</loc>\n        <lastmod>" . date('c', strtotime($date)) . "</lastmod>\n    </url>";
+    }
+
+    $stmt->free_result();
+    $stmt->close();
 }
 
-mysql_close($con);
+$mysqli->close();
 
 echo "\n</urlset>";

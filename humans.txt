@@ -1,50 +1,17 @@
 <?php
 
-include 'content/config.php';  // Configuration
-include 'content/connect.php'; // Connect to MySQL
+include 'content/config.php';
+include 'content/connect.php';
+include 'content/cache.php';
 
 header('Content-Type: text/plain');
 
-
-// Recent version date
-// --------------------------------------------------
-$directory = new RecursiveDirectoryIterator('.');
-$iterator  = new RecursiveIteratorIterator($directory);
-$regex     = new RegexIterator($iterator, '/.+\.(appcache|css|js|php|txt|xml)/');
-$array     = array();
-
-foreach ($regex as $key) {
-    $array[] = $key -> getMTime();
-}
-
-$modfile = max($array);
-$query   = mysql_query("SELECT UNIX_TIMESTAMP(GREATEST(updated, created)) AS date FROM `" . table . "`");
-
-while ($row = @mysql_fetch_array($query, MYSQL_ASSOC)) {
-    $moddate = $row['date'];
-}
-
-$modmax = max($modfile, $moddate);
-$date   = date('Y/m/d', $modmax);
-$cache  = date('Y-m-d H:i:s T', $modmax);
-
-
-// HTTP header cache
-// --------------------------------------------------
-if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MATCH'])) {
-    if ($_SERVER['HTTP_IF_MODIFIED_SINCE'] == $cache) {
-        http_response_code(304);
-        exit;
-    }
-}
-
-header("Last-Modified: $cache");
-
-
-echo "/* SITE */
+echo '/* SITE */
 Author:         Binyamin Laukstein
 Contact:        http://laukstein.com/contact
-Last update:    $date
-Standards:      HTML Living Standard - HTML5, CSS3, Microdata, JSON
-Components:     jQuery, PHP, MySQL
-Source:         https://github.com/laukstein/ajax-seo";
+Last update:    ' . datemod::date() . '
+Standards:      HTML Living Standard - HTML5.1, CSS4, Microdata, JSON
+Components:     jQuery, PHP, MySQLi
+Source:         https://github.com/laukstein/ajax-seo';
+
+$mysqli->close();

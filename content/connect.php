@@ -1,15 +1,16 @@
 <?php
-
+//
 // MySQL settings
-// --------------------------------------------------
-define('database', 'test');
+//
+
 define('hostname', 'localhost');
 define('username', 'root');
 define('password', '');
+define('database', 'test');
 define('table', 'ajax-seo');
-define('connection', true);
-define('error', false);
+define('connection', false);
 define('cdn', null);
+define('title', 'Ajax SEO');
 
 // Path for static assets
 $issetcdn   = cdn ? true : false;
@@ -21,81 +22,108 @@ $debug      = isset($debug) ? $debug : null;
 $path       = isset($path) ? $path : null;
 $assets     = $debug ? $path . 'assets/' : ($issetcdn ? cdn : $path . 'assets/');
 
-$con = @mysql_connect(hostname, username, password); // Connect to db
-$f   = 'content/connect.php';
+// Connect to database
+$mysqli  = @new mysqli(hostname, username, password, database);
+$results = false;
+$f       = __FILE__;
+$conn    = $mysqli->connect_errno ? false : true;
+$note    = null;
 
-if (@mysql_select_db(database, $con)) {
-    if (!connection) { // Define MySQL connection status
-        $change = file_get_contents($f);
-        $change = preg_replace("/define\('(connection)', false\);/", "define('$1', true);", $change);
-        $change = preg_replace("/define\('(error)', true\);/", "define('$1', false);", $change);
+if ($conn) {
+    $result = $mysqli->query("SHOW TABLES LIKE '" . table . "'");
+    $conn   = $result->num_rows ? true : false;
+    $result->close();
+}
+if ($conn) {
+    if (!connection) {
+        // Yahoo since 2007 seems to be supporting the feature to exclude content from search engine's index with class=robots-nocontent http://www.ysearchblog.com/2007/05/02/introducing-robots-nocontent-for-page-sections/
+        // Yandex supports the same feature on using HTML non standard element <noindex>to exclude content from indexing</noindex> and <!--noindex-->to do the same<!--/noindex--> http://help.yandex.ru/webmaster/?id=1111858
 
-        // Change connect.php file permissions if needed
-        if (!@is_writable($f)) {
-            chmod($f, 0755);
-        }
-
-        $fopen = fopen($f, 'w');
-
-        fwrite($fopen, $change);
+        $note = "\n<style>
+/* @keyframes currently not supported in scoped style */
+@-webkit-keyframes slide-down { /* Webkit legacy on mobile devices */
+    0% {
+        -webkit-transform: translateY(-110%);
+    }
+    10% {
+        -webkit-transform: translateY(0);
+    }
+    90% {
+        -webkit-transform: translateY(0);
+    }
+    100% {
+        -webkit-transform: translateY(-110%);
+    }
+}
+@keyframes slide-down {
+    0%, 100% {
+        transform: translateY(-110%);
+    }
+    10%, 90% {
+        transform: translateY(0);
+    }
+}
+.note {
+    overflow: hidden;
+    position: absolute;
+    z-index: 10000;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 0 3%;
+    line-height: 2.5;
+    text-align: center;
+    text-overflow: ellipsis;
+    text-shadow: 1px 1px 0 rgba(255,255,255,.6);
+    white-space: nowrap;
+    background-color: #ffdb18;
+    border-bottom: 1px solid #ffe65c;
+    box-shadow: 0 0 .3em rgba(0,0,0,.6);
+    -webkit-transition-duration: .3s;
+            transition-duration: .3s;
+    -webkit-animation: slide-down 4s forwards;
+            animation: slide-down 4s forwards;
+}
+#note:checked ~ .note {
+    -webkit-transform: translateY(-110%);
+            transform: translateY(-110%);
+    -webkit-animation: inherit;
+            animation: inherit;
+}
+</style>
+<!--noindex-->
+<input id=note type=checkbox hidden>
+<label for=note class=note>Congratulations on successful installation</label>
+<!--/noindex-->";
+        $string = preg_replace("/define\('(connection)', false\);/", "define('$1', true);", file_get_contents($f));
+        $fopen  = fopen($f, 'w');
+        fwrite($fopen, $string);
         fclose($fopen);
+    }
+} else {
+    // SEO friendly blackout status http://googlewebmastercentral.blogspot.com/2011/01/how-to-deal-with-planned-site-downtime.html
+    // Website outages and blackouts the right way https://plus.google.com/115984868678744352358/posts/Gas8vjZ5fmB
+    // Valid indexing & serving directives https://developers.google.com/webmasters/control-crawl-index/docs/robots_meta_tag
 
-        header("Location: {$_SERVER['REQUEST_URI']}");
+    header('Retry-After: 60'); // Try to reach server after 1 minute
+    header('X-Robots-Tag: none');
+
+    function refresh() {
+        global $path;
+        ob_end_clean();
+        header('Location: ' . $path);
         exit;
     }
 
-    array_map('trim', $_GET);
-    array_map('stripslashes', $_GET);
-    array_map('mysql_real_escape_string', $_GET);
-
-    $url   = isset($_GET['url']) ? $_GET['url'] : null;
-    $urlid = isset($urlid) ? $urlid : null;
-
-    if (!mysql_query('SELECT * FROM `' . table .'`')) {
-        // Set the global server timezone to GMT, needs for SUPER privileges
-        mysql_query("SET GLOBAL time_zone = '+00:00'");
-
-        // MySQL backward compatibility
-        $ver = preg_replace('#[^0-9\.]#', '', mysql_get_server_info());
-        if (version_compare($ver, '5.5.3', '>=')) {
-            $char = 'CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci';
-        } else {
-            mysql_query('SET NAMES utf8');
-            $char = 'CHARSET=utf8 COLLATE=utf8_unicode_ci';
-        }
-
-        // Create table
-        mysql_query('CREATE TABLE IF NOT EXISTS `' . table . '` (
-              id int AUTO_INCREMENT PRIMARY KEY,
-              array int NOT NULL,
-              url char(70) NOT NULL,
-              `meta-title` char(70) NOT NULL,
-              `meta-description` char(154) NOT NULL,
-              title char(70) NOT NULL,
-              content text NOT NULL,
-              updated datetime NOT NULL,
-              created timestamp DEFAULT current_timestamp
-            ) ENGINE=MyISAM DEFAULT ' . $char);
-        // Create trigger (needs TRIGGER global privilege)
-        mysql_query('CREATE TRIGGER updated BEFORE
-            UPDATE ON `' . table . '`
-              FOR EACH ROW SET new.updated=NOW()');
-        // Insert data
-        mysql_query("INSERT INTO `" . table . "` (array, url, `meta-title`, `meta-description`, title, content) VALUES
-            (1, '', 'Home', 'Ajax SEO is crawlable framework for Ajax applications.', 'Make Apps crawable', '<h2>Improve your user experience</h2>\n<p>Ajax SEO is crawlable framework for Ajax applications that uses the latest SEO standards, Page Speed and YSlow rules, Google HTML/CSS Style Guide, etc. to improve and maximize performance, security, accessibility, usability and user experience.</p>\n<p>The source code is build on latest W3C standards, HTML Living Standard HTML5, CSS3, Microdata, etc.<br>\nCheck <a class=js-as href=history>history</a> feature and after <a href=javascript:history.forward()>history.forward()</a>.</p>'),
-            (2, 'history', 'History', '', 'Manage history', '<p>Try <a href=javascript:history.back()>history.back()</a> and check <a class=js-as href=bind>bind event</a>.</p>'),
-            (3, 'bind', 'Bind', '', 'Bind event', '<p>Bind on Ajax loaded <a class=js-as href=test/nested.html>content</a> with class=js-as.</p>'),
-            (4, 'test/nested.html', 'Nested', '', 'Nested URL', '<p>This is nested URL example with .html ending. Try <a class=js-as href=кириллица.html>Cyrillic URL</a>.</p>'),
-            (5, 'кириллица.html', 'Cyrillic', '', 'Кириллический URL', '<p>This is Cyrillic URL example. Try <a class=js-as dir=rtl href=עברית>RTL עברית</a>.</p>'),
-            (6, 'עברית', 'RTL text', '', 'RTL text', '<p>This is RTL example <span dir=rtl>טקסט בעברית</span>. Try <a class=js-as href=no-page>not existing page</a>.</p>')");
-
-        if (is_writable($f)) {
-            chmod($f, 0600);
-        }
-
-        $note = 'Congratulations, installation has completed successfully.';
+    if (connection) {
+        $string = preg_replace("/define\('(connection)', true\);/", "define('$1', false);", file_get_contents($f));
+        $fopen  = fopen($f, 'w');
+        fwrite($fopen, $string);
+        fclose($fopen);
+        refresh();
+    } else {
+        if ($path !== $request_uri) refresh();
     }
-} else {
-    // Installer on not reachable database
+
     include 'content/install.php';
 }

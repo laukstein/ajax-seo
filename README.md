@@ -1,9 +1,10 @@
 # [Ajax SEO](http://lab.laukstein.com/ajax-seo/)
 
-Ajax SEO is crawlable framework for Ajax applications that uses the latest SEO standards, Page Speed and YSlow rules, Google HTML/CSS Style Guide, etc. to improve and maximize performance, security, accessibility, usability and user experience.
-The source code is build on latest W3C standards, HTML Living Standard HTML5, CSS3, Microdata, etc.
+Bring stable, aesthetic, fast and secure application experience with Ajax SEO framework. Ajax SEO based on bleeding edge W3C standards and SEO guides to maximize crawlability, accessibility, usability, performance and security.
 
-[See the demo](<http://lab.laukstein.com/ajax-seo/>)
+Based on W3C, Google, Yahoo, etc. rules to deliver innovative user experience.
+
+See the demo <http://lab.laukstein.com/ajax-seo/>
 
 
 ## How to use
