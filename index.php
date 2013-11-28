@@ -105,7 +105,7 @@ echo "<!DOCTYPE html>
 <head prefix=\"og: http://ogp.me/ns#\">
 <meta charset=UTF-8>
 $metadata
-<link rel=stylesheet href=$assets$css>
+<link rel=stylesheet href={$assets}style$ver$min.css>
 <!--[if lt IE 9]><script src=//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.min.js></script><![endif]-->
 <body class=\"status js-status\" itemscope itemtype=http://schema.org/WebPage>";
 
@@ -163,7 +163,7 @@ if($conn){
 
 echo "\n<!--[if IE]><script src=//cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js></script><![endif]-->
 <!--[if !IE]>--><script src=//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js></script><!--<![endif]-->
-<script src=$assets$js></script>
+<script src={$assets}jquery.address$min.js></script>
 <script>
 (function() {
     'use strict';

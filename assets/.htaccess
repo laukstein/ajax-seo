@@ -2,7 +2,6 @@ DirectorySlash Off
 
 <IfModule mod_rewrite.c>
     # Filename-based cache busting http://www.stevesouders.com/blog/2008/08/23/revving-filenames-dont-use-querystring/
-    RewriteCond %{REQUEST_FILENAME} !-d [OR]
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^(.+)\.(\d+)\.(js|css|png|jpg|gif)$ $1.$3 [L]
+    RewriteRule ^(.+)-(\d+).(.+)$ $1.$3 [L]
+    RewriteRule ^(.+)-(\d+).min.(.+)$ $1.min.$3 [L]
 </IfModule>

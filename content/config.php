@@ -8,20 +8,21 @@ if (in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1'))) {
     // Development
     error_reporting(E_ALL);
     $debug = true;
-    $rand  = rand();
-    $css   = 'style.' . $rand . '.css';
-    $js    = 'jquery.address.' . $rand . '.js';
+    $ver   = rand();
+    $min   = null;
 } else {
     // Production
     error_reporting(0);
     $debug = false;
-    $css   = $cssmin = 'style.min.css';
-    $js    = $jsmin  = 'jquery.address.min.js';
+    $ver   = 20131128;
+    $min   = '.min';
 }
+
+// Use filename-based versioning to avoid CDN cache issue
+$ver = '-' . $ver;
 
 // Prevent XSS and SQL Injection
 $host = $_SERVER['SERVER_NAME'];
-
 if (strpos($_SERVER['HTTP_HOST'], $host) === false) {
     http_response_code(400);
     header('Content-Type: text/plain');
@@ -33,13 +34,12 @@ if (strpos($_SERVER['HTTP_HOST'], $host) === false) {
 }
 
 // Compatibility
-$compatible = true;
-$fix        = null;
-
+$comp = true;
+$fix  = null;
 // Check if Apache mod_rewrite enabled
 if (function_exists('apache_get_modules') && !in_array('mod_rewrite', apache_get_modules())) {
-    $compatible = false;
-    $fix       .= "\n* enable Apache mod_rewrite";
+    $comp = false;
+    $fix .= "\n* enable Apache mod_rewrite";
 }
 $phpv = PHP_VERSION;
 // Add latest PHP functions
@@ -51,10 +51,10 @@ if (version_compare($phpv, '5.2', '>=')) {
     // Compress output with Gzip, PHP 5.4.4 bug https://bugs.php.net/bug.php?id=55544
     if (version_compare($phpv, '5.4.5', '>') && !ob_start('ob_gzhandler')) ob_start();
 } else {
-    $compatible = false;
-    $fix       .= "\n* upgrade to PHP 5.2 or later";
+    $comp = false;
+    $fix .= "\n* upgrade to PHP 5.2 or later";
 }
-if (!$compatible) {
+if (!$comp) {
     http_response_code(503);
     header('Content-Type: text/plain');
     header('Retry-After: 3600'); // 1 hour
