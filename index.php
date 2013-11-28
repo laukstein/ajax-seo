@@ -119,8 +119,8 @@ if ($conn) {
 
 echo "\n<div class=progress></div>
 <div class=tab>
-    <a class=\"item item-header js-header\" href=javascript:void(0)>≡</a>
-    <a class=\"item item-footer js-footer\" href=javascript:void(0)>i</a>
+    <a class=\"item item-header js-header\" href=javascript:;>≡</a>
+    <a class=\"item item-footer js-footer\" href=javascript:;>i</a>
     <header class=header>
         <nav class=nav>";
 
