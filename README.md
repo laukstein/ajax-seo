@@ -33,13 +33,14 @@ Releases <https://github.com/laukstein/ajax-seo/releases>
 * Remove index.php and .php extension
 * Remove dot and comma
 * Custom 404 error page
-* Google Universal Analytics
+* Universal Analytics
 
 
 ## Speed performance
 
 * Performance tuning on Apache, PHP, MySQL
 * Relative URL [RFC 3986](http://tools.ietf.org/html/rfc3986#section-4.2)
+* [jsPerf](http://jsperf.com/html-table-vs-css-block-table-flex/2) HTML table vs CSS block/table/flex
 * [jsPerf](http://jsperf.com/jquery-ajax-jsonp-timeout-performormance) `jQuery $.ajax() timeout` vs `window.setTimeout()`
 * [jsPerf](http://jsperf.com/ajax-jsonp-vs-ajax-json) `Ajax JSONP` vs `Ajax JSON`
 * [jsPerf](http://jsperf.com/getjson-vs-ajax-json) `$.ajax() json` vs `$.getJSON()`
