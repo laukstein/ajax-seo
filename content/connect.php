@@ -41,18 +41,22 @@ if ($conn) {
 
         $note = "\n<style>
 /* @keyframes currently not supported in scoped style */
-@-webkit-keyframes slide-down { /* Webkit legacy on mobile devices */
+@-webkit-keyframes slide-down { /* Webkit legacy */
     0% {
         -webkit-transform: translateY(-110%);
+                transform: translateY(-110%);
     }
     10% {
         -webkit-transform: translateY(0);
+                transform: translateY(0);
     }
     90% {
         -webkit-transform: translateY(0);
+                transform: translateY(0);
     }
     100% {
         -webkit-transform: translateY(-110%);
+                transform: translateY(-110%);
     }
 }
 @keyframes slide-down {
