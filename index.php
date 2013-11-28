@@ -1,7 +1,5 @@
 <?php
 
-// UX test case http://jsbin.com/iHAruPU/latest/edit
-
 include 'content/config.php';
 include 'content/connect.php';
 include 'content/cache.php';
@@ -77,16 +75,16 @@ $metadata .= "\n<meta name=referrer content=never>";
 
 // Optimize mobile device viewport and return the same pixel density like on desktop
 // 2012-06-13 Dropped target-densityDpi and its translated CSS property resolution http://lists.w3.org/Archives/Public/www-style/2012Jun/0283.html, http://trac.webkit.org/changeset/119527
-$metadata .= "\n<meta name=viewport content=\"width=device-width, user-scalable=0\">";
+$metadata .= "\n<meta name=viewport content=\"width=device-width, maximum-scale=1\">";
 
 // Authorship in Google Search https://support.google.com/webmasters/answer/1408986
 // $metadata .= "\n<link rel=author href=https://plus.google.com/000000000000000000000>";
 
 // Prefetch CDN by saving DNS resolution time https://github.com/h5bp/html5-boilerplate/blob/master/doc/extend.md#dns-prefetching
 if ($issetcdn) $metadata .= "\n<link rel=dns-prefetch href=$cdn_uri>"; // Own DNS
-$metadata .= "\n<link rel=dns-prefetch href=//cdnjs.cloudflare.com>";     // CloudFlare
+// $metadata .= "\n<link rel=dns-prefetch href=//cdnjs.cloudflare.com>";     // CloudFlare
 // $metadata .= "\n<link rel=dns-prefetch href=https://apis.google.com>";    // Google+ button
-$metadata .= "\n<link rel=dns-prefetch href=//www.google-analytics.com>"; // Google Analytics
+// $metadata .= "\n<link rel=dns-prefetch href=//www.google-analytics.com>"; // Google Analytics
 
 if ($conn) {
     // Fetch and cache API in background when everything is downloaded http://www.whatwg.org/specs/web-apps/current-work/#link-type-prefetch
@@ -103,12 +101,13 @@ $metadata .= "\n<link rel=license href=//creativecommons.org/licenses/by/3.0/>";
 // <html manifest=manifest.appcache>
 
 echo "<!DOCTYPE html>
+<html lang=en>
 <head prefix=\"og: http://ogp.me/ns#\">
 <meta charset=UTF-8>
 $metadata
 <link rel=stylesheet href=$assets$css>
 <!--[if lt IE 9]><script src=//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.min.js></script><![endif]-->
-<body class=\"status js-status\" lang=en itemscope itemtype=http://schema.org/WebPage>";
+<body class=\"status js-status\" itemscope itemtype=http://schema.org/WebPage>";
 
 // Declare the family friendly content http://schema.org/WebPage
 echo "\n<meta itemprop=isFamilyFriendly content=true>$note";
@@ -324,8 +323,8 @@ echo "\n<!--[if IE]><script src=//cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/j
     echo "\n<script>";
 }
 
-// Optimized Google Analytics snippet http://mathiasbynens.be/notes/async-analytics-snippet
+// Optimized Universal Analytics http://mathiasbynens.be/notes/async-analytics-snippet
 echo "\n(function(G,o,O,g,l){G.GoogleAnalyticsObject=O;G[O]||(G[O]=function(){(G[O].q=G[O].q||[]).push(arguments)});G[O].l=+new Date;g=o.createElement('script'),l=o.scripts[0];g.src='//www.google-analytics.com/analytics.js';l.parentNode.insertBefore(g,l)}(this,document,'ga'));
-ga('create','UA-XXXX-Y');
+ga('create','UA-XXXX-Y','domain.com');
 ga('send','pageview');
 </script>";
