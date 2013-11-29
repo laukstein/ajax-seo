@@ -36,6 +36,9 @@ html, form, .button {
             user-select: none;
 }
 html {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch; /* iOS 7 legacy http://barrow.io/overflow-scrolling */
     font-size: 62.45%; /* Make 1em = 10px = 2.5rem */
     background-color: #f8f9fa;
 
@@ -52,9 +55,6 @@ body, h4, ul, ol, dl, dd, blockquote, figure, input, select, textarea {
     margin: auto;
 }
 body {
-    overflow-x: hidden;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch; /* iOS 7 legacy http://barrow.io/overflow-scrolling */
     font-size: 1.9em; /* The optional font-size REM http://snook.ca/archives/html_and_css/font-size-with-rem, buggy on various browsers */
     /* CSS4 hyphenation http://generatedcontent.org/post/44751461516/finer-grained-control-of-hyphenation-with-css4-text */
     -webkit-hyphens: auto;
@@ -150,12 +150,14 @@ legend {
 }
 label {
     display: inline-block;
+    padding-bottom: .2em;
+    padding-top: .2em;
+    margin-top: .2em;
 }
 input, select, textarea {
-    margin-top: .4em;
-    margin-bottom: .4em;
     font-size: 1em;
-    vertical-align: bottom;
+    line-height: 1;
+    vertical-align: middle;
     background-color: #fff;
     border: 1px solid #ccc;
     -moz-box-sizing: border-box;
@@ -163,12 +165,10 @@ input, select, textarea {
 }
 input:not([type]), [type^=date], [type=email], [type=month],
 [type=number], [type=password], [type=tel], [type=text], [type=time],
-[type=url], [type=week], [type=submit], select, textarea,
-input.button {
+[type=url], [type=week], [type=submit], select, textarea, input.button {
     width: 20em;
-    padding: .6em .7em;
-    margin: auto;
-    line-height: inherit;
+    height: 2.85em;
+    padding: .65em .7em;
 }
 input:hover, input:focus,
 select:hover, select:focus,
@@ -183,9 +183,11 @@ textarea:hover, textarea:focus  {
 textarea {
     overflow: auto;
     -webkit-overflow-scrolling: touch; /* iOS 7 legacy */
+    height: auto;
     min-height: 7.5em;
-    word-wrap: break-word;
+    line-height: inherit;
     vertical-align: top;
+    word-wrap: break-word;
     resize: vertical;
 }
 
@@ -345,10 +347,11 @@ body, .tab {
 .button {
     overflow: hidden;
     display: inline-block;
-    padding: 0 .7em;
+    padding: .65em .7em;
     margin: .6em auto;
     color: inherit;
-    line-height: 2.66em;
+    line-height: 1;
+    vertical-align: middle;
     white-space: nowrap;
     text-overflow: ellipsis;
     background-color: #fff;
@@ -410,7 +413,7 @@ body, .tab {
     input[type=submit], input[type=submit]:hover {
         *filter: chroma(color=#000000);
     } */
-    body {
+    html {
         *overflow: auto;
     }
     ul, ol {
@@ -424,12 +427,9 @@ body, .tab {
         *margin: auto;
     }
     input, select, textarea {
-        *vertical-align: middle;
         width: 20em;
-        padding: .6em .7em;
-    }
-    input {
-        *overflow: visible;
+        padding: .65em .7em;
+        vertical-align: middle;
     }
     .tab:before {
         background-color: #f7f7f7;
@@ -538,6 +538,13 @@ body, .tab {
         /* Firefox FF4+ slow rendering repeating-linear-gradient with background-size https://bugzilla.mozilla.org/show_bug.cgi?id=644444 */
         background-size: auto auto;
     }
+    label:active {
+        background-color: transparent;
+    }
+    input, select, textarea {
+        background-image: none;
+        border-radius: 0;
+    }
     input {
         -moz-appearance: none;
 
@@ -581,7 +588,7 @@ body, .tab {
     body {
         margin: auto;
     }
-    input:not([type]), [type^=date], [type=email], [type=month],
+    label, input:not([type]), [type^=date], [type=email], [type=month],
     [type=number], [type=password], [type=tel], [type=text], [type=time],
     [type=url], [type=week], [type=submit], select, textarea {
         width: 100%;
