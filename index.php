@@ -155,6 +155,8 @@ echo "\n$content
     <a href=https://github.com/laukstein/ajax-seo/issues>Submit issue</a>
 </footer>";
 
+$setAnalytics = strlen(analytics_id)!==0;
+
 if($conn){
 
 // Comparing CDNs
@@ -317,11 +319,10 @@ echo "\n<!--[if IE]><script src=//cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/j
     //$(d).on('click', '.js-as', function(e) {
     //    console.log(e.target);
     //});
-})();\n" . (empty(analytics_id)) ? "\n</script>" : null;
+})();\n" . ($setAnalytics ? null : '</script>');
 }
-if (!empty(analytics_id)) {
+if ($setAnalytics) {
     // Optimized Universal Analytics http://mathiasbynens.be/notes/async-analytics-snippet
-    echo ($conn ? null : "\n<script>")
-    . "\n(function(G,o,O,g,l){G.GoogleAnalyticsObject=O;G[O]||(G[O]=function(){(G[O].q=G[O].q||[]).push(arguments)});G[O].l=+new Date;g=o.createElement('script'),l=o.scripts[0];g.src='//www.google-analytics.com/analytics.js';l.parentNode.insertBefore(g,l)}(this,document,'ga'));
-ga('create','" . analytics_id . "'" . (!empty(analytics_domain) ? ',\'' . analytics_domain . '\'' : null) . ");ga('send','pageview');\n</script>";
+    echo ($conn ? null : "\n<script>") . "\n(function(G,o,O,g,l){G.GoogleAnalyticsObject=O;G[O]||(G[O]=function(){(G[O].q=G[O].q||[]).push(arguments)});G[O].l=+new Date;g=o.createElement('script'),l=o.scripts[0];g.src='//www.google-analytics.com/analytics.js';l.parentNode.insertBefore(g,l)}(this,document,'ga'));
+ga('create','" . analytics_id . "'" . (strlen(analytics_id)===0 ? null : ',\'' . analytics_domain . '\'') . ");ga('send','pageview');\n</script>";
 }
