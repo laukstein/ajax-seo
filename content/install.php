@@ -5,13 +5,15 @@
 
 $error = null;
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $dhost  = trim($_POST['host']);
-    $user   = trim($_POST['user']);
-    $pass   = trim($_POST['pass']);
-    $db     = trim($_POST['db']);
-    $table  = trim($_POST['table']);
-    $cdn    = trim($_POST['cdn']);
-    $gtitle = trim($_POST['title']);
+    $dhost   = trim($_POST['host']);
+    $user    = trim($_POST['user']);
+    $pass    = trim($_POST['pass']);
+    $db      = trim($_POST['db']);
+    $table   = trim($_POST['table']);
+    $gtitle  = trim($_POST['title']);
+    $cdn     = trim($_POST['cdn']);
+    $aid     = trim($_POST['analytics_id']);
+    $adomain = trim($_POST['analytics_domain']);
 
     $array = array(
         'hostname'=>$dhost,
@@ -19,8 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'password'=>$pass,
         'database'=>$db,
         'table'=>$table,
-        'cdn'=>(!empty($cdn) ? $cdn  : null),
-        'title'=>(!empty($gtitle) ? $gtitle  : 'Ajax SEO')
+        'title'=>(!empty($gtitle) ? $gtitle  : 'Ajax SEO'),
+        'cdn'=>(!empty($cdn) ? $cdn : ''),
+        'analytics_id'=>(!empty($aid) ? $aid : ''),
+        'analytics_domain'=>(!empty($adomain) ? $adomain : '')
     );
 
     $string = file_get_contents($f);
@@ -92,57 +96,57 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 // Installer setup
-$dhost  = !empty($dhost) ? $dhost : hostname;
-$user   = !empty($user) ? $user : username;
-$pass   = !empty($pass) ? $pass : password;
-$db     = !empty($db) ? $db : database;
-$table  = !empty($table) ? $table : table;
-$cdn    = !empty($cdn) ? $cdn : cdn;
-$gtitle = !empty($gtitle) ? $gtitle : title;
+$dhost   = !empty($dhost) ? $dhost : hostname;
+$user    = !empty($user) ? $user : username;
+$pass    = !empty($pass) ? $pass : password;
+$db      = !empty($db) ? $db : database;
+$table   = !empty($table) ? $table : table;
+$gtitle  = !empty($gtitle) ? $gtitle : title;
+$cdn     = !empty($cdn) ? $cdn : cdn;
+$aid     = !empty($aid) ? $aid : analytics_id;
+$adomain = !empty($adomain) ? $adomain : analytics_domain;
 
 $meta_title     = 'Installation';
 $pagetitle      = $meta_title . ' - ' . $gtitle;
 $optional_title = ' ' . $meta_title;
 $content        = '<style>
-.installation {
-    display: inline-block;
+.main { padding-top: 1.2em; }
+.install { display: inline-block; }
+.install li, input.button, .install .i1 input { width: 100%; }
+.install li { float: left; }
+label { width: 30%; }
+.i1 label, .i2 label {
+    width: auto;
+    padding: 0;
+    margin: 0;
 }
-.installation li {
-    clear: both;
-}
-label {
-    padding-top: .6em;
-    padding-bottom: .6em;
-    margin-top: .4em;
-    margin-bottom: .4em;
-}
-input, .error {
-    float: right;
-}
-.error {
-    width: 20em;
-    margin-bottom: .4em;
-    color: #ff2121;
-    clear: both;
-}
-.main {
-    padding-top: 1.2em;
-}
+input:not([type]), [type=password], [type=url] { width: 70%; }
+.i2 input { width: 50%; }
+.error { color: #ff2121; }
+@media (max-width: 540px) { label, input:not([type]), [type=password], [type=url], .i2 input { width: 100%; } }
 </style>
 <form method=post>
-    <ol class=installation>
-        <li><h1>MySQL connection details</h1>
-        <li><input class=transition id=host placeholder=localhost name=host value="' . $dhost . '"><label for=host>Database host</label>
-        <li><input class=transition id=user placeholder=root name=user value="' . $user . '"><label for=user>User name</label>
-        <li><input class=transition id=pass type=password name=pass><label for=pass>Password</label>
-        <li><input class=transition id=db name=db value="' . $db . '"><label for=db>Database name</label>
-        <li><input class=transition id=table name=table value="' . $table . '"><label for=table>Table</label>' . $error . '
-        <li>
-            <hr><p>CDN assets URL like protocol-less //cdn.' . $host . '/ or with HTTP/HTTPS</p>
-            <input class=transition id=cdn placeholder=Optional name=cdn value="' . $cdn . '" type=url><label for=cdn>CDN URL</label>
+    <h1>MySQL connection details</h1>
+    <ol class=install>
+        <li><label for=host>Database host</label><input id=host name=host placeholder=localhost value="' . $dhost . '">
+        <li><label for=user>User name</label><input id=user name=user placeholder=root value="' . $user . '">
+        <li><label for=pass>Password</label><input id=pass name=pass placeholder=Password type=password>
+        <li><label for=db>Database name</label><input id=db name=db placeholder=db value="' . $db . '">
+        <li><label for=table>Table</label><input id=table name=table placeholder=table value="' . $table . '">' . $error . '
+        <li><hr><label for=title>Page title</label><input id=title name=title placeholder=Title value="' . $gtitle . '">
+        <li class=i1>
+            <p><label for=cdn>CDN URL protocol-less or with HTTP/HTTPS</label></p>
+            <input id=cdn name=cdn placeholder=//cdn.com/assets/ value="' . $cdn . '">
         </li>
-        <li><input class=transition id=cdn placeholder="Page title" name=title value="' . $gtitle . '"><label for=cdn>Page title</label>
-        <li><input class="transition button" type=submit name=install value=Install>
+        <li class=i2>
+            <p>Google <a rel=nofollow href=https://developers.google.com/analytics/devguides/collection/analyticsjs/ target=_blank>Universal Analytics</a> <label for=aid>tracking ID</label> and <label for=adomain>domain</label></p>
+            <input id=aid name=analytics_id placeholder=UA-XXXX-Y value="' . $aid . '"><input id=adomain name=analytics_domain placeholder=domain.com value="' . $adomain . '">
+        </li>
+        <li><input class=button name=install value=Install type=submit>
     </ol>
 </form>
-<p>The configuration will be saved in connect.php, after you can open and edit it trough text editor.</p>';
+<p>The configuration will be saved in connect.php, after you can open and edit it through a text editor.</p>';
+
+// Chrome CSS3 transition explode bug when form has three or more input elements
+// #167083 status in http://crbug.com/167083
+// test case http://lab.laukstein.com/bug/input

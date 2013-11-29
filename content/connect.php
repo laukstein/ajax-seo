@@ -9,8 +9,10 @@ define('password', '');
 define('database', 'test');
 define('table', 'ajax-seo');
 define('connection', false);
-define('cdn', null);
+define('cdn', '');
 define('title', 'Ajax SEO');
+define('analytics_id', '');
+define('analytics_domain', '');
 
 // Path for static assets
 $issetcdn   = cdn ? true : false;
@@ -75,6 +77,7 @@ if ($conn) {
     left: 0;
     right: 0;
     padding: 0 3%;
+    margin-top: 0;
     line-height: 2.5;
     text-align: center;
     text-overflow: ellipsis;
