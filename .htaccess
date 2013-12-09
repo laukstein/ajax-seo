@@ -105,14 +105,14 @@ AddDefaultCharset utf-8
     ExpiresByType application/javascript              "access plus 1 year"
 
     # Cache Ajax http://developer.yahoo.com/performance/rules.html#cacheajax
-    ExpiresByType application/json                    "access plus 1 hour"
+    ExpiresByType application/json                    "access plus 1 day"
 
-    ExpiresByType application/rss+xml                 "access plus 1 hour"
+    ExpiresByType application/rss+xml                 "access plus 1 day"
     ExpiresByType application/vnd.ms-fontobject       "access plus 1 month"
     ExpiresByType application/x-font-ttf              "access plus 1 month"
     ExpiresByType application/x-navigator-extension   "access plus 0 seconds"
     ExpiresByType application/x-web-app-manifest+json "access plus 0 seconds"
-    ExpiresByType application/xml                     "access plus 1 hour"
+    ExpiresByType application/xml                     "access plus 1 day"
     ExpiresByType audio/ogg                           "access plus 1 month"
     ExpiresByType font/opentype                       "access plus 1 month"
     ExpiresByType image/gif                           "access plus 1 month"
@@ -122,7 +122,7 @@ AddDefaultCharset utf-8
     ExpiresByType image/x-icon                        "access plus 1 month"
     ExpiresByType text/cache-manifest                 "access plus 0 seconds"
     ExpiresByType text/css                            "access plus 1 year"
-    ExpiresByType text/html                           "access plus 1 hour"
+    ExpiresByType text/html                           "access plus 1 day"
     ExpiresByType text/plain                          "access plus 1 month"
     ExpiresByType video/mp4                           "access plus 1 month"
     ExpiresByType video/ogg                           "access plus 1 month"
@@ -151,6 +151,7 @@ AddDefaultCharset utf-8
     Header set X-Frame-Options DENY
 
     Header unset ETag
+    Header unset Expires
 </IfModule>
 
 FileETag None
@@ -180,7 +181,7 @@ FileETag None
     # Solution without RewriteMap in https://github.com/laukstein/ajax-seo/wiki/Lowercase-URL
     RewriteCond %{REQUEST_URI} .+
     RewriteRule .*[A-Z] ${lc:%0} [R=301,L]
-    #RewriteRule .*/[A-Z\u0410-\u042f\u00c0-\u00de\u0150\u0170袗-携]+/g ${lc:%0} [R=301,L]
+    # RewriteRule .*/[A-Z\u0410-\u042f\u00c0-\u00de\u0150\u0170袗-携]+/g ${lc:%0} [R=301,L]
 
     # Apache and Firefox bug with backslash URL encoding https://issues.apache.org/bugzilla/show_bug.cgi?id=35256
     # Rewrite backslash to slash. Needs for httpd.conf "AllowEncodedSlashes On"
@@ -232,7 +233,7 @@ FileETag None
     # Block access to folders that begins with a period, like Subversion and Git directories
     RewriteRule (^|/)\. - [F]
 
-    # Rewrite query string for AJAX crawling http://support.google.com/webmasters/bin/answer.py?hl=en&answer=174992
+    # Rewrite query string for AJAX crawling https://support.google.com/webmasters/answer/174992
     RewriteCond %{QUERY_STRING} ^_escaped_fragment_=(.*)$
     RewriteRule .* %{REQUEST_URI}%1? [R=301,L]
 
@@ -249,7 +250,7 @@ FileETag None
     RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
 
     # Get the headers If-Modified-Since and If-None-Match when apache_request_headers() is not available
-    # Save bandwidth and overhead with If-Modified-Since, and help to Google Search crawler http://support.google.com/webmasters/bin/answer.py?hl=en&answer=35769#2
+    # Save bandwidth and overhead with If-Modified-Since, and help to Google Search crawler https://support.google.com/webmasters/answer/35769#2
     RewriteRule .* - [E=HTTP_IF_MODIFIED_SINCE:%{HTTP:If-Modified-Since}]
     RewriteRule .* - [E=HTTP_IF_NONE_MATCH:%{HTTP:If-None-Match}]
 </IfModule>
