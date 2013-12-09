@@ -2,7 +2,7 @@
 
 include 'content/config.php';
 include 'content/connect.php';
-include 'content/cache.php';
+include 'content/cache.php'; cache::url();
 
 $gtitle           = !empty($gtitle) ? $gtitle : title;
 $meta_description = null;
@@ -22,7 +22,7 @@ if ($conn) {
         $title      = !empty($title) && ($meta_title !== $title) ? $title : $meta_title;
         $meta_title = isset($meta_title) ? $meta_title : $title;
         // SEO page title improvement for the root page
-        $pagetitle  = empty($url) ? $gtitle : $meta_title; //. ' - ' . $gtitle;
+        $pagetitle  = empty($url) ? $gtitle : $meta_title;
     }
 
     // URL does not exist
@@ -51,54 +51,43 @@ $optional_title = isset($optional_title) ? $optional_title : null;
 // Avoid XSS attacks https://dvcs.w3.org/hg/content-security-policy/raw-file/tip/csp-specification.dev.html
 header("Content-Security-Policy: script-src 'self' 'unsafe-inline' 'unsafe-eval'"
     . ($issetcdn ? ' ' . $cdn_host : null) . ' cdnjs.cloudflare.com'
-    //. ' apis.google.com'
     . ' www.google-analytics.com');
 
 
-// 160 character title http://blogs.msdn.com/b/ie/archive/2012/05/14/sharing-links-from-ie10-on-windows-8.aspx
+// Max 160 character title http://blogs.msdn.com/b/ie/archive/2012/05/14/sharing-links-from-ie10-on-windows-8.aspx
 $metadata  = "<title>$pagetitle</title>";
 
 // Open Graph protocol http://ogp.me
 $metadata .= "\n<meta property=og:title content=\"$pagetitle\">";
-// 253 character description http://blogs.msdn.com/b/ie/archive/2012/05/14/sharing-links-from-ie10-on-windows-8.aspx
+// Max 253 character description http://blogs.msdn.com/b/ie/archive/2012/05/14/sharing-links-from-ie10-on-windows-8.aspx
 if (!empty($meta_description)) $metadata .= "\n<meta property=og:description name=description content=\"$meta_description\">";
 // Twitter Cards https://dev.twitter.com/docs/cards
 $metadata .= "\n<meta property=twitter:card content=summary>"; // Twitterbot will crawl as default 'summary' when twitter:card is not set (Twitterbot has some issue with it, need to be set)
-//$metadata .= "\n<meta property=og:url content=\"$uri\">"; // No more required
-
-// Opt-out of pinning by Pinterest, save copyrights and avoid SEO impact https://en.help.pinterest.com/entries/21063792-Prevent-pinning-from-your-site
-// Return the meta tag just for Pinterest, since W3C validator will return it as a unregistered specification.
-// if (stripos($_SERVER['HTTP_USER_AGENT'], 'Pinterest') !== false) $metadata .= "\n<meta name=pinterest content=nopin>";
 
 // Perform speed and security on removing referrer-header-value http://wiki.whatwg.org/wiki/Meta_referrer
 $metadata .= "\n<meta name=referrer content=never>";
 
-// Optimize mobile device viewport and return the same pixel density like on desktop
+// Optimize mobile device viewport
 // 2012-06-13 Dropped target-densityDpi and its translated CSS property resolution http://lists.w3.org/Archives/Public/www-style/2012Jun/0283.html, http://trac.webkit.org/changeset/119527
 $metadata .= "\n<meta name=viewport content=\"width=device-width, maximum-scale=1\">";
 
-// Authorship in Google Search https://support.google.com/webmasters/answer/1408986
+// Authorship in Google https://support.google.com/webmasters/answer/1408986
 // $metadata .= "\n<link rel=author href=https://plus.google.com/000000000000000000000>";
 
 // Prefetch CDN by saving DNS resolution time https://github.com/h5bp/html5-boilerplate/blob/master/doc/extend.md#dns-prefetching
-if ($issetcdn) $metadata .= "\n<link rel=dns-prefetch href=$cdn_uri>"; // Own DNS
-// $metadata .= "\n<link rel=dns-prefetch href=//cdnjs.cloudflare.com>";     // CloudFlare
-// $metadata .= "\n<link rel=dns-prefetch href=https://apis.google.com>";    // Google+ button
-// $metadata .= "\n<link rel=dns-prefetch href=//www.google-analytics.com>"; // Google Analytics
+if ($issetcdn) $metadata .= "\n<link rel=dns-prefetch href=$cdn_uri>";
 
-if ($conn) {
-    // Fetch and cache API in background when everything is downloaded http://www.whatwg.org/specs/web-apps/current-work/#link-type-prefetch
-    $metadata .= "\n<link rel=\"prefetch prerender\" href=api" . (!empty($url) ? '/' . $url : null) . '>';
-}
+// Fetch and cache API in background when everything is downloaded http://www.whatwg.org/specs/web-apps/current-work/#link-type-prefetch
+if ($conn) $metadata .= "\n<link rel=\"prefetch prerender\" href=api" . (!empty($url) ? '/' . $url : null) . '>';
 
 // Favicon 16x16, 32x32 4-bit 16 color /favicon.ico on website root or base64 inline dataURI when project not in root http://zoompf.com/2012/04/instagram-and-optimizing-favicons
-if ($path !== '/') $metadata .= "\n<link rel=\"shortcut icon\" href=\"data:image/x-icon;base64,AAABAAIAICAQAAEABADoAgAAJgAAABAQEAABAAQAKAEAAA4DAAAoAAAAIAAAAEAAAAABAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAvGMMALxkDQC9ZRAAxnsyAMd+NwDNjE0Az5FUANGVWwDSmWEA1J1oANaibwD6+fgAAAAAAP8A/wD//wAA////ALu7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7ALu7u7u7u7u7u7u7u7u0uwC7i7u7u7u7u7u7u7u7MCUAUge7u7u7u7u7u7u7u7IQAAAru7u7u7u7u7u7u7u5ALsAa7u7u7u7u7u7u7uwABu7sAALu7u7u7u7u7u7sBALu7AAC7u7u7u7u7u7u7u4ELsQW7u7u7u7u7u7u7u7sgAAACu7u7u7u7u7u7u7u4AlAFIEu7u7u7u7u7u7u7u6uwC7S7u7u7u7u7u7u7u7u7sAu7u7u7u7u7u7u7u7u7ALALALu7u7u7u7u7u7u7uwCwCwC7u7u7u7u7u7u7u7u7sAsAu7u7u7u7u7u7u7u7u7ALALu7u7u7u7u7u7u7u7u7uwC7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAoAAAAEAAAACAAAAABAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAvGMMALxkDQC9ZRAAxnsyAMd+NwDNjE0Az5FUANGVWwDSmWEA1J1oANaibwD6+fgAAAAAAP8A/wD//wAA////ALu7u7ALu7u7u7tLsAu4u7u7swJQBSB7u7u7IQAAAru7u7uQC7AGu7u7AAG7uwAAu7sBALu7AAC7u7uBC7EFu7u7uyAAAAK7u7u4AlAFIEu7u7ursAu0u7u7u7uwC7u7u7u7ALALALu7u7sAsAsAu7u7u7uwCwC7u7u7u7ALALu7AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==\">";
+// if ($path !== '/') $metadata .= "\n<link rel=\"shortcut icon\" href=\"data:image/x-icon;base64,...\">";
 
 // Website copyright license
 $metadata .= "\n<link rel=license href=//creativecommons.org/licenses/by/3.0/>";
 
 // Cache manifest (Chrome external domain hosting issue http://crbug.com/167918)
-// <html manifest=manifest.appcache>
+// <html lang=en manifest=manifest.appcache>
 
 echo "<!DOCTYPE html>
 <html lang=en>
@@ -107,10 +96,7 @@ echo "<!DOCTYPE html>
 $metadata
 <link rel=stylesheet href={$assets}style$ver$min.css>
 <!--[if lt IE 9]><script src=//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.min.js></script><![endif]-->
-<body class=\"status js-status\" itemscope itemtype=http://schema.org/WebPage>";
-
-// Declare the family friendly content http://schema.org/WebPage
-echo "\n<meta itemprop=isFamilyFriendly content=true>$note";
+<body class=\"status js-status\" itemscope itemtype=http://schema.org/WebPage>$note";
 
 if ($conn) {
     if ($stmt = $mysqli->prepare('SELECT url, `meta-title` FROM `' . table . '` ORDER BY array ASC')) {
@@ -143,9 +129,7 @@ echo "\n<div class=progress></div>
 
 echo "\n<main class=\"main js-content\" role=main itemprop=about itemscope itemtype=http://schema.org/Article>";
 
-if ($conn) {
-    echo "\n<h1 dir=auto>$title</h1>";
-}
+if ($conn) echo "\n<h1 dir=auto>$title</h1>";
 
 echo "\n$content
 </main>
@@ -157,8 +141,7 @@ echo "\n$content
 
 $setAnalytics = strlen(analytics_id)!==0;
 
-if($conn){
-
+if ($conn) {
 // Comparing CDNs
 // CloudFlare's cdnJS is better than Google CDN http://www.baldnerd.com/make-your-site-faster-cloudflares-cdnjs-vs-google-hosted-libraries-shocking-results/
 // jQuery EdgeCast's CDN better than Google, Microsoft and Media Temple CDN http://royal.pingdom.com/2012/07/24/best-cdn-for-jquery-in-2012/
@@ -321,8 +304,6 @@ echo "\n<!--[if IE]><script src=//cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/j
     //});
 })();\n" . ($setAnalytics ? null : '</script>');
 }
-if ($setAnalytics) {
-    // Optimized Universal Analytics http://mathiasbynens.be/notes/async-analytics-snippet
-    echo ($conn ? null : "\n<script>") . "\n(function(G,o,O,g,l){G.GoogleAnalyticsObject=O;G[O]||(G[O]=function(){(G[O].q=G[O].q||[]).push(arguments)});G[O].l=+new Date;g=o.createElement('script'),l=o.scripts[0];g.src='//www.google-analytics.com/analytics.js';l.parentNode.insertBefore(g,l)}(this,document,'ga'));
-ga('create','" . analytics_id . "'" . (strlen(analytics_id)===0 ? null : ',\'' . analytics_domain . '\'') . ");ga('send','pageview');\n</script>";
-}
+
+// Optimized Universal Analytics http://mathiasbynens.be/notes/async-analytics-snippet
+if ($setAnalytics) echo ($conn ? null : "\n<script>") . "\n(function(G,o,O,g,l){G.GoogleAnalyticsObject=O;G[O]||(G[O]=function(){(G[O].q=G[O].q||[]).push(arguments)});G[O].l=+new Date;g=o.createElement('script'),l=o.scripts[0];g.src='//www.google-analytics.com/analytics.js';l.parentNode.insertBefore(g,l)}(this,document,'ga'));ga('create','" . analytics_id . "'" . (strlen(analytics_id)===0 ? null : ',\'' . analytics_domain . '\'') . ");ga('send','pageview');\n</script>";
