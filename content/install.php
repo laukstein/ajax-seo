@@ -111,7 +111,10 @@ $pagetitle      = $meta_title . ' - ' . $gtitle;
 $optional_title = ' ' . $meta_title;
 $content        = '<style>
 .main { padding-top: 1.2em; }
-.install { display: inline-block; }
+.install {
+    display: inline-block;
+    margin-top: 1em;
+}
 .install li, input.button, .install .i1 input { width: 100%; }
 .install li { float: left; }
 label { width: 30%; }
