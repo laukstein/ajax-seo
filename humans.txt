@@ -2,14 +2,13 @@
 
 include 'content/config.php';
 include 'content/connect.php';
-include 'content/cache.php';
-
+include 'content/cache.php'; cache::all();
 header('Content-Type: text/plain');
 
 echo '/* SITE */
 Author:         Binyamin Laukstein
 Contact:        http://laukstein.com/contact
-Last update:    ' . datemod::date() . '
+Last update:    ' . date('Y/m/d', strtotime(date::all())) . '
 Standards:      HTML Living Standard - HTML5.1, CSS4, Microdata, JSON
 Components:     jQuery, PHP, MySQLi
 Source:         https://github.com/laukstein/ajax-seo';

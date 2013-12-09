@@ -4,8 +4,7 @@
 //
 
 include 'content/config.php';
-include 'content/cache.php';
-
+include 'content/cache.php'; cache::me();
 header('Content-Type: text/plain');
 
 echo "User-agent: *\nDisallow:";
