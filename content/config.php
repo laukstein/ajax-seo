@@ -14,22 +14,19 @@ if (in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1'))) {
     // Production
     error_reporting(0);
     $debug = false;
-    $ver   = 20131129;
+    $ver   = 20131209;
     $min   = '.min';
 }
 
 // Use filename-based versioning to avoid CDN cache issue
 $ver = '-' . $ver;
 
-// Prevent XSS and SQL Injection
+// Prevent XSS and SQL injection
 $host = $_SERVER['SERVER_NAME'];
-if (strpos($_SERVER['HTTP_HOST'], $host) === false) {
+if ($host !== $_SERVER['HTTP_HOST']) {
     http_response_code(400);
+    header('X-Robots-Tag: none'); // Robots meta tag and X-Robots-Tag HTTP header specifications https://developers.google.com/webmasters/control-crawl-index/docs/robots_meta_tag
     header('Content-Type: text/plain');
-
-    // Robots meta tag and X-Robots-Tag HTTP header specifications https://developers.google.com/webmasters/control-crawl-index/docs/robots_meta_tag
-    header('X-Robots-Tag: none');
-
     exit('400 Bad Request');
 }
 
@@ -56,9 +53,9 @@ if (version_compare($phpv, '5.2', '>=')) {
 }
 if (!$comp) {
     http_response_code(503);
-    header('Content-Type: text/plain');
     header('Retry-After: 3600'); // 1 hour
     header('X-Robots-Tag: none');
+    header('Content-Type: text/plain');
     exit('Your server is outdated' . $fix);
 }
 
