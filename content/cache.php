@@ -45,13 +45,11 @@ class cache {
 }
 
 class date {
-    private static $mysqli;
-
     //public function __construct($mysqli) {} // MySQLi in class http://www.weblimner.com/tutorial/using-mysqli-in-a-seperate-class/
     public static function url() {
-        global $url;
+        global $mysqli, $url;
 
-        $stmt = self::$mysqli->prepare('SELECT GREATEST(updated, created) AS date FROM `' . table . '` WHERE url=? LIMIT 1');
+        $stmt = $mysqli->prepare('SELECT GREATEST(updated, created) AS date FROM `' . table . '` WHERE url=? LIMIT 1');
 
         $stmt->bind_param('s', $url);
         $stmt->execute();
@@ -65,7 +63,9 @@ class date {
 
     // Latest database update
     public static function db() {
-        $stmt = self::$mysqli->prepare('SELECT MAX(GREATEST(updated, created)) AS date FROM `' . table . '`');
+        global $mysqli;
+
+        $stmt = $mysqli->prepare('SELECT MAX(GREATEST(updated, created)) AS date FROM `' . table . '`');
 
         $stmt->execute();
         $stmt->bind_result($date);
