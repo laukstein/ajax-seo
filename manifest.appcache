@@ -8,30 +8,28 @@
 
 include 'content/config.php';
 include 'content/connect.php';
-include 'content/cache.php';
-
+include 'content/cache.php'; cache::medb();
 header('Content-Type: text/cache-manifest; charset=utf-8');
 
 echo 'CACHE MANIFEST
-# Version ' . datemod::date() . "\n" . $path;
+# Version ' . date('Ymd', strtotime(date::all())) . "\n$path";
 
 // Explicitly cached entries
 if ($stmt = $mysqli->prepare('SELECT url FROM `' . table . '`')) {
     $stmt->execute();
     $stmt->bind_result($url);
 
-    while ($stmt->fetch()) {
-        echo "\n{$path}api" . (!empty($url) ? '/' : null) . $url;
-    }
+    while ($stmt->fetch()) echo "\n{$path}api" . (!empty($url) ? '/' : null) . $url;
 
     $stmt->free_result();
     $stmt->close();
 }
+
 $mysqli->close();
 
-echo "\n{$assets}assets/$css
-{$assets}assets/$js
-//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js";
+echo "\n{$assets}style$ver$min.css
+//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js
+{$assets}jquery.address$min.js";
 
 // Resources that requires user to be online
 echo "\n\nNETWORK:\n//www.google-analytics.com/analytics.js";
