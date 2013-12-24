@@ -52,7 +52,7 @@ html {
     cursor: default;
 }
 body, h4, ul, ol, dl, dd, blockquote, figure, input, select, textarea {
-    margin: auto;
+    margin: 0;
 }
 body {
     font-size: 1.9em; /* The optional font-size REM http://snook.ca/archives/html_and_css/font-size-with-rem, buggy on various browsers */
