@@ -41,9 +41,8 @@ Releases <https://github.com/laukstein/ajax-seo/releases>
 * Performance tuning on Apache, PHP, MySQL
 * Relative URL [RFC 3986](http://tools.ietf.org/html/rfc3986#section-4.2)
 * [jsPerf](http://jsperf.com/html-table-vs-css-block-table-flex/2) HTML table vs CSS block/table/flex
-* [jsPerf](http://jsperf.com/jquery-ajax-jsonp-timeout-performormance) `jQuery $.ajax() timeout` vs `window.setTimeout()`
-* [jsPerf](http://jsperf.com/ajax-jsonp-vs-ajax-json) `Ajax JSONP` vs `Ajax JSON`
-* [jsPerf](http://jsperf.com/getjson-vs-ajax-json) `$.ajax() json` vs `$.getJSON()`
+* [jsPerf](http://jsperf.com/jquery-ajax-jsonp-timeout-performormance) jQuery `$.ajax()` timeout vs `window.setTimeout()`
+* [jsPerf](http://jsperf.com/ajax-jsonp-vs-ajax-json) Ajax JSONP vs JSON
 * [jsPerf](http://jsperf.com/rename-title) `document.title=data.title` vs `$('title').html(data.title)`
 * [jsPerf](http://jsperf.com/encodeuri-vs-encodeuricomponent) `encodeURIComponent()` vs `encodeURI()`
 * [jsPerf](http://jsperf.com/decodeuri-vs-decodeuricomponent) `decodeURI()` vs `decodeURIComponent()`
