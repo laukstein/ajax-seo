@@ -1,4 +1,4 @@
-# [Ajax SEO](http://lab.laukstein.com/ajax-seo/)
+# [Ajax SEO](http://lab.laukstein.com/ajax-seo/) v2
 
 Bring stable, aesthetic, fast and secure application experience with Ajax SEO framework. Ajax SEO based on bleeding edge W3C standards and SEO guides to maximize crawlability, accessibility, usability, performance and security.
 
