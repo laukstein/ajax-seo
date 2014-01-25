@@ -112,7 +112,7 @@ ul, ol {
 a img, abbr, iframe {
     border: 0;
 }
-a, input, textarea {
+a, input, select, textarea {
     outline: none;
     pointer-events: auto;
 }
@@ -527,7 +527,6 @@ body, .tab {
         color: #ddd;
     }
 }
-@media (min-resolution: .001dpcm) { /* Opera <= 15 */ }
 @-moz-document url-prefix() { /* Firefox */
     ::-moz-selection {
         color: #fff;

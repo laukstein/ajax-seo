@@ -14,7 +14,7 @@ if (in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1'))) {
     // Production
     error_reporting(0);
     $debug = false;
-    $ver   = 20131209;
+    $ver   = 20140125;
     $min   = '.min';
 }
 
