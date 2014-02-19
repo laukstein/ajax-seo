@@ -86,7 +86,7 @@ class date {
         $directory = new RecursiveDirectoryIterator('.');
         $iterator  = new RecursiveIteratorIterator($directory);
         $regex     = new RegexIterator($iterator, '/.+\.(' . $type . ')/');
-        $date      = [];
+        $date      = array();
 
         foreach($regex as $key) $date[] = $key->getMTime();
 
