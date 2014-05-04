@@ -146,8 +146,8 @@ if ($conn) {
 // CloudFlare's cdnJS is better than Google CDN http://www.baldnerd.com/make-your-site-faster-cloudflares-cdnjs-vs-google-hosted-libraries-shocking-results/
 // jQuery EdgeCast's CDN better than Google, Microsoft and Media Temple CDN http://royal.pingdom.com/2012/07/24/best-cdn-for-jquery-in-2012/
 
-echo "\n<!--[if IE]><script src=//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js></script><![endif]-->
-<!--[if !IE]>--><script src=//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js></script><!--<![endif]-->
+echo "\n<!--[if IE]><script src=//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js></script><![endif]-->
+<!--[if !IE]>--><script src=//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js></script><!--<![endif]-->
 <script src={$assets}jquery.address$min.js></script>
 <script>
 (function() {
