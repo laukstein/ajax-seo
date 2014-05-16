@@ -12,17 +12,6 @@ Options -MultiViews -SymLinksIfOwnerMatch +IncludesNOEXEC
 ServerSignature Off
 # DirectorySlash Off
 
-# Security
-# Uncomment php_flag and php_value if you are not able to apply config/php.ini on your server
-# php_flag  allow_url_fopen 0
-# php_flag  allow_url_include 0
-# php_flag  display_errors 0
-# php_flag  expose_php 0
-# php_flag  log_errors 1
-# php_flag  session.use_trans_sid 0
-# php_flag  short_open_tag 0
-# php_value error_log error_log.txt
-
 # Custom error pages
 # ErrorDocument 403 /?url=error
 ErrorDocument 403 "403 Forbidden"
@@ -178,7 +167,7 @@ FileETag None
     RewriteRule ^assets/ - [L]
 
     # Rewrite uppercase letters URL to lowercase. Needs for httpd.conf "RewriteMap lc int:tolower"
-    # Solution without RewriteMap in https://github.com/laukstein/ajax-seo/wiki/Lowercase-URL
+    # Solution without RewriteMap in https://github.com/laukstein/ajax-seo/wiki/URL-lowercasing-without-RewriteMap
     RewriteCond %{REQUEST_URI} .+
     RewriteRule .*[A-Z] ${lc:%0} [R=301,L]
     # RewriteRule .*/[A-Z\u0410-\u042f\u00c0-\u00de\u0150\u0170袗-携]+/g ${lc:%0} [R=301,L]
