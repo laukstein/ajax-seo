@@ -41,6 +41,8 @@ if ($conn) {
         // Yahoo since 2007 seems to be supporting the feature to exclude content from search engine's index with class=robots-nocontent http://www.ysearchblog.com/2007/05/02/introducing-robots-nocontent-for-page-sections/
         // Yandex supports the same feature on using HTML non standard element <noindex>to exclude content from indexing</noindex> and <!--noindex-->to do the same<!--/noindex--> http://help.yandex.ru/webmaster/?id=1111858
 
+        header('Cache-Control: no-cache, no-store, must-revalidate'); // Chrome issue https://code.google.com/p/chromium/issues/detail?id=2763, requires "no-store" to avoid cache
+
         $note = "\n<style>
 /* @keyframes currently not supported in scoped style */
 @-webkit-keyframes slide-down { /* Webkit legacy */
@@ -102,6 +104,7 @@ if ($conn) {
 <input id=note type=checkbox hidden>
 <label for=note class=note>Congratulations on successful installation</label>
 <!--/noindex-->";
+
         $string = preg_replace("/define\('(connection)', false\);/", "define('$1', true);", file_get_contents($f));
         $fopen  = fopen($f, 'w');
         fwrite($fopen, $string);
