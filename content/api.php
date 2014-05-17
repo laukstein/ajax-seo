@@ -3,16 +3,27 @@
 // API JSON/P
 //
 
-// Simulate API slow respond
-//sleep(3);
-
 header('X-Robots-Tag: nosnippet');
 
-if (!$results) {
+function error() {
     http_response_code(404);
     header('Content-Type: text/plain');
     exit('404 Not Found');
 }
+if (!$results) error();
+
+/* function simulator() {
+    $arr = [0, 0, 3, 4, 5];
+    $i   = $arr[rand(0, count($arr) - 1)];
+
+    sleep(1);
+    if ($i > 0) {
+        if ($i === 5) error();
+        sleep($i);
+        if ($i > 3) error();
+    }
+}
+if ($debug) simulator(); // Respond status simulator */
 
 $callback      = isset($_GET['callback']) ? $_GET['callback'] : null;
 $issetcallback = !empty($callback) ? true : false;
@@ -20,7 +31,7 @@ $issetcallback = !empty($callback) ? true : false;
 header('Content-Type: application/' . ($issetcallback ?  'javascript' : 'json') . '; charset=utf-8');
 
 $array = array(
-    'pagetitle' => $pagetitle,
+    'title' => $pagetitle,
     'content' => "<h1 dir=auto>$title</h1>\n$content\n"
 );
 
