@@ -12,7 +12,7 @@ include 'content/cache.php'; cache::medb();
 header('Content-Type: text/cache-manifest; charset=utf-8');
 
 echo 'CACHE MANIFEST
-# Version ' . date('Ymd', strtotime(date::all())) . "\n$path";
+# ' . date('D, d M Y H:i:s T', strtotime(date::all())) . "\n$path";
 
 // Explicitly cached entries
 if ($stmt = $mysqli->prepare('SELECT url FROM `' . table . '`')) {
@@ -28,8 +28,7 @@ if ($stmt = $mysqli->prepare('SELECT url FROM `' . table . '`')) {
 $mysqli->close();
 
 echo "\n{$assets}style$ver$min.css
-//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js
-{$assets}jquery.address$min.js";
+{$assets}script$min.js";
 
 // Resources that requires user to be online
 echo "\n\nNETWORK:\n//www.google-analytics.com/analytics.js";
