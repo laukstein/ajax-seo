@@ -243,3 +243,7 @@ FileETag None
     RewriteRule .* - [E=HTTP_IF_MODIFIED_SINCE:%{HTTP:If-Modified-Since}]
     RewriteRule .* - [E=HTTP_IF_NONE_MATCH:%{HTTP:If-None-Match}]
 </IfModule>
+
+# Test case (remove from production version)
+Redirect 302 /ajax-seo/lorem-ipsum /ajax-seo/טיפוגרפיה-html5-bidi
+Redirect 302 /ajax-seo/api/lorem-ipsum /ajax-seo/api/טיפוגרפיה-html5-bidi
