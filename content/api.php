@@ -12,7 +12,7 @@ function error() {
 }
 if (!$results) error();
 
-/* function simulator() {
+function simulator() {
     $arr = [0, 0, 3, 4, 5];
     $i   = $arr[rand(0, count($arr) - 1)];
 
@@ -23,7 +23,7 @@ if (!$results) error();
         if ($i > 3) error();
     }
 }
-if ($debug) simulator(); // Respond status simulator */
+if ($debug && response) simulator(); // Response simulator
 
 $callback      = isset($_GET['callback']) ? $_GET['callback'] : null;
 $issetcallback = !empty($callback) ? true : false;

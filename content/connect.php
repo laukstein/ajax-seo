@@ -13,6 +13,7 @@ define('cdn', '');
 define('title', 'Ajax SEO');
 define('analytics_id', '');
 define('analytics_domain', '');
+define('response', false);
 
 // Path for static assets
 $issetcdn   = cdn ? true : false;
@@ -102,7 +103,7 @@ if ($conn) {
 </style>
 <!--noindex-->
 <input id=note type=checkbox hidden>
-<label for=note class=note>Congratulations on successful installation</label>
+<label for=note class=note>Congratulations for successful installation</label>
 <!--/noindex-->";
 
         $string = preg_replace("/define\('(connection)', false\);/", "define('$1', true);", file_get_contents($f));
