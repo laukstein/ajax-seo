@@ -64,6 +64,6 @@ $scheme      = $_SERVER['SERVER_PORT'] == 443 ? 'https' : 'http';
 $request_uri = rawurldecode($_SERVER['REQUEST_URI']);
 $uri         = $scheme . '://' . $host . $request_uri;
 $url         = isset($_GET['url']) ? $_GET['url'] : null;
-// Absolute path
-$path = str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME));
-$path = $path == '/' ? $path : $path . '/';
+$basename    = basename($url);
+$path        = str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME));
+if ($path !== '/') $path .= '/';
