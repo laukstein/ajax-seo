@@ -12,21 +12,27 @@ Avoid IDs
 http://screwlewse.com/2010/07/dont-use-id-selectors-in-css/
 http://screwlewse.com/2010/08/different-css-techniques-and-their-performance/ */
 
+/* @viewport should be inlined in HTML to avoid scaling and native responsive images issues, http://vimeo.com/93347500 21 min */
+@viewport {
+    width: device-width;
+    max-zoom: 1;
+}
+
 /* Stabilization
 -------------------------------------------------- */
 ::selection {
-    color: #fff;
     text-shadow: none;
-    background-color: #8f8f8f;
+    background-color: rgba(180,180,180,.5);
 }
 html, body {
     height: 100%;
 }
 html, input, select, textarea {
     color: #222;
-    line-height: 1.5;
     font-family: Cambria, Georgia, serif;
-    word-spacing: .1em;
+}
+html, textarea {
+    line-height: 1.5;
 }
 html, form, .button {
     /* Remove user-select for easer debugging */
@@ -38,25 +44,20 @@ html, form, .button {
 html {
     overflow-x: hidden;
     overflow-y: scroll;
-    -webkit-overflow-scrolling: touch; /* iOS 7 legacy http://barrow.io/overflow-scrolling */
     font-size: 62.45%; /* Make 1em = 10px = 2.5rem */
     background-color: #f8f9fa;
-
-    /* Old Webkit smooth text rendering issue */
-    -webkit-font-smoothing: antialiased;
-            font-smoothing: antialiased;
-
-    -webkit-text-size-adjust: 100%;
-        -ms-text-size-adjust: 100%;
-
+    /* -ms-text-size-adjust property will be ignored where the viewport tag is present */
     cursor: default;
 }
-body, h4, ul, ol, dl, dd, blockquote, figure, input, select, textarea {
+body, dl, dd, blockquote, figure {
     margin: 0;
 }
 body {
     font-size: 1.9em; /* The optional font-size REM http://snook.ca/archives/html_and_css/font-size-with-rem, buggy on various browsers */
+    overflow-wrap: break-word;
     /* CSS4 hyphenation http://generatedcontent.org/post/44751461516/finer-grained-control-of-hyphenation-with-css4-text */
+    -ms-hyphenate-limit-chars: 6 3 2;
+        hyphenate-limit-chars: 6 3 2;
     -webkit-hyphens: auto;
        -moz-hyphens: auto;
         -ms-hyphens: auto;
@@ -71,63 +72,77 @@ main, input, textarea {
 main {
     display: block; /* IE10, Opera 12.16 and old WebKit legacy */
 }
-h1, h2, h3 {
-    margin-top: .2em;
-    margin-bottom: .2em;
+h1, h2, h3, dt {
+    line-height: 1.07;
     font-weight: normal;
     font-family: 'Times New Roman', serif; /* IE fallback 'Times New Roman' */
-    line-height: 1.1;
 }
 h1 {
-    font-size: 2.1em;
-}
-h1 small {
-    font-size: 60%;
+    margin-top: .1em;
+    margin-bottom: .1em;
+    font-size: 2.65em;
 }
 h2 {
+    margin-top: .2em;
+    margin-bottom: .2em;
     color: #777;
-    font-size: 1.7em;
+    font-size: 2em;
 }
-h3 {
-    color: #aaa;
-    font-size: 1.4em;
+h3, dt {
+    margin-top: .3em;
+    margin-bottom: .3em;
+    font-size: 1.35em;
 }
-h1 + h2,
-h2 + h3 {
-    margin-top: -.2em;
+h4 {
+    margin-top: .4em;
+    margin-bottom: .4em;
+}
+small {
+    font-size: 70%;
+}
+blockquote {
+    padding-left: 1.2em;
+    font-style: italic;
+    border-left: .3em solid #eee;
+}
+blockquote cite {
+    color: #999;
+}
+blockquote cite:before {
+    content: '\2014 \00A0';
+    color: #999;
 }
 br {
     word-spacing: 0;
 }
 code, pre {
+    padding: .1em .4em;
     font-family: Consolas, 'Liberation Mono', Courier, monospace;
     white-space: pre-wrap;
+    background-color: #eee;
     -moz-tab-size: 4;
          tab-size: 4;
-}
-ul, ol {
-    padding: 0;
-    list-style: none inside;
-}
-a img, abbr, iframe {
-    border: 0;
 }
 a, input, select, textarea {
     outline: none;
     pointer-events: auto;
+}
+a img, abbr, iframe {
+    border: 0;
 }
 a, img {
     -webkit-user-drag: none;
             user-drag: none;
 }
 a {
-    color: #0c63bc;
+    color: #0f4cd5;
     text-decoration: none;
+    overflow-wrap: normal;
     touch-action: none; /* Disable double-tap-zoom http://msdn.microsoft.com/en-us/library/windows/apps/Hh767313.aspx */
     cursor: default;
 }
 a:hover, a:focus {
-    color: #204e92;
+    color: #0e439b;
     text-decoration: underline;
 }
 img {
@@ -138,9 +153,12 @@ img {
     vertical-align: top;
     -ms-interpolation-mode: bicubic;
 }
+abbr {
+    border-bottom: 1px dotted #ccc;
+}
 hr {
-    margin-top: 1em;
-    margin-bottom: 1em;
+    position: relative; /* [id]:target:before issue */
+    margin: 1em -11%;
     clear: both;
     border-width: 0;
     border-top: 1px solid #eee;
@@ -152,40 +170,31 @@ label {
     display: inline-block;
     padding-bottom: .2em;
     padding-top: .2em;
-    margin-top: .2em;
+}
+input:not([type]), [type^=date], [type=email], [type=month],
+[type=number], [type=password], [type=search], [type=submit],
+[type=tel], [type=text], [type=time], [type=url], [type=week],
+select, textarea, .button {
+    width: 20em;
+    padding: .6em .7em;
+    margin: .15em 0;
+}
+input, select, textarea, .button {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
 }
 input, select, textarea {
     font-size: 1em;
-    line-height: 1;
-    vertical-align: middle;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    -moz-box-sizing: border-box;
-         box-sizing: border-box;
-}
-input:not([type]), [type^=date], [type=email], [type=month],
-[type=number], [type=password], [type=tel], [type=text], [type=time],
-[type=url], [type=week], [type=submit], select, textarea, input.button {
-    width: 20em;
-    height: 2.85em;
-    padding: .6em .7em;
 }
 input:hover, input:focus,
 select:hover, select:focus,
 textarea:hover, textarea:focus {
     border-color: #ababab;
-    box-shadow: inset 1px 1px 3px #d6d6d6,
-                1px 1px 0 #fff;
-}
-:-ms-input-placeholder {
-    color: #ddd;
+    box-shadow: inset 1px 1px 3px #d6d6d6;
 }
 textarea {
     overflow: auto;
-    -webkit-overflow-scrolling: touch; /* iOS 7 legacy */
-    height: auto;
-    min-height: 7.5em;
-    line-height: inherit;
     vertical-align: top;
     word-wrap: break-word;
     resize: vertical;
@@ -195,25 +204,70 @@ textarea {
 /* Design
 -------------------------------------------------- */
 body, .tab {
-    margin: auto 1em;
+    margin: 0 10%;
 }
-.progress {
+.button {
+    overflow: hidden;
+    display: inline-block;
+    width: auto;
+    color: inherit;
+    line-height: 1;
+    vertical-align: top;
+    white-space: nowrap;
+    text-align: center;
+    text-overflow: ellipsis;
+    background-image: -webkit-linear-gradient(rgba(248,249,250,0), #f8f8f8); /* Safari and Android legacy */
+    background-image:         linear-gradient(rgba(248,249,250,0), #f8f8f8);
+}
+.button:hover, .button:focus {
+    color: inherit;
+    text-decoration: none;
+    background-image: none;
+    border-color: #ababab;
+    box-shadow: 0 1px 1px rgba(0,0,0,.2);
+}
+.button:active, .button.selected {
+    box-shadow: inset 0 -3em 6em -3em #d6d6d6,
+                inset 1px 1px .3em #d6d6d6;
+}
+#status {
     position: fixed;
     z-index: 999;
     left: 0;
-    width: 0%; /* IE transition issue */
+    width: 0; /* IE transition issue */
     height: 3px;
     background-color: #29d;
+
+    will-change: transition; /* http://dev.w3.org/csswg/css-will-change/ */
+
+    /* Enable hardware accelerator */
+    -webkit-transform: translateZ(0); /* Webkit legacy */
+        -ms-transform: translateZ(0); /* IE9 legacy */
+            transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+    -webkit-perspective: 1000;
+            perspective: 1000;
 }
-.status.start .progress {
+#status.status-start:before {
+    content: '';
+    display: block;
+    width: 1em;
+    height: 100%;
+    float: right;
+    background-image: -webkit-linear-gradient(left, rgba(0,194,255,0), #00c2ff);  /* Safari and Android legacy */
+    background-image:         linear-gradient(to right, rgba(0,194,255,0), #00c2ff);
+    box-shadow: 2px -2px 5px 1px #00c2ff;
+}
+#status.status-start {
     width: 70%;
-    -webkit-transition-duration: 5s; /* Safari and Android legacy */
+    -webkit-transition-duration: 5s; /* Safari, Android and iOS legacy */
             transition-duration: 5s;
 }
-.status.done .progress {
+#status.status-done {
     width: 100%;
     background-color: rgba(34,153,221,0);
-    -webkit-transition-duration: .2s; /* Safari and Android legacy */
+    -webkit-transition-duration: .2s; /* Safari, Android and iOS legacy */
             transition-duration: .2s;
 }
 .tab {
@@ -231,32 +285,32 @@ body, .tab {
     color: inherit;
     text-decoration: none;
 }
-.item {
+.bar {
     display: none;
 }
 .header, .main, .footer {
-    width: 70%;
-    min-width: 26em;
-    -moz-box-sizing: border-box;
-         box-sizing: border-box;
+    max-width: 900px;
+    margin: auto;
+    box-sizing: border-box;
+}
+.header, .main {
+    background-color: #fff;
+    border: 0 solid #d9e0e2;
+    border-width: 0 1px;
 }
 .header {
-    display: inline-block;
     position: relative;
-    padding: 0 .4em;
-    margin: auto;
-    text-align: center;
-    background-color: #fff;
-    background-clip: content-box;
+    width: 100%;
+    padding: .2em .4em;
 }
 .header:after {
     content: '';
     position: absolute;
-    left: .4em;
-    right: .4em;
+    left: 0;
+    right: 0;
     height: 1.5em;
-    background-image: -webkit-linear-gradient(#fff, rgba(255,255,255,0));
-    background-image:         linear-gradient(#fff, rgba(255,255,255,0));
+    background-image: -webkit-linear-gradient(#fff, rgba(255,255,255,.8) 50%, rgba(255,255,255,0)); /* Safari and Android legacy */
+    background-image:         linear-gradient(#fff, rgba(255,255,255,.8) 50%, rgba(255,255,255,0));
     pointer-events: none;
 }
 .nav, .footer {
@@ -266,17 +320,15 @@ body, .tab {
     display: inline-block;
     display: -webkit-box; /* Android 2.3 legacy */
     display: flex;
-    margin: .2em auto;
-    background-color: #f1f1f1;
-    background-image: -webkit-linear-gradient(#f8f8f8, rgba(248,248,248,0)); /* Safari and Android legacy */
-    background-image:         linear-gradient(#f8f8f8, rgba(248,248,248,0));
-    border: 1px solid #ddd;
+    background-color: #f3f3f3;
+    background-image: -webkit-linear-gradient(#f8f8f8, rgba(248,249,250,0)); /* Safari and Android legacy */
+    background-image:         linear-gradient(#f8f8f8, rgba(248,249,250,0));
+    border: 1px solid #d9e0e2;
     border-bottom-color: #ccc;
     border-radius: .2em;
     box-shadow: 0 1px 1px rgba(0,0,0,.1),
                 inset 0 0 0 1px rgba(255,255,255,.5);
-    -moz-box-sizing: border-box;
-         box-sizing: border-box;
+    box-sizing: border-box;
 }
 .nav a {
     overflow: hidden;
@@ -285,27 +337,30 @@ body, .tab {
     -webkit-box-flex: 1; /* Android 2.3 legacy */
     -ms-flex: 1;
         flex: 1;
+    flex-basis: auto;
     min-width: 0; /* Implied Minimum Size of Flex Items http://dev.w3.org/csswg/css3-flexbox/#min-size-auto */
     max-height: 2.2em; /* Old Webkit legacy */
     padding: 0 .4em; /* Firefox flexbox padding percentage issue https://bugzilla.mozilla.org/show_bug.cgi?id=529761 */
     text-overflow: ellipsis;
-    border: 0 solid #ddd;
+    border: 0 solid #d9e0e2;
     border-left-width: 1px;
 }
 .nav a:first-child {
+    padding-left: .5em;
     border-left: none;
     border-radius: .2em 0 0 .2em;
 }
 .nav a:last-child {
     border-radius: 0 .2em .2em 0;
 }
-.nav a:hover, .nav a:focus,
-.item:hover, .item:focus {
-    color: #000;
-    background-color: #fcfcfc;
+.nav a:hover, .nav a:focus {
+    background-color: #fff;
 }
-.nav a.selected {
+.nav a.focus {
     background-color: #ebebeb;
+}
+.nav a.error {
+    background-color: #f1e2e2;
 }
 .nav a.active {
     position: relative;
@@ -313,7 +368,7 @@ body, .tab {
     margin: -1px auto;
     color: #fff;
     line-height: 2.2;
-    background-color: #0c63bc;
+    background-color: #006cff;
     border-color: transparent;
 }
 .nav .active + a {
@@ -322,113 +377,66 @@ body, .tab {
 .footer a {
     display: inline-block;
     color: #777;
-    padding: 0 .4em;
+}
+.footer a + a {
+    margin-left: .6em;
 }
 .footer a:hover, .footer a:focus {
-    color: #555;
+    color: #222;
     text-decoration: underline;
 }
 .main, .footer {
     position: relative;
     padding: 0 5%;
-    margin: auto;
 }
 .main {
-    overflow: auto;
-    -webkit-overflow-scrolling: touch; /* iOS 7 legacy */
-    min-height: 100%;
-    padding-top: 3.7em;
-    padding-bottom: 3.7em;
-    background-color: #fff;
-    border: 0 solid #d9e0e2;
-    border-width: 0 1px;
-    box-shadow: 2px 0 8px #ddd;
-}
-.button {
     overflow: hidden;
-    display: inline-block;
-    padding: .65em .7em;
-    margin: .6em auto;
-    color: inherit;
-    line-height: 1;
-    vertical-align: middle;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    box-shadow: inset 0 -3em 6em -3em #ececec,
-                1px 1px 0 #fff;
+    min-height: 100%;
+    padding-top: 3.8em;
+    padding-bottom: 4.1em;
+    will-change: contents; /* http://dev.w3.org/csswg/css-will-change/ */
 }
-.button:hover, .button:focus {
-    color: inherit;
+.main :target {
+    background-color: #ffff00;
+}
+.main a:target {
     text-decoration: none;
-    border-color: #ababab;
-    box-shadow: inset 0 0 0 1px #fff,
-                inset 0 -3em 6em -3em #ececec, 1px 1px .3em #d6d6d6;
 }
-.button:active, .button.selected {
-    box-shadow: inset 0 -3em 6em -3em #d6d6d6,
-                inset 1px 1px .3em #d6d6d6, 1px 1px 0 #fff;
+.main a:target:hover {
+    text-decoration: underline;
+}
+.main [id]:target:before {
+    content: '';
+    display: block; /* Bug with anchor element and hover state */
+    padding-top: 3.5em;
+    margin-top: -3.5em;
+    pointer-events: none;
+    background-color: #fff;
+}
+.main h1[id]:target:before {
+    padding-top: 1.3em;
+    margin-top: -1.3em;
 }
 .footer {
     overflow: hidden;
-    height: 2.1em; /* IE11 issue */
-    margin-top: -2.1em;
-    line-height: 2.1;
+    height: 2.7em; /* IE11 issue */
+    margin-top: -2.7em;
+    line-height: 2.7;
     text-overflow: ellipsis;
     white-space: nowrap;
     border-top: 1px solid #eee;
 }
 
 
-/* Handlers
+
+/* Cross-browser compatibility
 -------------------------------------------------- */
 [hidden], template { /* Unsupported attribute http://dev.w3.org/html5/spec/single-page.html#the-hidden-attribute */
     display: none;
 }
-.visible {
-    visibility: visible;
-}
-.hidden {
-    visibility: hidden;
-    pointer-events: none;
-}
-.touchstart {
-    opacity: .55;
-}
-.disabled, .disabled a {
-    pointer-events: none;
-}
-.disabled {
-    opacity: .3;
-}
-
-
-/* Cross-browser compatibility
--------------------------------------------------- */
+/* IE @media hacks http://blog.keithclark.co.uk/moving-ie-specific-css-into-media-blocks/ */
 @media \0screen\,screen\9 { /* IE6-8 */
-    /* Remove IE7 black border on converting any black color to transparent.
-       Be sure that input[type=submit] has not specified #000000 for any property.
-       Unfortunately it is casing remove properties filter:progid:DXImageTransform.Microsoft.gradient(), box-shadow.
-    input[type=submit], input[type=submit]:hover {
-        *filter: chroma(color=#000000);
-    } */
-    html {
-        *overflow: auto;
-    }
-    ul, ol {
-        *list-style-position: outside;
-    }
-    hr {
-        *display: block;
-        *height: auto;
-    }
-    form {
-        *margin: auto;
-    }
     input, select, textarea {
-        width: 20em;
-        padding: .65em .7em;
         vertical-align: middle;
     }
     .tab:before {
@@ -465,11 +473,11 @@ body, .tab {
     .nav a {
         display: table-cell;
     }
-    .show .nav a {
-        display: block;
-    }
 }
 @media (-ms-high-contrast: active), (-ms-high-contrast: none) { /* IE10+ */
+    :-ms-input-placeholder {
+        color: #ccc;
+    }
     .tab:before {
         background-color: rgba(247,247,247,0);
     }
@@ -483,13 +491,28 @@ body, .tab {
     .nav a {
         display: block;
     }
+    @media (max-width: 540px) {
+        .tab {
+            text-align: left;
+        }
+        .header, .footer {
+            text-align: left;
+        }
+    }
 }
 @media (-webkit-min-device-pixel-ratio: 0) { /* Webkit */
-    /* Android version issues
+    /* Android/iOS WebView issues
     --------------------------------------------------
     all - slow click/hover state on any element except <a>
     2.3 - @keyframes flicker http://georgehess.com/post/2054803814/css-keyframe-animation-flicker
     2.3 - unknown appearance of visibility:hidden on new DOM elements on scroll while using -webkit-transform:translate3d(0,0,0), -webkit-backface-visibility:hidden or -webkit-perspective:1000 */
+    html, textarea {
+        -webkit-overflow-scrolling: touch; /* iOS 7 legacy http://barrow.io/overflow-scrolling */
+    }
+    html {
+        -webkit-font-smoothing: antialiased; /* Old Webkit smooth text rendering issue */
+        -webkit-text-size-adjust: 100%;
+    }
     a, input, select, textarea {
         /* <select> shadow DOM issue https://code.google.com/p/chromium/issues/detail?id=234871 */
         /* Remove outline and highlight-color from click-able elements on Android and iOS */
@@ -497,21 +520,6 @@ body, .tab {
     }
     a {
         -webkit-touch-callout: none; /* iOS remove bubble dialog on tap-holding */
-    }
-    [type=search],
-    input::-webkit-clear-button,
-    input::-webkit-inner-spin-button,
-    input::-webkit-file-upload-button,
-    input::-webkit-search-cancel-button {
-        -webkit-appearance: none; /* Firefox issue https://bugzilla.mozilla.org/show_bug.cgi?id=605985 */
-    }
-    input::-webkit-inner-spin-button {
-        height: inherit;
-    }
-    input::-webkit-file-upload-button {
-        margin: auto;
-        font: inherit;
-        border: 0;
     }
     textarea::-webkit-scrollbar {
         width: 8px;
@@ -521,17 +529,16 @@ body, .tab {
         background-color: #8e8f91;
     }
     textarea::-webkit-scrollbar-thumb:hover {
-        background-color: #666;
+        background-color: #777;
     }
     ::-webkit-input-placeholder {
-        color: #ddd;
+        color: #ccc;
     }
 }
 @-moz-document url-prefix() { /* Firefox */
     ::-moz-selection {
-        color: #fff;
         text-shadow: none;
-        background-color: #8f8f8f;
+        background-color: rgba(180,180,180,.5);
     }
     label:active {
         background-color: transparent;
@@ -540,48 +547,64 @@ body, .tab {
         background-image: none;
         border-radius: 0;
     }
-    input {
-        -moz-appearance: none;
-
-        /* Hack for appearance:none https://bugzilla.mozilla.org/show_bug.cgi?id=649849 */
-        text-indent: .01px;
-        text-overflow: '';
-    }
-    input::-moz-focus-inner {
-        /* Firefox input height issue http://davidwalsh.name/firefox-buttons,
-           line-height issue https://bugzilla.mozilla.org/show_bug.cgi?id=697451 */
-        padding: 0;
-        border: 0;
-    }
-    :-moz-placeholder {
-        color: #ddd;
+    ::-moz-placeholder {
+        color: #ccc;
     }
 }
 
 
-/* Device optimization
+
+/* Device adaptation http://dev.w3.org/csswg/css-device-adapt/
 -------------------------------------------------- */
-/* CSS Device Adaptation http://dev.w3.org/csswg/css-device-adapt/ */
-@viewport {
-    width: device-width;
-    max-zoom: 1;
-}
 @media (max-width: 1280px) {
-    .header, .main, .footer {
-        width: 80%;
-        -webkit-transition: width .21s; /* Safari and Android legacy */
-                transition: width .21s;
+    body, .tab {
+        margin: 0 3%;
+        -webkit-transition: margin .21s; /* Safari, Android and iOS legacy */
+                transition: margin .21s;
+    }
+    #status:not(.expand) ~ .tab {
+        -webkit-transition-duration: 0; /* Safari, Android and iOS legacy */
+                transition-duration: 0;
     }
 }
 @media (max-width: 540px) {
     html {
         background-color: #fff;
-        -webkit-text-size-adjust: 100%;
-        /* -ms-text-size-adjust property will be ignored where the viewport tag is present */
-        /*     -ms-text-size-adjust: 100%; */
     }
-    body {
+    .main [id]:before {
+        padding-top: 1.8em;
+        margin-top: -1.8em;
+    }
+    #status:not(.expand) ~ .tab,
+    #status:not(.expand) ~ .tab .header,
+    #status:not(.expand) ~ .footer {
+        -webkit-transition-duration: 0; /* Safari, Android and iOS legacy */
+                transition-duration: 0;
+    }
+    .tab {
         margin: auto;
+        -webkit-transition-duration: 0; /* Safari, Android and iOS legacy */
+                transition-duration: 0;
+    }
+    .bar {
+        display: inline-block;
+        position: relative;
+        z-index: 1;
+    }
+    .bar div {
+        width: 2.4rem;
+        margin: .65em .65em .65em .45em;
+        border: 0 solid #222;
+        border-width: .4rem 0;
+    }
+    .bar:hover, .bar:focus {
+        background-color: rgba(0,0,0,.06);
+    }
+    .bar span {
+        display: block;
+        height: .4rem;
+        margin: .4rem 0;
+        background-color: #222;
     }
     label, input:not([type]), [type^=date], [type=email], [type=month],
     [type=number], [type=password], [type=tel], [type=text], [type=time],
@@ -589,163 +612,148 @@ body, .tab {
     input.button {
         width: 100%;
     }
-    .tab:before {
-        position: absolute;
-        content: '';
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        background-image: -webkit-linear-gradient(#f7f7f7, rgba(241,241,241,.9));
-        background-image:         linear-gradient(#f7f7f7, rgba(241,241,241,.9));
-        border-bottom: 1px solid rgba(255,255,255,.1);
-        box-shadow: 0 0 4px #888;
-    }
     .tab, .main {
         background-color: transparent;
-        -webkit-transition: 0; /* Safari and Android legacy */
+        -webkit-transition: 0; /* Safari, Android and iOS legacy */
                 transition: 0;
     }
     .tab {
-        margin: auto;
-    }
-    .item {
-        position: relative;
-        z-index: 1;
-        display: inline-block;
-        font-weight: bold;
-        font-size: 2em;
-        text-shadow: 1px 1px 0 #fff;
-        width: 50%;
-        float: left;
-    }
-    .item-header {
-        text-align: left;
-        text-indent: -.1em;
-    }
-    .item-footer {
-        font-family: serif;
-        text-align: right;
+        margin: 0;
+        text-align: start;
+        background-image: -webkit-linear-gradient(#fff, rgba(255,255,255,.8) 50%, rgba(255,255,255,.9) 60%, rgba(255,255,255,0)); /* Safari and Android legacy */
+        background-image:         linear-gradient(#fff, rgba(255,255,255,.8) 50%, rgba(255,255,255,.9) 60%, rgba(255,255,255,0));
     }
     .header, .main, .footer {
         min-width: 13.6em;
     }
     .header, .footer {
-        visibility: hidden;
         position: fixed;
-        z-index: -1;
-        top: 0;
         bottom: 0;
-        width: 85%;
+        width: 75%;
         padding: 0;
         margin: auto;
         right: auto;
-        text-align: left;
         text-align: start;
-        -webkit-transition: -webkit-transform .21s, box-shadow .1s; /* Safari and Android legacy */
-                transition:         transform .21s, box-shadow .1s;
+        -webkit-transition: -webkit-transform .16s cubic-bezier(.5,.31,.85,.55); /* Safari, Android and iOS legacy */
+                transition:         transform .16s cubic-bezier(.5,.31,.85,.55); /* http://cubic-bezier.com/#.5,.31,.85,.55 */
     }
-    .header {
+    .header, .footer {
         left: 0;
         -webkit-transform: translateX(-100%); /* Webkit legacy */
+            -ms-transform: translateX(-100%); /* IE9 legacy */
                 transform: translateX(-100%);
     }
-    .footer {
-        z-index: 99;
-        right: 0;
-        padding-top: 2.35em;
-        font-family: 'Open Sans', Meiryo, 'Segoe UI', sans-serif;
-        border-left: 1px solid #ddd;
-        -webkit-transform: translateX(100%); /* Webkit legacy */
-                transform: translateX(100%);
+    .header {
+        top: 0;
+        z-index: -1;
+        padding-bottom: 6.3em;
+        background-color: #f8f9fa;
+        border: 0;
     }
     .header:after {
         display: none;
     }
     .nav, .footer {
         overflow: auto;
+        border: 0;
         -webkit-overflow-scrolling: touch; /* iOS 7 legacy */
-        height: 100%;
-        background-color: #f8f8f8;
+    }
+    .footer {
+        overflow: visible;
+        z-index: 100;
+        height: auto;
+        line-height: 2.1;
+        background-color: #f8f9fa;
+    }
+    .footer:before {
+        content: '';
+        position: absolute;
+        top: -1.5em;
+        left: 0;
+        right: 0;
+        height: 1.5em;
+        background-image: -webkit-linear-gradient(rgba(248,249,250,0), rgba(248,249,250,.8) 50%, rgba(248,249,250,.9) 60%, #f8f9fa); /* Safari and Android legacy */
+        background-image:         linear-gradient(rgba(248,249,250,0), rgba(248,249,250,.8) 50%, rgba(248,249,250,.9) 60%, #f8f9fa);
+        pointer-events: none;
     }
     .nav, .nav a:first-child, .nav a:last-child {
         border-radius: 0;
     }
     .nav {
         display: block;
-        padding-top: 2.2em;
-        background-image: none;
-        border-width: 0;
-        border-right-width: 1px;
+        height: 100%;
+        padding-top: 2.35em;
+        background: none;
         box-shadow: none;
     }
     .nav a, .footer a {
         display: block;
-        padding: 0 1.2em;
+        padding: 0 1.3em;
         float: none; /* IE legacy issue */
+        border-color: #eee;
     }
     .nav a {
         -webkit-box-flex: 0; /* Android 2.3 legacy */
         -webkit-flex: 0;
             -ms-flex: 0;
                 flex: 0;
+        border-width: 0;
         border-top-width: 1px;
-        border-left-width: 0;
+    }
+    .nav a:first-child {
+        padding-left: 1.3em;
     }
     .nav a:first-child, .footer a:first-child {
         border-top-width: 0;
     }
+    .footer a + a {
+        margin-left: 0;
+    }
+    .main {
+        overflow: visible;
+        padding-top: 2em;
+        padding-bottom: 1em;
+        padding-right: 1em;
+        padding-left: 1em;
+        border-width: 0;
+        -webkit-transition: -webkit-transform .16s; /* Safari, Android and iOS legacy */
+                transition:         transform .16s;
+    }
     .footer a {
         overflow: hidden;
         color: inherit;
-        text-overflow: ellipsis; /* if even needed */
-        border-top: 1px solid #ddd;
+        text-overflow: ellipsis;
+        border-top-width: 1px;
+        border-top-style: solid;
     }
     .footer a:hover, .footer a:focus {
-        color: #000;
+        color: #222;
         text-decoration: none;
-        background-color: #fcfcfc;
+        background-color: #fff;
     }
-    .main {
-        width: 95%;
-        padding-bottom: 1em;
-        margin: auto;
-        border-width: 0;
-        box-shadow: none;
-        -webkit-transition: -webkit-transform .21s; /* Safari and Android legacy */
-                transition:         transform .21s;
-    }
-    .status.show-header .header,
-    .status.show-footer .footer {
+    .expand ~ .tab .header,
+    .expand ~ .footer {
         visibility: visible;
-        box-shadow: 0 0 1.2em rgba(0,0,0,.2);
         -webkit-transform: translateX(0); /* Webkit legacy */
+            -ms-transform: translateX(0); /* IE9 legacy */
                 transform: translateX(0);
     }
-    .status.show-header .item-header,
-    .status.show-footer .item-footer {
-        background-color: #ebebeb;
+    .expand ~ .tab .header {
+        box-shadow: 0 0 4em rgba(0,0,0,.3);
     }
-    .status.show .main {
+    .tab,
+    .expand ~ .main {
         pointer-events: none;
         -webkit-user-select: none;
            -moz-user-select: none;
             -ms-user-select: none;
                 user-select: none;
     }
-    .status.show-header .main {
-        -webkit-transform: translateX(92%); /* Webkit legacy */
-                transform: translateX(92%);
-    }
-    .status.show-footer .main {
-        -webkit-transform: translateX(-92%); /* Webkit legacy */
-                transform: translateX(-92%);
-    }
 }
 @media (max-width: 320px) {
     html {
         font-size: 58%;
-        -webkit-transition: font-size .2s; /* Safari and Android legacy */
+        -webkit-transition: font-size .2s; /* Safari, Android and iOS legacy */
                 transition: font-size .2s;
     }
     h1 {
@@ -754,34 +762,18 @@ body, .tab {
     h2 {
         font-size: 1.6em;
     }
-    h3 {
+    h3, dt {
         font-size: 1.3em;
     }
 }
 @media print {
-    *, h2, h3 {
-        color: #000;
-        text-shadow: none;
-        background: transparent;
-    }
-    a, a:visited {
-        color: #444;
-        text-decoration: underline;
-    }
-    /*[href]:after, abbr[title]:after {
-        color: #999;
-    }
-    [href]:after {
-        content: ' (' attr(href) ')';
-    }
-    abbr[title]:after {
-        content: ' (' attr(title) ')';
-    }*/
-    img {
-        page-break-inside: avoid;
-    }
     @page {
         margin: .5cm;
+    }
+    *, h2, h3 {
+        color: #222;
+        text-shadow: none;
+        background: transparent;
     }
     p, h2, h3 {
         orphans: 3;
@@ -790,24 +782,27 @@ body, .tab {
     h2, h3 {
         page-break-after: avoid;
     }
-    .tab, .footer {
-        display: none;
+    a {
+        color: #777;
+        text-decoration: underline;
+    }
+    img {
+        page-break-inside: avoid;
     }
     html, .main {
         background: inherit;
     }
+    .tab, .footer {
+        display: none;
+    }
     .main {
+        padding-top: 1em;
+        padding-bottom: 1em;
         border-width: 0;
-        box-shadow: none;
     }
     .button {
         text-decoration: none;
-        border-color: #444;
-        box-shadow: none;
-    }
-    @media (max-width: 532px) {
-        .main {
-            padding-top: 1em;
-        }
+        background-image: none;
+        border-color: #777;
     }
 }
