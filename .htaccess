@@ -58,13 +58,15 @@ AddDefaultCharset utf-8
             # Force IE in highest available mode http://expression.microsoft.com/en-us/dd835379.aspx
             BrowserMatch MSIE ie
             Header set X-UA-Compatible IE=edge env=ie
-            <FilesMatch "\.(appcache|crx|css|eot|gif|ico|jpe?g|js|mp4|oga|ogg|ogv|otf|pdf|png|svg|ttf|vcf|nex|webapp|webm|webp|woff|xml)$">
-                Header unset X-UA-Compatible env=ie
-            </FilesMatch>
 
             # Remove cross-site scripting attacks on IE8 and IE9 http://technet.microsoft.com/en-us/security/bulletin/MS10-002#section6
             BrowserMatch "MSIE [8-9]" ie89
             Header set X-XSS-Protection "1; mode=block" env=ie89
+
+            <FilesMatch "\.(appcache|crx|css|eot|gif|ico|jpe?g|js|mp4|oga|ogg|ogv|otf|pdf|png|svg|ttf|vcf|nex|webapp|webm|webp|woff|xml)$">
+                Header unset X-UA-Compatible
+                Header unset X-XSS-Protection
+            </FilesMatch>
         </IfModule>
     </IfModule>
     <IfModule mod_filter.c>
@@ -80,6 +82,7 @@ AddDefaultCharset utf-8
                                       font/opentype \
                                       image/svg+xml \
                                       image/x-icon \
+                                      text/cache-manifest \
                                       text/css \
                                       text/html \
                                       text/plain
