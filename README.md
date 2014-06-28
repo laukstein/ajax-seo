@@ -28,6 +28,7 @@ Place robots.txt and humans.txt in website root.
 * SEO accessible, crawlable and indexable
 * Grade-A performance, security and usability
 * Simple, responsive, intuitive, maintainable
+* [Future plans](https://github.com/laukstein/ajax-seo/wiki/Plans)
 
 
 ## Techniques
@@ -40,7 +41,7 @@ Place robots.txt and humans.txt in website root.
 * Performance tuning on Apache, MySQL and PHP
 * Avoid outdated browser support
 
-Legacy browser support in [earlier releases](releases).
+Legacy browser support in [earlier releases](https://github.com/laukstein/ajax-seo/releases).
 
 
 ## License
