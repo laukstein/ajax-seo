@@ -12,18 +12,19 @@ function error() {
 }
 if (!$results) error();
 
+/*// Response simulator
 function simulator() {
     $arr = [0, 0, 3, 4, 5];
     $i   = $arr[rand(0, count($arr) - 1)];
 
-    sleep(1);
     if ($i > 0) {
         if ($i === 5) error();
         sleep($i);
         if ($i > 3) error();
     }
 }
-if ($debug && response) simulator(); // Response simulator
+simulator();
+if (debug) simulator();*/
 
 $callback      = isset($_GET['callback']) ? $_GET['callback'] : null;
 $issetcallback = !empty($callback) ? true : false;
