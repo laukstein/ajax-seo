@@ -3,49 +3,30 @@
 // MySQL settings
 //
 
-define('hostname', 'localhost');
-define('username', 'root');
-define('password', '');
-define('database', 'test');
-define('table', 'ajax-seo');
-define('connection', false);
-define('cdn', '');
-define('title', 'Ajax SEO');
-define('analytics_id', '');
-define('analytics_domain', '');
-define('response', false);
-
-// Path for static assets
-$issetcdn   = cdn ? true : false;
-$cdn_host   = parse_url(cdn, PHP_URL_HOST);
-$cdn_scheme = parse_url(cdn, PHP_URL_SCHEME);
-$cdn_scheme = isset($cdn_scheme) ? $cdn_scheme . '://' : '//';
-$cdn_uri    = $cdn_scheme . $cdn_host;
-$debug      = isset($debug) ? $debug : null;
-$path       = isset($path) ? $path : null;
-$assets     = $debug ? $path . 'assets/' : ($issetcdn ? cdn : $path . 'assets/');
-
 // Connect to database
 $mysqli  = @new mysqli(hostname, username, password, database);
 $results = false;
-$f       = __FILE__;
 $conn    = $mysqli->connect_errno ? false : true;
 $note    = null;
+
+// Path for assets
+$cdn_host   = parse_url(assets, PHP_URL_HOST);
+$cdn_host   = $cdn_host === $host ? null : $cdn_host;
+$cdn_scheme = parse_url(assets, PHP_URL_SCHEME);
+$cdn_scheme = $cdn_scheme ? $cdn_scheme . '://' : '//';
 
 if ($conn) {
     $result = $mysqli->query("SHOW TABLES LIKE '" . table . "'");
     $conn   = $result->num_rows ? true : false;
     $result->close();
-}
-if ($conn) {
+
     if (!connection) {
-        // Yahoo since 2007 seems to be supporting the feature to exclude content from search engine's index with class=robots-nocontent http://www.ysearchblog.com/2007/05/02/introducing-robots-nocontent-for-page-sections/
-        // Yandex supports the same feature on using HTML non standard element <noindex>to exclude content from indexing</noindex> and <!--noindex-->to do the same<!--/noindex--> http://help.yandex.ru/webmaster/?id=1111858
+        // Yahoo since 2007 supports content exclude from search engine's index with class=robots-nocontent http://www.ysearchblog.com/2007/05/02/introducing-robots-nocontent-for-page-sections/
+        // Yandex supports content exclude on using non-standard element <noindex></noindex> and conditional comment <!--noindex--><!--/noindex--> http://help.yandex.ru/webmaster/?id=1111858
 
         header('Cache-Control: no-cache, no-store, must-revalidate'); // Chrome issue https://code.google.com/p/chromium/issues/detail?id=2763, requires "no-store" to avoid cache
 
-        $note = "\n<style>
-/* @keyframes currently not supported in scoped style */
+        $note = "\n<style scoped>
 @-webkit-keyframes slide-down { /* Webkit legacy */
     0% {
         -webkit-transform: translateY(-110%);
@@ -74,25 +55,28 @@ if ($conn) {
 }
 .note {
     overflow: hidden;
-    position: absolute;
+    position: fixed;
     z-index: 10000;
     top: 0;
     left: 0;
     right: 0;
-    padding: 0 3%;
-    margin-top: 0;
-    line-height: 2.5;
+    padding: .5em 3%;
     text-align: center;
     text-overflow: ellipsis;
-    text-shadow: 1px 1px 0 rgba(255,255,255,.6);
+    text-shadow: 1px 1px 0 rgba(255,255,255,.7);
     white-space: nowrap;
-    background-color: #ffdb18;
-    border-bottom: 1px solid #ffe65c;
-    box-shadow: 0 0 .3em rgba(0,0,0,.6);
+    background-color: #ffdd00;
+    border: 0 solid transparent;
+    border-width: 0 1em;
+    box-sizing: border-box;
     -webkit-transition-duration: .3s;
             transition-duration: .3s;
     -webkit-animation: slide-down 4s forwards;
             animation: slide-down 4s forwards;
+}
+.note:hover {
+    -webkit-transform: translateY(0);
+            transform: translateY(0);
 }
 #note:checked ~ .note {
     -webkit-transform: translateY(-110%);

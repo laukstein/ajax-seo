@@ -3,23 +3,28 @@
 // Global configuration
 //
 
+define('hostname', 'localhost');
+define('username', 'root');
+define('password', '');
+define('database', 'test');
+define('table', 'ajax-seo');
+define('connection', false);
+define('assets', '');
+define('title', 'Ajax SEO');
+define('ga', '');
+define('debug', false);
+
+$f   = __FILE__;
+$ver = '-' . rand(); // Use filename-based versioning to avoid assets cache issue
+
 // Debug mode
-if (in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1'))) {
+if (debug && in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1'))) {
     // Development
     error_reporting(E_ALL);
-    $debug = true;
-    $ver   = rand();
-    $min   = null;
 } else {
     // Production
     error_reporting(0);
-    $debug = false;
-    $ver   = 20140125;
-    $min   = '.min';
 }
-
-// Use filename-based versioning to avoid CDN cache issue
-$ver = '-' . $ver;
 
 // Prevent XSS and SQL injection
 $host = $_SERVER['SERVER_NAME'];
