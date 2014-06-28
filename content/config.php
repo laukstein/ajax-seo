@@ -12,6 +12,7 @@ define('connection', false);
 define('assets', '');
 define('title', 'Ajax SEO');
 define('ga', '');
+define('ga_domain', '');
 define('debug', false);
 
 $f   = __FILE__;

@@ -5,26 +5,28 @@
 
 $error = null;
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $dhost  = trim($_POST['host']);
-    $user   = trim($_POST['user']);
-    $pass   = trim($_POST['pass']);
-    $db     = trim($_POST['db']);
-    $table  = trim($_POST['table']);
-    $gtitle = trim($_POST['title']);
-    $assets = trim($_POST['assets']);
-    $ga     = trim($_POST['ga']);
-    $debug  = !empty($_POST['debug']) ? 'true' : 'false';
+    $dhost     = trim($_POST['host']);
+    $user      = trim($_POST['user']);
+    $pass      = trim($_POST['pass']);
+    $db        = trim($_POST['db']);
+    $table     = trim($_POST['table']);
+    $gtitle    = trim($_POST['title']);
+    $assets    = trim($_POST['assets']);
+    $ga        = trim($_POST['ga']);
+    $ga_domain = trim($_POST['ga_domain']);
+    $debug     = !empty($_POST['debug']) ? 'true' : 'false';
 
     $array = array(
-        'hostname' => "'$dhost'",
-        'username' => "'$user'",
-        'password' => "'$pass'",
-        'database' => "'$db'",
-        'table'    => "'$table'",
-        'title'    => "'$gtitle'",
-        'assets'   => "'$assets'",
-        'ga'       => "'$ga'",
-        'debug'    => $debug
+        'hostname'  => "'$dhost'",
+        'username'  => "'$user'",
+        'password'  => "'$pass'",
+        'database'  => "'$db'",
+        'table'     => "'$table'",
+        'title'     => "'$gtitle'",
+        'assets'    => "'$assets'",
+        'ga'        => "'$ga'",
+        'ga_domain' => "'$ga_domain'",
+        'debug'     => $debug
     );
 
     $string = file_get_contents($f);
@@ -93,33 +95,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 // Installer setup
-$dhost  = !empty($dhost) ? $dhost : hostname;
-$user   = !empty($user) ? $user : username;
-$pass   = !empty($pass) ? $pass : password;
-$db     = !empty($db) ? $db : database;
-$table  = !empty($table) ? $table : table;
-$gtitle = !empty($gtitle) ? $gtitle : title;
-$assets = (!connection && empty(assets)) ? $path . 'assets/' : (!empty($assets) ? $assets : assets);
-$ga     = !empty($ga) ? $ga : ga;
-$adebug = !empty($debug) && $debug === 'true' || debug ? ' checked' : null;
+$dhost     = !empty($dhost) ? $dhost : hostname;
+$user      = !empty($user) ? $user : username;
+$pass      = !empty($pass) ? $pass : password;
+$db        = !empty($db) ? $db : database;
+$table     = !empty($table) ? $table : table;
+$gtitle    = !empty($gtitle) ? $gtitle : title;
+$assets    = (!connection && empty(assets)) ? $path . 'assets/' : (!empty($assets) ? $assets : assets);
+$ga        = !empty($ga) ? $ga : ga;
+$ga_domain = !empty($ga_domain) ? $ga_domain : ga_domain;
+$adebug    = !empty($debug) && $debug === 'true' || debug ? ' checked' : null;
 
 $meta_title     = 'Installation';
 $pagetitle      = $gtitle . ' ' . $meta_title;
 $optional_title = ' ' . $meta_title;
-$content        = '<style scoped>
-.main { padding-top: 1.2em; }
-.button, .i1 input { width: 100%; }
-input:not([type]), [type=password], [type=url] { width: 70%; }
-label { width: 30%; }
-.reset {
-    margin: 1em 0;
-}
-.reset label {
-    width: auto;
-}
-.error { color: #ff2121; }
-@media (max-width: 540px) { label, input:not([type]), [type=password], [type=url] { width: 100%; } }
-</style>
+$content        = '<style scoped>.main{padding-top:1.2em}.button,.i1 input{width:100%}[type=password],[type=url],input:not([type]){width:70%}input.n2{width:35%}label{width:30%}.reset{margin:1em 0}.reset label{width:auto}.error{color:#ff2121}@media (max-width:540px){[type=password],[type=url],input.n2,input:not([type]),label{width:100%}}</style>
 <form method=post>
     <h1>' . $pagetitle . '</h1>
     <dl>
@@ -132,7 +122,7 @@ label { width: 30%; }
         <dt><hr>Page details
         <dd><label for=title>Page title</label><input id=title name=title placeholder=Title value="' . $gtitle . '">
         <dd><label for=assets>Full assets URL</label><input id=assets name=assets placeholder="' . $path . 'assets/" value="' . $assets . '">
-        <dd><label for=ga>Google Analytics ID</label><input id=ga name=ga placeholder=UA-XXXX-Y value="' . $ga . '">
+        <dd><label for=ga>Google Analytics</label><input id=ga class=n2 name=ga placeholder=UA-XXXX-Y value="' . $ga . '"><input class=n2 name=ga_domain placeholder="' . $host . ' (optional)" value="' . $ga_domain . '">
         <dd class=reset><label><input name=debug type=checkbox' . $adebug . '> Debug in localhost (error_reporting, uncompressed assets and console.log)</label>
         <dd><input class=button name=install value=Install type=submit><p>Your configuration will be saved in config.php, after you can open and edit it manually.</p>
     </dl>
