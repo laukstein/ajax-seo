@@ -33,7 +33,7 @@ Place robots.txt and humans.txt in website root.
 ## Techniques
 **Think hard to make life easy**
 
-* Less dependencies
+* No-dependency
 * Use [no-www](http://no-www.org) domain
 * Protocol-relative URL [RFC 3986](http://tools.ietf.org/html/rfc3986#section-4.2)
 * URL lowercasing and gibberish cleanup
