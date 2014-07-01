@@ -511,7 +511,18 @@ body, .tab {
     html {
         -webkit-font-smoothing: antialiased; /* Old Webkit smooth text rendering issue */
         -webkit-text-size-adjust: 100%;
+        /*-webkit-transform: translateZ(0);*/
+        /*-webkit-backface-visibility: hidden;*/
+        -webkit-perspective: 1000; /* Android repaint issue on screen orientation change */
     }
+    /* Android 2.3 repaint WebView bug hack */
+    /*html {
+        -webkit-animation: bugfix infinite 1s;
+    }
+    @-webkit-keyframes bugfix {
+        from { padding: 0; }
+        to { padding: 0; }
+    }*/
     a, input, select, textarea {
         /* <select> shadow DOM issue https://code.google.com/p/chromium/issues/detail?id=234871 */
         /* Remove outline and highlight-color from click-able elements on Android and iOS */
@@ -593,21 +604,64 @@ body, .tab {
         display: inline-block;
         position: relative;
         z-index: 1;
-    }
-    .bar div {
-        width: 1.3em;
-        margin: .65em .65em .65em .45em;
-        border: 0 solid #222;
-        border-width: .25em 0;
-    }
-    .bar:hover, .bar:focus {
-        background-color: rgba(0,0,0,.06);
+        pointer-events: auto;
+
+        /* reset button user-agent styles */
+        padding: 0;
+        margin: 0;
+        font-size: 1em;
+        background: none;
+        border: 0;
+        outline: 0;
     }
     .bar span {
+        position: relative;
+        margin: 1.07em .65em 1.07em .45em;
+        will-change: transition, transform;
+    }
+    .bar span,
+    .bar span:before,
+    .bar span:after {
         display: block;
+        width: 1.3em;
         height: .21em;
-        margin: .21em 0;
         background-color: #222;
+        border-radius: .1em;
+        -webkit-transition: .2s; /* Safari, Android and iOS legacy */
+                transition: .2s;
+    }
+    .bar span:before,
+    .bar span:after {
+        content: "";
+        position: absolute;
+    }
+    .bar span:before {
+        -webkit-transform: translateY(-.42em); /* Webkit legacy */
+            -ms-transform: translateY(-.42em); /* IE9 legacy */
+                transform: translateY(-.42em);
+    }
+    .bar span:after {
+        -webkit-transform: translateY(.42em); /* Webkit legacy */
+            -ms-transform: translateY(.42em); /* IE9 legacy */
+                transform: translateY(.42em);
+    }
+    .bar:hover {
+        background-color: rgba(0,0,0,.06);
+    }
+    .expand ~ .tab .bar span {
+        background-color: transparent;
+    }
+    .expand ~ .tab .bar span:before {
+        -webkit-transform: rotate(45deg); /* Webkit legacy */
+        -webkit-transform: rotate3d(0,0,1,45deg); /* Chrome rotation offset fix */
+            -ms-transform: rotate(45deg); /* IE9 legacy */
+                transform: rotate3d(0,0,1,45deg); /* Chrome rotation offset fix */
+    }
+    .expand ~ .tab .bar span:after {
+        -webkit-transform: rotate(-45deg); /* Webkit legacy */
+        -webkit-transform: rotate3d(0,0,1,-45deg); /* Chrome rotation offset fix */
+            -ms-transform: rotate(-45deg); /* IE9 legacy */
+                transform: rotate3d(0,0,1,-45deg); /* Chrome rotation offset fix */
     }
     label, input:not([type]), [type^=date], [type=email], [type=month],
     [type=number], [type=password], [type=tel], [type=text], [type=time],
