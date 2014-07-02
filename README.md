@@ -12,7 +12,7 @@ Demo in <http://lab.laukstein.com/ajax-seo/>.
 3. Open in browser and setup settings
 
 Use by adding `class=x` to any API compatible hyperlink.<br>
-Here, `<a class=x href=history>href=history</a>` requires API Ajax request `api/history`
+Here, `<a class=x href=history>href=history</a>` requires API request `api/history`.
 
 Minimum server requirements Apache 2 + mod_rewrite, MySQL 5, PHP 5.2.<br>
 Apache, MySQL and PHP recommended settings in [/config](config).<br>
