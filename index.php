@@ -4,25 +4,23 @@ include 'content/config.php';
 include 'content/connect.php';
 include 'content/cache.php'; cache::url();
 
-$gtitle           = !empty($gtitle) ? $gtitle : title;
-$meta_description = null;
+$gtitle      = !empty($gtitle) ? $gtitle : title;
+$description = null;
 
 if ($conn) {
     $title     = $title_error     = 'Oops...';
     $pagetitle = $pagetitle_error = 'Page not found';
     $content   = $content_error   = '<p>Sorry, this page hasn\'t been found. Try to <a class="x x-error" href=' . $url . '>reload</a> the page or head to <a class="x x-error" href=' . $path . '>home</a>.</p>'; // Old Webkit breaks the layout without </p>
 
-    $stmt = $mysqli->prepare('SELECT url, title, `meta-title`, `meta-description`, content FROM `' . table . '` WHERE url=? LIMIT 1');
+    $stmt = $mysqli->prepare('SELECT url, title, description, content FROM `' . table . '` WHERE url=? LIMIT 1');
     $stmt->bind_param('s', $url);
     $stmt->execute();
-    $stmt->bind_result($url, $title, $meta_title, $meta_description, $content);
+    $stmt->bind_result($url, $title, $description, $content);
 
     while ($stmt->fetch()) {
-        $results    = true;
-        $title      = !empty($title) && ($meta_title !== $title) ? $title : $meta_title;
-        $meta_title = isset($meta_title) ? $meta_title : $title;
+        $results   = true;
         // SEO page title improvement for the root page
-        $pagetitle  = empty($url) ? $gtitle : $meta_title;
+        $pagetitle = empty($url) ? $gtitle : $title;
 
         function string($str) {
             if (!function_exists('_variable')) { // Avoid function redeclare
@@ -71,7 +69,7 @@ $metadata  = "<title>$pagetitle</title>";
 // Open Graph protocol http://ogp.me
 $metadata .= "\n<meta property=og:title content=\"$pagetitle\">";
 // Max 253 character description http://blogs.msdn.com/b/ie/archive/2012/05/14/sharing-links-from-ie10-on-windows-8.aspx
-if (!empty($meta_description)) $metadata .= "\n<meta property=og:description name=description content=\"$meta_description\">";
+if (!empty($description)) $metadata .= "\n<meta property=og:description name=description content=\"$description\">";
 // Twitter Cards https://dev.twitter.com/docs/cards
 $metadata .= "\n<meta property=twitter:card content=summary>"; // Twitterbot will crawl as default 'summary' when twitter:card is not set (Twitterbot has some issue with it, need to be set)
 
@@ -113,7 +111,7 @@ $metadata
     <header class=header>";
 
 if ($conn) {
-    if ($stmt = $mysqli->prepare('SELECT url, `meta-title` FROM `' . table . '` WHERE permit=1 ORDER BY `order` ASC')) {
+    if ($stmt = $mysqli->prepare('SELECT url, title FROM `' . table . '` WHERE permit=1 ORDER BY `order` ASC')) {
         $stmt->execute();
         $stmt->bind_result($data_url, $data_metatitle);
         echo "\n        <nav class=nav role=navigation>";
