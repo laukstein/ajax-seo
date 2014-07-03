@@ -6,7 +6,7 @@
 header('X-Robots-Tag: nosnippet');
 
 function error() {
-    http_response_code(404);
+    //http_response_code(404);
     header('Content-Type: text/plain');
     exit('404 Not Found');
 }
