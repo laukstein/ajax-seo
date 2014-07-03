@@ -4,10 +4,9 @@
 //
 
 // Connect to database
-$mysqli  = @new mysqli(hostname, username, password, database);
-$results = false;
-$conn    = $mysqli->connect_errno ? false : true;
-$note    = null;
+$mysqli = @new mysqli(hostname, username, password, database);
+$conn   = !!@$mysqli->query('SELECT id FROM `' . table . '` LIMIT 1')->num_rows;
+$note   = null;
 
 // Path for assets
 $cdn_host   = parse_url(assets, PHP_URL_HOST);
@@ -16,10 +15,6 @@ $cdn_scheme = parse_url(assets, PHP_URL_SCHEME);
 $cdn_scheme = $cdn_scheme ? $cdn_scheme . '://' : '//';
 
 if ($conn) {
-    $result = $mysqli->query("SHOW TABLES LIKE '" . table . "'");
-    $conn   = $result->num_rows ? true : false;
-    $result->close();
-
     if (!connection) {
         // Yahoo since 2007 supports content exclude from search engine's index with class=robots-nocontent http://www.ysearchblog.com/2007/05/02/introducing-robots-nocontent-for-page-sections/
         // Yandex supports content exclude on using non-standard element <noindex></noindex> and conditional comment <!--noindex--><!--/noindex--> http://help.yandex.ru/webmaster/?id=1111858
