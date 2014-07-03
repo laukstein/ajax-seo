@@ -11,6 +11,7 @@ if ($conn) {
     $title     = $title_error     = 'Oops...';
     $pagetitle = $pagetitle_error = 'Page not found';
     $content   = $content_error   = '<p>Sorry, this page hasn\'t been found. Try to <a class="x x-error" href=' . $url . '>reload</a> the page or head to <a class="x x-error" href=' . $path . '>home</a>.</p>'; // Old Webkit breaks the layout without </p>
+    $results   = false;
 
     $stmt = $mysqli->prepare('SELECT url, title, description, content FROM `' . table . '` WHERE url=? LIMIT 1');
     $stmt->bind_param('s', $url);
@@ -54,9 +55,6 @@ if ($conn) {
         exit;
     }
 }
-
-// Avoid undefined variables
-$optional_title = isset($optional_title) ? $optional_title : null;
 
 
 // Avoid XSS attacks https://w3c.github.io/webappsec/specs/content-security-policy/
