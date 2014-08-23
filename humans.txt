@@ -9,7 +9,7 @@ echo '/* SITE */
 Author:         Binyamin Laukstein
 Contact:        http://laukstein.com/contact
 Last update:    ' . date('D, d M Y H:i:s T', strtotime(date::all())) . '
-Standards:      HTML Living Standard, Microdata, JavaScript, JSON
+Standards:      HTML Living Standard, Microdata, JavaScript
 Source:         https://github.com/laukstein/ajax-seo';
 
 $mysqli->close();
