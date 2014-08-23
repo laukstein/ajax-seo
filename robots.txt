@@ -7,6 +7,7 @@ include 'content/config.php';
 include 'content/cache.php'; cache::me();
 header('Content-Type: text/plain');
 
+// Global rules
 echo "User-agent: *\nDisallow:";
 // Removing Documents From the Wayback Machine archive.org
 echo "\n\nUser-agent: ia_archiver\nDisallow: /";

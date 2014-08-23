@@ -30,7 +30,7 @@ $mysqli->close();
 // echo "\n" . assets . "style$ver.css
 // " . assets . "script$ver.js";
 
+// FALLBACK:
+
 // Resources that requires user to be online
 echo "\n\nNETWORK:\n//www.google-analytics.com/analytics.js";
-
-// FALLBACK:

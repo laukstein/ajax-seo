@@ -1,9 +1,8 @@
 <?php
 //
-// MySQL settings
+// Connect to database
 //
 
-// Connect to database
 $mysqli = @new mysqli(hostname, username, password, database);
 $conn   = !!@$mysqli->query('SELECT id FROM `' . table . '` LIMIT 1')->num_rows;
 $note   = null;
