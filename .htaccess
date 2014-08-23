@@ -163,7 +163,7 @@ FileETag None
     RewriteRule ^ http%{ENV:https}://%1%{REQUEST_URI} [R=301,L]
 
     # Avoid subdomains
-    # RewriteCond %{HTTP_HOST} !^domain\.com
+    # RewriteCond %{HTTP_HOST} !^domain.com
     # RewriteRule . http%{ENV:https}://domain.com%{REQUEST_URI} [R=301,L]
 
     # Rewrite exceptions for specific path
@@ -224,10 +224,6 @@ FileETag None
 
     # Block access to folders that begins with a period, like Subversion and Git directories
     RewriteRule (^|/)\. - [F]
-
-    # Rewrite query string for AJAX crawling https://support.google.com/webmasters/answer/174992
-    RewriteCond %{QUERY_STRING} ^_escaped_fragment_=(.*)$
-    RewriteRule .* %{REQUEST_URI}%1? [R=301,L]
 
     # Remove question mark and parameters
     RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /([^?#\ ]*)\?[^\ ]*\ HTTP/
