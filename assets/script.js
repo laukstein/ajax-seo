@@ -17,18 +17,17 @@
 (function (w, d, h, l, g) { // IIFE http://gregfranko.com/blog/i-love-my-iife/
     'use strict';
 
-    function toggle() { // http://youmightnotneedjquery.com/#toggle_class
-        var el = d.getElementById('status'),
-            className = 'expand',
+    w.toggle = function (focusOut) { // http://youmightnotneedjquery.com/#toggle_class
+        var className = 'expand',
+            status = d.getElementById('status'),
             classes,
             existingIndex;
 
         console.log('------------------ toggle');
-        if (el.classList) {
-            el.classList.toggle(className);
-            // console.log('classList');
+        if (status.classList) {
+            status.classList.toggle(className);
         } else {
-            classes       = el.className.split(' ');
+            classes = status.className.split(' ');
             existingIndex = classes.indexOf(className);
 
             if (existingIndex >= 0) {
@@ -36,11 +35,11 @@
             } else {
                 classes.push(className);
             }
-
-            el.className = classes.join(' ');
-            // console.log('className');
+            status.className = classes.join(' ');
         }
-        return;
+        if (!!focusOut) {
+            d.getElementById('focusout').focus();
+        }
     }
 
     w[g] = function () {
@@ -51,8 +50,7 @@
     ga('send', 'pageview');
 
     if (!h.pushState) { // Browser legacy, stop here if does not support History API
-        d.getElementById('expand').onclick = toggle;
-        throw new Error('History API not supported.');
+        throw new Error('History API not supported');
     }
 
     var // cached
@@ -186,6 +184,7 @@
     }, 100);
     function closest(el, selector) { // http://jsperf.com/native-vs-jquery-closest
         // console.log('------------------ closest');
+        // Element.matches() supported in Firefox 34, based on Gecko 34, will ship in November 2014 https://developer.mozilla.org/en-US/Firefox/Releases/34
         var matchesSelector = el.matches || el.webkitMatchesSelector || el.mozMatchesSelector || el.msMatchesSelector;
         while (el && el.nodeType === 1) {
             if (matchesSelector.call(el, selector)) { return el; }
@@ -196,7 +195,7 @@
     function listener(e) {
         console.log('==========================LISTENER');
 
-        if (closest(e.target, '.bar')) { return toggle(); }
+        if (closest(e.target, '.bar') || closest(e.target, '.handler')) { return; } // Fire toggle()
         if (!closest(e.target, 'nav ' + selector) && xstatus.classList.contains('expand')) { console.log('#status remove .expand'); return xstatus.classList.remove('expand'); }
 
         me = closest(e.target, selector);
