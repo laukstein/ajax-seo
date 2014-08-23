@@ -3,20 +3,10 @@
 // Global configuration
 //
 
-define('hostname', 'localhost');
-define('username', 'root');
-define('password', '');
-define('database', 'test');
-define('table', 'ajax-seo');
-define('connection', false);
-define('assets', '');
-define('title', 'Ajax SEO');
-define('ga', '');
-define('ga_domain', '');
-define('debug', false);
-
 $f   = __FILE__;
 $ver = '-' . rand(); // Use filename-based versioning to avoid assets cache issue
+
+define('debug', false);
 
 // Debug mode
 if (debug && in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1'))) {
@@ -65,6 +55,19 @@ if (!$comp) {
     exit('Your server is outdated' . $fix);
 }
 
+// Template prototype
+function string($str) {
+    if (!function_exists('_variable')) { // Avoid function redeclare
+        // Usecase: Execute variable {$foo}
+        // Supported since PHP 4.1.0 http://www.php.net/manual/en/language.variables.superglobals.php
+        function _variable($m) {
+            return @$GLOBALS[$m[1]]; // case-sensitive variable
+        }
+    }
+    $str = preg_replace_callback('/{\$(\w+)}/', '_variable', $str);
+    return $str;
+}
+
 // Common variables
 $scheme      = $_SERVER['SERVER_PORT'] == 443 ? 'https' : 'http';
 $request_uri = rawurldecode($_SERVER['REQUEST_URI']);
@@ -73,3 +76,14 @@ $url         = isset($_GET['url']) ? $_GET['url'] : null;
 $basename    = basename($url);
 $path        = str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME));
 if ($path !== '/') $path .= '/';
+
+define('hostname', 'localhost');
+define('username', 'root');
+define('password', ' ');
+define('database', 'test');
+define('table', 'ajax-seo');
+define('connection', false);
+define('assets', string('{$path}assets/'));
+define('title', 'Ajax SEO');
+define('ga', '');
+define('ga_domain', '');

@@ -104,7 +104,7 @@ $db        = !empty($db) ? $db : database;
 $table     = !empty($table) ? $table : table;
 $drop      = $drop ? ' checked' : null;
 $gtitle    = !empty($gtitle) ? $gtitle : title;
-$assets    = (!connection && empty(assets)) ? $path . 'assets/' : (!empty($assets) ? $assets : assets);
+$assets    = (!connection && empty(assets)) ? '{$path}assets/' : (!empty($assets) ? $assets : assets);
 $ga        = !empty($ga) ? $ga : ga;
 $ga_domain = !empty($ga_domain) ? $ga_domain : ga_domain;
 $adebug    = !empty($debug) && $debug === 'true' || debug ? ' checked' : null;
@@ -112,7 +112,7 @@ $adebug    = !empty($debug) && $debug === 'true' || debug ? ' checked' : null;
 // Content output
 $title     = 'Installation';
 $pagetitle = $gtitle . ' ' . $title;
-$content   = '<style scoped>.main{padding-top:1.2em}.button,.i1 input{width:100%}[type=password],[type=url],input:not([type]){width:70%}input.n2{width:35%}label{width:30%}.reset{margin:1em 0}.reset label{width:auto}.error{color:#ff2121}@media (max-width:540px){[type=password],[type=url],input.n2,input:not([type]),label{width:100%}}</style>
+$content   = '<style scoped>.main{padding-top:1.2em}label{width:30%}input{width:70%}[type=checkbox]{width:auto}.n2{width:35%}button{width:100%}.reset{margin:1em 0}.reset label{width:auto}.error{color:#ff2121}@media (max-width:540px){label,input,.n2{width:100%}[type=checkbox]{width:auto}}</style>
 <form method=post>
     <h1>' . $pagetitle . '</h1>
     <dl>
@@ -127,7 +127,7 @@ $content   = '<style scoped>.main{padding-top:1.2em}.button,.i1 input{width:100%
         <dd><label for=assets>Full assets URL</label><input id=assets name=assets placeholder="' . $path . 'assets/" value="' . $assets . '">
         <dd><label for=ga>Google Analytics</label><input id=ga class=n2 name=ga placeholder=UA-XXXX-Y value="' . $ga . '"><input class=n2 name=ga_domain placeholder="' . $host . ' (optional)" value="' . $ga_domain . '">
         <dd class=reset><label><input name=debug type=checkbox' . $adebug . '> Debug in localhost (error_reporting, uncompressed assets and console.log)</label>
-        <dd><input class=button name=install value=Install type=submit><p>Your configuration will be saved in config.php, after you can open and edit it manually.</p>
+        <dd><button name=install>Install</button><p>Your configuration will be saved in config.php, after you can open and edit it manually.</p>
     </dl>
 </form>';
 
