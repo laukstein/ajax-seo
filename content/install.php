@@ -104,7 +104,7 @@ $db        = !empty($db) ? $db : database;
 $table     = !empty($table) ? $table : table;
 $drop      = $drop ? ' checked' : null;
 $gtitle    = !empty($gtitle) ? $gtitle : title;
-$assets    = (!connection && empty(assets)) ? '{$path}assets/' : (!empty($assets) ? $assets : assets);
+$assets    = (!connection && empty(assets)) ? string('{$path}assets/') : (!empty($assets) ? $assets : assets);
 $ga        = !empty($ga) ? $ga : ga;
 $ga_domain = !empty($ga_domain) ? $ga_domain : ga_domain;
 $adebug    = !empty($debug) && $debug === 'true' || debug ? ' checked' : null;
