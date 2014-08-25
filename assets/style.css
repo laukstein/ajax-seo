@@ -584,8 +584,8 @@ button:active,
     }
     #status:not(.expand) ~ .tab .header,
     #status:not(.expand) ~ .footer {
-        -webkit-transition-duration: 0; /* Safari, Android and iOS legacy */
-                transition-duration: 0;
+        -webkit-transition: none; /* Safari, Android and iOS legacy */
+                transition: none;
     }
     .tab {
         padding-bottom: .2em;
@@ -618,6 +618,7 @@ button:active,
     .bar span {
         position: relative;
         margin: 1.07em .65em 1.07em .45em;
+        transform: translateY(0); /* Firefox 34 Nightly width fix */
         -webkit-transition-duration: .15s; /* Android 4.3 legacy */
                 transition-duration: .15s;
         will-change: transition, transform;
@@ -683,7 +684,7 @@ button:active,
     }
     .header:before,
     .header:after {
-        opacity: 0; /* IE11 legacy */
+        opacity: 0; /* IE11 width flicker hack */
         content: "";
         position: fixed;
         left: 0;
@@ -691,8 +692,7 @@ button:active,
         width: 75%; /* Chrome bug - differ width with vs without scroll, fixes calculation on changing windows size; fine on old WebKit */
         height: 2.35em;
         pointer-events: none;
-        -webkit-transition: opacity .35s cubic-bezier(.2,1,.4,1); /* Android 4.3 legacy */
-                transition: opacity .35s cubic-bezier(.2,1,.4,1);
+        transition: opacity .35s cubic-bezier(.2,1,.4,1); /* IE11 width flicker hack */
     }
     .header:before {
         top: 0;
@@ -707,7 +707,7 @@ button:active,
     }
     .expand ~ .tab .header:before,
     .expand ~ .tab .header:after {
-        opacity: 1;
+        opacity: 1; /* IE11 width flicker hack */
     }
     .expand ~ .handler,
     .expand ~ .tab .handler {
@@ -781,8 +781,7 @@ button:active,
     .main {
         overflow: visible;
         width: 100%;
-        padding: 2em 1.7em 1em;
-        margin-bottom: 1em;
+        padding: 2em 1.7em;
         border: 0;
     }
     .main [id]:before {
