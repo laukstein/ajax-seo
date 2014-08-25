@@ -6,7 +6,7 @@
 $f   = __FILE__;
 $ver = '-' . rand(); // Use filename-based versioning to avoid assets cache issue
 
-define('debug', false);
+define('debug', true);
 
 // Debug mode
 if (debug && in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1'))) {
@@ -79,7 +79,7 @@ if ($path !== '/') $path .= '/';
 
 define('hostname', 'localhost');
 define('username', 'root');
-define('password', ' ');
+define('password', '');
 define('database', 'test');
 define('table', 'ajax-seo');
 define('connection', false);
