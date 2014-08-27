@@ -623,6 +623,7 @@ button:active,
         -webkit-transition-duration: .15s; /* Android 4.3 legacy */
                 transition-duration: .15s;
         will-change: transition, transform;
+        pointer-events: none; /* IE11 legacy */
     }
     .bar span:before {
         content: "";

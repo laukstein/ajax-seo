@@ -40,7 +40,10 @@
         if (!!focusOut) {
             d.getElementById('focusout').focus();
         }
-    }
+    };
+    w.through = function (e) { /* IE10 legacy, pass through layers http://www.vinylfox.com/forwarding-mouse-events-through-layers/ */
+        d.elementFromPoint(e.clientX, e.clientY).focus();
+    };
 
     w[g] = function () {
         w[g].q = w[g].q || [];
