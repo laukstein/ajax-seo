@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $assets    = trim($_POST['assets']);
     $ga        = trim($_POST['ga']);
     $ga_domain = trim($_POST['ga_domain']);
-    $debug     = !empty($_POST['debug']) ? 'true' : 'false';
+    $xdebug    = !empty($_POST['debug']) ? 'true' : 'false';
 
     $array = array(
         'hostname'  => "'$dhost'",
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'assets'    => "'$assets'",
         'ga'        => "'$ga'",
         'ga_domain' => "'$ga_domain'",
-        'debug'     => $debug
+        'debug'     => $xdebug
     );
 
     $string = file_get_contents($f);
@@ -107,7 +107,7 @@ $gtitle    = !empty($gtitle) ? $gtitle : title;
 $assets    = (!connection && empty(assets)) ? string('{$path}assets/') : (!empty($assets) ? $assets : assets);
 $ga        = !empty($ga) ? $ga : ga;
 $ga_domain = !empty($ga_domain) ? $ga_domain : ga_domain;
-$adebug    = !empty($debug) && $debug === 'true' || debug ? ' checked' : null;
+$adebug    = !empty($xdebug) && $xdebug === 'true' || debug ? ' checked' : null;
 
 // Content output
 $title     = 'Installation';

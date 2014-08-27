@@ -12,9 +12,11 @@ define('debug', true);
 if (debug && in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1'))) {
     // Development
     error_reporting(E_ALL);
+    $debug = true;
 } else {
     // Production
     error_reporting(0);
+    $debug = false;
 }
 
 // Prevent XSS and SQL injection

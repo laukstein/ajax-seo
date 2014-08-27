@@ -23,7 +23,7 @@ function simulator() {
     }
 }
 simulator();
-if (debug) simulator();*/
+if ($debug) simulator();*/
 
 $callback      = isset($_GET['callback']) ? $_GET['callback'] : null;
 $issetcallback = !empty($callback) ? true : false;
