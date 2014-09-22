@@ -44,7 +44,10 @@ if (version_compare($phpv, '5.2', '>=')) {
     // date.timezone settings required since PHP 5.3
     if (version_compare($phpv, '5.3', '>=') && !ini_get('date.timezone')) date_default_timezone_set('Etc/GMT');
     // Compress output with Gzip, PHP 5.4.4 bug https://bugs.php.net/bug.php?id=55544
-    if (version_compare($phpv, '5.4.5', '>') && !ob_start('ob_gzhandler')) ob_start();
+    if (version_compare($phpv, '5.4', '>') && extension_loaded('zlib')) {
+        ob_end_clean();
+        ob_start('ob_gzhandler');
+    }
 } else {
     $comp = false;
     $fix .= "\n* upgrade to PHP 5.2 or later";
