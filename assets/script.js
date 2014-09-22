@@ -71,7 +71,11 @@
         me2,
 
         host = l.host,
-        path = '/ajax-seo/', // script.js?path=/pathtosite/ d.currentScript.src.split('?')[1] not supported on IE11
+        currentScript = d.currentScript || (function () {
+            var script = d.getElementsByTagName('script');
+            return script[script.length - 1];
+        }()),
+        path = currentScript.src.split('#')[1] || '/ajax-seo/',
         selector = '.x',
         nav = d.querySelector('nav'),
         x   = nav ? nav.querySelectorAll(selector) : null,
@@ -188,9 +192,9 @@
     function closest(el, selector) { // http://jsperf.com/native-vs-jquery-closest
         // console.log('------------------ closest');
         // Element.matches() supported in Firefox 34, based on Gecko 34, will ship in November 2014 https://developer.mozilla.org/en-US/Firefox/Releases/34
-        var matchesSelector = el.matches || el.webkitMatchesSelector || el.mozMatchesSelector || el.msMatchesSelector;
+        var matches = el.matches || el.webkitMatchesSelector || el.mozMatchesSelector || el.msMatchesSelector;
         while (el && el.nodeType === 1) {
-            if (matchesSelector.call(el, selector)) { return el; }
+            if (matches.call(el, selector)) { return el; }
             el = el.parentNode;
         }
         return null;
