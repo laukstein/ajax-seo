@@ -40,7 +40,7 @@ class cache {
 
     // Latest update
     public static function all() {
-        self::http(self::$dbcon ? max(date::db(), date::file('appcache|css|js|php|txt|xml')) : date::file('appcache|css|js|php|txt|xml'));
+        self::http(self::$dbcon ? max(date::db(), date::file()) : date::file());
     }
 }
 
@@ -83,18 +83,22 @@ class date {
 
     // Recent file update filtered by type
     public static function file($type) {
-        $directory = new RecursiveDirectoryIterator('.');
-        $iterator  = new RecursiveIteratorIterator($directory);
-        $regex     = new RegexIterator($iterator, '/.+\.(' . $type . ')/');
-        $date      = array();
+        $directory = new RecursiveDirectoryIterator('.', FilesystemIterator::SKIP_DOTS);
+        $filter    = new RecursiveCallbackFilterIterator($directory, function ($current, $key, $iterator) {
+            // 3.5x TTFB improvement by excluding dot files/directories like .htaccess and .git
+            return substr($current->getFilename(), 0, 1) !== '.';
+        });
+        $iterator = new RecursiveIteratorIterator($filter, RecursiveIteratorIterator::SELF_FIRST);
+        $regex    = new RegexIterator($iterator, '/.+\.(' . $type . ')/');
+        $date     = array();
 
-        foreach($regex as $key) $date[] = $key->getMTime();
+        foreach($regex as $fileInfo) $date[] = $fileInfo->getMTime();
 
         return date('Y-m-d H:i:s', max($date));
     }
 
     // Latest update
     public static function all() {
-        return max(self::db(), self::file('appcache|css|js|php|txt|xml'));
+        return max(self::db(), self::file());
     }
 }
