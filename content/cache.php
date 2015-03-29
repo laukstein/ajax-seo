@@ -51,7 +51,7 @@ class date {
 
         $stmt = $mysqli->prepare('SELECT GREATEST(updated, created) AS date FROM `' . table . '` WHERE url=? LIMIT 1');
 
-        $stmt->bind_param('s', $url);
+        $stmt->bind_param('s', $urldb);
         $stmt->execute();
         $stmt->bind_result($date);
         $stmt->fetch();
@@ -82,7 +82,7 @@ class date {
     }
 
     // Recent file update filtered by type
-    public static function file($type) {
+    public static function file($type = '') {
         $directory = new RecursiveDirectoryIterator('.', FilesystemIterator::SKIP_DOTS);
         $filter    = new RecursiveCallbackFilterIterator($directory, function ($current, $key, $iterator) {
             // 3.5x TTFB improvement by excluding dot files/directories like .htaccess and .git
