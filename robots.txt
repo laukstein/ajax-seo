@@ -5,13 +5,23 @@
 
 include 'content/config.php';
 include 'content/cache.php'; cache::me();
-header('Content-Type: text/plain');
 
-// Global rules
+// Allow crawl all content
 echo "User-agent: *\nDisallow:";
+
 // Removing Documents From the Wayback Machine archive.org
 echo "\n\nUser-agent: ia_archiver\nDisallow: /";
-// Disable *.domaintools.com crawler
-echo "\n\nUser-agent: SurveyBot\nDisallow: /";
-// Be sure your sitemap.xml path is correct
-echo "\n\nSitemap: http://$host{$path}sitemap.xml";
+
+// Reduce bandwidth on blocking unwanted crawlers
+echo "\n\nUser-agent: AhrefsBot\nDisallow: /
+\nUser-agent: Exabot\nDisallow: /
+\nUser-agent: meanpathbot\nDisallow: /
+\nUser-agent: MJ12bot\nDisallow: /
+\nUser-agent: nibbler\nDisallow: /
+\nUser-agent: SurveyBot\nDisallow: /
+\nUser-agent: XoviBot\nDisallow: /";
+
+// Add sitemap.xml if exists
+if (file_exists('sitemap.xml')) {
+    echo "\n\nSitemap: $scheme://$host$path/sitemap.xml";
+}
