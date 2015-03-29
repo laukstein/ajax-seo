@@ -39,7 +39,7 @@ $array = array(
 // Add option "JSON_PRETTY_PRINT" in case you care more readability than to save some bits
 $data = json_encode($array, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 if (version_compare(PHP_VERSION, '5.4', '<')) {
-    $data = preg_replace('/\\\\u([a-f0-9]{4})/e', "iconv('UCS-4LE', 'UTF-8', pack('V',  hexdec('U$1')))", json_encode($array));
+    $data = preg_replace('/\\\\u([a-f0-9]{4})/e', "iconv('UCS-4LE', 'utf-8', pack('V',  hexdec('U$1')))", json_encode($array));
     $data = str_replace('\\/', '/', $data);
 }
 
