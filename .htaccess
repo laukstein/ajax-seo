@@ -5,9 +5,9 @@
     # Filename-based cache busting
     RewriteRule assets/(.+)-(\d{1,8}+).(.+)$ assets/$1.$3 [L]
 
-    # URL rewrite and secure directory /.config and /content
+    # URL rewrite and secure directory /~config and /content
     RewriteRule ^api(?:/(.*))?$ index.php?api&url=$1 [QSA,L]
     RewriteCond %{REQUEST_FILENAME} !-f [OR]
-    RewriteCond %{REQUEST_URI} ^/(.config|content)($|/)
+    RewriteCond %{REQUEST_URI} ^/(~config|content)($|/)
     RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
 </IfModule>
