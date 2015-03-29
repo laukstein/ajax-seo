@@ -3,13 +3,12 @@
 include 'content/config.php';
 include 'content/connect.php';
 include 'content/cache.php'; cache::all();
-header('Content-Type: text/plain');
 
 echo '/* SITE */
 Author:         Binyamin Laukstein
 Contact:        http://laukstein.com/contact
-Last update:    ' . date('D, d M Y H:i:s T', strtotime(date::all())) . '
-Standards:      HTML Living Standard, Microdata, JavaScript
+Last update:    ' . date('Y-m-d\TH:i\Z', strtotime(date::all())) . '
+Standards:      HTML Living Standard, Microdata, CSS, JavaScript
 Source:         https://github.com/laukstein/ajax-seo';
 
 $mysqli->close();

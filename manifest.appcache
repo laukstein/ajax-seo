@@ -9,17 +9,16 @@
 include 'content/config.php';
 include 'content/connect.php';
 include 'content/cache.php'; cache::medb();
-header('Content-Type: text/cache-manifest; charset=utf-8');
 
 echo 'CACHE MANIFEST
-# ' . date('D, d M Y H:i:s T', strtotime(date::all())) . "\n$path";
+# ' . date('Y-m-d\TH:i\Z', strtotime(date::all())) . "\n\n". (strlen($path) ? $path : '/');
 
 // Explicitly cached entries
 if ($stmt = $mysqli->prepare('SELECT url FROM `' . table . '`')) {
     $stmt->execute();
     $stmt->bind_result($url);
 
-    while ($stmt->fetch()) echo "\n{$path}api" . (!empty($url) ? '/' : null) . $url;
+    while ($stmt->fetch()) echo "\n$path/api" . (strlen($url) ? "/$url" : null);
 
     $stmt->free_result();
     $stmt->close();
@@ -27,8 +26,7 @@ if ($stmt = $mysqli->prepare('SELECT url FROM `' . table . '`')) {
 
 $mysqli->close();
 
-// echo "\n" . assets . "style$ver.css
-// " . assets . "script$ver.js";
+// echo "\n" . assets . "style.css\n" . assets . "script.js";
 
 // FALLBACK:
 
