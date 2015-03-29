@@ -1,14 +1,15 @@
 <?php
 //
-// Sitemaps https://support.google.com/webmasters/answer/183668
+// Sitemap https://support.google.com/webmasters/answer/183668
+// 50,000 URLs or maximum size of 10MB http://googlewebmastercentral.blogspot.com/2014/10/best-practices-for-xml-sitemaps-rssatom.html
 //
 
 include 'content/config.php';
 include 'content/connect.php';
 include 'content/cache.php'; cache::medb();
-header('Content-Type: application/xml');
 
-echo '<?xml version="1.0" encoding="UTF-8"?>
+echo '<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="' . $scheme . '://' . $host . $path . '/sitemap.xsl"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
     xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
     xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">';
@@ -17,7 +18,7 @@ if ($stmt = $mysqli->prepare('SELECT url, GREATEST(updated, created) AS date FRO
     $stmt->execute();
     $stmt->bind_result($url, $date);
 
-    while ($stmt->fetch()) echo "\n    <url>\n        <loc>$scheme://$host$path$url</loc>\n        <lastmod>" . date('c', strtotime($date)) . "</lastmod>\n    </url>";
+    while ($stmt->fetch()) echo "\n    <url>\n        <loc>$scheme://$host$path" . (strlen($url) ? "/$url" : null) . "</loc>\n        <lastmod>" . date('Y-m-d\TH:i\Z', strtotime($date)) . "</lastmod>\n    </url>";
 
     $stmt->free_result();
     $stmt->close();
