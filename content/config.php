@@ -3,13 +3,9 @@
 // Global configuration
 //
 
-$f   = __FILE__;
-$ver = '-' . rand(); // Use filename-based versioning to avoid assets cache issue
-
-define('debug', true);
-
 // Debug mode
-if (debug && in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1'))) {
+define('debug', false);
+if (debug && !!preg_match('/^(127.0.0.1|10.0.0.\d{1,3})$/', $_SERVER['REMOTE_ADDR'])) {
     // Development
     error_reporting(E_ALL);
     $debug = true;
@@ -42,7 +38,7 @@ if (version_compare($phpv, '5.4', '<')) include 'content/function.http-response-
 // PHP 5.2 backward compatibility
 if (version_compare($phpv, '5.2', '>=')) {
     // date.timezone settings required since PHP 5.3
-    if (version_compare($phpv, '5.3', '>=') && !ini_get('date.timezone')) date_default_timezone_set('Etc/GMT');
+    if (version_compare($phpv, '5.3', '>=') && !ini_get('date.timezone')) date_default_timezone_set('UTC');
     // Compress output with Gzip, PHP 5.4.4 bug https://bugs.php.net/bug.php?id=55544
     if (version_compare($phpv, '5.4', '>') && extension_loaded('zlib')) {
         ob_end_clean();
@@ -74,21 +70,25 @@ function string($str) {
 }
 
 // Common variables
-$scheme      = $_SERVER['SERVER_PORT'] == 443 ? 'https' : 'http';
-$request_uri = rawurldecode($_SERVER['REQUEST_URI']);
-$uri         = $scheme . '://' . $host . $request_uri;
-$url         = isset($_GET['url']) ? $_GET['url'] : null;
-$basename    = basename($url);
-$path        = str_replace('\\', '/', pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_DIRNAME));
-if ($path !== '/') $path .= '/';
+$file   = __FILE__;
+$scheme = $_SERVER['SERVER_PORT'] == 443 ? 'https' : 'http';
+$url    = rawurldecode($_SERVER['REQUEST_URI']);
+$url    = $url === '/' ? null : $url;
+$uri    = $scheme . '://' . $host . $url;
+$urlend = basename($url);
+$path   = str_replace($_SERVER['DOCUMENT_ROOT'], '', str_replace('\\', '/', getcwd()));
+$urldb  = empty($_GET['url']) ? '' : $_GET['url']; // PHP7 : $_GET['url'] ?? ''; // https://www.bram.us/2014/10/16/php-null-coalesce-operator/
 
-define('hostname', 'localhost');
+// 1-2s TTFB improvement by avoiding IPV6 lookup for the hostname
+// hostname "localhost" will cause extra time http://thisinterestsme.com/slow-mysqli-connection/
+define('hostname', '127.0.0.1');
 define('username', 'root');
 define('password', '');
 define('database', 'test');
 define('table', 'ajax-seo');
 define('connection', false);
-define('assets', string('{$path}assets/'));
+// Assets URL default: string('{$path}/assets/')
+define('assets', string('{$path}/assets/'));
 define('title', 'Ajax SEO');
+// Google Analytics configuration
 define('ga', '');
-define('ga_domain', '');

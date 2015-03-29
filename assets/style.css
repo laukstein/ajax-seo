@@ -15,15 +15,11 @@ http://screwlewse.com/2010/08/different-css-techniques-and-their-performance/ */
 /* @viewport should be inlined in HTML to avoid scaling and native responsive images issues, http://vimeo.com/93347500 21 min */
 @viewport {
     width: device-width;
-    max-zoom: 1;
+    zoom: 1;
 }
 
 /* Stabilization
 -------------------------------------------------- */
-::selection {
-    text-shadow: none;
-    background-color: rgba(180,180,180,.5);
-}
 html, body {
     height: 100%;
 }
@@ -31,7 +27,7 @@ html, input, select, textarea, button {
     color: #222;
     font-family: Cambria, Georgia, serif;
 }
-html, form, input, ::-webkit-input-placeholder, button, .button {
+html, label, input, ::-webkit-input-placeholder, button, .button {
     /* Remove user-select for easer debugging */
     -webkit-user-select: none;
        -moz-user-select: none;
@@ -43,8 +39,12 @@ html {
     font-size: 62.45%; /* Make 1em = 10px = 2.5rem */
     line-height: 1.5;
     text-rendering: optimizeSpeed;
-    background-color: #f8f9fa;
     /* -ms-text-size-adjust property will be ignored where the viewport tag is present */
+    background-color: #f8f9fa;
+
+    /* Smoother scroll, faster clicks http://updates.html5rocks.com/2013/12/300ms-tap-delay-gone-away */
+    -ms-touch-action: manipulation;
+        touch-action: manipulation;
     cursor: default;
 }
 body, dl, dd, blockquote, figure {
@@ -53,7 +53,8 @@ body, dl, dd, blockquote, figure {
 body {
     font-size: 1.9em; /* rem unit is too buggy https://code.google.com/p/chromium/issues/detail?id=362113 and not so flexible, not standardised in @media query condition */
     overflow-wrap: break-word;
-    /* CSS4 hyphenation http://generatedcontent.org/post/44751461516/finer-grained-control-of-hyphenation-with-css4-text */
+    /* CSS4 hyphenation http://generatedcontent.org/post/44751461516/finer-grained-control-of-hyphenation-with-css4-text
+       Chrome issue https://code.google.com/p/chromium/issues/detail?id=47083 */
     -ms-hyphenate-limit-chars: 6 3 2;
         hyphenate-limit-chars: 6 3 2;
     -webkit-hyphens: auto;
@@ -61,14 +62,12 @@ body {
         -ms-hyphens: auto;
             hyphens: auto;
 }
-main, label {
+main {
+    display: block; /* IE10, Opera 12.16 and old Webkit legacy */
     -webkit-user-select: text;
        -moz-user-select: text;
         -ms-user-select: text;
             user-select: text;
-}
-main {
-    display: block; /* IE10, Opera 12.16 and old Webkit legacy */
 }
 h1, h2, h3, dt {
     line-height: 1.07;
@@ -79,12 +78,16 @@ h1, h2 {
     margin-top: .2em;
     margin-bottom: .2em;
 }
+h1:first-line,
+h2:first-line {
+    font-size: 150%;
+}
 h1 {
-    font-size: 2.65em;
+    font-size: 1.9em;
 }
 h2 {
     color: #777;
-    font-size: 2em;
+    font-size: 1.5em;
 }
 h3, dt {
     margin-top: .3em;
@@ -109,6 +112,9 @@ blockquote cite {
 blockquote cite:before {
     content: "\2014 \00A0";
     color: #777;
+}
+cite {
+    display: block; /* Chrome ::selection related issue */
 }
 br {
     word-spacing: 0;
@@ -141,14 +147,16 @@ a, img {
     -webkit-user-drag: none;
             user-drag: none;
 }
-a {
+a[href] {
     color: #0f4cd5;
     text-decoration: none;
     /*touch-action: none;*/ /* Chrome Android avoids scroll on touch
                                Disable double-tap-zoom http://msdn.microsoft.com/en-us/library/windows/apps/Hh767313.aspx */
+    -webkit-box-decoration-break: clone; /* Chrome legacy, demo http://jsbin.com/xojoro/quiet */
+            box-decoration-break: clone;
     cursor: default;
 }
-a:hover, a:focus {
+a[href]:hover, a[href]:focus {
     color: #0e439b;
     text-decoration: underline;
 }
@@ -177,13 +185,28 @@ label {
     padding-bottom: .2em;
     padding-top: .2em;
 }
+::selection {
+    text-shadow: none;
+    background-color: rgba(180,180,180,.5);
+}
+:placeholder-shown {
+    /* W3C http://dev.w3.org/csswg/selectors4/#placeholder
+       Firefox https://bugzilla.mozilla.org/show_bug.cgi?id=1069012
+       Chrome https://code.google.com/p/chromium/issues/detail?id=451120
+       Webkit https://bugs.webkit.org/show_bug.cgi?id=118162
+
+       Apply Firefox approach http://jsbin.com/fesunu/1/quiet
+       resource://gre-resources/forms.css
+       https://bugzilla.mozilla.org/show_bug.cgi?id=556145 */
+    opacity: 0.54;
+    color: inherit;
+}
 input, select, textarea, button, .button {
     width: 20em;
     padding: .6em .7em;
     margin: .15em 0;
     font-size: 1em;
     line-height: 1.25;
-    vertical-align: middle;
     background-color: #fff;
     border: 1px solid #b1b2b2;
     box-sizing: border-box;
@@ -201,20 +224,17 @@ textarea:hover, textarea:focus {
     border-color: #9f9f9f;
     box-shadow: inset 0 1px 3px rgba(0,0,0,.15);
 }
-:placeholder-shown {
-    /* W3C placeholder http://dev.w3.org/csswg/selectors4/#placeholder */
-    color: #c3c3c3;
-}
 [type=checkbox], [type=radio], [type=image], [type=file], [type=color] {
     /* Reset */
     width: auto;
     padding: 0;
+    border: 0;
     box-sizing: padding-box;
 }
 select, button, .button {
     overflow: hidden;
     display: inline-block;
-    white-space: nowrap;
+    white-space: nowrap; /* Mobile button text wrapping fix for button */
     text-align: center;
     text-overflow: ellipsis;
     background-color: #f4f4f4;
@@ -226,21 +246,25 @@ select, button, .button {
 .button {
     width: auto;
 }
-a.button {
+a[href].button {
     color: inherit;
     text-decoration: none;
 }
 select:hover, select:focus,
 button:hover, button:focus,
 .button:hover, .button:focus {
+    background-color: #f6f6f6;
     border-color: #9f9f9f;
-    background-color: rgba(228,228,228,.3);
 }
 select:active,
 button:active,
 .button:active {
     background-color: #e2e4e5;
     box-shadow: none;
+}
+option[value=""] {
+    /* First element as placeholder, fails on IE */
+    display: none;
 }
 [tabindex] {
     outline: 0;
@@ -300,15 +324,19 @@ button:active,
     right: 0;
     left: 0;
     line-height: 2.2;
-    font-family: Open Sans, Meiryo, Segoe UI, sans-serif;
+    font-family: Segoe UI, Open Sans, sans-serif; /* "Meiryo" returns ellipsis in middle of text */
     text-align: center;
     white-space: nowrap;
 }
 .bar {
     display: none;
+    box-suppress: discard; /* It is recommended that box-suppress be used instead of display: none,
+                              so that the element's display type is automatically preserved for when it's no longer suppressed.
+                              http://dev.w3.org/csswg/css-display/#propdef-box-suppress */
 }
 .focusout {
     display: none;
+    box-suppress: discard;
 }
 .header, .main, .footer {
     width: 95%;
@@ -336,11 +364,14 @@ button:active,
     pointer-events: none;
 }
 .nav {
+    overflow: hidden; /* IE11 issue */
     display: inline-block;
     display: -webkit-box; /* Android 2.3 legacy */
+    display: -ms-flexbox; /* IE10 legacy */
     display: flex;
+    width: 100%;
     margin: .1em auto;
-    line-height: 2.1;
+    font-size: 1.05em;
     background-color: #f3f3f3;
     background-image: -webkit-linear-gradient(#f8f8f8, rgba(248,249,250,0)); /* Safari, iOS and Android fallback */
     background-image:         linear-gradient(#f8f8f8, rgba(248,249,250,0));
@@ -350,12 +381,11 @@ button:active,
     box-shadow: 0 1px 1px rgba(0,0,0,.1),
                 inset 0 0 0 1px rgba(255,255,255,.5);
 }
-.nav a, .footer a {
+.nav.nav a, .footer a {
     color: inherit;
     text-decoration: none;
 }
 .nav a {
-    overflow: hidden;
     display: block;
     position: relative; /* Old Webkit visibility issue */
     z-index: 1;
@@ -364,9 +394,8 @@ button:active,
         flex: 1;
     flex-basis: auto;
     min-width: 0;
-    max-height: 2.15em; /* Old Webkit legacy */
-    padding: 0 .4em; /* Firefox flexbox padding percentage issue https://bugzilla.mozilla.org/show_bug.cgi?id=529761 */
-    text-overflow: ellipsis;
+    max-height: 2.3em; /* Old Webkit legacy */
+    padding: 0 .43em; /* Firefox flexbox padding percentage issue https://bugzilla.mozilla.org/show_bug.cgi?id=529761 */
     border: 0 solid #d9e0e2;
     border-left-width: 1px;
 }
@@ -389,16 +418,23 @@ button:active,
     background-color: #f1e2e2;
 }
 .nav a.active {
-    position: relative;
-    z-index: 1;
     margin: -1px auto;
     color: #fff;
-    line-height: 2.2;
+    line-height: 2.25;
     background-color: #006cff;
     border-color: transparent;
 }
 .nav .active + a {
     border-color: transparent;
+}
+.nav span {
+    overflow: hidden;
+    display: block;
+    position: relative;
+    top: -.06em;
+    text-overflow: clip;
+    -webkit-mask: linear-gradient(to left, rgba(0,0,0,0), #000 1.5em, #000); /* Chrome legacy */
+            mask: linear-gradient(to left, rgba(0,0,0,0), #000 1.5em, #000);
 }
 .main, .footer {
     position: relative;
@@ -409,7 +445,7 @@ button:active,
     overflow: hidden;
     min-height: 100%;
     padding-top: 3.8em;
-    padding-bottom: 4.1em;
+    padding-bottom: 6em;
     will-change: contents;
 }
 .main :target {
@@ -458,31 +494,27 @@ button:active,
 
 /* Cross-browser compatibility
 -------------------------------------------------- */
-[hidden], template { /* Unsupported attribute http://dev.w3.org/html5/spec/single-page.html#the-hidden-attribute */
+template {
     display: none;
+    box-suppress: discard;
 }
-/* IE @media hacks http://blog.keithclark.co.uk/moving-ie-specific-css-into-media-blocks/ */
-@media \0screen\,screen\9 { /* IE6-8 */
+@media \0screen\,screen\9 { /* IE6-8 http://keithclark.co.uk/articles/moving-ie-specific-css-into-media-blocks/media-tests/ */
     .header {
         max-width: 100%;
     }
     .nav {
         display: table;
-        width: 100%;
         table-layout: fixed;
-        border-collapse: collapse;
     }
     .nav a {
         display: table-cell;
     }
+	[hidden],
     .handler {
         display: none;
     }
 }
-@media (min-width:0\0) { /* IE9-10 http://www.impressivewebs.com/ie10-css-hacks/ */
-    a {
-        background-color: inherit; /* Remove IE10 :active gray background-color */
-    }
+@media (min-width:0\0) and (min-resolution: .001dpcm) { /* IE9 https://github.com/jeffclayton/css_hack_testing */
     .nav,
     .nav a:first-of-type,
     .nav a:last-of-type {
@@ -490,34 +522,41 @@ button:active,
     }
     .nav {
         display: table;
-        width: 100%;
         table-layout: fixed;
     }
     .nav a {
         display: table-cell;
     }
+	[hidden],
     .handler {
         display: none;
     }
 }
-@media (-ms-high-contrast: active), (-ms-high-contrast: none) { /* IE10+ */
+@media (-ms-high-contrast: active), (-ms-high-contrast: none) { /* IE10+ http://www.impressivewebs.com/ie10-css-hacks/ */
+    html, textarea, .nav {
+        /* Auto-hide scrollbar */
+        -ms-overflow-style: -ms-autohiding-scrollbar;
+    }
+    a {
+        background-color: initial; /* Remove IE10 :active gray background-color */
+    }
+    select {
+        -ms-user-select: none; /* Disable text highlight on elemnt blur on IE11 */
+    }
     :-ms-input-placeholder {
-        color: #c3c3c3;
+        opacity: 0.54;
     }
-    .nav {
-        display: -ms-flexbox;
-        display: flex;
+    ::-ms-clear {
+        display: none; /* Remove input x */
     }
-    .nav a {
-        display: block;
+    select:focus::-ms-value {
+        /* Remove focused element highlight on IE11 */
+        color: initial;
+        background-color: initial;
     }
-    @media (max-width: 540px) {
-        .tab {
-            text-align: left;
-        }
-        .header, .footer {
-            text-align: left;
-        }
+    [hidden] {
+        display: none;
+        box-suppress: discard;
     }
 }
 @media (-webkit-min-device-pixel-ratio: 0) { /* Webkit */
@@ -532,7 +571,7 @@ button:active,
     html {
         -webkit-font-smoothing: antialiased; /* Old Webkit smooth text rendering issue */
         -webkit-text-size-adjust: 100%;
-        /*-webkit-perspective: 1000;*/ /* Breaks position:fixed;
+        /*-webkit-perspective: 1000;*/ /* Breaks position: fixed
                                           Android repaint issue on screen orientation change */
     }
     a, input, select, textarea, button, [tabindex] {
@@ -544,7 +583,9 @@ button:active,
         -webkit-touch-callout: none; /* iOS remove bubble dialog on tap-holding */
     }
     ::-webkit-input-placeholder {
-        color: #c3c3c3;
+        opacity: 0.54;
+        color: inherit;
+        -webkit-user-select: none;
     }
 }
 @-moz-document url-prefix() { /* Firefox */
@@ -559,8 +600,11 @@ button:active,
         background-image: none;
         border-radius: 0;
     }
-    ::-moz-placeholder {
-        color: #c3c3c3;
+    input::-moz-focus-inner,
+    button::-moz-focus-inner {
+        /* Remove button padding */
+        border: 0;
+        padding: 0;
     }
 }
 
@@ -583,26 +627,41 @@ button:active,
         /* Reset */
         width: auto;
     }
-    #status:not(.expand) ~ .tab .header,
-    #status:not(.expand) ~ .footer {
+    #status:not(.expand) ~ .tab .header {
         -webkit-transition: none; /* Safari, Android and iOS legacy */
                 transition: none;
     }
     .tab {
+        z-index: 100;
+        width: 100%;
+        width: 75%\9\0; /* IE9 legacy */
         padding-bottom: .2em;
         text-align: left; /* IE9 legacy */
         text-align: start;
-        padding-bottom: .2em;
         background-image: -webkit-linear-gradient(#fff, rgba(255,255,255,.9) 35%, rgba(255,255,255,.8) 50%, rgba(255,255,255,0)); /* Safari, iOS and Android fallback */
         background-image:         linear-gradient(#fff, rgba(255,255,255,.9) 35%, rgba(255,255,255,.8) 50%, rgba(255,255,255,0));
+        pointer-events: none;
     }
     .bar {
+        width: auto;
+        height: 2.35em;
+        padding: inherit;
+        margin: inherit;
+        background-color: transparent;
+        border: inherit;
+        box-shadow: inherit;
+
+        all: unset; /* No support on IE10 and Safari */
+
         display: inline-block;
         position: relative;
+        vertical-align: top; /* IE11: remove top margin */
         z-index: 3;
     }
-    .bar:hover,
-    .bar:focus {
+    .bar, .nav {
+        pointer-events: auto;
+    }
+    .bar:hover, .bar:focus {
         background-color: rgba(0,0,0,.06);
     }
     .bar span,
@@ -613,12 +672,12 @@ button:active,
         height: .21em;
         background-color: #222;
         border-radius: .1em;
-        -webkit-transition: .35s cubic-bezier(.2,1,.4,1); /* Android 4.3 legacy */
-                transition: .35s cubic-bezier(.2,1,.4,1); /* Simulation http://cubic-bezier.com/#.2,1,.4,1 */
+        -webkit-transition: width .1s, background-color 1ms, -webkit-transform .35s cubic-bezier(.2,1,.4,1); /* Android 4.3 legacy */
+                transition: width .1s, background-color 1ms, transform .35s cubic-bezier(.2,1,.4,1); /* Simulation http://cubic-bezier.com/#.2,1,.4,1 */
     }
     .bar span {
         position: relative;
-        margin: 1.07em .65em 1.07em .45em;
+        margin: 1.07em .65em 1.07em .55em;
         transform: translateY(0); /* Firefox 34 Nightly width fix */
         -webkit-transition-duration: .15s; /* Android 4.3 legacy */
                 transition-duration: .15s;
@@ -635,6 +694,7 @@ button:active,
     .bar span:after {
         content: "";
         position: absolute;
+        width: .9em;
         -webkit-transform: translateY(.42em); /* Webkit legacy */
             -ms-transform: translateY(.42em); /* IE9 legacy */
                 transform: translateY(.42em);
@@ -649,13 +709,13 @@ button:active,
                 transform: rotate3d(0,0,1,45deg); /* Chrome rotation offset fix */
     }
     .expand ~ .tab .bar span:after {
+        width: 1.3em;
         -webkit-transform: rotate(-45deg); /* Webkit legacy */
         -webkit-transform: rotate3d(0,0,1,-45deg); /* Chrome rotation offset fix */
             -ms-transform: rotate(-45deg); /* IE9 legacy */
                 transform: rotate3d(0,0,1,-45deg); /* Chrome rotation offset fix */
     }
-    .expand ~ .tab .header,
-    .expand ~ .footer {
+    .expand ~ .tab .header {
         -webkit-transform: none; /* Webkit legacy */
             -ms-transform: none; /* IE9 legacy */
                 transform: none;
@@ -663,26 +723,20 @@ button:active,
     .focusout {
         display: inline;
     }
-    .header, .main, .footer {
-        min-width: 13.6em;
-    }
-    .header, .footer {
+    .header {
         position: fixed;
+        top: 0;
         left: 0;
         bottom: 0;
         width: 75%;
         padding: 0;
+        background-color: #f8f9fa;
+        border: 0;
         -webkit-transform: translateX(-100%); /* Webkit legacy */
             -ms-transform: translateX(-100%); /* IE9 legacy */
                 transform: translateX(-100%);
         -webkit-transition: -webkit-transform .35s cubic-bezier(.2,1,.4,1); /* Android 4.3 legacy */
                 transition:         transform .35s cubic-bezier(.2,1,.4,1);
-    }
-    .header {
-        top: 0;
-        padding-bottom: 6.3em;
-        background-color: #f8f9fa;
-        border: 0;
     }
     .header:before,
     .header:after {
@@ -727,83 +781,50 @@ button:active,
     .expand ~ .tab .header {
         box-shadow: 0 0 4em rgba(0,0,0,.3);
     }
-    .nav, .footer {
-        overflow: auto;
-        border: 0;
-        -webkit-overflow-scrolling: touch; /* iOS 7 legacy */
-    }
-    .footer {
-        overflow: visible;
-        z-index: 100;
-        height: auto;
-        line-height: 2.1;
-        background-color: #f8f9fa;
-    }
-    .footer:before {
-        content: "";
-        position: absolute;
-        top: -1.5em;
-        left: 0;
-        right: 0;
-        height: 1.5em;
-        background-image: -webkit-linear-gradient(rgba(248,249,250,0), rgba(248,249,250,.8) 50%, rgba(248,249,250,.9) 60%, #f8f9fa); /* Safari, iOS and Android fallback */
-        background-image:         linear-gradient(rgba(248,249,250,0), rgba(248,249,250,.8) 50%, rgba(248,249,250,.9) 60%, #f8f9fa);
-        pointer-events: none;
-    }
-    .nav, .nav a:first-of-type, .nav a:last-of-type {
+    .nav,
+    .nav a:first-of-type,
+    .nav a:last-of-type {
         border-radius: 0;
     }
     .nav {
         overflow: auto;
         display: block;
         height: 100%;
-        padding: 2.35em 0;
+        padding: 2.3em 0;
         margin: 0;
         background: none;
+        border: 0;
         box-shadow: none;
         box-sizing: border-box;
     }
-    .nav.nav a, .footer a { /* Increase selector specificity http://vimeo.com/100264064 minute 03:30 */
+    .nav.nav a { /* Increase selector specificity http://vimeo.com/100264064 minute 03:30 */
         display: block;
-        padding: 0 1.3em;
-        float: none; /* IE legacy issue */
-        border-color: #eef0f0;
-    }
-    .nav a {
         -webkit-box-flex: 0; /* Android 2.3 legacy */
         -webkit-flex: 0;
             -ms-flex: 0;
                 flex: 0;
+        padding: 0 1.3em;
+        float: none; /* IE legacy issue */
+        border-color: #eef0f0;
         border-width: 0;
         border-top-width: 1px;
     }
-    .nav a:first-child, .footer a:first-child {
+    .nav a:first-child {
         border-top-width: 0;
     }
     .main {
-        overflow: visible;
-        width: 100%;
-        padding: 2em 1.7em;
+        overflow-x: auto;
+        width: auto;
+        min-width: 13.6em;
+        padding: 2em 1.9em 3.2em;
         border: 0;
     }
     .main [id]:before {
         padding-top: 1.8em;
         margin-top: -1.8em;
     }
-    .footer a + a {
-        margin-left: 0;
-    }
-    .footer a {
-        overflow: hidden;
-        color: inherit;
-        text-overflow: ellipsis;
-        border-top-width: 1px;
-        border-top-style: solid;
-    }
-    .footer a:hover, .footer a:focus {
-        color: #222;
-        text-decoration: none;
-        background-color: #fff;
+    .footer {
+        display: none;
     }
 }
 @media (max-width: 320px) {
@@ -811,10 +832,10 @@ button:active,
         font-size: 58%;
     }
     h1 {
-        font-size: 2em;
+        font-size: 1.5em;
     }
     h2 {
-        font-size: 1.6em;
+        font-size: 1.2em;
     }
     h3, dt {
         font-size: 1.3em;

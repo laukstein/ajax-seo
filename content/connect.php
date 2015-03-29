@@ -20,14 +20,14 @@ if ($conn) {
 
         header('Cache-Control: no-cache, no-store, must-revalidate'); // Chrome issue https://code.google.com/p/chromium/issues/detail?id=2763, requires "no-store" to avoid cache
 
-        $note = "\n<style scoped>@-webkit-keyframes slide-down{0%{-webkit-transform:translateY(-110%);transform:translateY(-110%)}10%,90%{-webkit-transform:translateY(0);transform:translateY(0)}100%{-webkit-transform:translateY(-110%);transform:translateY(-110%)}}@keyframes slide-down{0%,100%{transform:translateY(-110%)}10%,90%{transform:translateY(0)}}.note{overflow:hidden;position:fixed;z-index:10000;top:0;left:0;right:0;padding:.5em 3%;text-align:center;text-overflow:ellipsis;text-shadow:1px 1px 0 rgba(255,255,255,.7);white-space:nowrap;background-color:#fd0;border:0 solid transparent;border-width:0 1em;box-sizing:border-box;-webkit-transition-duration:.3s;transition-duration:.3s;-webkit-animation:slide-down 4s forwards;animation:slide-down 4s forwards}.note:hover{-webkit-transform:translateY(0);transform:translateY(0)}#note:checked~.note{-webkit-transform:translateY(-110%);transform:translateY(-110%);-webkit-animation:inherit;animation:inherit}</style>
+        $note = "\n<style scoped>@-webkit-keyframes slide-down{0%{-webkit-transform:translateY(-110%);transform:translateY(-110%)}10%,90%{-webkit-transform:translateY(0);transform:translateY(0)}100%{-webkit-transform:translateY(-110%);transform:translateY(-110%)}}@keyframes slide-down{0%,100%{transform:translateY(-110%)}10%,90%{transform:translateY(0)}}.note{overflow:hidden;position:fixed;z-index:10000;top:0;left:0;right:0;padding:.6em 3%;text-align:center;text-overflow:ellipsis;text-shadow:1px 1px 0 rgba(255,255,255,.7);white-space:nowrap;background-color:#fd0;border:0 solid transparent;border-width:0 1em;box-sizing:border-box;-webkit-transition-duration:.3s;transition-duration:.3s;-webkit-animation:slide-down 4s forwards;animation:slide-down 4s forwards}.note:hover{-webkit-transform:translateY(0);transform:translateY(0)}#note:checked~.note{-webkit-transform:translateY(-110%);transform:translateY(-110%);-webkit-animation:inherit;animation:inherit}</style>
 <!--noindex-->
 <input id=note type=checkbox hidden>
 <label for=note class=note>Congratulations for successful installation</label>
 <!--/noindex-->";
 
-        $string = preg_replace("/define\('(connection)', false\);/", "define('$1', true);", file_get_contents($f));
-        $fopen  = fopen($f, 'w');
+        $string = preg_replace("/define\('(connection)', false\);/", "define('$1', true);", file_get_contents($file));
+        $fopen  = fopen($file, 'w');
         fwrite($fopen, $string);
         fclose($fopen);
     }
@@ -42,18 +42,17 @@ if ($conn) {
     function refresh() {
         global $path;
         ob_end_clean();
-        header('Location: ' . $path);
+        header('Location: ' . (strlen($path) ? $path : '.'));
         exit;
     }
-
     if (connection) {
-        $string = preg_replace("/define\('(connection)', true\);/", "define('$1', false);", file_get_contents($f));
-        $fopen  = fopen($f, 'w');
+        $string = preg_replace("/define\('(connection)', true\);/", "define('$1', false);", file_get_contents($file));
+        $fopen  = fopen($file, 'w');
         fwrite($fopen, $string);
         fclose($fopen);
         refresh();
     } else {
-        if ($path !== $request_uri) refresh();
+        if (isset($url) && $path !== $url) refresh();
     }
 
     include 'content/install.php';

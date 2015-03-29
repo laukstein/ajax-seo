@@ -1,8 +1,8 @@
-# [Ajax SEO v3](http://lab.laukstein.com/ajax-seo/)
+# [Ajax SEO v4](https://lab.laukstein.com/ajax-seo)
 **Extend user experience**
 
 Ajax SEO is crawlable webapp framework for outstanding UX.<br>
-Demo in <http://lab.laukstein.com/ajax-seo/>.
+Demo in <https://lab.laukstein.com/ajax-seo>.
 
 
 ## Quick start
@@ -11,11 +11,8 @@ Demo in <http://lab.laukstein.com/ajax-seo/>.
 2. Extract on compatible Web server
 3. Open in browser and setup settings
 
-Use by adding `class=x` to any API compatible hyperlink.<br>
-Here, `<a class=x href=history>href=history</a>` requires API request `api/history`.
-
 Minimum server requirements Apache 2 + mod_rewrite, MySQL 5, PHP 5.2.<br>
-Apache, MySQL and PHP recommended settings in [/config](config).<br>
+Apache, MySQL and PHP recommended settings in [/~config](~config).<br>
 Place robots.txt and humans.txt in website root.
 
 
@@ -24,7 +21,7 @@ Place robots.txt and humans.txt in website root.
 
 * Cross-platform
 * W3C cutting-edge standards
-* Native JavaScript, HTML5.1 APIs
+* Native HTML5.1 APIs, Microdata, JavaScript
 * SEO accessible, crawlable and indexable
 * Grade-A performance, security and usability
 * Simple, responsive, intuitive, maintainable
@@ -36,14 +33,15 @@ Place robots.txt and humans.txt in website root.
 
 * No-dependency
 * Use [no-www](http://no-www.org) domain
+* [HTTP vs HTTPS](https://www.httpvshttps.com)
 * Protocol-relative URL [RFC 3986](http://tools.ietf.org/html/rfc3986#section-4.2)
 * URL lowercasing and gibberish cleanup
 * Performance tuning on Apache, MySQL and PHP
-* Avoid outdated browser support
+* [Avoid](http://dowebsitesneedtolookexactlythesameineverybrowser.com) outdated browser support
 
 Legacy browser support in [earlier releases](https://github.com/laukstein/ajax-seo/releases).
 
 
 ## License
 
-Released under [the MIT License](LICENSE).
+Released under the [ISC License](LICENSE).
