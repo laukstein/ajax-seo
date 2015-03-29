@@ -1,8 +1,0 @@
-DirectorySlash Off
-
-<IfModule mod_rewrite.c>
-    # Filename-based cache busting http://www.stevesouders.com/blog/2008/08/23/revving-filenames-dont-use-querystring/
-    RewriteRule ^(.+)-(\d+).(.+)$ $1.$3 [L]
-    RewriteRule ^(.+).min.(.+)$ $1.$2 [L]
-    RewriteRule ^(.+)-(\d+).min.(.+)$ $1.min.$3 [L]
-</IfModule>
