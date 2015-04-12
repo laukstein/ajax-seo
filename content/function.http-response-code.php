@@ -45,11 +45,11 @@ if (!function_exists('http_response_code')) {
                     exit('Unknown http status code "' . htmlentities($code) . '"');
                 break;
             }
-            $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
+            $protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
             header($protocol . ' ' . $code . ' ' . $text);
             $GLOBALS['http_response_code'] = $code;
         } else {
-            $code = (isset($GLOBALS['http_response_code']) ? $GLOBALS['http_response_code'] : 200);
+            $code = isset($GLOBALS['http_response_code']) ? $GLOBALS['http_response_code'] : 200;
         }
         return $code;
     }
