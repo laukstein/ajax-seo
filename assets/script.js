@@ -7,7 +7,7 @@ void function (root, factory) {
     /*global module, define */
 
     if (typeof module === "object" && typeof module.exports === "object") {
-        // Node.js
+        // Node.js, CommonJS
         module.exports = factory();
     } else if (typeof define === "function" && define.amd) {
         // AMD. Register as an anonymous module.
@@ -19,13 +19,19 @@ void function (root, factory) {
 }(this, function () {
     "use strict";
 
-    /*global window, history, location, ga, setTimeout, clearTimeout, XMLHttpRequest*/
+    /*global window, document, history, location, ga, setTimeout, clearTimeout, XMLHttpRequest*/
 
     // cached
     var w = window,
         d = document,
         h = history,
         l = location,
+        has = {
+            // classList supported since IE10
+            classList: "classList" in document.createElement("_"),
+            // addEventListener supported since IE9
+            eventListener: d.addEventListener ? true : false
+        },
         layout = {
             // Expandable navigation
             bar: d.getElementById("bar"),
@@ -39,6 +45,24 @@ void function (root, factory) {
             output: d.getElementById("output")
         },
         nav = {
+            toggleClassName: function (el, className) {
+                if (el) {
+                    if (has.classList) {
+                        el.classList.toggle(className);
+                    } else {
+                        var classes = el.className.split(" "),
+                            existingIndex = classes.indexOf(className);
+
+                        if (existingIndex >= 0) {
+                            classes.splice(existingIndex, 1);
+                        } else {
+                            classes.push(className);
+                        }
+
+                        el.className = classes.join(" ");
+                    }
+                }
+            },
             toFocus: function () {
                 if (d.activeElement !== layout.focusin) {
                     // Old Webkit fix
@@ -46,26 +70,11 @@ void function (root, factory) {
                 }
             },
             toToggle: function (toExpand) {
-                var className = "expand",
-                    status = d.getElementById("status"),
-                    classes,
-                    existingIndex;
+                // Perf http://jsperf.com/document-body-parentelement
+                nav.toggleClassName(d.body.parentElement, "noscroll");
+                nav.toggleClassName(layout.status, "expand");
 
-                if (status.classList) {
-                    status.classList.toggle(className);
-                } else {
-                    classes = status.className.split(" ");
-                    existingIndex = classes.indexOf(className);
-
-                    if (existingIndex >= 0) {
-                        classes.splice(existingIndex, 1);
-                    } else {
-                        classes.push(className);
-                    }
-
-                    status.className = classes.join(" ");
-                }
-                if (toExpand) {
+                if (toExpand && layout.focusin) {
                     setTimeout(function () {
                         // Fix twice fired focus on Firefox
                         layout.focusin.focus();
@@ -73,14 +82,13 @@ void function (root, factory) {
                 }
             }
         },
-        // Compare PAI with flowplayer().conf https://flowplayer.org/
+        // Compare API with flowplayer().conf https://flowplayer.org/
         as = {
-            // Semantic versioning http://semver.org (MAJOR.MINOR.PATCH)
             // Number
             version: 4,
 
-            // String
-            analytics: "UA-XXXX-Y",
+            // String "UA-XXXX-Y"
+            analytics: undefined,
 
             // String
             path: (function () {
@@ -95,8 +103,7 @@ void function (root, factory) {
                 return d.URL.replace(re, "$1");
             }()),
 
-            // Perf http://jsperf.com/document-url-vs-window-location-href/2
-            // String
+            // String, http://jsperf.com/document-url-vs-window-location-href/2
             url: d.URL,
 
             // String
@@ -104,7 +111,7 @@ void function (root, factory) {
 
             // Element or null
             activeElement: (function () {
-                var arr = d.querySelectorAll ? d.querySelectorAll('[href]') : [],
+                var arr = d.querySelectorAll ? d.querySelectorAll("[href]") : [],
                     i;
                 for (i = 0; i < arr.length; i += 1) {
                     if (arr[i].href === d.URL) {
@@ -123,18 +130,18 @@ void function (root, factory) {
         client,
         root;
 
+    if (as.analytics) {
+        // Google Analytics, run also on legacy browsers
+        w.ga = function () {
+            ga.q = ga.q || [];
 
-    // Google Analytics, run also on legacy browsers
-    w.ga = function () {
-        ga.q = ga.q || [];
-
-        ga.q.push(arguments);
-    };
-    ga("create", as.analytics, "auto");
-    ga("send", "pageview");
-
-    // addEventListener and CSS media query supported since IE9
-    if (layout.bar && layout.bar.addEventListener) {
+            ga.q.push(arguments);
+        };
+        ga("create", as.analytics, "auto");
+        ga("send", "pageview");
+    }
+    if (layout.bar && has.eventListener) {
+        // addEventListener and CSS media query supported since IE9
         layout.bar.addEventListener("focus", function () {
             nav.toToggle(true);
         }, true);
@@ -151,8 +158,7 @@ void function (root, factory) {
             layout.reset.addEventListener("click", nav.toToggle, true);
         }
     }
-
-    if (!h.pushState) {
+    if (!h.pushState || !has.classList || !has.eventListener) {
         // Stop here IE10 and Android 4.3 http://caniuse.com/#feat=history
         // Browser legacy, stop here if does not support History API
         throw new Error("Browser legacy: History API not supported");
@@ -163,8 +169,7 @@ void function (root, factory) {
 
     root = {
         filter: function (srt) {
-            // Remove all after hash in URL
-            // http://jsperf.com/url-replace-vs-match/2
+            // Remove all after hash in URL, http://jsperf.com/url-replace-vs-match/2
             return srt ? srt.replace(/#.*$/, "").toLowerCase() : undefined;
         },
         reset: function () {
@@ -194,9 +199,9 @@ void function (root, factory) {
             // Array
             // Convert NodeList to Array, perf http://jsperf.com/convert-nodelist-to-array
             // Array.from(selector) ECMAScript 6 http://toddmotto.com/a-comprehensive-dive-into-nodelists-arrays-converting-nodelists-and-understanding-the-dom/
-            nodeList: layout.nav ? (Array.from ? Array.from('a') : [].slice.call(layout.nav.querySelectorAll('a'))) : null,
+            nodeList: layout.nav ? (Array.from ? Array.from("a") : [].slice.call(layout.nav.querySelectorAll("a"))) : null,
             // Element or null
-            activeElement: function(url) {
+            activeElement: function() {
                 var i;
                 if (root.nav.nodeList) {
                     // Loop performance https://www.youtube.com/watch?v=taaEzHI9xyY#t=3042, http://www.impressivewebs.com/javascript-for-loop/, http://jsperf.com/array-length-vs-cached/19
@@ -210,20 +215,15 @@ void function (root, factory) {
             }
         },
         update: function (data, status, track, activeElement) {
-            // Google Universal Analytics tracking
-            ga("send", "pageview", {page: decodeURI(l.pathname)});
-
+            if (as.analytics) {
+                // Google Universal Analytics tracking
+                ga("send", "pageview", {page: decodeURI(l.pathname)});
+            }
             if (!track) {
                 client.abort();
             } else {
                 root.reset();
             }
-
-
-            var hash = l.hash,
-                item,
-                i;
-
             if (root.nav.nodeList) {
                 layout.focus = layout.nav.querySelector(".focus");
                 layout.active = layout.nav.querySelector(".active");
@@ -246,37 +246,29 @@ void function (root, factory) {
             }
 
             as.url = root.filter(d.URL);
-            activeElement = activeElement || root.nav.activeElement(as.url);
+            activeElement = activeElement || root.nav.activeElement();
 
             if (activeElement) {
                 activeElement.focus();
-
-                if (data.status) {
-                    status = "error";
-                }
-
                 activeElement.classList.add(status);
 
                 if (status === "error") {
-                    activeElement.classList.remove("active");
                     activeElement.classList.add("x-error");
                 }
-
-                activeElement.classList.remove("x-error");
-                activeElement.classList.remove("error");
             }
 
             d.title = as.title = data.title;
+            d.body.scrollTop = 0;
             layout.output.innerHTML = data.content;
 
-            if (hash) {
+            if (l.hash) {
                 // CSS :target fix
                 h.replaceState({
                     title: as.title,
                     content: layout.output.innerHTML
                 }, as.title, as.url);
 
-                l.replace(as.url + hash);
+                l.replace(as.url + l.hash);
             }
         },
         retry: false,
@@ -293,19 +285,17 @@ void function (root, factory) {
 
             var state = e.state,
                 status = state && state.status ? state.status : "active",
-                activeElement,
-                item,
-                i;
+                activeElement;
 
             if (!state) {
                 // retry
                 root.retry = true;
                 as.url = root.filter(d.URL);
-                activeElement = root.nav.activeElement(as.url);
+                activeElement = root.nav.activeElement();
 
                 root.click(activeElement);
             }
-            if (!status) {
+            if (status === "error") {
                 as.error = true;
             }
             if (as.error && status === "active") {
@@ -387,17 +377,16 @@ void function (root, factory) {
             }
 
             var el = e.target,
-                host = l.host,
-                matcher = new RegExp("^" + as.path + "($|#|/.{1,}).*", "i"),
+                patt = new RegExp("^" + as.path + "($|#|/.{1,}).*", "i"),
                 url = {};
 
             // Run script only if has link and matches "as.path" root
             if (!el) {
                 return;
-            } else if (el.tagName !== 'A') {
+            } else if (el.tagName !== "A") {
                 el = root.closest(el, "a[href]");
             }
-            if (!el || !(el.tagName === 'A' && el.hasAttribute("href")) || !matcher.test(el.href)) {
+            if (!el || !(el.tagName === "A" && el.hasAttribute("href")) || !patt.test(el.href)) {
                 // Stop: outside API scope
                 return;
             }
@@ -415,16 +404,16 @@ void function (root, factory) {
             }
 
             e.preventDefault();
-
             el.blur();
 
             as.activeElement = el;
-            // innerText is not standardised and not either supported on Firefox, http://www.kellegous.com/j/2013/02/27/innertext-vs-textcontent/ http://stackoverflow.com/questions/1359469/innertext-works-in-ie-but-not-in-firefox http://jsperf.com/textcontent-and-innertext/2
-            as.title = as.activeElement.innerText || as.activeElement.textContent;
 
             if (!root.retry) {
                 as.error = as.activeElement.classList.contains("x-error");
             }
+
+            // innerText is not standardised and not either supported on Firefox, http://www.kellegous.com/j/2013/02/27/innertext-vs-textcontent/ http://stackoverflow.com/questions/1359469/innertext-works-in-ie-but-not-in-firefox http://jsperf.com/textcontent-and-innertext/2
+            as.title = as.activeElement.innerText || as.activeElement.textContent;
 
             // Chrome bug (also Chrome 37.0.2004.0 canary): hangs on error page (perhaps https://code.google.com/p/chromium/issues/detail?id=371549 will fix the issue, testcase http://jsbin.com/371549):
             //   click on link that returns error
@@ -441,20 +430,6 @@ void function (root, factory) {
                 // Avoid API retry on same link if has not error status
                 return;
             }
-            // if (layout.status && layout.status.hasAttribute("class")) {
-            //     layout.status.removeAttribute("class");
-            // }
-            if (root.nav.nodeList) {
-                layout.focus = layout.nav.querySelector(".focus");
-
-                if (layout.focus) {
-                    layout.focus.classList.remove("focus");
-                }
-            }
-
-            as.activeElement.classList.remove("error");
-            as.activeElement.classList.add("focus");
-
             if (statusLanded) {
                 clearTimeout(statusLanded);
             }
@@ -463,20 +438,35 @@ void function (root, factory) {
                 d.title = as.title;
             }, 3);
 
+            if (layout.status) {
+                // IE11 doesn't support multiple classes https://connect.microsoft.com/IE/Feedback/Details/920755
+                layout.status.classList.remove("status-start");
+                layout.status.classList.remove("status-done");
+            }
+            if (root.nav.nodeList) {
+                if (as.error) {
+                    as.activeElement.classList.remove("x-error");
+                    as.activeElement.classList.remove("error");
+                }
+
+                layout.focus = layout.nav.querySelector(".focus");
+
+                if (layout.focus) {
+                    layout.focus.classList.remove("focus");
+                }
+            }
+            as.activeElement.classList.add("focus");
+
             // IE11 issue: client.send() new request doesn"t cancel unfinished earlier request
             client.abort();
 
             // decodeURIComponent(as.url) http://jsperf.com/decodeuri-vs-decodeuricomponent
-            matcher = new RegExp("^" + as.path, "i"),
-
-            client.open("GET", as.path + "/api" + as.url.replace(matcher, ""));
+            client.open("GET", as.path + "/api" + as.url.replace(new RegExp("^" + as.path, "i"), ""));
 
             if (as.error) {
-                // // Avoid  http://stackoverflow.com/questions/1046966/whats-the-difference-between-cache-control-max-age-0-and-no-cache
-                // // Firefox bug https://bugzilla.mozilla.org/show_bug.cgi?id=706806, https://bugzilla.mozilla.org/show_bug.cgi?id=428916, https://bugzilla.mozilla.org/show_bug.cgi?id=443098 : does not retry new XMLHttpRequest, but returns cache
+                // Avoid cache http://stackoverflow.com/questions/1046966/whats-the-difference-between-cache-control-max-age-0-and-no-cache
+                // Firefox bug https://bugzilla.mozilla.org/show_bug.cgi?id=706806, https://bugzilla.mozilla.org/show_bug.cgi?id=428916, https://bugzilla.mozilla.org/show_bug.cgi?id=443098
                 // client.setRequestHeader("Cache-Control", "no-cache");
-                // // Chrome will avoid cache forever, works fine on Firefox
-                // client.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 2000 00:00:00 GMT");
                 client.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 2000 00:00:00 GMT");
             }
             client.send();
