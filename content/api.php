@@ -6,6 +6,7 @@
 header('X-Robots-Tag: nosnippet');
 
 function error() {
+    http_response_code(404);
     header('Content-Type: text/plain');
     exit('404 Not Found');
 }
@@ -13,7 +14,7 @@ if (!$results) error();
 
 /*// Response simulator
 function simulator() {
-    $arr = [0, 0, 3, 4, 5];
+    $arr = [0, 2, 4, 6];
     $i   = $arr[rand(0, count($arr) - 1)];
 
     if ($i > 0) {
@@ -22,7 +23,6 @@ function simulator() {
         if ($i > 3) error();
     }
 }
-simulator();
 if ($debug) simulator();*/
 
 $callback      = isset($_GET['callback']) ? $_GET['callback'] : null;
