@@ -5,7 +5,7 @@
 
 // Debug mode
 define('debug', false);
-if (debug && !!preg_match('/^(127.0.0.1|10.0.0.\d{1,3})$/', $_SERVER['REMOTE_ADDR'])) {
+if (debug && preg_match('/^(127.0.0.1|10.0.0.\d{1,3})$/', $_SERVER['REMOTE_ADDR'])) {
     // Development
     error_reporting(E_ALL);
     $debug = true;
