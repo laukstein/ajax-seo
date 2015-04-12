@@ -35,7 +35,6 @@ html, label, input, ::-webkit-input-placeholder, button, .button {
             user-select: none;
 }
 html {
-    overflow-y: scroll;
     font-size: 62.45%; /* Make 1em = 10px = 2.5rem */
     line-height: 1.5;
     text-rendering: optimizeSpeed;
@@ -128,11 +127,11 @@ hr {
     border-top: 1px solid #eef0f0;
 }
 code, pre {
-    padding: .1em .4em;
+    padding: .05em .3em;
     font-style: italic;
     font-family: Consolas, Liberation Mono, Courier, monospace;
     white-space: pre-wrap;
-    background-color: #eef0f0;
+    background-color: rgba(206,209,210,.4);
     -moz-tab-size: 4;
          tab-size: 4;
 }
@@ -187,7 +186,7 @@ label {
 }
 ::selection {
     text-shadow: none;
-    background-color: rgba(180,180,180,.5);
+    background-color: rgba(206,209,210,.4);
 }
 :placeholder-shown {
     /* W3C http://dev.w3.org/csswg/selectors4/#placeholder
@@ -203,6 +202,7 @@ label {
 }
 input, select, textarea, button, .button {
     width: 20em;
+    max-width: 100%;
     padding: .6em .7em;
     margin: .15em 0;
     font-size: 1em;
@@ -253,13 +253,13 @@ a[href].button {
 select:hover, select:focus,
 button:hover, button:focus,
 .button:hover, .button:focus {
-    background-color: #f6f6f6;
+    background-color: #f8f9fa;
     border-color: #9f9f9f;
 }
 select:active,
 button:active,
 .button:active {
-    background-color: #e2e4e5;
+    background-color: rgba(206,209,210,.4);
     box-shadow: none;
 }
 option[value=""] {
@@ -273,13 +273,28 @@ option[value=""] {
 
 /* Design
 -------------------------------------------------- */
+html {
+    /* Avoid content jumping on vertical scrollbar appearing http://jsbin.com/horone/4 */
+    width: 100vw;
+    max-width: 100%;
+}
+div.noscroll {
+    overflow: hidden;
+}
+.wrapper {
+    width: 100vw;
+    min-height: 100vh;
+}
+
 #status {
+    opacity: 0;
     position: fixed;
     z-index: 999;
     left: 0;
     width: 0; /* IE transition issue */
     height: 3px;
-    background-color: #29d;
+    background-color: #006cff;
+    box-shadow: 0 0 0 1px rgba(255,255,255,.8);
 
     /* Enable hardware accelerator */
     -webkit-transform: translateZ(0); /* Webkit legacy */
@@ -300,29 +315,29 @@ option[value=""] {
     float: right;
     background-image: -webkit-linear-gradient(left, rgba(0,194,255,0), #00c2ff);  /* Safari, iOS and Android fallback */
     background-image:         linear-gradient(to right, rgba(0,194,255,0), #00c2ff);
-    box-shadow: 2px -2px 5px 1px #00c2ff;
+    box-shadow: 3px -2px 5px 1px #00c2ff;
 }
 #status.status-start {
+    opacity: 1;
     width: 70%;
-    -webkit-transition-duration: 5s; /* Safari, Android and iOS legacy */
-            transition-duration: 5s;
+    -webkit-transition: opacity .2s, width 5s cubic-bezier(.2,1,.4,1); /* Safari, Android and iOS legacy */
+            transition: opacity .2s, width 5s cubic-bezier(.2,1,.4,1);
 }
 #status.status-done {
     width: 100%;
     opacity: 0;
-    /*background-color: rgba(34,153,221,0);*/
     -webkit-transition-duration: .2s; /* Safari, Android and iOS legacy */
             transition-duration: .2s;
 }
 
 /* Navigation */
-/* Bar */
 .tab {
     position: fixed;
     z-index: 100;
     top: 0;
     right: 0;
     left: 0;
+    width: 100vw;
     line-height: 2.2;
     font-family: Segoe UI, Open Sans, sans-serif; /* "Meiryo" returns ellipsis in middle of text */
     text-align: center;
@@ -372,7 +387,7 @@ option[value=""] {
     width: 100%;
     margin: .1em auto;
     font-size: 1.05em;
-    background-color: #f3f3f3;
+    background-color: #f4f4f4;
     background-image: -webkit-linear-gradient(#f8f8f8, rgba(248,249,250,0)); /* Safari, iOS and Android fallback */
     background-image:         linear-gradient(#f8f8f8, rgba(248,249,250,0));
     border: 1px solid #d9e0e2;
@@ -393,7 +408,7 @@ option[value=""] {
     -ms-flex: 1;
         flex: 1;
     flex-basis: auto;
-    min-width: 0;
+    min-width: 1px; /* IE11 ignores min-width: 0; */
     max-height: 2.3em; /* Old Webkit legacy */
     padding: 0 .43em; /* Firefox flexbox padding percentage issue https://bugzilla.mozilla.org/show_bug.cgi?id=529761 */
     border: 0 solid #d9e0e2;
@@ -412,7 +427,7 @@ option[value=""] {
     background-color: #fff;
 }
 .nav a.focus {
-    background-color: #ebebeb;
+    background-color: rgba(206,209,210,.4);
 }
 .nav a.error {
     background-color: #f1e2e2;
@@ -443,13 +458,13 @@ option[value=""] {
 }
 .main {
     overflow: hidden;
-    min-height: 100%;
+    min-height: 100vh;
     padding-top: 3.8em;
     padding-bottom: 6em;
     will-change: contents;
 }
 .main :target {
-    background-color: #ffff00;
+    background-color: #ff0;
 }
 .main a:target {
     text-decoration: none;
@@ -499,8 +514,11 @@ template {
     box-suppress: discard;
 }
 @media \0screen\,screen\9 { /* IE6-8 http://keithclark.co.uk/articles/moving-ie-specific-css-into-media-blocks/media-tests/ */
-    .header {
-        max-width: 100%;
+    .noscroll, .wrapper, .main {
+        height: 100%;
+    }
+    .noscroll.noscroll, .main {
+        overflow: visible;
     }
     .nav {
         display: table;
@@ -509,8 +527,7 @@ template {
     .nav a {
         display: table-cell;
     }
-	[hidden],
-    .handler {
+	[hidden], .handler, .footer {
         display: none;
     }
 }
@@ -527,8 +544,7 @@ template {
     .nav a {
         display: table-cell;
     }
-	[hidden],
-    .handler {
+	[hidden], .handler {
         display: none;
     }
 }
@@ -591,7 +607,7 @@ template {
 @-moz-document url-prefix() { /* Firefox */
     ::-moz-selection {
         text-shadow: none;
-        background-color: rgba(180,180,180,.5);
+        background-color: rgba(206,209,210,.4);
     }
     label:active {
         background-color: transparent;
@@ -615,6 +631,9 @@ template {
 @media (max-width: 540px) {
     html {
         background-color: #fff;
+    }
+    html.noscroll {
+        overflow: hidden;
     }
     hr {
         margin-right: -1.7em;
@@ -662,7 +681,7 @@ template {
         pointer-events: auto;
     }
     .bar:hover, .bar:focus {
-        background-color: rgba(0,0,0,.06);
+        background-color: rgba(206,209,210,.4);
     }
     .bar span,
     .bar span:before,
@@ -813,7 +832,6 @@ template {
         border-top-width: 0;
     }
     .main {
-        overflow-x: auto;
         width: auto;
         min-width: 13.6em;
         padding: 2em 1.9em 3.2em;
