@@ -59,7 +59,7 @@ $metadata  = "<title>$pagetitle</title>";
 // Open Graph protocol http://ogp.me
 $metadata .= "\n<meta property=og:title content=\"$pagetitle\">";
 // Max 253 character description http://blogs.msdn.com/b/ie/archive/2012/05/14/sharing-links-from-ie10-on-windows-8.aspx
-if (!!($description)) $metadata .= "\n<meta property=og:description name=description content=\"$description\">";
+if ($description) $metadata .= "\n<meta property=og:description name=description content=\"$description\">";
 // Twitter Cards https://dev.twitter.com/cards/overview, https://cards-dev.twitter.com/validator
 $metadata .= "\n<meta property=twitter:card content=summary>";
 
