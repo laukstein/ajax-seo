@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $gtitle    = trim($_POST['title']);
     // $assets    = trim($_POST['assets']);
     $ga        = trim($_POST['ga']);
+    $ga_domain = empty($_POST['ga_domain']) ? 'auto' : trim($_POST['ga_domain']);
     $xdebug    = empty($_POST['debug']) ? 'false' : 'true';
 
     $array = array(
@@ -29,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'title'     => "'$gtitle'",
         // 'assets'    => $assets === $path . '/assets/' ? "string('{\$path}/assets/')" : "'$assets'",
         'ga'        => "'$ga'",
+        'ga_domain' => "'$ga_domain'",
         'debug'     => $xdebug
     );
 
@@ -107,6 +109,7 @@ $drop      = $drop ? ' checked' : null;
 $gtitle    = empty($gtitle) ? title : $gtitle;
 // $assets    = empty($assets) ? assets : $assets;
 $ga        = empty($ga) ? ga : $ga;
+$ga_domain = empty($ga_domain) ? ga_domain : $ga_domain;
 $adebug    = !empty($xdebug) && $xdebug === 'true' || debug ? ' checked' : null;
 
 // Content output
@@ -117,14 +120,14 @@ $content   = '<style scoped>.main{padding-top:1.2em}label{width:30%}input{width:
     <h1>' . $pagetitle . '</h1>
     <dl>
         <dt>MySQL connection
-        <dd><label for=host>Database host</label><input id=host class=n2 name=host placeholder=localhost value="' . $dhost . '"><input id=port class=n2 name=port placeholder="Port (3306)" value="' . $port . '">
+        <dd><label for=host>Database host</label><input id=host class=n2 name=host placeholder=localhost value="' . $dhost . '"><input id=port class=n2 name=port placeholder=Port value="' . $port . '">
         <dd><label for=user>User name</label><input id=user name=user placeholder=root value="' . $user . '">
         <dd><label for=pass>Password</label><input id=pass name=pass placeholder=Password type=password>
         <dd><label for=db>Database name</label><input id=db name=db placeholder=db value="' . $db . '">
         <dd><label for=table>Table</label><input id=table class=n2 name=table placeholder=table value="' . $table . '"> <label><input id=drop name=drop type=checkbox' . $drop . '> drop if exists</label>' . $error . '
         <dt><hr>Page details
         <dd><label for=title>Page title</label><input id=title name=title placeholder=Title value="' . $gtitle . '">
-        <dd><label for=ga>Google Analytics</label><input id=ga name=ga placeholder="UA-XXXX-Y (optional)" value="' . $ga . '">
+        <dd><label for=ga>Google Analytics</label><input id=ga class=n2 name=ga placeholder=UA-XXXX-Y value="' . $ga . '"><input id=ga_domain class=n2 name=ga_domain placeholder="Domain" value="' . $ga_domain . '">
         <dd class=reset><label><input name=debug type=checkbox' . $adebug . '> Debug in localhost (PHP error_reporting, uncompressed assets and console.log)</label>
         <dd><button name=install>Install</button><p>Your configuration will be saved in config.php, after you can open and edit it manually.</p>
     </dl>

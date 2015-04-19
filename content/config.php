@@ -93,3 +93,4 @@ define('assets', string('{$path}/assets/'));
 define('title', 'Ajax SEO');
 // Google Analytics configuration
 define('ga', '');
+define('ga_domain', '');
