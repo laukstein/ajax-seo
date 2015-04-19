@@ -3,7 +3,7 @@
 // Connect to database
 //
 
-$mysqli = @new mysqli(hostname, username, password, database);
+$mysqli = @new mysqli(hostname, username, password, database, port);
 $conn   = !!@$mysqli->query('SELECT id FROM `' . table . '` LIMIT 1')->num_rows;
 $note   = null;
 

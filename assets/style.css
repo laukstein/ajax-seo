@@ -139,6 +139,9 @@ a, input, select, textarea, button {
     outline: none;
     pointer-events: auto;
 }
+input, select, button {
+  vertical-align: middle;
+}
 a img, abbr, iframe {
     border: 0;
 }
@@ -183,6 +186,8 @@ label {
     display: inline-block;
     padding-bottom: .2em;
     padding-top: .2em;
+    line-height: 1.2;
+    vertical-align: middle;
 }
 ::selection {
     text-shadow: none;

@@ -82,6 +82,7 @@ $urldb  = empty($_GET['url']) ? '' : $_GET['url']; // PHP7 : $_GET['url'] ?? '';
 // 1-2s TTFB improvement by avoiding IPV6 lookup for the hostname
 // hostname "localhost" will cause extra time http://thisinterestsme.com/slow-mysqli-connection/
 define('hostname', '127.0.0.1');
+define('port', 3306);
 define('username', 'root');
 define('password', '');
 define('database', 'test');

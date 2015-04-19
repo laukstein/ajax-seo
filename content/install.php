@@ -8,6 +8,7 @@ $drop  = true;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dhost     = trim($_POST['host']);
+    $port      = empty($_POST['port']) ? '3306' : trim($_POST['port']);
     $user      = trim($_POST['user']);
     $pass      = trim($_POST['pass']);
     $db        = trim($_POST['db']);
@@ -20,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $array = array(
         'hostname'  => "'$dhost'",
+        'port'      => "$port",
         'username'  => "'$user'",
         'password'  => "'$pass'",
         'database'  => "'$db'",
@@ -96,6 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Installer setup
 $dhost     = empty($dhost) ? hostname : $dhost;
+$port      = empty($port) ? port : $port;
 $user      = empty($user) ? username : $user;
 $pass      = empty($pass) ? password : $pass;
 $db        = empty($db) ? database : $db;
@@ -114,7 +117,7 @@ $content   = '<style scoped>.main{padding-top:1.2em}label{width:30%}input{width:
     <h1>' . $pagetitle . '</h1>
     <dl>
         <dt>MySQL connection
-        <dd><label for=host>Database host</label><input id=host name=host placeholder=localhost value="' . $dhost . '">
+        <dd><label for=host>Database host</label><input id=host class=n2 name=host placeholder=localhost value="' . $dhost . '"><input id=port class=n2 name=port placeholder="Port (3306)" value="' . $port . '">
         <dd><label for=user>User name</label><input id=user name=user placeholder=root value="' . $user . '">
         <dd><label for=pass>Password</label><input id=pass name=pass placeholder=Password type=password>
         <dd><label for=db>Database name</label><input id=db name=db placeholder=db value="' . $db . '">
