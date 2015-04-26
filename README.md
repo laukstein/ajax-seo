@@ -11,7 +11,7 @@ Demo in <https://lab.laukstein.com/ajax-seo>.
 2. Extract on compatible Web server
 3. Open in browser and setup settings
 
-Here, `<a class=x href=history>href=history</a>` requires API request `api/history`.
+Here, `<a href=history>href=history</a>` requires API request `api/history`.
 
 Minimum server requirements Apache 2 + mod_rewrite, MySQL 5, PHP 5.2.<br>
 Apache, MySQL and PHP recommended settings in [/~config](~config).<br>
