@@ -2,9 +2,6 @@
 # ErrorDocument 403 /?url=error
 
 <IfModule rewrite_module>
-    # Filename-based cache busting
-    RewriteRule assets/(.+)-(\d{1,8}+).(.+)$ assets/$1.$3 [L]
-
     # URL rewrite and secure directory /~config and /content
     RewriteRule ^api(?:/(.*))?$ index.php?api&url=$1 [QSA,L]
     RewriteCond %{REQUEST_FILENAME} !-f [OR]
