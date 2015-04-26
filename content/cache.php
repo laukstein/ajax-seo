@@ -10,8 +10,6 @@ class cache {
 
     // HTTP header cache
     private static function http($date) {
-        // $date = strtotime($date);
-        // if (!$date) return false;
         $date = date('D, d M Y H:i:s T', strtotime($date));
 
         if ((isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MATCH'])) && $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $date) {
