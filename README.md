@@ -1,5 +1,4 @@
 # [Ajax SEO v4](https://lab.laukstein.com/ajax-seo)
-**Extend user experience**
 
 Ajax SEO is crawlable webapp framework for outstanding UX.<br>
 Demo in <https://lab.laukstein.com/ajax-seo>.
@@ -11,7 +10,7 @@ Demo in <https://lab.laukstein.com/ajax-seo>.
 2. Extract on compatible Web server
 3. Open in browser and setup settings
 
-Here: `<a href=history>History</a>` requests API `api/history`
+Here, `<a href=history>History</a>` requests API `api/history`.
 
 Minimum server requirements Apache 2 + mod_rewrite, MySQL 5, PHP 5.2.<br>
 Apache, MySQL and PHP recommended settings in [/~config](~config).<br>
@@ -19,7 +18,6 @@ Place robots.txt and humans.txt in website root.
 
 
 ## Benifits
-**Have one work for everyone**
 
 * Cross-platform
 * W3C cutting-edge standards
@@ -31,7 +29,6 @@ Place robots.txt and humans.txt in website root.
 
 
 ## Techniques
-**Think hard to make life easy**
 
 * No-dependency
 * Use [no-www](http://no-www.org) domain
