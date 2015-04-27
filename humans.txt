@@ -7,7 +7,7 @@ include 'content/cache.php'; cache::all();
 echo '/* SITE */
 Author:         Binyamin Laukstein
 Contact:        http://laukstein.com/contact
-Last update:    ' . date('Y-m-d\TH:i\Z', strtotime(date::all())) . '
+Last update:    ' . date('Y-m-d\TH:i\Z', date::all()) . '
 Standards:      HTML Living Standard, Microdata, CSS, JavaScript
 Source:         https://github.com/laukstein/ajax-seo';
 

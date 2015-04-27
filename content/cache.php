@@ -10,15 +10,13 @@ class cache {
 
     // HTTP header cache
     private static function http($date) {
-        $date = date('D, d M Y H:i:s T', strtotime($date));
-
-        if ((isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) || isset($_SERVER['HTTP_IF_NONE_MATCH'])) && $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $date) {
+        if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) === $date) {
             http_response_code(304);
             ob_end_clean(); // Empty the response body
             exit;
         }
 
-        header('Last-Modified: '. $date);
+        header('Last-Modified: '. date('D, d M Y H:i:s', $date) . ' GMT');
     }
 
     // Identified URL cache
@@ -43,11 +41,11 @@ class cache {
 }
 
 class date {
-    //public function __construct($mysqli) {} // MySQLi in class http://www.weblimner.com/tutorial/using-mysqli-in-a-seperate-class/
+    // public function __construct($mysqli) {} // MySQLi in class http://www.weblimner.com/tutorial/using-mysqli-in-a-seperate-class/
     public static function url() {
         global $mysqli, $url;
 
-        $stmt = $mysqli->prepare('SELECT GREATEST(updated, created) AS date FROM `' . table . '` WHERE url=? LIMIT 1');
+        $stmt = $mysqli->prepare('SELECT UNIX_TIMESTAMP(GREATEST(updated, created)) AS date FROM `' . table . '` WHERE url=? LIMIT 1');
 
         $stmt->bind_param('s', $urldb);
         $stmt->execute();
@@ -63,7 +61,7 @@ class date {
     public static function db() {
         global $mysqli;
 
-        $stmt = $mysqli->prepare('SELECT MAX(GREATEST(updated, created)) AS date FROM `' . table . '`');
+        $stmt = $mysqli->prepare('SELECT UNIX_TIMESTAMP(MAX(GREATEST(updated, created))) AS date FROM `' . table . '`');
 
         $stmt->execute();
         $stmt->bind_result($date);
@@ -76,7 +74,7 @@ class date {
 
     // The file
     public static function me() {
-        return date('Y-m-d H:i:s', filemtime($_SERVER['SCRIPT_FILENAME']));
+        return filemtime($_SERVER['SCRIPT_FILENAME']);
     }
 
     // Recent file update filtered by type
@@ -92,7 +90,7 @@ class date {
 
         foreach($regex as $fileInfo) $date[] = $fileInfo->getMTime();
 
-        return date('Y-m-d H:i:s', max($date));
+        return max($date);
     }
 
     // Latest update
