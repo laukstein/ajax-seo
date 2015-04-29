@@ -71,7 +71,7 @@ function string($str) {
 
 // Common variables
 $file   = __FILE__;
-$scheme = $_SERVER['SERVER_PORT'] == 443 ? 'https' : 'http';
+$scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https' ? 'https' : 'http';
 $url    = rawurldecode($_SERVER['REQUEST_URI']);
 $url    = $url === '/' ? null : $url;
 $uri    = $scheme . '://' . $host . $url;

@@ -31,10 +31,10 @@ Place robots.txt and humans.txt in website root.
 ## Techniques
 
 * No-dependency
-* Use [no-www](http://no-www.org) domain
-* [HTTP vs HTTPS](https://www.httpvshttps.com)
+* [no-www](http://no-www.org) domain
+* [HTTPS-Only Standard](https://https.cio.gov)
 * Protocol-relative URL [RFC 3986](http://tools.ietf.org/html/rfc3986#section-4.2)
-* URL lowercasing and gibberish cleanup
+* SEO URLs, lowercasing and gibberish cleanup
 * Performance tuning on Apache, MySQL and PHP
 * [Avoid](http://dowebsitesneedtolookexactlythesameineverybrowser.com) outdated browser support
 
