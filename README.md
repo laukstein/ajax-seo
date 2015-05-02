@@ -13,7 +13,7 @@ Demo in <https://lab.laukstein.com/ajax-seo>.
 Here, `<a href=history>History</a>` requests API `api/history`.
 
 Minimum server requirements Apache 2 + mod_rewrite, MySQL 5, PHP 5.2.<br>
-Apache, MySQL and PHP recommended settings in [/~config](~config).<br>
+Apache, MySQL and PHP recommended settings in [`~config`](~config).<br>
 Place robots.txt and humans.txt in website root.
 
 
