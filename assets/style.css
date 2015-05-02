@@ -627,6 +627,10 @@ template {
         border: 0;
         padding: 0;
     }
+    .nav span {
+        /* Firefox 40 does not support "mask: linear-gradient()" and "mask" for "text-overflow: clip" */
+        text-overflow: ellipsis;
+    }
 }
 
 
