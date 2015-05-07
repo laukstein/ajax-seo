@@ -298,7 +298,7 @@ div.noscroll {
     left: 0;
     width: 0; /* IE transition issue */
     height: 3px;
-    background-color: #006cff;
+    background-color: #60d778;
     box-shadow: 0 0 0 1px rgba(255,255,255,.8);
 
     /* Enable hardware accelerator */
@@ -315,21 +315,21 @@ div.noscroll {
 #status.status-start:before {
     content: "";
     display: block;
-    width: 1em;
+    width: 10%;
     height: 100%;
     float: right;
-    background-image: -webkit-linear-gradient(left, rgba(0,194,255,0), #00c2ff);  /* Safari, iOS and Android fallback */
-    background-image:         linear-gradient(to right, rgba(0,194,255,0), #00c2ff);
-    box-shadow: 3px -2px 5px 1px #00c2ff;
+    background-image: -webkit-linear-gradient(left, rgba(96,215,120,0), #62fb82);  /* Safari, iOS and Android fallback */
+    background-image:         linear-gradient(to right, rgba(96,215,120,0), #62fb82);
+    box-shadow: 2px -2px 5px 1px #62fb82;
 }
 #status.status-start {
     opacity: 1;
-    width: 70%;
+    width: 70vw;
     -webkit-transition: opacity .2s, width 5s cubic-bezier(.2,1,.4,1); /* Safari, Android and iOS legacy */
             transition: opacity .2s, width 5s cubic-bezier(.2,1,.4,1);
 }
 #status.status-done {
-    width: 100%;
+    width: 100vw;
     opacity: 0;
     -webkit-transition-duration: .2s; /* Safari, Android and iOS legacy */
             transition-duration: .2s;
