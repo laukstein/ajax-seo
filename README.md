@@ -35,7 +35,7 @@ Place robots.txt and humans.txt in website root.
 * [HTTPS-Only Standard](https://https.cio.gov)
 * Protocol-relative URL [RFC 3986](http://tools.ietf.org/html/rfc3986#section-4.2)
 * SEO URLs, lowercasing and gibberish cleanup
-* Performance tuning on Apache, MySQL and PHP
+* Performance tuning on front end and back end
 * [Avoid](http://dowebsitesneedtolookexactlythesameineverybrowser.com) outdated browser support
 
 Legacy browser support in [earlier releases](https://github.com/laukstein/ajax-seo/releases).
