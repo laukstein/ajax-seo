@@ -50,7 +50,8 @@ if (version_compare($phpv, '5.2', '>=')) {
 }
 if (!$comp) {
     http_response_code(503);
-    header('Retry-After: 3600'); // 1 hour
+    // Retry-After 1 hour
+    header('Retry-After: 3600');
     header('X-Robots-Tag: none');
     header('Content-Type: text/plain');
     exit('Your server is outdated' . $fix);
@@ -58,7 +59,8 @@ if (!$comp) {
 
 // Template prototype
 function string($str) {
-    if (!function_exists('_variable')) { // Avoid function redeclare
+    if (!function_exists('_variable')) {
+        // Avoid function redeclare
         // Usecase: Execute variable {$foo}
         // Supported since PHP 4.1.0 http://www.php.net/manual/en/language.variables.superglobals.php
         function _variable($m) {
@@ -72,12 +74,14 @@ function string($str) {
 // Common variables
 $file   = __FILE__;
 $scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https' ? 'https' : 'http';
+$path   = str_replace($_SERVER['DOCUMENT_ROOT'], '', str_replace('\\', '/', getcwd()));
 $url    = rawurldecode($_SERVER['REQUEST_URI']);
-$url    = $url === '/' ? null : $url;
+$url    = $url === '/' ? '/' : preg_replace('/^' . addcslashes($path, '/') . '\/api/', '', $url);
+$url    = preg_replace('/^' . addcslashes($path, '/') . '/', '', $url);
+
+$urldb  = preg_replace('/^\//', '', $url);
 $uri    = $scheme . '://' . $host . $url;
 $urlend = basename($url);
-$path   = str_replace($_SERVER['DOCUMENT_ROOT'], '', str_replace('\\', '/', getcwd()));
-$urldb  = empty($_GET['url']) ? '' : $_GET['url']; // PHP7 : $_GET['url'] ?? ''; // https://www.bram.us/2014/10/16/php-null-coalesce-operator/
 
 // 1-2s TTFB improvement by avoiding IPV6 lookup for the hostname
 // hostname "localhost" will cause extra time http://thisinterestsme.com/slow-mysqli-connection/
@@ -92,5 +96,5 @@ define('connection', false);
 define('assets', string('{$path}/assets/'));
 define('title', 'Ajax SEO');
 // Google Analytics configuration
-define('ga', '');
-define('ga_domain', '');
+define('ga', null);
+define('ga_domain', null);
