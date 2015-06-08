@@ -52,6 +52,7 @@ body, dl, dd, blockquote, figure {
 body {
     font-size: 1.9em; /* rem unit is too buggy https://code.google.com/p/chromium/issues/detail?id=362113 and not so flexible, not standardised in @media query condition */
     overflow-wrap: break-word;
+    word-wrap: break-word; /* IE11 legacy */
     /* CSS4 hyphenation http://generatedcontent.org/post/44751461516/finer-grained-control-of-hyphenation-with-css4-text
        Chrome issue https://code.google.com/p/chromium/issues/detail?id=47083 */
     -ms-hyphenate-limit-chars: 6 3 2;
@@ -97,6 +98,13 @@ h4 {
     margin-top: .4em;
     margin-bottom: .4em;
 }
+p {
+    margin-top: .8em;
+    margin-bottom: .8em;
+}
+p + p {
+    margin-top: 1.6em;
+}
 small {
     font-size: 70%;
 }
@@ -121,7 +129,8 @@ br {
 hr {
     position: relative; /* [id]:target:before issue */
     margin: 1em -3em;
-    margin: 1em -4.9vw;
+    margin-right: -4.9vw;
+    margin-left: -4.9vw;
     clear: both;
     border-width: 0;
     border-top: 1px solid #eef0f0;
@@ -240,6 +249,7 @@ select, button, .button {
     overflow: hidden;
     display: inline-block;
     white-space: nowrap; /* Mobile button text wrapping fix for button */
+    word-wrap: normal; /* "nowrap" compatibility for IE9 */
     text-align: center;
     text-overflow: ellipsis;
     background-color: #f4f4f4;
@@ -280,6 +290,7 @@ option[value=""] {
 -------------------------------------------------- */
 html {
     /* Avoid content jumping on vertical scrollbar appearing http://jsbin.com/horone/4 */
+    width: 100%;
     width: 100vw;
     max-width: 100%;
 }
@@ -287,11 +298,12 @@ div.noscroll {
     overflow: hidden;
 }
 .wrapper {
+    width: 100%;
     width: 100vw;
     min-height: 100vh;
 }
 
-#status {
+.status {
     opacity: 0;
     position: fixed;
     z-index: 999;
@@ -310,9 +322,10 @@ div.noscroll {
     -webkit-perspective: 1000;
             perspective: 1000;
 
-    will-change: transition; /* Source http://dev.w3.org/csswg/css-will-change/ */
+    will-change: transition; /* will-change http://dev.w3.org/csswg/css-will-change/ */
+    pointer-events: none;
 }
-#status.status-start:before {
+.status-start:before {
     content: "";
     display: block;
     width: 10%;
@@ -322,17 +335,30 @@ div.noscroll {
     background-image:         linear-gradient(to right, rgba(96,215,120,0), #62fb82);
     box-shadow: 2px -2px 5px 1px #62fb82;
 }
-#status.status-start {
+.status-start {
     opacity: 1;
+    width: 70%;
     width: 70vw;
     -webkit-transition: opacity .2s, width 5s cubic-bezier(.2,1,.4,1); /* Safari, Android and iOS legacy */
             transition: opacity .2s, width 5s cubic-bezier(.2,1,.4,1);
 }
-#status.status-done {
-    width: 100vw;
+.status-done {
     opacity: 0;
+    width: 100%;
+    width: 100vw;
     -webkit-transition-duration: .2s; /* Safari, Android and iOS legacy */
             transition-duration: .2s;
+}
+.status-error {
+    opacity: 1;
+    width: 100%;
+    width: 100vw;
+    background-color: #f79c87;
+    -webkit-transition: background .2s cubic-bezier(.2,1,.4,1); /* Safari, Android and iOS legacy */
+            transition: background .2s cubic-bezier(.2,1,.4,1);
+}
+.status-error:before {
+    display: none;
 }
 
 /* Navigation */
@@ -342,11 +368,13 @@ div.noscroll {
     top: 0;
     right: 0;
     left: 0;
+    width: 100%;
     width: 100vw;
     line-height: 2.2;
     font-family: Segoe UI, Open Sans, sans-serif; /* "Meiryo" returns ellipsis in middle of text */
     text-align: center;
     white-space: nowrap;
+    word-wrap: normal;
 }
 .bar {
     display: none;
@@ -371,7 +399,7 @@ div.noscroll {
 }
 .header {
     position: relative;
-    padding: .1em .4em;
+    padding: .08em .4em;
 }
 .header:after {
     content: "";
@@ -401,7 +429,8 @@ div.noscroll {
     box-shadow: 0 1px 1px rgba(0,0,0,.1),
                 inset 0 0 0 1px rgba(255,255,255,.5);
 }
-.nav.nav a, .footer a {
+.nav.nav a,
+.footer a {
     color: inherit;
     text-decoration: none;
 }
@@ -428,24 +457,31 @@ div.noscroll {
 .nav a:last-of-type {
     border-radius: 0 .2em .2em 0;
 }
-.nav a:hover, .nav a:focus {
+.nav a:hover,
+.nav a:focus {
     background-color: #fff;
+}
+.nav a.focus,
+.nav a.error,
+.nav a.active {
+    margin: -1px auto;
+    line-height: 2.25;
+    border-color: transparent;
+}
+.nav .focus + a,
+.nav .active + a,
+.nav .error + a {
+    border-color: transparent;
 }
 .nav a.focus {
     background-color: rgba(206,209,210,.4);
 }
-.nav a.error {
-    background-color: #f1e2e2;
-}
 .nav a.active {
-    margin: -1px auto;
     color: #fff;
-    line-height: 2.25;
     background-color: #006cff;
-    border-color: transparent;
 }
-.nav .active + a {
-    border-color: transparent;
+.nav a.error {
+    background-color: #f7dad4;
 }
 .nav span {
     overflow: hidden;
@@ -455,6 +491,10 @@ div.noscroll {
     text-overflow: clip;
     -webkit-mask: linear-gradient(to left, rgba(0,0,0,0), #000 1.5em, #000); /* Chrome legacy */
             mask: linear-gradient(to left, rgba(0,0,0,0), #000 1.5em, #000);
+}
+.nav span[dir] {
+    -webkit-mask: linear-gradient(to right, rgba(0,0,0,0), #000 1.5em, #000); /* Chrome legacy */
+            mask: linear-gradient(to right, rgba(0,0,0,0), #000 1.5em, #000);
 }
 .main, .footer {
     position: relative;
@@ -489,6 +529,13 @@ div.noscroll {
     padding-top: 1.3em;
     margin-top: -1.3em;
 }
+.error ~ .main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding-bottom: 8.5em;
+}
 .footer {
     overflow: hidden;
     height: 2.7em; /* IE11 issue */
@@ -496,6 +543,7 @@ div.noscroll {
     line-height: 2.7;
     text-overflow: ellipsis;
     white-space: nowrap;
+    word-wrap: normal;
     border-top: 1px solid #eee;
 }
 .footer a {
@@ -553,6 +601,14 @@ template {
         display: none;
     }
 }
+/* @media (min-width:0\0) { // IE9-10
+    input {
+        // IE10 Long text overflowing a padding http://jsbin.com/kabeqixogi/1, https://connect.microsoft.com/IE/Feedback/Details/788605
+        border: 0 solid transparent;
+        border-width: 0 .01em;
+        border-radius: .01em;
+    }
+} */
 @media (-ms-high-contrast: active), (-ms-high-contrast: none) { /* IE10+ http://www.impressivewebs.com/ie10-css-hacks/ */
     html, textarea, .nav {
         /* Auto-hide scrollbar */
@@ -655,12 +711,14 @@ template {
         /* Reset */
         width: auto;
     }
-    #status:not(.expand) ~ .tab .header {
+    .status {
+        height: 4px;
+    }
+    .status:not(.expand) ~ .tab .header {
         -webkit-transition: none; /* Safari, Android and iOS legacy */
                 transition: none;
     }
     .tab {
-        z-index: 100;
         width: 100%;
         width: 75%\9\0; /* IE9 legacy */
         padding-bottom: .2em;
@@ -846,12 +904,16 @@ template {
         padding: 2em 1.9em 3.2em;
         border: 0;
     }
+    .error ~ .main {
+        padding-bottom: 6.7em;
+    }
     .main [id]:before {
         padding-top: 1.8em;
         margin-top: -1.8em;
     }
     .footer {
         display: none;
+        box-suppress: discard;
     }
 }
 @media (max-width: 320px) {
