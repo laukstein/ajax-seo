@@ -1,46 +1,55 @@
 <?php
 //
-// API JSON/P
-//
+// JSON API
 
-header('X-Robots-Tag: nosnippet');
+$arr = array();
 
-function error() {
-    http_response_code(404);
-    header('Content-Type: text/plain');
-    exit('404 Not Found');
-}
-if (!$results) error();
-
-/*// Response simulator
+/*// Simulate slow response and errors
 function simulator() {
-    $arr = [0, 2, 4, 6];
-    $i   = $arr[rand(0, count($arr) - 1)];
+    global $result, $arr, $title, $content, $pagetitle, $title_error, $content_error, $pagetitle_error;
+
+    $a = [0, 2, 4, 6];
+    $i = $a[rand(0, count($a) - 1)];
 
     if ($i > 0) {
-        if ($i === 5) error();
+        if ($i === 6) {
+            http_response_code(403);
+            header('Content-Type: text/plain');
+            exit('403 Forbidden');
+        }
+
         sleep($i);
-        if ($i > 3) error();
+
+        if ($result && $i === 4) {
+            http_response_code(404);
+
+            $arr['error'] = true;
+            $title        = $title_error;
+            $content      = $content_error;
+            $pagetitle    = $pagetitle_error;
+        }
     }
 }
+
 if ($debug) simulator();*/
 
-$callback      = isset($_GET['callback']) ? $_GET['callback'] : null;
-$issetcallback = !empty($callback) ? true : false;
 
-header('Content-Type: application/' . ($issetcallback ?  'javascript' : 'json') . '; charset=utf-8');
+// Genarate
+if (!$result) $arr['error'] = true;
 
-$array = array(
-    'title' => $pagetitle,
-    'content' => "<h1 dir=auto>$title</h1>\n$content\n"
-);
+$arr['title']   = $pagetitle;
+$arr['content'] = "<h1 dir=auto>$title</h1>\n$content\n";
+$arr = array_filter($arr);
+$arr = $debug ? json_encode($arr, JSON_PRESERVE_ZERO_FRACTION | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) : json_encode($arr, JSON_PRESERVE_ZERO_FRACTION | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
-// UTF8 decoded JSON
-// Add option "JSON_PRETTY_PRINT" in case you care more readability than to save some bits
-$data = json_encode($array, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 if (version_compare(PHP_VERSION, '5.4', '<')) {
-    $data = preg_replace('/\\\\u([a-f0-9]{4})/e', "iconv('UCS-4LE', 'utf-8', pack('V',  hexdec('U$1')))", json_encode($array));
-    $data = str_replace('\\/', '/', $data);
+    $arr = preg_replace('/\\\\u([a-f0-9]{4})/e', "iconv('UCS-4LE', 'utf-8', pack('V',  hexdec('U$1')))", json_encode($arr));
+    $arr = str_replace('\\/', '/', $arr);
 }
 
-echo $issetcallback ? $callback . '(' . $data . ')' : $data;
+
+// Respond
+if (!$result) http_response_code(404);
+header('Content-Type: application/json; charset=utf-8');
+header('X-Robots-Tag: nosnippet');
+echo $arr;
