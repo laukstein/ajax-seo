@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pass      = trim($_POST['pass']);
     $db        = trim($_POST['db']);
     $table     = trim($_POST['table']);
-    $drop      = empty($_POST['drop']) ? false : true;
+    $drop      = !empty($_POST['drop']);
     $gtitle    = trim($_POST['title']);
     // $assets    = trim($_POST['assets']);
     $ga        = trim($_POST['ga']);
@@ -69,12 +69,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       title char(70) NOT NULL,
                       description char(154) NOT NULL,
                       content text NOT NULL,
-                      updated datetime NOT NULL,
+                      modified datetime NOT NULL,
                       created timestamp DEFAULT CURRENT_TIMESTAMP,
                       PRIMARY KEY (id),
                       UNIQUE KEY url (url)
                     ) ENGINE=MyISAM DEFAULT ' . $char);
-                $mysqli->query('CREATE TRIGGER updated BEFORE UPDATE ON `' . $table . '` FOR EACH ROW SET new.updated=NOW()'); // Requires TRIGGER global privilege
+                // Requires TRIGGER global privilege
+                $mysqli->query('CREATE TRIGGER modified BEFORE UPDATE ON `' . $table . '` FOR EACH ROW SET new.modified=NOW()');
                 if ($mysqli->query("INSERT INTO `" . $table . "` (`order`, permit, url, title, description, content) VALUES
                                     (1, 1, '', 'Ajax SEO v4', 'Extend user experience with crawlable webapp framework Ajax SEO', '<h2>Extend user experience</h2>\n<p>Ajax SEO is crawlable webapp framework for outstanding UX.</p>\n<a class=button role=button href=https://github.com/laukstein/ajax-seo/zipball/master download>Download recent code</a>\n<ul>\n    <li>Cross-platform\n    <li>W3C cutting-edge standards\n        <ul>\n            <li>Native HTML5.1 APIs, Microdata, JavaScript\n            <li>SEO accessible, crawlable and indexable\n        </ul>\n    </li>\n    <li>Grade-A performance, security and usability\n    <li>Simple, responsive, intuitive, maintainable\n    <li><a href={\$path}/more-features>More features</a>\n</ul>\n<p>Here, <code><a href=history>href=history</a></code> requests API <code>api/history</code>.</p>\n<p>Legacy browser support in <a href=https://github.com/laukstein/ajax-seo/releases target=_blank>earlier releases</a>.</p>'),
                                     (2, 1, 'history', 'History', 'When it begin', '<h2>When it begin</h2>\n<blockquote>\n    <p>I always keep learning, research, innovate and brainstorm ideas to make a better life, to merge art and technology and improve the World\'s experience.</p>\n    <cite><a href=http://laukstein.com>Binyamin Laukstein</a>, <time datetime=\"2014-05-27\">May 27, 2014</time></cite>\n</blockquote>\n<p>In 2001 I become passionately interested how Web works and how easily it changes the World knowledge. Since then I make the Web a better place and in my spare time I propose Web standards, UX concepts, advise major companies and innovate patents.</p>\n<p>Ajax SEO idea began in 2007 on using Dynamic Drive <a rel=nofollow href=http://www.dynamicdrive.com/dynamicindex17/tabcontent.htm target=_blank>Tab Content Script</a> with HTTP cookie memorized last opened tab, where I expend its features with Google Analytics compatibility.</p>\n<p>Later, in 2010 I found Asual\'s (Rostislav Hristov) jQuery <a rel=nofollow href=https://github.com/asual/jquery-address target=_blank>Address plugin</a> and wondered about missed SEO, <a rel=nofollow href=https://developers.google.com/webmasters/ajax-crawling/docs/getting-started target=_blank>Ajax crawlability</a>, Apache + MySQL + PHP compatibility, and so I began my first GitHub project <a href=https://github.com/laukstein/ajax-seo>Ajax SEO</a> with jQuery Address plugin.</p>\n<p>Through time I saw Asual and jQuery code too slow, outdated and unnecessary and in 2013, while developing cross-platform webapps on multiple devices, I decided to go forward - remove dependencies and make own code with native JavaScript and more W3C cutting-edge standards.</p>'),
