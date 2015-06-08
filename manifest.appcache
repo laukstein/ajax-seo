@@ -8,7 +8,7 @@
 
 include 'content/config.php';
 include 'content/connect.php';
-include 'content/cache.php'; cache::medb();
+include 'content/cache.php'; cache::all();
 
 echo 'CACHE MANIFEST
 # ' . date('Y-m-d\TH:i\Z', date::all()) . "\n\n". (strlen($path) ? $path : '/');
