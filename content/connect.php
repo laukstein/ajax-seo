@@ -32,27 +32,32 @@ if ($conn) {
         fclose($fopen);
     }
 } else {
+    // Not reachable database
     // SEO friendly blackout status http://googlewebmastercentral.blogspot.com/2011/01/how-to-deal-with-planned-site-downtime.html
     // Website outages and blackouts the right way https://plus.google.com/115984868678744352358/posts/Gas8vjZ5fmB
+    http_response_code(503);
+    // Try to reach server after 1 minute
+    header('Retry-After: 60');
     // Valid indexing & serving directives https://developers.google.com/webmasters/control-crawl-index/docs/robots_meta_tag
-
-    header('Retry-After: 60'); // Try to reach server after 1 minute
     header('X-Robots-Tag: none');
 
     function refresh() {
         global $path;
         ob_end_clean();
-        header('Location: ' . (strlen($path) ? $path : '.'));
+        header('Location: ' . (strlen($path) ? $path : '/'));
         exit;
     }
+
+    $ishome = (strlen($path) ? $path : '/') === $path . $url;
+
     if (connection) {
         $string = preg_replace("/define\('(connection)', true\);/", "define('$1', false);", file_get_contents($file));
         $fopen  = fopen($file, 'w');
         fwrite($fopen, $string);
         fclose($fopen);
         refresh();
-    } else {
-        if (isset($url) && $path !== $url) refresh();
+    } else if (!$ishome) {
+        refresh();
     }
 
     include 'content/install.php';
