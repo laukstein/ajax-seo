@@ -488,13 +488,7 @@ div.noscroll {
     display: block;
     position: relative;
     top: -.06em;
-    text-overflow: clip;
-    -webkit-mask: linear-gradient(to left, rgba(0,0,0,0), #000 1.5em, #000); /* Chrome legacy */
-            mask: linear-gradient(to left, rgba(0,0,0,0), #000 1.5em, #000);
-}
-.nav span[dir] {
-    -webkit-mask: linear-gradient(to right, rgba(0,0,0,0), #000 1.5em, #000); /* Chrome legacy */
-            mask: linear-gradient(to right, rgba(0,0,0,0), #000 1.5em, #000);
+    text-overflow: ellipsis;
 }
 .main, .footer {
     position: relative;
@@ -664,6 +658,17 @@ template {
         color: inherit;
         -webkit-user-select: none;
     }
+    .nav span {
+        /* Only Webkit currently supports "mask" value "linear-gradient" */
+        text-overflow: clip;
+        -webkit-mask: linear-gradient(to left, rgba(0,0,0,0), #000 1.5em, #000); /* Chrome legacy */
+                mask: linear-gradient(to left, rgba(0,0,0,0), #000 1.5em, #000);
+    }
+    .nav span[dir] {
+        /* "mask" for RTL */
+        -webkit-mask: linear-gradient(to right, rgba(0,0,0,0), #000 1.5em, #000); /* Chrome legacy */
+                mask: linear-gradient(to right, rgba(0,0,0,0), #000 1.5em, #000);
+    }
 }
 @-moz-document url-prefix() { /* Firefox */
     ::-moz-selection {
@@ -682,10 +687,6 @@ template {
         /* Remove button padding */
         border: 0;
         padding: 0;
-    }
-    .nav span {
-        /* Firefox 40 does not support "mask: linear-gradient()" and "mask" for "text-overflow: clip" */
-        text-overflow: ellipsis;
     }
 }
 
