@@ -72,7 +72,8 @@ main {
 h1, h2, h3, dt {
     line-height: 1.07;
     font-weight: normal;
-    font-family: Times New Roman, serif; /* IE fallback "Times New Roman", Unquote font-family http://mothereff.in/font-family */
+    /* IE fallback "Times New Roman", Unquote font-family http://mothereff.in/font-family */
+    font-family: Times New Roman, serif;
 }
 h1, h2 {
     margin-top: .2em;
@@ -121,7 +122,8 @@ blockquote cite:before {
     color: #777;
 }
 cite {
-    display: block; /* Chrome ::selection related issue */
+    /* Chrome ::selection related issue */
+    display: block;
 }
 br {
     word-spacing: 0;
@@ -189,7 +191,8 @@ abbr {
     border-bottom: 1px dotted #ccc;
 }
 legend {
-    display: table; /* IE line-wrapping issue */
+    /* IE line-wrapping issue */
+    display: table;
 }
 label {
     display: inline-block;
@@ -609,16 +612,19 @@ template {
         -ms-overflow-style: -ms-autohiding-scrollbar;
     }
     a {
-        background-color: initial; /* Remove IE10 :active gray background-color */
+        /* Remove IE10 :active gray background-color */
+        background-color: initial;
     }
     select {
-        -ms-user-select: none; /* Disable text highlight on elemnt blur on IE11 */
+        /* Disable text highlight on elemnt blur on IE11 */
+        -ms-user-select: none;
     }
     :-ms-input-placeholder {
         opacity: 0.54;
     }
     ::-ms-clear {
-        display: none; /* Remove input x */
+        /* Remove input x */
+        display: none;
     }
     select:focus::-ms-value {
         /* Remove focused element highlight on IE11 */
@@ -637,10 +643,12 @@ template {
     2.3 - @keyframes flicker http://georgehess.com/post/2054803814/css-keyframe-animation-flicker
     2.3 - unknown appearance of visibility:hidden on new DOM elements on scroll while using -webkit-transform:translate3d(0,0,0), -webkit-backface-visibility:hidden or -webkit-perspective:1000 */
     html, textarea, .nav {
-        -webkit-overflow-scrolling: touch; /* iOS 7 legacy http://barrow.io/overflow-scrolling */
+        /* iOS 7 legacy http://barrow.io/overflow-scrolling */
+        -webkit-overflow-scrolling: touch;
     }
     html {
-        -webkit-font-smoothing: antialiased; /* Old Webkit smooth text rendering issue */
+        /* Old Webkit smooth text rendering issue */
+        -webkit-font-smoothing: antialiased;
         -webkit-text-size-adjust: 100%;
         /*-webkit-perspective: 1000;*/ /* Breaks position: fixed
                                           Android repaint issue on screen orientation change */
