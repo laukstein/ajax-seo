@@ -77,7 +77,7 @@ $metadata .= "\n<meta name=viewport content=\"width=device-width, initial-scale=
 $metadata .= "\n<meta name=theme-color content=#" . ($result ? 'eef0f0' : 'f79c87') . ">";
 
 // Prefetch CDN by saving DNS resolution time https://github.com/h5bp/html5-boilerplate/blob/master/doc/extend.md#dns-prefetching
-if ($cdn_host) $metadata .= "\n<link rel=dns-prefetch href=$cdn_scheme$cdn_host>";
+if ($cdn_host) $metadata .= "\n<link rel=dns-prefetch href=$cdn_scheme$cdn_host/>";
 
 // Resource hints http://w3c.github.io/resource-hints/
 // Fetch and cache API in background when everything is downloaded https://html.spec.whatwg.org/#link-type-prefetch
