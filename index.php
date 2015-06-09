@@ -13,7 +13,7 @@ if ($conn) {
     $title     = $title_error     = 'Whoops...';
     $pagetitle = $pagetitle_error = 'Page not found';
     // Old Webkit breaks the layout without </p>
-    $content   = $content_error   = '<p>This page hasn\'t been found. Try to <a class=x-error href=' . $url . '>reload</a>' . ($path === $url ? null : ' or head to <a href=' . $path . '>home page</a>') . '.</p>';
+    $content   = $content_error   = '<p>This page hasn\'t been found. Try to <a class=x-error href=' . $url . '>reload</a>' . ($ishome ? null : ' or head to <a href=' . $path . '>home page</a>') . '.</p>';
 
     $stmt = $mysqli->prepare('SELECT title, description, content, GREATEST(modified, created) AS date FROM `' . table . '` WHERE url=? LIMIT 1');
     $stmt->bind_param('s', $urldb);
@@ -23,7 +23,7 @@ if ($conn) {
     while ($stmt->fetch()) {
         $result    = true;
         // SEO page title improvement for the root page
-        $pagetitle = $path === $url ? $title : $gtitle;
+        $pagetitle = $ishome ? $title : $gtitle;
         $content   = string($content);
     }
     $stmt->free_result();

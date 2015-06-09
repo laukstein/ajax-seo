@@ -48,8 +48,6 @@ if ($conn) {
         exit;
     }
 
-    $ishome = (strlen($path) ? $path : '/') === $path . $url;
-
     if (connection) {
         $string = preg_replace("/define\('(connection)', true\);/", "define('$1', false);", file_get_contents($file));
         $fopen  = fopen($file, 'w');
