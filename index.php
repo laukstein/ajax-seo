@@ -46,15 +46,19 @@ if ($conn) {
 }
 
 
-// Avoid XSS attacks https://w3c.github.io/webappsec/specs/content-security-policy/
-$equal_origin = false;
-if ($cdn_host) {
-    preg_match('/([^.]*\.[^.]{2}|[^.]*)\.([^.]*)$/i', $host, $matches_host);
-    preg_match('/([^.]*\.[^.]{2}|[^.]*)\.([^.]*)$/i', $cdn_host, $matches_cdn_host);
-    $equal_origin = $matches_host[0] === $matches_cdn_host[0];
-}
 if (empty($_GET['api'])) {
-    header("Content-Security-Policy: script-src 'self' 'unsafe-inline'" . ($equal_origin ? null : " $cdn_host") . (ga ? ' www.google-analytics.com' : null));
+    $equal_origin = false;
+
+    if ($cdn_host) {
+        preg_match('/([^.]*\.[^.]{2}|[^.]*)\.([^.]*)$/i', $host, $matches_host);
+        preg_match('/([^.]*\.[^.]{2}|[^.]*)\.([^.]*)$/i', $cdn_host, $matches_cdn_host);
+        $equal_origin = $matches_host[0] === $matches_cdn_host[0];
+    }
+
+    // Avoid XSS attacks with CSP https://w3c.github.io/webappsec/specs/content-security-policy/
+    // Firefox OS app suggestion https://developer.mozilla.org/en-US/Apps/CSP
+    // Upgrade insecure requests https://w3c.github.io/webappsec/specs/upgrade/#upgrade_insecure_requests
+    header('Content-Security-Policy:' . ($scheme === 'https' ? ' upgrade-insecure-requests;' : '') . "script-src 'self' 'unsafe-inline'" . ($equal_origin ? null : " $cdn_host") . (ga ? ' www.google-analytics.com' : null));
 }
 
 // Max 160 character title http://blogs.msdn.com/b/ie/archive/2012/05/14/sharing-links-from-ie10-on-windows-8.aspx
@@ -74,6 +78,8 @@ $metadata .= "\n<meta name=referrer content=never>";
 $metadata .= "\n<meta name=viewport content=\"width=device-width, initial-scale=1\">";
 
 // Set toolbar color http://updates.html5rocks.com/2014/11/Support-for-theme-color-in-Chrome-39-for-Android
+// Black SVG favicon <link rel=mask-icon sizes=any href=icon.svg> coloured in "theme-color" https://lists.w3.org/Archives/Public/public-whatwg-archive/2015Jun/0059.html
+// Resource https://developer.apple.com/library/safari/releasenotes/General/WhatsNewInSafari/Articles/Safari_9.html#//apple_ref/doc/uid/TP40014305-CH9-SW20
 $metadata .= "\n<meta name=theme-color content=#" . ($result ? 'eef0f0' : 'f79c87') . ">";
 
 // Prefetch CDN by saving DNS resolution time https://github.com/h5bp/html5-boilerplate/blob/master/doc/extend.md#dns-prefetching
