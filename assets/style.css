@@ -42,7 +42,7 @@ html {
     background-color: #f8f9fa;
 
     /* Smoother scroll, faster clicks http://updates.html5rocks.com/2013/12/300ms-tap-delay-gone-away */
-    -ms-touch-action: manipulation;
+    -ms-touch-action: manipulation; /* IE10 legacy */
         touch-action: manipulation;
     cursor: default;
 }
@@ -53,7 +53,7 @@ body {
     font-size: 1.9em; /* rem unit is too buggy https://code.google.com/p/chromium/issues/detail?id=362113 and not so flexible, not standardised in @media query condition */
     overflow-wrap: break-word;
     word-wrap: break-word; /* IE11 legacy */
-    /* CSS4 hyphenation http://generatedcontent.org/post/44751461516/finer-grained-control-of-hyphenation-with-css4-text
+    /* CSS4 hyphenation http://dev.w3.org/csswg/css-text-4/ http://generatedcontent.org/post/44751461516/finer-grained-control-of-hyphenation-with-css4-text
        Chrome issue https://code.google.com/p/chromium/issues/detail?id=47083 */
     -ms-hyphenate-limit-chars: 6 3 2;
         hyphenate-limit-chars: 6 3 2;
@@ -334,7 +334,7 @@ div.noscroll {
     width: 10%;
     height: 100%;
     float: right;
-    background-image: -webkit-linear-gradient(left, rgba(96,215,120,0), #62fb82);  /* Safari, iOS and Android fallback */
+    background-image: -webkit-linear-gradient(left, rgba(96,215,120,0), #62fb82); /* Android 4.3 legacy */
     background-image:         linear-gradient(to right, rgba(96,215,120,0), #62fb82);
     box-shadow: 2px -2px 5px 1px #62fb82;
 }
@@ -342,7 +342,7 @@ div.noscroll {
     opacity: 1;
     width: 70%;
     width: 70vw;
-    -webkit-transition: opacity .2s, width 5s cubic-bezier(.2,1,.4,1); /* Safari, Android and iOS legacy */
+    -webkit-transition: opacity .2s, width 5s cubic-bezier(.2,1,.4,1); /* Android 4.3 legacy */
             transition: opacity .2s, width 5s cubic-bezier(.2,1,.4,1);
 }
 .status-done {
@@ -357,7 +357,7 @@ div.noscroll {
     width: 100%;
     width: 100vw;
     background-color: #f79c87;
-    -webkit-transition: background .2s cubic-bezier(.2,1,.4,1); /* Safari, Android and iOS legacy */
+    -webkit-transition: background .2s cubic-bezier(.2,1,.4,1); /* Android 4.3 legacy */
             transition: background .2s cubic-bezier(.2,1,.4,1);
 }
 .status-error:before {
@@ -410,7 +410,7 @@ div.noscroll {
     left: 0;
     right: 0;
     height: 1.5em;
-    background-image: -webkit-linear-gradient(#fff, rgba(255,255,255,.9) 35%, rgba(255,255,255,.8) 50%, rgba(255,255,255,0)); /* Safari, iOS and Android fallback */
+    background-image: -webkit-linear-gradient(#fff, rgba(255,255,255,.9) 35%, rgba(255,255,255,.8) 50%, rgba(255,255,255,0)); /* Android 4.3 legacy */
     background-image:         linear-gradient(#fff, rgba(255,255,255,.9) 35%, rgba(255,255,255,.8) 50%, rgba(255,255,255,0));
     pointer-events: none;
 }
@@ -424,7 +424,7 @@ div.noscroll {
     margin: .1em auto;
     font-size: 1.05em;
     background-color: #f4f4f4;
-    background-image: -webkit-linear-gradient(#f8f8f8, rgba(248,249,250,0)); /* Safari, iOS and Android fallback */
+    background-image: -webkit-linear-gradient(#f8f8f8, rgba(248,249,250,0)); /* Android 4.3 legacy */
     background-image:         linear-gradient(#f8f8f8, rgba(248,249,250,0));
     border: 1px solid #d9e0e2;
     border-bottom-color: #ccc;
@@ -649,7 +649,7 @@ template {
     html {
         /* Old Webkit smooth text rendering issue */
         -webkit-font-smoothing: antialiased;
-        -webkit-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%; /* iOS fix */
         /*-webkit-perspective: 1000;*/ /* Breaks position: fixed
                                           Android repaint issue on screen orientation change */
     }
@@ -659,7 +659,8 @@ template {
         -webkit-tap-highlight-color: rgba(0,0,0,0);
     }
     a {
-        -webkit-touch-callout: none; /* iOS remove bubble dialog on tap-holding */
+        /* iOS remove bubble dialog on tap-holding */
+        -webkit-touch-callout: none;
     }
     ::-webkit-input-placeholder {
         opacity: 0.54;
@@ -724,7 +725,7 @@ template {
         height: 4px;
     }
     .status:not(.expand) ~ .tab .header {
-        -webkit-transition: none; /* Safari, Android and iOS legacy */
+        -webkit-transition: none; /* Android 4.3 legacy */
                 transition: none;
     }
     .tab {
@@ -733,7 +734,7 @@ template {
         padding-bottom: .2em;
         text-align: left; /* IE9 legacy */
         text-align: start;
-        background-image: -webkit-linear-gradient(#fff, rgba(255,255,255,.9) 35%, rgba(255,255,255,.8) 50%, rgba(255,255,255,0)); /* Safari, iOS and Android fallback */
+        background-image: -webkit-linear-gradient(#fff, rgba(255,255,255,.9) 35%, rgba(255,255,255,.8) 50%, rgba(255,255,255,0)); /* Android 4.3 legacy */
         background-image:         linear-gradient(#fff, rgba(255,255,255,.9) 35%, rgba(255,255,255,.8) 50%, rgba(255,255,255,0));
         pointer-events: none;
     }
@@ -847,13 +848,13 @@ template {
     }
     .header:before {
         top: 0;
-        background-image: -webkit-linear-gradient(#f8f9fa, rgba(248,249,250,.9) 50%, rgba(248,249,250,.8) 60%, rgba(248,249,250,0)); /* Safari, iOS and Android fallback */
+        background-image: -webkit-linear-gradient(#f8f9fa, rgba(248,249,250,.9) 50%, rgba(248,249,250,.8) 60%, rgba(248,249,250,0)); /* Android 4.3 legacy */
         background-image:         linear-gradient(#f8f9fa, rgba(248,249,250,.9) 50%, rgba(248,249,250,.8) 60%, rgba(248,249,250,0));
     }
     .header:after {
         bottom: 0;
         right: auto;
-        background-image: -webkit-linear-gradient(rgba(248,249,250,0), rgba(248,249,250,.8) 50%, rgba(248,249,250,.9) 60%, #f8f9fa); /* Safari, iOS and Android fallback */
+        background-image: -webkit-linear-gradient(rgba(248,249,250,0), rgba(248,249,250,.8) 50%, rgba(248,249,250,.9) 60%, #f8f9fa); /* Android 4.3 legacy */
         background-image:         linear-gradient(rgba(248,249,250,0), rgba(248,249,250,.8) 50%, rgba(248,249,250,.9) 60%, #f8f9fa);
     }
     .expand ~ .tab .header:before,
