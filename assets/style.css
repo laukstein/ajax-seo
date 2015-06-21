@@ -280,6 +280,12 @@ button:active,
     background-color: rgba(206,209,210,.4);
     box-shadow: none;
 }
+option {
+    /* Match to parent element width (currently supported only on Firefox) */
+    /* Chrome max-width issue https://code.google.com/p/chromium/issues/detail?id=82253 */
+    min-width: 100%;
+    max-width: 0;
+}
 option[value=""] {
     /* First element as placeholder, fails on IE */
     display: none;
