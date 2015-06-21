@@ -279,7 +279,11 @@
             }
 
             d.title = as.title = data.title;
-            d.body.scrollTop = 0;
+
+            // Fixing scrollTop with Document.scrollingElement https://dev.opera.com/articles/fixing-the-scrolltop-bug/, http://dev.w3.org/csswg/cssom-view/#dom-document-scrollingelement
+            var scrollingElement = d.scrollingElement || d.documentElement.scrollTop || d.body;
+            scrollingElement.scrollTop = 0;
+
             layout.output.innerHTML = data.content;
 
             if (l.hash) {
