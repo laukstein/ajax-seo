@@ -4,11 +4,15 @@ include 'content/config.php';
 include 'content/connect.php';
 include 'content/cache.php'; cache::all();
 
-echo '/* SITE */
-Author:         Binyamin Laukstein
-Contact:        http://laukstein.com/contact
-Last update:    ' . date('Y-m-d\TH:i\Z', date::all()) . '
-Standards:      HTML Living Standard, Microdata, CSS, JavaScript
-Source:         https://github.com/laukstein/ajax-seo';
+echo '/* TEAM */
+Author: Binyamin Laukstein
+Site: https://laukstein.com/
+Google+: https://plus.google.com/+BinyaminLaukstein
+
+/* SITE */
+Last update: ' . date('Y/m/d', date::all()) . '
+Standards: HTML Living Standard, Microdata, CSS, JavaScript
+Components: HTML5 Shiv, Google Analytics
+Source: https://github.com/laukstein/ajax-seo';
 
 $mysqli->close();
