@@ -1,4 +1,4 @@
-/* Resources
+/* References
 --------------------------------------------------
 Google HTML/CSS Style Guide
 http://google-styleguide.googlecode.com/svn/trunk/htmlcssguide.xml
@@ -35,6 +35,7 @@ html, label, input, ::-webkit-input-placeholder, button, .button {
             user-select: none;
 }
 html {
+    scroll-behavior: smooth; /* Spec http://dev.w3.org/csswg/cssom-view/#propdef-scroll-behavior */
     font-size: 62.45%; /* Make 1em = 10px = 2.5rem */
     line-height: 1.5;
     text-rendering: optimizeSpeed;
@@ -113,6 +114,7 @@ blockquote {
     padding-left: 1.2em;
     font-style: italic;
     border-left: .3em solid #eef0f0;
+    border-color: rgba(125,138,138,.13);
 }
 blockquote cite {
     color: #777;
@@ -136,6 +138,7 @@ hr {
     clear: both;
     border-width: 0;
     border-top: 1px solid #eef0f0;
+    border-color: rgba(125,138,138,.13);
 }
 code, pre {
     padding: .05em .3em;
@@ -246,7 +249,7 @@ textarea:hover, textarea:focus {
     width: auto;
     padding: 0;
     border: 0;
-    box-sizing: padding-box;
+    box-sizing: content-box;
 }
 select, button, .button {
     overflow: hidden;
@@ -331,7 +334,7 @@ div.noscroll {
     -webkit-perspective: 1000;
             perspective: 1000;
 
-    will-change: transition; /* will-change http://dev.w3.org/csswg/css-will-change/ */
+    will-change: transform; /* will-change http://dev.w3.org/csswg/css-will-change/ */
     pointer-events: none;
 }
 .status-start:before {
@@ -384,16 +387,15 @@ div.noscroll {
     text-align: center;
     white-space: nowrap;
     word-wrap: normal;
+    backface-visibility: hidden; /* will-change does not repaint fully .tab.expand height, box-shadow, etc. */
 }
-.bar {
+.bar,
+.handler,
+.focusin {
     display: none;
     box-suppress: discard; /* It is recommended that box-suppress be used instead of display: none,
                               so that the element's display type is automatically preserved for when it's no longer suppressed.
                               http://dev.w3.org/csswg/css-display/#propdef-box-suppress */
-}
-.focusout {
-    display: none;
-    box-suppress: discard;
 }
 .header, .main, .footer {
     width: 95%;
@@ -445,14 +447,11 @@ div.noscroll {
 }
 .nav a {
     display: block;
-    position: relative; /* Old Webkit visibility issue */
-    z-index: 1;
     -webkit-box-flex: 1; /* Android 2.3 legacy */
     -ms-flex: 1;
         flex: 1;
     flex-basis: auto;
     min-width: 1px; /* IE11 ignores min-width: 0; */
-    max-height: 2.3em; /* Old Webkit legacy */
     padding: 0 .43em; /* Firefox flexbox padding percentage issue https://bugzilla.mozilla.org/show_bug.cgi?id=529761 */
     border: 0 solid #d9e0e2;
     border-left-width: 1px;
@@ -486,6 +485,8 @@ div.noscroll {
     background-color: rgba(206,209,210,.4);
 }
 .nav a.active {
+    position: relative;
+    z-index: 1;
     color: #fff;
     background-color: #006cff;
 }
@@ -497,6 +498,7 @@ div.noscroll {
     display: block;
     position: relative;
     top: -.06em;
+    max-height: 2.3em; /* Old Webkit legacy */
     text-overflow: ellipsis;
 }
 .main, .footer {
@@ -583,7 +585,7 @@ template {
     .nav a {
         display: table-cell;
     }
-	[hidden], .handler, .footer {
+	[hidden], .footer {
         display: none;
     }
 }
@@ -640,6 +642,11 @@ template {
     [hidden] {
         display: none;
         box-suppress: discard;
+    }
+    .nav:before,
+    .nav:after {
+        /* IE11 width flicker hack */
+        transition: width .35s cubic-bezier(.2,1,.4,1);
     }
 }
 @media (-webkit-min-device-pixel-ratio: 0) { /* Webkit */
@@ -717,8 +724,8 @@ template {
         overflow: hidden;
     }
     hr {
-        margin-right: -1.7em;
-        margin-left: -1.7em;
+        margin-right: -1.9em;
+        margin-left: -1.9em;
     }
     label, input, textarea, button {
         width: 100%;
@@ -736,7 +743,6 @@ template {
     }
     .tab {
         width: 100%;
-        width: 75%\9\0; /* IE9 legacy */
         padding-bottom: .2em;
         text-align: left; /* IE9 legacy */
         text-align: start;
@@ -776,6 +782,7 @@ template {
         border-radius: .1em;
         -webkit-transition: width .1s, background-color 1ms, -webkit-transform .35s cubic-bezier(.2,1,.4,1); /* Android 4.3 legacy */
                 transition: width .1s, background-color 1ms, transform .35s cubic-bezier(.2,1,.4,1); /* Simulation http://cubic-bezier.com/#.2,1,.4,1 */
+        will-change: transform;
     }
     .bar span {
         position: relative;
@@ -783,7 +790,6 @@ template {
         transform: translateY(0); /* Firefox 34 Nightly width fix */
         -webkit-transition-duration: .15s; /* Android 4.3 legacy */
                 transition-duration: .15s;
-        will-change: transition, transform;
         pointer-events: none; /* IE11 legacy */
     }
     .bar span:before {
@@ -817,14 +823,6 @@ template {
             -ms-transform: rotate(-45deg); /* IE9 legacy */
                 transform: rotate3d(0,0,1,-45deg); /* Chrome rotation offset fix */
     }
-    .expand ~ .tab .header {
-        -webkit-transform: none; /* Webkit legacy */
-            -ms-transform: none; /* IE9 legacy */
-                transform: none;
-    }
-    .focusout {
-        display: inline;
-    }
     .header {
         position: fixed;
         top: 0;
@@ -839,33 +837,21 @@ template {
                 transform: translateX(-100%);
         -webkit-transition: -webkit-transform .35s cubic-bezier(.2,1,.4,1); /* Android 4.3 legacy */
                 transition:         transform .35s cubic-bezier(.2,1,.4,1);
+        backface-visibility: hidden;
     }
-    .header:before,
-    .header:after {
-        opacity: 0; /* IE11 width flicker hack */
-        content: "";
-        position: fixed;
-        left: 0;
-        z-index: 2;
-        width: 75%; /* Chrome bug - differ width with vs without scroll, fixes calculation on changing windows size; fine on old WebKit */
-        height: 2.35em;
-        pointer-events: none;
-        transition: opacity .35s cubic-bezier(.2,1,.4,1); /* IE11 width flicker hack */
+    .expand ~ .tab .header {
+        -webkit-transform: none; /* Webkit legacy */
+            -ms-transform: none; /* IE9 legacy */
+                transform: none;
     }
-    .header:before {
-        top: 0;
-        background-image: -webkit-linear-gradient(#f8f9fa, rgba(248,249,250,.9) 50%, rgba(248,249,250,.8) 60%, rgba(248,249,250,0)); /* Android 4.3 legacy */
-        background-image:         linear-gradient(#f8f9fa, rgba(248,249,250,.9) 50%, rgba(248,249,250,.8) 60%, rgba(248,249,250,0));
+    .expand ~ .tab .header:after,
+    .footer {
+        display: none;
+        box-suppress: discard;
     }
-    .header:after {
-        bottom: 0;
-        right: auto;
-        background-image: -webkit-linear-gradient(rgba(248,249,250,0), rgba(248,249,250,.8) 50%, rgba(248,249,250,.9) 60%, #f8f9fa); /* Android 4.3 legacy */
-        background-image:         linear-gradient(rgba(248,249,250,0), rgba(248,249,250,.8) 50%, rgba(248,249,250,.9) 60%, #f8f9fa);
-    }
-    .expand ~ .tab .header:before,
-    .expand ~ .tab .header:after {
-        opacity: 1; /* IE11 width flicker hack */
+    .focusin,
+    .handler {
+        display: block;
     }
     .expand ~ .handler,
     .expand ~ .tab .handler {
@@ -898,6 +884,34 @@ template {
         border: 0;
         box-shadow: none;
         box-sizing: border-box;
+        backface-visibility: hidden; /* will-change breaks pseudo-class position: fixed */
+    }
+    .nav:before,
+    .nav:after {
+        content: "";
+        position: fixed;
+        left: 0;
+        z-index: 2;
+        width: 0;
+        height: 2.35em;
+        pointer-events: none;
+        will-change: transform;
+    }
+    .expand ~ .tab .nav:before,
+    .expand ~ .tab .nav:after {
+        width: 75%;
+        width: 75vw;
+    }
+    .nav:before {
+        top: 0;
+        background-image: -webkit-linear-gradient(#f8f9fa, rgba(248,249,250,.9) 50%, rgba(248,249,250,.8) 60%, rgba(248,249,250,0)); /* Android 4.3 legacy */
+        background-image:         linear-gradient(#f8f9fa, rgba(248,249,250,.9) 50%, rgba(248,249,250,.8) 60%, rgba(248,249,250,0));
+    }
+    .nav:after {
+        bottom: 0;
+        right: auto;
+        background-image: -webkit-linear-gradient(rgba(248,249,250,0), rgba(248,249,250,.8) 50%, rgba(248,249,250,.9) 60%, #f8f9fa); /* Android 4.3 legacy */
+        background-image:         linear-gradient(rgba(248,249,250,0), rgba(248,249,250,.8) 50%, rgba(248,249,250,.9) 60%, #f8f9fa);
     }
     .nav.nav a { /* Increase selector specificity http://vimeo.com/100264064 minute 03:30 */
         display: block;
@@ -908,6 +922,7 @@ template {
         padding: 0 1.3em;
         float: none; /* IE legacy issue */
         border-color: #eef0f0;
+        border-color: rgba(125,138,138,.13);
         border-width: 0;
         border-top-width: 1px;
     }
@@ -926,10 +941,6 @@ template {
     .main [id]:before {
         padding-top: 1.8em;
         margin-top: -1.8em;
-    }
-    .footer {
-        display: none;
-        box-suppress: discard;
     }
 }
 @media (max-width: 320px) {
