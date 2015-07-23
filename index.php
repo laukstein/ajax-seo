@@ -118,8 +118,8 @@ if ($conn) {
 
         echo "\n<div id=status class=" . ($result ? 'status' : '"status error status-error"') . ' role=progressbar></div>
 <div class=tab>
-    <button class=bar id=bar tabindex=0><span></span></button>
-    <span class=focusin id=focusin tabindex=0></span>
+    <button class=bar id=bar tabindex=0 hidden><span></span></button>
+    <span class=focusin id=focusin tabindex=0 hidden></span>
     <header class=header>
         <nav class=nav id=nav role=navigation>';
 
@@ -133,11 +133,11 @@ if ($conn) {
             ' href="' . (strlen($data_url) ? "$path/$data_url" : (strlen($path) ? $path : '/')) . '"><span' .
             (is_rtl($data_metatitle) ? ' dir=auto' : '') . ">$data_metatitle</span></a>";
 
-        echo "\n            <div class=handler id=focusout tabindex=0></div>
+        echo "\n            <div class=handler id=focusout tabindex=0 hidden></div>
         </nav>
     </header>
 </div>
-<div class=handler id=reset></div>";
+<div class=handler id=reset hidden></div>";
 
         $stmt->free_result();
         $stmt->close();
