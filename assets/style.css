@@ -20,14 +20,24 @@ http://screwlewse.com/2010/08/different-css-techniques-and-their-performance/ */
 
 /* Stabilization
 -------------------------------------------------- */
-html, body {
+html,
+body {
     height: 100%;
 }
-html, input, select, textarea, button {
+html,
+input,
+select,
+textarea,
+button {
     color: #222;
     font-family: Cambria, Georgia, serif;
 }
-html, label, input, ::-webkit-input-placeholder, button, .button {
+html,
+label,
+input,
+::-webkit-input-placeholder,
+button,
+.button {
     /* Remove user-select for easer debugging */
     -webkit-user-select: none;
        -moz-user-select: none;
@@ -47,7 +57,11 @@ html {
         touch-action: manipulation;
     cursor: default;
 }
-body, dl, dd, blockquote, figure {
+body,
+dl,
+dd,
+blockquote,
+figure {
     margin: 0;
 }
 body {
@@ -70,13 +84,17 @@ main {
         -ms-user-select: text;
             user-select: text;
 }
-h1, h2, h3, dt {
+h1,
+h2,
+h3,
+dt {
     line-height: 1.07;
     font-weight: normal;
     /* IE fallback "Times New Roman", Unquote font-family http://mothereff.in/font-family */
     font-family: Times New Roman, serif;
 }
-h1, h2 {
+h1,
+h2 {
     margin-top: .2em;
     margin-bottom: .2em;
 }
@@ -91,7 +109,8 @@ h2 {
     color: #777;
     font-size: 1.5em;
 }
-h3, dt {
+h3,
+dt {
     margin-top: .3em;
     margin-bottom: .3em;
     font-size: 1.35em;
@@ -136,11 +155,12 @@ hr {
     margin-right: -4.9vw;
     margin-left: -4.9vw;
     clear: both;
-    border-width: 0;
+    border: 0;
     border-top: 1px solid #eef0f0;
     border-color: rgba(125,138,138,.13);
 }
-code, pre {
+code,
+pre {
     padding: .05em .3em;
     font-style: italic;
     font-family: Consolas, Liberation Mono, Courier, monospace;
@@ -149,17 +169,26 @@ code, pre {
     -moz-tab-size: 4;
          tab-size: 4;
 }
-a, input, select, textarea, button {
+a,
+input,
+select,
+textarea,
+button {
     outline: none;
     pointer-events: auto;
 }
-input, select, button {
+input,
+select,
+button {
   vertical-align: middle;
 }
-a img, abbr, iframe {
+a img,
+abbr,
+iframe {
     border: 0;
 }
-a, img {
+a,
+img {
     -webkit-user-drag: none;
             user-drag: none;
 }
@@ -170,9 +199,9 @@ a[href] {
                                Disable double-tap-zoom http://msdn.microsoft.com/en-us/library/windows/apps/Hh767313.aspx */
     -webkit-box-decoration-break: clone; /* Chrome legacy, demo http://jsbin.com/xojoro/quiet */
             box-decoration-break: clone;
-    cursor: default;
 }
-a[href]:hover, a[href]:focus {
+a[href]:hover,
+a[href]:focus {
     color: #0e439b;
     text-decoration: underline;
 }
@@ -184,7 +213,6 @@ img {
     vertical-align: top;
 
     /* Image scale rendering http://dev.w3.org/csswg/css-images/#the-image-rendering */
-    /*-ms-interpolation-mode: bicubic;*/
     -ms-interpolation-mode: nearest-neighbor; /* IE8+ */
     image-rendering: -webkit-optimize-contrast; /* Webkit legacy https://code.google.com/p/chromium/issues/detail?id=134040 */
     image-rendering: -moz-crisp-edges; /* Firefox legacy */
@@ -220,7 +248,11 @@ label {
     opacity: 0.54;
     color: inherit;
 }
-input, select, textarea, button, .button {
+input,
+select,
+textarea,
+button,
+.button {
     width: 20em;
     max-width: 100%;
     padding: .6em .7em;
@@ -239,19 +271,27 @@ textarea {
     word-wrap: break-word;
     resize: none;
 }
-input:hover, input:focus,
-textarea:hover, textarea:focus {
+input:hover,
+input:focus,
+textarea:hover,
+textarea:focus {
     border-color: #9f9f9f;
     box-shadow: inset 0 1px 3px rgba(0,0,0,.15);
 }
-[type=checkbox], [type=radio], [type=image], [type=file], [type=color] {
+[type=checkbox],
+[type=radio],
+[type=image],
+[type=file],
+[type=color] {
     /* Reset */
     width: auto;
     padding: 0;
     border: 0;
     box-sizing: content-box;
 }
-select, button, .button {
+select,
+button,
+.button {
     overflow: hidden;
     display: inline-block;
     white-space: nowrap; /* Mobile button text wrapping fix for button */
@@ -263,6 +303,24 @@ select, button, .button {
     outline: 0;
     box-shadow: inset 0 0 0 1px #f5f5f5,
                 1px 1px 2px rgba(0,0,0,.1);
+    cursor: pointer;
+}
+[disabled],
+form:not(:valid) [type=submit] {
+    color: #bababa;
+    text-decoration: none;
+    text-shadow: 0 1px 1px #fff;
+    box-shadow: none;
+    transition: none;
+    pointer-events: none;
+    cursor: default;
+}
+select[disabled],
+button[disabled],
+form:not(:valid) [type=submit] {
+    background-color: #f4f4f4;
+    background-color: rgba(179,179,179,.08);
+    border-color: transparent; /* If #f4f4f4, then IE10 shows dark gray on :hover */
 }
 .button {
     width: auto;
@@ -271,9 +329,12 @@ a[href].button {
     color: inherit;
     text-decoration: none;
 }
-select:hover, select:focus,
-button:hover, button:focus,
-.button:hover, .button:focus {
+select:hover,
+select:focus,
+button:hover,
+button:focus,
+.button:hover,
+.button:focus {
     background-color: #f8f9fa;
     border-color: #9f9f9f;
 }
@@ -288,10 +349,6 @@ option {
     /* Chrome max-width issue https://code.google.com/p/chromium/issues/detail?id=82253 */
     min-width: 100%;
     max-width: 0;
-}
-option[value=""] {
-    /* First element as placeholder, fails on IE */
-    display: none;
 }
 [tabindex] {
     outline: 0;
@@ -389,21 +446,16 @@ div.noscroll {
     word-wrap: normal;
     backface-visibility: hidden; /* will-change does not repaint fully .tab.expand height, box-shadow, etc. */
 }
-.bar,
-.handler,
-.focusin {
-    display: none;
-    box-suppress: discard; /* It is recommended that box-suppress be used instead of display: none,
-                              so that the element's display type is automatically preserved for when it's no longer suppressed.
-                              http://dev.w3.org/csswg/css-display/#propdef-box-suppress */
-}
-.header, .main, .footer {
+.header,
+.main,
+.footer {
     width: 95%;
     max-width: 900px;
     margin: auto;
     box-sizing: border-box;
 }
-.header, .main {
+.header,
+.main {
     background-color: #fff;
     border: 0 solid #d9e0e2;
     border-width: 0 1px;
@@ -501,7 +553,8 @@ div.noscroll {
     max-height: 2.3em; /* Old Webkit legacy */
     text-overflow: ellipsis;
 }
-.main, .footer {
+.main,
+.footer {
     position: relative;
     padding: 0 3em;
     padding: 0 4.9vw;
@@ -558,7 +611,8 @@ div.noscroll {
 .footer a + a {
     margin-left: .6em;
 }
-.footer a:hover, .footer a:focus {
+.footer a:hover,
+.footer a:focus {
     color: #222;
     text-decoration: underline;
 }
@@ -567,16 +621,26 @@ div.noscroll {
 
 /* Cross-browser compatibility
 -------------------------------------------------- */
-template {
+[hidden],
+option[value=""] /* First element as placeholder, fails on IE */ {
+    /* <template> element breaks whole layout rendering on old browsers */
     display: none;
-    box-suppress: discard;
+    box-suppress: discard; /* It is recommended that box-suppress be used instead of display: none,
+                              so that the element's display type is automatically preserved for when it's no longer suppressed.
+                              http://dev.w3.org/csswg/css-display/#propdef-box-suppress */
 }
+
 @media \0screen\,screen\9 { /* IE6-8 http://keithclark.co.uk/articles/moving-ie-specific-css-into-media-blocks/media-tests/ */
-    .noscroll, .wrapper, .main {
+    .noscroll,
+    .wrapper {
         height: 100%;
     }
-    .noscroll.noscroll, .main {
+    .noscroll.noscroll,
+    .main {
         overflow: visible;
+    }
+    .main {
+        min-height: 100%;
     }
     .nav {
         display: table;
@@ -584,9 +648,6 @@ template {
     }
     .nav a {
         display: table-cell;
-    }
-	[hidden], .footer {
-        display: none;
     }
 }
 @media (min-width:0\0) and (min-resolution: .001dpcm) { /* IE9 https://github.com/jeffclayton/css_hack_testing */
@@ -602,9 +663,6 @@ template {
     .nav a {
         display: table-cell;
     }
-	[hidden], .handler {
-        display: none;
-    }
 }
 /* @media (min-width:0\0) { // IE9-10
     input {
@@ -615,7 +673,9 @@ template {
     }
 } */
 @media (-ms-high-contrast: active), (-ms-high-contrast: none) { /* IE10+ http://www.impressivewebs.com/ie10-css-hacks/ */
-    html, textarea, .nav {
+    html,
+    textarea,
+    .nav {
         /* Auto-hide scrollbar */
         -ms-overflow-style: -ms-autohiding-scrollbar;
     }
@@ -624,7 +684,7 @@ template {
         background-color: initial;
     }
     select {
-        /* Disable text highlight on elemnt blur on IE11 */
+        /* Disable text highlight on element blur on IE11 */
         -ms-user-select: none;
     }
     :-ms-input-placeholder {
@@ -633,15 +693,12 @@ template {
     ::-ms-clear {
         /* Remove input x */
         display: none;
+        box-suppress: discard;
     }
     select:focus::-ms-value {
         /* Remove focused element highlight on IE11 */
         color: initial;
         background-color: initial;
-    }
-    [hidden] {
-        display: none;
-        box-suppress: discard;
     }
     .nav:before,
     .nav:after {
@@ -655,7 +712,9 @@ template {
     all - slow click/hover state on any element except <a>
     2.3 - @keyframes flicker http://georgehess.com/post/2054803814/css-keyframe-animation-flicker
     2.3 - unknown appearance of visibility:hidden on new DOM elements on scroll while using -webkit-transform:translate3d(0,0,0), -webkit-backface-visibility:hidden or -webkit-perspective:1000 */
-    html, textarea, .nav {
+    html,
+    textarea,
+    .nav {
         /* iOS 7 legacy http://barrow.io/overflow-scrolling */
         -webkit-overflow-scrolling: touch;
     }
@@ -666,7 +725,12 @@ template {
         /*-webkit-perspective: 1000;*/ /* Breaks position: fixed
                                           Android repaint issue on screen orientation change */
     }
-    a, input, select, textarea, button, [tabindex] {
+    a,
+    input,
+    select,
+    textarea,
+    button,
+    [tabindex] {
         /* <select> shadow DOM issue https://code.google.com/p/chromium/issues/detail?id=234871 */
         /* Remove outline and highlight-color from click-able elements on Android and iOS */
         -webkit-tap-highlight-color: rgba(0,0,0,0);
@@ -700,7 +764,10 @@ template {
     label:active {
         background-color: transparent;
     }
-    input, select, textarea, button {
+    input,
+    select,
+    textarea,
+    button {
         background-image: none;
         border-radius: 0;
     }
@@ -727,10 +794,21 @@ template {
         margin-right: -1.9em;
         margin-left: -1.9em;
     }
-    label, input, textarea, button {
+    input,
+    textarea,
+    button {
         width: 100%;
     }
-    [type=checkbox], [type=radio], [type=image], [type=file], [type=color] {
+    .footer,
+    .expand ~ .tab .header:after {
+        display: none;
+        box-suppress: discard;
+    }
+    [type=checkbox],
+    [type=radio],
+    [type=image],
+    [type=file],
+    [type=color] {
         /* Reset */
         width: auto;
     }
@@ -763,13 +841,17 @@ template {
 
         display: inline-block;
         position: relative;
-        vertical-align: top; /* IE11: remove top margin */
         z-index: 3;
+        vertical-align: top; /* IE11 - remove top margin */
+
+        cursor: pointer;
     }
-    .bar, .nav {
+    .bar,
+    .nav {
         pointer-events: auto;
     }
-    .bar:hover, .bar:focus {
+    .bar:hover,
+    .bar:focus {
         background-color: rgba(206,209,210,.4);
     }
     .bar span,
@@ -823,31 +905,34 @@ template {
             -ms-transform: rotate(-45deg); /* IE9 legacy */
                 transform: rotate3d(0,0,1,-45deg); /* Chrome rotation offset fix */
     }
+    .header,
+    .expand ~ .tab .nav:before,
+    .expand ~ .tab .nav:after {
+        width: 75%;
+        width: 75vw;
+        min-width: 8em;
+    }
     .header {
         position: fixed;
         top: 0;
         left: 0;
         bottom: 0;
-        width: 75%;
         padding: 0;
         background-color: #f8f9fa;
         border: 0;
         -webkit-transform: translateX(-100%); /* Webkit legacy */
             -ms-transform: translateX(-100%); /* IE9 legacy */
                 transform: translateX(-100%);
-        -webkit-transition: -webkit-transform .35s cubic-bezier(.2,1,.4,1); /* Android 4.3 legacy */
-                transition:         transform .35s cubic-bezier(.2,1,.4,1);
-        backface-visibility: hidden;
+        backface-visibility: hidden; /* will-change breaks pseudo-class position: fixed */
     }
     .expand ~ .tab .header {
+        box-shadow: 0 0 4em rgba(0,0,0,.3); /* Webkit legacy */
+        box-shadow: 0 0 4em rgba(0,0,0,.1), 0 0 44vw rgba(0,0,0,.3);
         -webkit-transform: none; /* Webkit legacy */
             -ms-transform: none; /* IE9 legacy */
                 transform: none;
-    }
-    .expand ~ .tab .header:after,
-    .footer {
-        display: none;
-        box-suppress: discard;
+        -webkit-transition: -webkit-transform .35s cubic-bezier(.2,1,.4,1); /* Android 4.3 legacy */
+                transition:         transform .35s cubic-bezier(.2,1,.4,1);
     }
     .focusin,
     .handler {
@@ -855,7 +940,7 @@ template {
     }
     .expand ~ .handler,
     .expand ~ .tab .handler {
-        position: inherit;
+        position: initial;
         top: 0;
         right: 0;
         left: 0;
@@ -866,9 +951,6 @@ template {
         position: fixed;
         z-index: 99;
     }
-    .expand ~ .tab .header {
-        box-shadow: 0 0 4em rgba(0,0,0,.3);
-    }
     .nav,
     .nav a:first-of-type,
     .nav a:last-of-type {
@@ -878,13 +960,19 @@ template {
         overflow: auto;
         display: block;
         height: 100%;
-        padding: 2.3em 0;
         margin: 0;
         background: none;
         border: 0;
         box-shadow: none;
         box-sizing: border-box;
         backface-visibility: hidden; /* will-change breaks pseudo-class position: fixed */
+    }
+    .nav a:first-child {
+        margin-top: 2.3em;
+        border-top: 0;
+    }
+    .nav a:last-of-type {
+        margin-bottom: 2.3em;
     }
     .nav:before,
     .nav:after {
@@ -896,11 +984,6 @@ template {
         height: 2.35em;
         pointer-events: none;
         will-change: transform;
-    }
-    .expand ~ .tab .nav:before,
-    .expand ~ .tab .nav:after {
-        width: 75%;
-        width: 75vw;
     }
     .nav:before {
         top: 0;
@@ -920,14 +1003,11 @@ template {
             -ms-flex: 0;
                 flex: 0;
         padding: 0 1.3em;
-        float: none; /* IE legacy issue */
+        float: none; /* IE legacy */
         border-color: #eef0f0;
         border-color: rgba(125,138,138,.13);
         border-width: 0;
         border-top-width: 1px;
-    }
-    .nav a:first-child {
-        border-top-width: 0;
     }
     .main {
         width: auto;
@@ -953,7 +1033,8 @@ template {
     h2 {
         font-size: 1.2em;
     }
-    h3, dt {
+    h3,
+    dt {
         font-size: 1.3em;
     }
 }
@@ -961,16 +1042,21 @@ template {
     @page {
         margin: .5cm;
     }
-    *, h2, h3 {
+    *,
+    h2,
+    h3 {
         color: #222;
         text-shadow: none;
         background: none;
     }
-    p, h2, h3 {
+    p,
+    h2,
+    h3 {
         orphans: 3;
         widows: 3;
     }
-    h2, h3 {
+    h2,
+    h3 {
         page-break-after: avoid;
     }
     a {
@@ -980,18 +1066,23 @@ template {
     img {
         page-break-inside: avoid;
     }
-    html, .main {
+    html,
+    .main {
         background: none;
     }
-    .tab, .footer {
+    .tab,
+    .footer {
         display: none;
+        box-suppress: discard;
     }
     .main {
         padding-top: 1em;
         padding-bottom: 1em;
-        border-width: 0;
+        border: 0;
     }
-    select, button, .button {
+    select,
+    button,
+    .button {
         box-shadow: none;
     }
 }
