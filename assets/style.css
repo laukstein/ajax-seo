@@ -681,7 +681,7 @@ option[value=""] /* First element as placeholder, fails on IE */ {
     }
     a {
         /* Remove IE10 :active gray background-color */
-        background-color: initial;
+        background-color: transparent;
     }
     select {
         /* Disable text highlight on element blur on IE11 */
