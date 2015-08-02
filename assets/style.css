@@ -440,7 +440,7 @@ div.noscroll {
     width: 100%;
     width: 100vw;
     line-height: 2.2;
-    font-family: Segoe UI, Open Sans, sans-serif; /* "Meiryo" returns ellipsis in middle of text */
+    font-family: Segoe UI Historic, Segoe UI Symbol, Open Sans, sans-serif; /* "Meiryo" returns ellipsis in middle of text, Windows fonts https://en.wikipedia.org/wiki/List_of_typefaces_included_with_Microsoft_Windows */
     text-align: center;
     white-space: nowrap;
     word-wrap: normal;
