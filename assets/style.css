@@ -34,8 +34,6 @@ button {
 }
 html,
 label,
-input,
-::-webkit-input-placeholder,
 button,
 .button {
     /* Remove user-select for easer debugging */
@@ -305,19 +303,18 @@ button,
                 1px 1px 2px rgba(0,0,0,.1);
     cursor: pointer;
 }
-[disabled],
-form:not(:valid) [type=submit] {
+[disabled] {
     color: #bababa;
     text-decoration: none;
     text-shadow: 0 1px 1px #fff;
+    border-color: #e3e6e7;
     box-shadow: none;
     transition: none;
     pointer-events: none;
     cursor: default;
 }
 select[disabled],
-button[disabled],
-form:not(:valid) [type=submit] {
+button[disabled] {
     background-color: #f4f4f4;
     background-color: rgba(179,179,179,.08);
     border-color: transparent; /* If #f4f4f4, then IE10 shows dark gray on :hover */
@@ -742,7 +739,6 @@ option[value=""] /* First element as placeholder, fails on IE */ {
     ::-webkit-input-placeholder {
         opacity: 0.54;
         color: inherit;
-        -webkit-user-select: none;
     }
     .nav span {
         /* Only Webkit currently supports "mask" value "linear-gradient" */
@@ -754,6 +750,11 @@ option[value=""] /* First element as placeholder, fails on IE */ {
         /* "mask" for RTL */
         -webkit-mask: linear-gradient(to right, rgba(0,0,0,0), #000 1.5em, #000); /* Chrome legacy */
                 mask: linear-gradient(to right, rgba(0,0,0,0), #000 1.5em, #000);
+    }
+}
+@supports (-ms-accelerator:true) { /* Microsoft Edge http://browserstrangeness.bitbucket.org/css_hacks.html#edge */
+    .nav span {
+        text-overflow: ellipsis;
     }
 }
 @-moz-document url-prefix() { /* Firefox */
