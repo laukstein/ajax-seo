@@ -94,7 +94,7 @@
         },
         as = {
             // Number
-            version: 4.3,
+            version: 4.4,
 
             // String "UA-XXXX-Y"
             analytics: undefined,
@@ -105,10 +105,13 @@
                         var script = d.getElementsByTagName("script");
                         return script[script.length - 1];
                     }()),
-                    origin = currentScript.src.split("#")[1] || "/ajax-seo",
-                    re = new RegExp("(" + origin + ")(.*)$");
+                    origin = currentScript.src.split("#")[1] || "/ajax-seo";
 
-                return d.URL.replace(re, "$1");
+                if (origin === "/") {
+                    return location.origin;
+                } else {
+                    return d.URL.replace(new RegExp("(" + origin + ")(.*)$"), "$1");
+                }
             }()),
 
             // String http://jsperf.com/document-url-vs-window-location-href/2
@@ -226,9 +229,8 @@
         },
         nav: {
             // Array
-            // Convert NodeList to Array http://jsperf.com/convert-nodelist-to-array
-            // Array.from(selector) ECMAScript 6 http://toddmotto.com/a-comprehensive-dive-into-nodelists-arrays-converting-nodelists-and-understanding-the-dom/
-            nodeList: layout.nav ? (Array.from ? Array.from("a") : [].slice.call(layout.nav.querySelectorAll("a"))) : null,
+            // Convert NodeList to Array http://jsperf.com/convert-nodelist-to-array http://toddmotto.com/a-comprehensive-dive-into-nodelists-arrays-converting-nodelists-and-understanding-the-dom/
+            nodeList: layout.nav ? (Array.from ? Array.from(layout.nav.querySelectorAll("a")) : [].slice.call(layout.nav.querySelectorAll("a"))) : null,
             // Element or null
             activeElement: function() {
                 if (root.nav.nodeList) {
@@ -427,7 +429,7 @@
                 } else if (el.tagName !== "A") {
                     el = root.closest(el, "a[href]");
                 }
-                if (!el || !(el.tagName === "A" && el.hasAttribute("href")) || !patt.test(el.href)) {
+                if (!el || !(el.tagName === "A" && el.hasAttribute("href")) || !patt.test(el.href.replace(/\/$/, ""))) {
                     // Stop: outside API scope
                     return;
                 }
