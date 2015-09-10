@@ -94,7 +94,7 @@
         },
         as = {
             // Number
-            version: 4.4,
+            version: 4.5,
 
             // String "UA-XXXX-Y"
             analytics: undefined,
@@ -282,14 +282,14 @@
                 }
 
                 as.url = root.filter(d.URL);
-                activeElement = activeElement || root.nav.activeElement();
+                as.activeElement = activeElement || root.nav.activeElement();
 
-                if (activeElement) {
-                    activeElement.focus();
-                    activeElement.classList.add(as.error ? "error" : "active");
+                if (as.activeElement) {
+                    as.activeElement.focus();
+                    as.activeElement.classList.add(as.error ? "error" : "active");
 
                     if (as.error) {
-                        activeElement.classList.add("x-error");
+                        as.activeElement.classList.add("x-error");
                     }
                 }
 
