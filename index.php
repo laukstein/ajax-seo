@@ -71,8 +71,8 @@ if ($description) $metadata .= "\n<meta property=og:description name=description
 // Twitter Cards https://dev.twitter.com/cards/overview, https://cards-dev.twitter.com/validator
 $metadata .= "\n<meta property=twitter:card content=summary>";
 
-// Perform speed and security by removing referrer header http://w3c.github.io/webappsec/specs/referrer-policy/
-$metadata .= "\n<meta name=referrer content=never>";
+// Omit Referrer header https://w3c.github.io/webappsec/specs/referrer-policy/
+$metadata .= "\n<meta name=referrer content=no-referrer>";
 
 // Optimize smart device viewport (initial-scale=1 to enable zoom-in, maximum-scale=1 to disable zoom)
 $metadata .= "\n<meta name=viewport content=\"width=device-width, initial-scale=1\">";
