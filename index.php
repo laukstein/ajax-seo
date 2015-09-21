@@ -77,12 +77,17 @@ $metadata .= "\n<meta name=referrer content=no-referrer>";
 // Optimize smart device viewport (initial-scale=1 to enable zoom-in, maximum-scale=1 to disable zoom)
 $metadata .= "\n<meta name=viewport content=\"width=device-width, initial-scale=1\">";
 
-// Early handshake DNS, TCP and TLS https://w3c.github.io/resource-hints/#preconnect
-if ($issetcdn) $metadata .= "\n<link rel=preconnect href=$cdn_scheme$cdn_host/>";
+// Early handshake DNS https://w3c.github.io/resource-hints/#dns-prefetch
+if ($issetcdn) $metadata .= "\n<link rel=dns-prefetch href=$cdn_scheme$cdn_host/>";
+// // Early handshake DNS, TCP and TLS https://w3c.github.io/resource-hints/#preconnect
+// if ($issetcdn) $metadata .= "\n<link rel=preconnect href=$cdn_scheme$cdn_host/>";
 
 // Resource hints http://w3c.github.io/resource-hints/
 // Fetch and cache API in background when everything is downloaded https://html.spec.whatwg.org/#link-type-prefetch
 if ($conn && $result) $metadata .= "\n<link rel=\"prefetch prerender\" href=$path/api" . ($url === '/' ? '' : $url) . '>';
+
+// // Manifest for a web application https://w3c.github.io/manifest/
+// <link rel=manifest href=manifest.json>
 
 // // Black SVG favicon <link rel=mask-icon sizes=any href=icon.svg> coloured in "theme-color" must be placed before <link rel=icon> element https://lists.w3.org/Archives/Public/public-whatwg-archive/2015Jun/0059.html https://developer.apple.com/library/safari/releasenotes/General/WhatsNewInSafari/Articles/Safari_9.html#//apple_ref/doc/uid/TP40014305-CH9-SW20
 // <link rel=mask-icon sizes=any href=icon.svg>
@@ -117,7 +122,7 @@ if ($conn) {
     <button class=bar id=bar tabindex=0 hidden><span></span></button>
     <span class=focusin id=focusin tabindex=0 hidden></span>
     <header class=header>
-        <nav class=nav id=nav role=navigation>';
+        <nav class=nav id=nav>';
 
         function is_rtl($string) {
             // Check if there RTL characters (Arabic, Persian, Hebrew) https://gist.github.com/khal3d/4648574
@@ -141,7 +146,7 @@ if ($conn) {
     $mysqli->close();
 }
 
-echo "\n<main class=main role=main itemprop=about itemscope itemtype=http://schema.org/Article>
+echo "\n<main class=main itemprop=about itemscope itemtype=http://schema.org/Article>
 <div id=output>";
 
 if ($conn) echo "\n<h1 dir=auto>$title</h1>";
