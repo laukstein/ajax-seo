@@ -45,20 +45,12 @@ if ($conn) {
     }
 }
 
-
 if (empty($_GET['api'])) {
-    $equal_origin = false;
-
-    if ($cdn_host) {
-        preg_match('/([^.]*\.[^.]{2}|[^.]*)\.([^.]*)$/i', $host, $matches_host);
-        preg_match('/([^.]*\.[^.]{2}|[^.]*)\.([^.]*)$/i', $cdn_host, $matches_cdn_host);
-        $equal_origin = $matches_host[0] === $matches_cdn_host[0];
-    }
-
-    // Avoid XSS attacks with CSP https://w3c.github.io/webappsec/specs/content-security-policy/
+    // Avoid XSS attacks with CSP https://w3c.github.io/webappsec-csp/
+    // Omit Referrer https://w3c.github.io/webappsec-referrer-policy/
+    // Upgrade insecure requests https://w3c.github.io/webappsec-upgrade-insecure-requests/
     // Firefox OS app suggestion https://developer.mozilla.org/en-US/Apps/CSP
-    // Upgrade insecure requests https://w3c.github.io/webappsec/specs/upgrade/#upgrade_insecure_requests
-    header('Content-Security-Policy:' . ($scheme === 'https' ? ' upgrade-insecure-requests;' : '') . "script-src 'self' 'unsafe-inline'" . ($equal_origin ? null : " $cdn_host") . (ga ? ' www.google-analytics.com' : null));
+    header('Content-Security-Policy: script-src' . ($debug ? null : " 'unsafe-inline'") . ($cdn_host ? " $cdn_host" : " 'self'") . (ga ? ' www.google-analytics.com' : null) . '; referrer no-referrer' . ($scheme === 'https' ? '; upgrade-insecure-requests' : null));
 }
 
 // Max 160 character title http://blogs.msdn.com/b/ie/archive/2012/05/14/sharing-links-from-ie10-on-windows-8.aspx
@@ -71,16 +63,13 @@ if ($description) $metadata .= "\n<meta property=og:description name=description
 // Twitter Cards https://dev.twitter.com/cards/overview, https://cards-dev.twitter.com/validator
 $metadata .= "\n<meta property=twitter:card content=summary>";
 
-// Omit Referrer header https://w3c.github.io/webappsec/specs/referrer-policy/
-$metadata .= "\n<meta name=referrer content=no-referrer>";
-
 // Optimize smart device viewport (initial-scale=1 to enable zoom-in, maximum-scale=1 to disable zoom)
 $metadata .= "\n<meta name=viewport content=\"width=device-width, initial-scale=1\">";
 
 // Early handshake DNS https://w3c.github.io/resource-hints/#dns-prefetch
-if ($issetcdn) $metadata .= "\n<link rel=dns-prefetch href=$cdn_scheme$cdn_host/>";
+if ($cdn_host) $metadata .= "\n<link rel=dns-prefetch href=$cdn_scheme$cdn_host/>";
 // // Early handshake DNS, TCP and TLS https://w3c.github.io/resource-hints/#preconnect
-// if ($issetcdn) $metadata .= "\n<link rel=preconnect href=$cdn_scheme$cdn_host/>";
+// if ($cdn_host) $metadata .= "\n<link rel=preconnect href=$cdn_scheme$cdn_host/>";
 
 // Resource hints http://w3c.github.io/resource-hints/
 // Fetch and cache API in background when everything is downloaded https://html.spec.whatwg.org/#link-type-prefetch
