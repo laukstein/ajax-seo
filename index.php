@@ -48,9 +48,8 @@ if ($conn) {
 if (empty($_GET['api'])) {
     // Avoid XSS attacks with CSP https://w3c.github.io/webappsec-csp/
     // Omit Referrer https://w3c.github.io/webappsec-referrer-policy/
-    // Upgrade insecure requests https://w3c.github.io/webappsec-upgrade-insecure-requests/
     // Firefox OS app suggestion https://developer.mozilla.org/en-US/Apps/CSP
-    header('Content-Security-Policy: script-src' . ($debug ? null : " 'unsafe-inline'") . ($cdn_host ? " $cdn_host" : " 'self'") . (ga ? ' www.google-analytics.com' : null) . '; referrer no-referrer' . ($scheme === 'https' ? '; upgrade-insecure-requests' : null));
+    header('Content-Security-Policy: script-src' . ($debug ? null : " 'unsafe-inline'") . ($cdn_host ? " $cdn_host" : " 'self'") . (ga ? ' www.google-analytics.com' : null) . '; referrer no-referrer');
 }
 
 // Max 160 character title http://blogs.msdn.com/b/ie/archive/2012/05/14/sharing-links-from-ie10-on-windows-8.aspx
