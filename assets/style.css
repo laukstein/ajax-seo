@@ -496,6 +496,7 @@ div.noscroll {
 }
 .nav a {
     display: block;
+    position: relative;
     -webkit-box-flex: 1; /* Android 2.3 legacy */
     -ms-flex: 1;
         flex: 1;
@@ -506,6 +507,8 @@ div.noscroll {
     border-left-width: 1px;
 }
 .nav a:first-child { /* Selector supported on IE7+ http://kimblim.dk/css-tests/selectors/ */
+    max-width: 3.2em;
+    padding: 0;
     border-left: 0;
 }
 .nav a:first-of-type {
@@ -534,7 +537,6 @@ div.noscroll {
     background-color: rgba(206,209,210,.4);
 }
 .nav a.active {
-    position: relative;
     z-index: 1;
     color: #fff;
     background-color: #006cff;
@@ -542,13 +544,79 @@ div.noscroll {
 .nav a.error {
     background-color: #f7dad4;
 }
-.nav span {
+.nav a > span {
     overflow: hidden;
     display: block;
     position: relative;
     top: -.06em;
     max-height: 2.3em; /* Old Webkit legacy */
     text-overflow: ellipsis;
+}
+.bar {
+    width: auto;
+    height: 2.35em;
+    padding: inherit;
+    margin: inherit;
+    background-color: transparent;
+    border: inherit;
+    box-shadow: inherit;
+
+    all: unset; /* No support on IE10 and Safari */
+
+    display: none;
+    box-suppress: discard;
+    position: relative;
+    z-index: 3;
+    vertical-align: top; /* IE11 - remove top margin */
+}
+.nav .bar {
+    display: inline-block;
+}
+[data-version]:before {
+    content: attr(data-version);
+    position: absolute;
+    bottom: .2em;
+    right: 1.5em;
+    font-weight: bold;
+    font-size: .55em;
+    pointer-events: none;
+}
+.bar span,
+.bar span:before,
+.bar span:after {
+    display: block;
+    width: 1.3em;
+    height: .21em;
+    background-color: #222;
+    border-radius: .1em;
+}
+.active .bar span,
+.active .bar span:before,
+.active .bar span:after {
+    background-color: #fff;
+}
+.bar span {
+    position: relative;
+    margin: 1.07em .65em 1.07em .55em;
+    transform: translateY(0); /* Firefox 34 Nightly width fix */
+    pointer-events: none; /* IE11 legacy */
+}
+.bar span:before {
+    content: "";
+    position: absolute;
+    right: 0;
+    width: .9em;
+    -webkit-transform: translateY(-.42em); /* Webkit legacy */
+        -ms-transform: translateY(-.42em); /* IE9 legacy */
+            transform: translateY(-.42em);
+}
+.bar span:after {
+    content: "";
+    position: absolute;
+    width: .5em;
+    -webkit-transform: translateY(.42em); /* Webkit legacy */
+        -ms-transform: translateY(.42em); /* IE9 legacy */
+            transform: translateY(.42em);
 }
 .main,
 .footer {
@@ -619,7 +687,8 @@ div.noscroll {
 /* Cross-browser compatibility
 -------------------------------------------------- */
 [hidden],
-option[value=""] /* First element as placeholder, fails on IE */ {
+option[value=""], /* First element as placeholder, fails on IE */
+.nav [data-placeholder] {
     /* <template> element breaks whole layout rendering on old browsers */
     display: none;
     box-suppress: discard; /* It is recommended that box-suppress be used instead of display: none,
@@ -659,6 +728,13 @@ option[value=""] /* First element as placeholder, fails on IE */ {
     }
     .nav a {
         display: table-cell;
+    }
+    .nav .bar,
+    [data-version]:before {
+        display: none;
+    }
+    .nav [data-placeholder] {
+        display: inline-block;
     }
 }
 /* @media (min-width:0\0) { // IE9-10
@@ -740,20 +816,20 @@ option[value=""] /* First element as placeholder, fails on IE */ {
         opacity: 0.54;
         color: inherit;
     }
-    .nav span {
+    .nav a > span {
         /* Only Webkit currently supports "mask" value "linear-gradient" */
         text-overflow: clip;
         -webkit-mask: linear-gradient(to left, rgba(0,0,0,0), #000 1.5em, #000); /* Chrome legacy */
                 mask: linear-gradient(to left, rgba(0,0,0,0), #000 1.5em, #000);
     }
-    .nav span[dir] {
+    .nav a > span[dir] {
         /* "mask" for RTL */
         -webkit-mask: linear-gradient(to right, rgba(0,0,0,0), #000 1.5em, #000); /* Chrome legacy */
                 mask: linear-gradient(to right, rgba(0,0,0,0), #000 1.5em, #000);
     }
 }
 @supports (-ms-accelerator:true) { /* Microsoft Edge http://browserstrangeness.bitbucket.org/css_hacks.html#edge */
-    .nav span {
+    .nav a > span {
         text-overflow: ellipsis;
     }
 }
@@ -801,7 +877,9 @@ option[value=""] /* First element as placeholder, fails on IE */ {
         width: 100%;
     }
     .footer,
-    .expand ~ .tab .header:after {
+    .nav .bar,
+    .expand ~ .tab .header:after,
+    [data-version]:before {
         display: none;
         box-suppress: discard;
     }
@@ -829,71 +907,36 @@ option[value=""] /* First element as placeholder, fails on IE */ {
         background-image:         linear-gradient(#fff, rgba(255,255,255,.9) 35%, rgba(255,255,255,.8) 50%, rgba(255,255,255,0));
         pointer-events: none;
     }
-    .bar {
-        width: auto;
-        height: 2.35em;
-        padding: inherit;
-        margin: inherit;
-        background-color: transparent;
-        border: inherit;
-        box-shadow: inherit;
-
-        all: unset; /* No support on IE10 and Safari */
-
+    .tab > .bar {
         display: inline-block;
-        position: relative;
-        z-index: 3;
-        vertical-align: top; /* IE11 - remove top margin */
-
-        cursor: pointer;
     }
     .bar,
     .nav {
         pointer-events: auto;
     }
-    .bar:hover,
-    .bar:focus {
-        background-color: rgba(206,209,210,.4);
+    .bar {
+        cursor: pointer;
     }
     .bar span,
     .bar span:before,
     .bar span:after {
-        display: block;
-        width: 1.3em;
-        height: .21em;
-        background-color: #222;
-        border-radius: .1em;
         -webkit-transition: width .1s, background-color 1ms, -webkit-transform .35s cubic-bezier(.2,1,.4,1); /* Android 4.3 legacy */
                 transition: width .1s, background-color 1ms, transform .35s cubic-bezier(.2,1,.4,1); /* Simulation http://cubic-bezier.com/#.2,1,.4,1 */
         will-change: transform;
     }
     .bar span {
-        position: relative;
-        margin: 1.07em .65em 1.07em .55em;
-        transform: translateY(0); /* Firefox 34 Nightly width fix */
         -webkit-transition-duration: .15s; /* Android 4.3 legacy */
                 transition-duration: .15s;
-        pointer-events: none; /* IE11 legacy */
     }
-    .bar span:before {
-        content: "";
-        position: absolute;
-        -webkit-transform: translateY(-.42em); /* Webkit legacy */
-            -ms-transform: translateY(-.42em); /* IE9 legacy */
-                transform: translateY(-.42em);
-    }
-    .bar span:after {
-        content: "";
-        position: absolute;
-        width: .9em;
-        -webkit-transform: translateY(.42em); /* Webkit legacy */
-            -ms-transform: translateY(.42em); /* IE9 legacy */
-                transform: translateY(.42em);
+    .bar:hover,
+    .bar:focus {
+        background-color: rgba(206,209,210,.4);
     }
     .expand ~ .tab .bar span {
         background-color: transparent;
     }
     .expand ~ .tab .bar span:before {
+        width: 1.3em;
         -webkit-transform: rotate(45deg); /* Webkit legacy */
         -webkit-transform: rotate3d(0,0,1,45deg); /* Chrome rotation offset fix */
             -ms-transform: rotate(45deg); /* IE9 legacy */
@@ -936,7 +979,8 @@ option[value=""] /* First element as placeholder, fails on IE */ {
                 transition:         transform .35s cubic-bezier(.2,1,.4,1);
     }
     .focusin,
-    .handler {
+    .handler,
+    .nav [data-placeholder] {
         display: block;
     }
     .expand ~ .handler,
@@ -969,6 +1013,7 @@ option[value=""] /* First element as placeholder, fails on IE */ {
         backface-visibility: hidden; /* will-change breaks pseudo-class position: fixed */
     }
     .nav a:first-child {
+        max-width: 100%;
         margin-top: 2.3em;
         border-top: 0;
     }

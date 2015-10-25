@@ -94,7 +94,7 @@
         },
         as = {
             // Number
-            version: 4.5,
+            version: 4.6,
 
             // String "UA-XXXX-Y"
             analytics: undefined,
@@ -160,29 +160,55 @@
 
     if (layout.bar && has.eventListener) {
         // addEventListener and CSS media query supported since IE9
-        layout.bar.addEventListener("focus", function () {
+
+        nav.toToggle.true = function () {
             nav.toToggle(true);
-        }, true);
-
-        layout.bar.addEventListener("click", function () {
+        };
+        nav.toToggle.false = function () {
+            nav.toToggle(false);
+        };
+        nav.toFocus.run = function () {
             nav.toFocus();
-        }, true);
+        };
+        nav.run = function () {
+            if (d.documentElement.offsetWidth <= 540) {
+                layout.bar.addEventListener("focus", nav.toToggle.true, true);
+                layout.bar.addEventListener("click", nav.toFocus.run, true);
 
-        if (layout.nav) {
-            layout.nav.addEventListener("click", function () {
-                nav.toToggle(true);
-            }, true);
-        }
-        if (layout.focusout) {
-            layout.focusout.addEventListener("focus", function () {
-                nav.toToggle(false);
-            }, true);
-        }
-        if (layout.reset) {
-            layout.reset.addEventListener("click", function () {
-                nav.toToggle(true);
-            }, true);
-        }
+                if (layout.nav) {
+                    layout.nav.addEventListener("click", nav.toToggle.true, true);
+                }
+                if (layout.focusout) {
+                    layout.focusout.addEventListener("focus", nav.toToggle.false, true);
+                }
+                if (layout.reset) {
+                    layout.reset.addEventListener("click", nav.toToggle.true, true);
+                }
+            } else {
+                layout.bar.removeEventListener("focus", nav.toToggle.true, true);
+                layout.bar.removeEventListener("click", nav.toFocus.run, true);
+
+                if (layout.nav) {
+                    layout.nav.removeEventListener("click", nav.toToggle.true, true);
+                }
+                if (layout.focusout) {
+                    layout.focusout.removeEventListener("focus", nav.toToggle.false, true);
+                }
+                if (layout.reset) {
+                    layout.reset.removeEventListener("click", nav.toToggle.true, true);
+                }
+            }
+        };
+
+        nav.run();
+        w.addEventListener("resize", function () {
+            if (nav.timeoutScale) {
+                clearTimeout(nav.timeoutScale);
+            }
+
+            // Improve performance
+            nav.timeoutScale = setTimeout(nav.run, 100);
+        }, true);
     }
 
     if (!h.pushState || !has.classList || !has.eventListener) {
