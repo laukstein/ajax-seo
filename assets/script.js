@@ -1,4 +1,4 @@
-/*global define, module, window, document, history, location, ga, setTimeout, clearTimeout, XMLHttpRequest*/
+/*global define, module, window, document, history, location, DocumentTouch, ga, setTimeout, clearTimeout, XMLHttpRequest*/
 
 (function (factory) {
     "use strict";
@@ -29,8 +29,8 @@
             click: "click" in d.documentElement,
             // addEventListener supported since IE9
             eventListener: !!d.addEventListener,
-            // Touch events supported since Edge
-            touch: w.hasOwnProperty("ontouchstart"),
+            // Touch events supported since Edge, Firefox 27 bug https://bugzilla.mozilla.org/show_bug.cgi?id=970346, Chrome issue https://code.google.com/p/chromium/issues/detail?id=152149
+            touch: w.DocumentTouch && d instanceof DocumentTouch,
             valid: function (fn) {
                 // V8 optimized try-catch http://stackoverflow.com/questions/19727905/in-javascript-is-it-expensive-to-use-try-catch-blocks-even-if-an-exception-is-n
                 try {
@@ -94,7 +94,7 @@
         },
         as = {
             // Number
-            version: 4.6,
+            version: 4.7,
 
             // String "UA-XXXX-Y"
             analytics: undefined,
@@ -486,7 +486,7 @@
                 // http://www.kellegous.com/j/2013/02/27/innertext-vs-textcontent/
                 // http://stackoverflow.com/questions/1359469/innertext-works-in-ie-but-not-in-firefox
                 // http://jsperf.com/textcontent-and-innertext/3
-                as.title = as.activeElement.innerText.replace(/\n/, "") || as.activeElement.textContent;
+                as.title = as.activeElement.innerText ? as.activeElement.innerText.replace(/\n/, "") : as.activeElement.textContent;
 
                 if (as.error && url.address === d.URL) {
                     h.replaceState(null, as.title, as.url);
@@ -561,20 +561,20 @@
                 content: layout.output.innerHTML
             }, as.title, as.url);
 
-            // XMLHttpRequest https://xhr.spec.whatwg.org https://dvcs.w3.org/hg/xhr/raw-file/tip/Overview.html
+            // XMLHttpRequest https://xhr.spec.whatwg.org/
             client = new XMLHttpRequest();
             // // IE11: SCRIPT5022: SyntaxError
             // client.open("GET", null);
             // // IE11: SCRIPT5022: InvalidStateError https://connect.microsoft.com/IE/feedback/details/794808
             // client.responseType = "json";
             // // would loop 4 times
-            // client.onreadystatechange = root.callback;
-            client.onloadstart = root.loadstart;
-            client.onload = root.load;
-            client.onabort = root.reset;
+            // client.addEventListener("readystatechange", root.callback, true);
+            client.addEventListener("loadstart", root.loadstart, true);
+            client.addEventListener("load", root.load, true);
+            client.addEventListener("abort", root.reset, true);
 
             // http://jsperf.com/addeventlistener-usecapture-true-vs-false
-            d.addEventListener(has.touch ? "touchstart" : "click", root.listener, true);
+            d.documentElement.addEventListener(has.touch ? "touchstart" : "click", root.listener, true);
         }
     };
 
