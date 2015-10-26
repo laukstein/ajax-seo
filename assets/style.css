@@ -588,7 +588,7 @@ div.noscroll {
     width: 1.3em;
     height: .21em;
     background-color: #222;
-    border-radius: .1em;
+    border-radius: .5em;
 }
 .active .bar span,
 .active .bar span:before,
