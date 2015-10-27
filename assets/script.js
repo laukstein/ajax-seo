@@ -1,4 +1,4 @@
-/*global define, module, window, document, history, location, DocumentTouch, ga, setTimeout, clearTimeout, XMLHttpRequest*/
+/*global define, module, window, document, history, location, ga, setTimeout, clearTimeout, XMLHttpRequest*/
 
 (function (factory) {
     "use strict";
@@ -29,8 +29,9 @@
             click: "click" in d.documentElement,
             // addEventListener supported since IE9
             eventListener: !!d.addEventListener,
-            // Touch events supported since Edge, Firefox 27 bug https://bugzilla.mozilla.org/show_bug.cgi?id=970346, Chrome issue https://code.google.com/p/chromium/issues/detail?id=152149
-            touch: w.DocumentTouch && d instanceof DocumentTouch,
+            // Touch events supported since Edge
+            // https://code.google.com/p/chromium/issues/detail?id=152149, Firefox 27+ https://bugzilla.mozilla.org/show_bug.cgi?id=970346 (only if earlier used Developer Tools > Responsive mode)
+            touch: "ontouchstart" in w,
             valid: function (fn) {
                 // V8 optimized try-catch http://stackoverflow.com/questions/19727905/in-javascript-is-it-expensive-to-use-try-catch-blocks-even-if-an-exception-is-n
                 try {
