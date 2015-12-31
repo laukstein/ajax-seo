@@ -233,18 +233,17 @@ label {
     text-shadow: none;
     background-color: rgba(206,209,210,.4);
 }
-:placeholder-shown {
+/*:placeholder-shown {*/
     /* W3C http://dev.w3.org/csswg/selectors4/#placeholder
+       Chrome 47 approach released with bugs https://code.google.com/p/chromium/issues/detail?id=451120#c13
        Firefox https://bugzilla.mozilla.org/show_bug.cgi?id=1069012
-       Chrome https://code.google.com/p/chromium/issues/detail?id=451120
        Webkit https://bugs.webkit.org/show_bug.cgi?id=118162
-
        Apply Firefox approach http://jsbin.com/fesunu/1/quiet
        resource://gre-resources/forms.css
        https://bugzilla.mozilla.org/show_bug.cgi?id=556145 */
-    opacity: 0.54;
-    color: inherit;
-}
+    /*opacity: 0.54;*/
+    /*color: inherit;*/
+/*}*/
 input,
 select,
 textarea,
@@ -752,7 +751,8 @@ option[value=""], /* First element as placeholder, fails on IE */
         -ms-user-select: none;
     }
     :-ms-input-placeholder {
-        opacity: 0.54;
+        /* IE11 "opacity" is applied to parent element input itself */
+        color: #999;
     }
     ::-ms-clear {
         /* Remove input x */
@@ -770,59 +770,71 @@ option[value=""], /* First element as placeholder, fails on IE */
         transition: width .35s cubic-bezier(.2,1,.4,1);
     }
 }
-@media (-webkit-min-device-pixel-ratio: 0) { /* Webkit */
-    /* Android/iOS WebView issues
-    --------------------------------------------------
-    all - slow click/hover state on any element except <a>
-    2.3 - @keyframes flicker http://georgehess.com/post/2054803814/css-keyframe-animation-flicker
-    2.3 - unknown appearance of visibility:hidden on new DOM elements on scroll while using -webkit-transform:translate3d(0,0,0), -webkit-backface-visibility:hidden or -webkit-perspective:1000 */
-    html,
-    textarea,
-    .nav {
-        /* iOS 7 legacy http://barrow.io/overflow-scrolling */
-        -webkit-overflow-scrolling: touch;
-    }
-    html {
-        /* Old Webkit smooth text rendering issue */
-        -webkit-font-smoothing: antialiased;
-        -webkit-text-size-adjust: 100%; /* iOS fix */
-        /*-webkit-perspective: 1000;*/ /* Breaks position: fixed
-                                          Android repaint issue on screen orientation change */
-    }
-    a,
-    input,
-    select,
-    textarea,
-    button,
-    [tabindex] {
-        /* <select> shadow DOM issue https://code.google.com/p/chromium/issues/detail?id=234871 */
-        /* Remove outline and highlight-color from click-able elements on Android and iOS */
-        -webkit-tap-highlight-color: rgba(0,0,0,0);
-    }
-    a {
-        /* iOS remove bubble dialog on tap-holding */
-        -webkit-touch-callout: none;
-    }
+@supports (-ms-accelerator: true) { /* Edge http://browserstrangeness.bitbucket.org/css_hacks.html#edge */
     ::-webkit-input-placeholder {
-        text-overflow: ellipsis!important; /* Chrome 49 input:focus forces "text-overflow: clip" */
         opacity: 0.54;
-        color: inherit;
     }
-    .nav a > span {
-        /* Only Webkit currently supports "mask" value "linear-gradient" */
-        text-overflow: clip;
-        -webkit-mask: linear-gradient(to left, rgba(0,0,0,0), #000 1.5em, #000); /* Chrome legacy */
-                mask: linear-gradient(to left, rgba(0,0,0,0), #000 1.5em, #000);
+    ::-ms-clear {
+        /* Remove input x */
+        display: none;
+        box-suppress: discard;
     }
-    .nav a > span[dir] {
-        /* "mask" for RTL */
-        -webkit-mask: linear-gradient(to right, rgba(0,0,0,0), #000 1.5em, #000); /* Chrome legacy */
-                mask: linear-gradient(to right, rgba(0,0,0,0), #000 1.5em, #000);
+    select:focus::-ms-value {
+        /* Remove focused element highlight on IE11 */
+        color: initial;
+        background-color: initial;
     }
 }
-@supports (-ms-accelerator:true) { /* Microsoft Edge http://browserstrangeness.bitbucket.org/css_hacks.html#edge */
-    .nav a > span {
-        text-overflow: ellipsis;
+@media (-webkit-min-device-pixel-ratio: 0) {
+    @supports (not (-ms-accelerator: true)) { /* Webkit */
+        /* Android/iOS WebView issues
+        --------------------------------------------------
+        all - slow click/hover state on any element except <a>
+        2.3 - @keyframes flicker http://georgehess.com/post/2054803814/css-keyframe-animation-flicker
+        2.3 - unknown appearance of visibility:hidden on new DOM elements on scroll while using -webkit-transform:translate3d(0,0,0), -webkit-backface-visibility:hidden or -webkit-perspective:1000 */
+        html,
+        textarea,
+        .nav {
+            /* iOS 7 legacy http://barrow.io/overflow-scrolling */
+            -webkit-overflow-scrolling: touch;
+        }
+        html {
+            /* Old Webkit smooth text rendering issue */
+            -webkit-font-smoothing: antialiased;
+            -webkit-text-size-adjust: 100%; /* iOS fix */
+            /*-webkit-perspective: 1000;*/ /* Breaks position: fixed
+                                              Android repaint issue on screen orientation change */
+        }
+        a,
+        input,
+        select,
+        textarea,
+        button,
+        [tabindex] {
+            /* <select> shadow DOM issue https://code.google.com/p/chromium/issues/detail?id=234871 */
+            /* Remove outline and highlight-color from click-able elements on Android and iOS */
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+        }
+        a {
+            /* iOS remove bubble dialog on tap-holding */
+            -webkit-touch-callout: none;
+        }
+        ::-webkit-input-placeholder {
+            text-overflow: ellipsis!important; /* Chrome 49 input:focus forces "text-overflow: clip" */
+            opacity: 0.54;
+            color: inherit;
+        }
+        .nav a > span {
+            /* Only Webkit currently supports "mask" value "linear-gradient" */
+            text-overflow: clip;
+            -webkit-mask: linear-gradient(to left, rgba(0,0,0,0), #000 1.5em, #000); /* Chrome legacy */
+                    mask: linear-gradient(to left, rgba(0,0,0,0), #000 1.5em, #000);
+        }
+        .nav a > span[dir] {
+            /* "mask" for RTL */
+            -webkit-mask: linear-gradient(to right, rgba(0,0,0,0), #000 1.5em, #000); /* Chrome legacy */
+                    mask: linear-gradient(to right, rgba(0,0,0,0), #000 1.5em, #000);
+        }
     }
 }
 @-moz-document url-prefix() { /* Firefox */
