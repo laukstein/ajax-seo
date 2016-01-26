@@ -33,8 +33,9 @@ if ($conn) {
     }
 } else {
     // Not reachable database
-    // SEO friendly blackout status http://googlewebmastercentral.blogspot.com/2011/01/how-to-deal-with-planned-site-downtime.html
+    // SEO friendly blackout status https://googlewebmastercentral.blogspot.com/2011/01/how-to-deal-with-planned-site-downtime.html
     // Website outages and blackouts the right way https://plus.google.com/115984868678744352358/posts/Gas8vjZ5fmB
+    // CloudFlare doesn't cache 5XX error pages
     http_response_code(503);
     // Try to reach server after 1 minute
     header('Retry-After: 60');
