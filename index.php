@@ -77,11 +77,11 @@ if ($conn && $result) $metadata .= "\n<link rel=\"prefetch prerender\" href=$pat
 // // Manifest for a web application https://w3c.github.io/manifest/
 // <link rel=manifest href=manifest.json>
 
-// // Black SVG favicon <link rel=mask-icon sizes=any href=icon.svg> coloured in "theme-color" must be placed before <link rel=icon> element https://lists.w3.org/Archives/Public/public-whatwg-archive/2015Jun/0059.html https://developer.apple.com/library/safari/releasenotes/General/WhatsNewInSafari/Articles/Safari_9.html#//apple_ref/doc/uid/TP40014305-CH9-SW20
-// <link rel=mask-icon sizes=any href=icon.svg>
-// // Favicon 16x16, 32x32 4-bit 16 color /favicon.ico on website root or base64 inline dataURI when project not in root http://zoompf.com/2012/04/instagram-and-optimizing-favicons
-// // if ($path !== '/') $metadata .= "\n<link rel=\"shortcut icon\" href=data:image/x-icon;base64,...>";
-// <link rel=icon sizes=192x192 href=icon.png>
+// // Black SVG favicon rel=mask-icon coloured in "theme-color" must be placed before <link rel=icon> element https://github.com/whatwg/html/issues/110
+// $metadata .= "\n<link rel=mask-icon href=$path/icon.svg color=#222>";
+// Favicon 16x16 4-bit 16 color favicon.ico in website root http://zoompf.com/2012/04/instagram-and-optimizing-favicons
+// 16px used on all browsers https://github.com/audreyr/favicon-cheat-sheet, http://realfavicongenerator.net/faq#.Vpasouh96Hs
+if (!empty($path)) $metadata .= "\n<link rel=\"shortcut icon\" href=$path/favicon.png>";
 
 // Website copyright license
 $metadata .= "\n<link rel=license href=//creativecommons.org/licenses/by/4.0/>";
