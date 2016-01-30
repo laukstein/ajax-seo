@@ -86,7 +86,6 @@ if ($conn && $result) $metadata .= "\n<link rel=\"prefetch prerender\" href=$pat
 // Website copyright license
 $metadata .= "\n<link rel=license href=//creativecommons.org/licenses/by/4.0/>";
 
-// <html lang=en manifest=$path/manifest.appcache> Cache manifest (Chrome external domain hosting issue http://crbug.com/167918)
 // JavaScript CDNs performance stats http://www.cdnperf.com
 
 echo "<!doctype html>
