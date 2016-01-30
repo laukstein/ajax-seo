@@ -6,7 +6,7 @@ include 'content/cache.php'; cache::all();
 
 echo '/* TEAM */
 Author: Binyamin Laukstein
-Site: https://laukstein.com/
+Site: https://laukstein.com
 Google+: https://plus.google.com/+BinyaminLaukstein
 
 /* SITE */
