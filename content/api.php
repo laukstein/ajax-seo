@@ -38,7 +38,7 @@ if ($debug) simulator();*/
 if (!$result) $arr['error'] = true;
 
 $arr['title']   = $pagetitle;
-$arr['content'] = "<h1 dir=auto>$title</h1>\n$content\n";
+$arr['content'] = $content;
 $arr = array_filter($arr);
 $arr = $debug ? json_encode($arr, JSON_PRESERVE_ZERO_FRACTION | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) : json_encode($arr, JSON_PRESERVE_ZERO_FRACTION | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
