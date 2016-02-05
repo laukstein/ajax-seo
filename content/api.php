@@ -1,6 +1,7 @@
 <?php
 //
 // JSON API
+//
 
 $arr = array();
 
@@ -25,7 +26,7 @@ function simulator() {
 
             $arr['error'] = true;
             $title        = $title_error;
-            $content      = $content_error;
+            $content      = "<h1 dir=auto>$title</h1>\n" . $content_error;
             $pagetitle    = $pagetitle_error;
         }
     }
