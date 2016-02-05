@@ -1,9 +1,13 @@
-/*global define, module, window, document, history, location, ga, setTimeout, clearTimeout, XMLHttpRequest*/
+/*global define, module, window, document, navigator, history, location, localStorage, ga, setTimeout, clearTimeout, XMLHttpRequest*/
+
+// Detect DOM change https://developers.google.com/web/updates/2012/02/Detect-DOM-changes-with-Mutation-Observers
 
 (function (factory) {
     "use strict";
 
-    // ES6 UMD (Universal Module Definition) http://jsrocks.org/2014/07/a-new-syntax-for-modules-in-es6/
+    // Initialize
+
+    // ES6 UMD http://jsrocks.org/2014/07/a-new-syntax-for-modules-in-es6/
     if (typeof define === "function" && define.amd) {
         // AMD
         define(["as"], factory);
@@ -20,6 +24,7 @@
     // cached
     var w = window,
         d = document,
+        n = navigator,
         h = history,
         l = location,
         has = {
@@ -27,11 +32,13 @@
             classList: "classList" in d.documentElement,
             // DOM 2 spec: element.click() defined only for HTMLInputElement http://www.w3.org/TR/DOM-Level-2-HTML/ecma-script-binding.html
             click: "click" in d.documentElement,
+            // DNT (Do Not Track)
+            dnt: n.doNotTrack === "1" || w.doNotTrack === "1" || n.msDoNotTrack === "1",
             // addEventListener supported since IE9
             eventListener: !!d.addEventListener,
-            // Touch events supported since Edge
-            // https://code.google.com/p/chromium/issues/detail?id=152149, Firefox 27+ https://bugzilla.mozilla.org/show_bug.cgi?id=970346 (only if earlier used Developer Tools > Responsive mode)
-            touch: "ontouchstart" in w,
+            // Pointer Events vs touch vs click
+            // http://www.stucox.com/blog/you-cant-detect-a-touchscreen/
+            pointer: n.pointerEnabled ? "pointerdown" : (n.maxTouchPoints > 0 || w.matchMedia && w.matchMedia("(pointer: coarse)").matches || "ontouchstart" in w ? "touchstart" : "click"),
             valid: function (fn) {
                 // V8 optimized try-catch http://stackoverflow.com/questions/19727905/in-javascript-is-it-expensive-to-use-try-catch-blocks-even-if-an-exception-is-n
                 try {
@@ -74,33 +81,37 @@
                     }
                 }
             },
-            toToggle: function (toExpand) {
+            toToggle: function (toExpand, avoidFocus) {
                 // Perf http://jsperf.com/document-body-parentelement
-                this.toggleClass(d.body.parentElement, "noscroll");
-                this.toggleClass(layout.status, "expand");
+                nav.toggleClass(d.body.parentElement, "noscroll");
+                nav.toggleClass(layout.status, "expand");
 
-                if (toExpand && layout.focusin) {
+                if (!avoidFocus && toExpand && layout.focusin) {
                     setTimeout(function () {
                         // Fix twice fired focus on Firefox
                         layout.focusin.focus();
                     }, 0);
                 }
             },
-            toFocus: function () {
-                if (d.activeElement !== layout.focusin) {
-                    // Old Webkit fix
-                    this.toToggle(true);
+            toFocus: function (e) {
+                var touchstart = e.type === "touchstart";
+
+                if (d.activeElement !== layout.focusin || touchstart) {
+                    nav.toToggle(true, touchstart);
                 }
             }
         },
         as = {
-            // Number
-            version: 4.7,
+            // Number (Ajax SEO version)
+            version: 5,
 
-            // String "UA-XXXX-Y"
+            // String (Google Analytics ID "UA-XXXX-Y")
             analytics: undefined,
 
-            // String
+            // Boolean (user agent DNT settings)
+            dnt: has.dnt,
+
+            // String (project root)
             origin: (function () {
                 var currentScript = d.currentScript || (function () {
                         var script = d.getElementsByTagName("script");
@@ -115,13 +126,13 @@
                 }
             }()),
 
-            // String http://jsperf.com/document-url-vs-window-location-href/2
+            // String (current page URL) http://jsperf.com/document-url-vs-window-location-href/2
             url: d.URL,
 
-            // String
+            // String (current page title)
             title: d.title,
 
-            // Element or null
+            // Element or null (the focused DOM Element based on "url")
             activeElement: (function () {
                 var arr = d.querySelectorAll ? d.querySelectorAll("[href]") : [],
                     i;
@@ -136,80 +147,134 @@
                 return null;
             }()),
 
-            // Boolean
+            // Boolean (detect if shown error page)
             error: layout.status && (has.classList ? layout.status.classList.contains("status-error") : new RegExp("(^|\\s)status-error(\\s|$)").test(layout.status.className))
         },
-        statusLanded,
         statusTimer,
-        client,
+        analytics,
+        client, // XMLHttpRequest
         root;
 
     has.valid.error = {
         e: null
     };
 
-    if (as.analytics) {
-        // Google Analytics, run also on legacy browsers
-        w.ga = function () {
-            ga.q = ga.q || [];
-            ga.q.push(arguments);
-        };
+    if (has.eventListener) {
+        // addEventListener and CSS media query supported in IE9+
+        if (layout.bar) {
+            has.touch = has.pointer === "touchstart";
 
-        ga("create", as.analytics, "auto");
-        ga("send", "pageview");
-    }
+            nav.toToggle.true = function () {
+                nav.toToggle(true);
+            };
+            nav.toToggle.false = function () {
+                nav.toToggle(false);
+            };
+            nav.toFocus.run = function (e) {
+                nav.toFocus(e);
+            };
+            nav.run = function () {
+                if (d.documentElement.offsetWidth <= 540) {
+                    if (!has.touch) {
+                        layout.bar.addEventListener("focus", nav.toToggle.true, true);
 
-    if (layout.bar && has.eventListener) {
-        // addEventListener and CSS media query supported since IE9
+                        if (layout.focusout) {
+                            layout.focusout.addEventListener("focus", nav.toToggle.false, true);
+                        }
+                    }
 
-        nav.toToggle.true = function () {
-            nav.toToggle(true);
-        };
-        nav.toToggle.false = function () {
-            nav.toToggle(false);
-        };
-        nav.toFocus.run = function () {
-            nav.toFocus();
-        };
-        nav.run = function () {
-            if (d.documentElement.offsetWidth <= 540) {
-                layout.bar.addEventListener("focus", nav.toToggle.true, true);
-                layout.bar.addEventListener("click", nav.toFocus.run, true);
+                    layout.bar.addEventListener(has.pointer, nav.toFocus.run, true);
 
-                if (layout.nav) {
-                    layout.nav.addEventListener("click", nav.toToggle.true, true);
-                }
-                if (layout.focusout) {
-                    layout.focusout.addEventListener("focus", nav.toToggle.false, true);
-                }
-                if (layout.reset) {
-                    layout.reset.addEventListener("click", nav.toToggle.true, true);
-                }
-            } else {
-                layout.bar.removeEventListener("focus", nav.toToggle.true, true);
-                layout.bar.removeEventListener("click", nav.toFocus.run, true);
+                    if (layout.nav) {
+                        layout.nav.addEventListener(has.pointer, nav.toToggle.true, true);
+                    }
+                    if (layout.reset) {
+                        layout.reset.addEventListener(has.pointer, nav.toToggle.true, true);
+                    }
+                } else {
+                    if (!has.touch) {
+                        layout.bar.removeEventListener("focus", nav.toToggle.true, true);
 
-                if (layout.nav) {
-                    layout.nav.removeEventListener("click", nav.toToggle.true, true);
+                        if (layout.focusout) {
+                            layout.focusout.removeEventListener("focus", nav.toToggle.false, true);
+                        }
+                    }
+
+                    layout.bar.removeEventListener(has.pointer, nav.toFocus.run, true);
+
+                    if (layout.nav) {
+                        layout.nav.removeEventListener(has.pointer, nav.toToggle.true, true);
+                    }
+                    if (layout.reset) {
+                        layout.reset.removeEventListener(has.pointer, nav.toToggle.true, true);
+                    }
                 }
-                if (layout.focusout) {
-                    layout.focusout.removeEventListener("focus", nav.toToggle.false, true);
+            };
+
+            nav.run();
+            w.addEventListener("resize", function () {
+                if (nav.timeoutScale) {
+                    clearTimeout(nav.timeoutScale);
                 }
-                if (layout.reset) {
-                    layout.reset.removeEventListener("click", nav.toToggle.true, true);
-                }
+
+                // Improve performance
+                nav.timeoutScale = setTimeout(nav.run, 100);
+            }, true);
+        }
+
+        if (!has.dnt && as.analytics) {
+            // Google Analytics
+            // Respect DNT (Do Not Track)
+            analytics = {
+                reset: function () {
+                    layout.analytics.removeEventListener("load", analytics.load);
+                    layout.analytics.removeEventListener("error", analytics.reset);
+                    layout.analytics.removeEventListener("readystatechange", analytics.readystatechange);
+                    layout.analytics.removeAttribute("id");
+                },
+                load: function () {
+                    // Disabling cookies https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#disabling_cookies
+                    ga("create", as.analytics, "auto", {
+                        storage: "none",
+                        clientId: localStorage.gaClientId
+                    });
+
+                    if (!localStorage.gaClientId) {
+                        ga(function (tracker) {
+                            localStorage.gaClientId = tracker.get("clientId");
+                        });
+                    }
+
+                    ga("send", "pageview");
+
+                    analytics.reset();
+                },
+                readystatechange: function () {
+                    if (layout.analytics.readyState === "complete" || layout.analytics.readyState === "loaded") {
+                        if (typeof ga === "function") {
+                            analytics.load();
+                        } else {
+                            analytics.reset();
+                        }
+                    }
+                },
+                timestamp: +new Date + ""
+            };
+
+            layout.analytics = d.createElement("script");
+            layout.analytics.src = "//www.google-analytics.com/analytics.js";
+            layout.analytics.id = analytics.timestamp;
+
+            d.body.appendChild(layout.analytics);
+
+            layout.analytics = d.getElementById(analytics.timestamp);
+
+            if (layout.analytics) {
+                layout.analytics.addEventListener("load", analytics.load);
+                layout.analytics.addEventListener("error", analytics.reset);
+                layout.analytics.addEventListener("readystatechange", analytics.readystatechange);
             }
-        };
-
-        nav.run();
-        w.addEventListener("resize", function () {
-            if (nav.timeoutScale) {
-                clearTimeout(nav.timeoutScale);
-            }
-
-            // Improve performance
-            nav.timeoutScale = setTimeout(nav.run, 100);
-        }, true);
+        }
     }
 
     if (!h.pushState || !has.classList || !has.eventListener) {
@@ -217,7 +282,6 @@
         // Browser legacy, stop here if does not support History API
         throw new Error("Browser legacy: History API not supported");
     }
-
     if (!layout.output) {
         throw new Error("Layout issue: missing elements");
     }
@@ -246,8 +310,7 @@
                     el.click();
                 } else {
                     // Old Webkit legacy
-                    var evt;
-                    evt = d.createEvent("MouseEvents");
+                    var evt = d.createEvent("MouseEvents");
 
                     evt.initEvent("click", true, true);
                     el.dispatchEvent(evt);
@@ -276,9 +339,11 @@
         },
         update: function (data, track, activeElement) {
             if (data) {
-                if (as.analytics) {
-                    // Google Universal Analytics tracking
-                    ga("send", "pageview", {page: as.url});
+                if (!has.dnt && as.analytics && typeof ga === "function") {
+                    // Track Ajax page requests
+                    ga("send", "pageview", {
+                        page: as.url
+                    });
                 }
 
                 if (!track) {
@@ -337,13 +402,6 @@
                 layout.output.innerHTML = data.content;
 
                 if (l.hash) {
-                    // CSS :target fix
-                    // h.replaceState({
-                    //     error: as.error,
-                    //     title: as.title,
-                    //     content: layout.output.innerHTML
-                    // }, as.title, null);
-
                     l.replace(as.url + l.hash);
                 }
             }
@@ -366,8 +424,6 @@
 
                     root.click(activeElement);
                 }
-
-                d.activeElement.blur();
 
                 // Chrome bug: XMLHttpRequest error avoids first popstate cache and recreates XMLHttpRequest (perhaps https://code.google.com/p/chromium/issues/detail?id=371549 will fix it)
                 // 1. Fire XMLHttpRequest by clicking on different links till some of links returns an error
@@ -401,10 +457,6 @@
             response = has.valid(function () {
                 return JSON.parse(response);
             });
-
-            if (statusLanded) {
-                clearTimeout(statusLanded);
-            }
 
             root.callback(response === has.valid.error ? {
                 error: true,
@@ -474,6 +526,11 @@
                 }
 
                 e.preventDefault();
+
+                if (el !== d.activeElement) {
+                    el.focus();
+                }
+
                 el.blur();
 
                 as.activeElement = el;
@@ -483,7 +540,7 @@
                     as.error = as.activeElement.classList.contains("x-error");
                 }
 
-                // innerText is not standardised and not either supported on Firefox
+                // Node.innerText support status http://kangax.github.io/jstests/innerText/ (Firefox 45 https://bugzilla.mozilla.org/show_bug.cgi?id=264412)
                 // http://www.kellegous.com/j/2013/02/27/innertext-vs-textcontent/
                 // http://stackoverflow.com/questions/1359469/innertext-works-in-ie-but-not-in-firefox
                 // http://jsperf.com/textcontent-and-innertext/3
@@ -500,13 +557,7 @@
                     return;
                 }
 
-                if (statusLanded) {
-                    clearTimeout(statusLanded);
-                }
-
-                statusLanded = setTimeout(function () {
-                    d.title = as.title;
-                }, 3);
+                d.title = as.title;
 
                 root.resetStatus();
 
@@ -524,6 +575,13 @@
                 }
                 if (as.activeNav) {
                     as.activeElement.classList.add("focus");
+                }
+
+                // Stop awaiting requests
+                if (w.stop) {
+                    w.stop();
+                } else if (d.execCommand) {
+                    d.execCommand("Stop", false);
                 }
 
                 // IE11 issue: client.send() new request doesn't cancel unfinished earlier request
@@ -562,7 +620,7 @@
                 content: layout.output.innerHTML
             }, as.title, as.url);
 
-            // XMLHttpRequest https://xhr.spec.whatwg.org/
+            // XMLHttpRequest https://xhr.spec.whatwg.org
             client = new XMLHttpRequest();
             // // IE11: SCRIPT5022: SyntaxError
             // client.open("GET", null);
@@ -575,7 +633,7 @@
             client.addEventListener("abort", root.reset, true);
 
             // http://jsperf.com/addeventlistener-usecapture-true-vs-false
-            d.documentElement.addEventListener(has.touch ? "touchstart" : "click", root.listener, true);
+            d.documentElement.addEventListener(has.pointer, root.listener, true);
         }
     };
 
