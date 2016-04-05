@@ -38,7 +38,7 @@ if ($debug) simulator();*/
 // Genarate
 if (!$result) $arr['error'] = true;
 
-$arr['title']   = $pagetitle;
+$arr['title'] = $pagetitle;
 $arr['content'] = $content;
 $arr = array_filter($arr);
 $arr = $debug ? json_encode($arr, JSON_PRESERVE_ZERO_FRACTION | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) : json_encode($arr, JSON_PRESERVE_ZERO_FRACTION | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
@@ -51,6 +51,8 @@ if (version_compare(PHP_VERSION, '5.4', '<')) {
 
 // Respond
 if (!$result) http_response_code(404);
+
 header('Content-Type: application/json; charset=utf-8');
 header('X-Robots-Tag: nosnippet');
+
 echo $arr;
