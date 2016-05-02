@@ -45,7 +45,7 @@ if ($conn) {
     function refresh() {
         global $path;
         ob_end_clean();
-        header('Location: ' . (strlen($path) ? $path : '/'));
+        header('Location: ' . $safepath);
         exit;
     }
 

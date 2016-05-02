@@ -78,7 +78,8 @@ $path   = str_replace($_SERVER['DOCUMENT_ROOT'], '', str_replace('\\', '/', getc
 $url    = rawurldecode($_SERVER['REQUEST_URI']);
 $url    = $url === '/' ? '/' : preg_replace('/^' . addcslashes($path, '/') . '\/api/', '', $url);
 $url    = preg_replace('/^' . addcslashes($path, '/') . '/', '', $url);
-$ishome = (strlen($path) ? $path : '/') === $path . $url;
+$safepath = strlen($path) ? $path : '/';
+$ishome = $safepath === $path . $url;
 
 $urldb  = preg_replace('/^\//', '', $url);
 $uri    = $scheme . '://' . $host . $url;

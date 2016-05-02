@@ -1,0 +1,24 @@
+<?php
+
+// Webapp Manifest https://w3c.github.io/manifest/
+
+include 'content/config.php';
+include 'content/connect.php';
+include 'content/cache.php'; cache::medb();
+
+echo '{
+    "lang": "en",
+    "name": "Ajax SEO v5",
+    "short_name": "Ajax SEO",
+    "version": "' . date('Y-m-d\TH:i\Z', date::all()) . '",
+    "description": "Crawlable webapp framework for outstanding UX",
+    "icons": [{
+        "src": "' . $path . '/icon.svg",
+        "foreground_color": "#0b62bb"
+    }],
+    "scope": "' . $safepath . '",
+    "start_url": "' . $safepath . '",
+    "display": "fullscreen",
+    "theme_color": "#f6f6f6",
+    "background_color": "#fff"
+}';

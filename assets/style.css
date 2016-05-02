@@ -10,12 +10,46 @@ http://www.markdotto.com/2011/12/06/formatting-vendor-prefixed-css/
 
 Avoid IDs
 http://screwlewse.com/2010/07/dont-use-id-selectors-in-css/
-http://screwlewse.com/2010/08/different-css-techniques-and-their-performance/ */
+http://screwlewse.com/2010/08/different-css-techniques-and-their-performance/
+
+Selector priorities https://css-tricks.com/specifics-on-css-specificity/
+Reset form elements http://jsfiddle.net/LHcR8/3/
+currentColor http://blogs.adobe.com/dreamweaver/2015/02/extending-the-color-cascade-with-the-css-currentcolor-variable.html
+
+Syntax order:
+    content
+    overflow
+    position
+    display
+    flex
+    padding
+    margin
+    color
+    font
+    text-decoration
+    text-align
+    vertical-align
+    white-space
+    word-wrap
+    background: color position size repeat origin clip attachment image;
+    background-color
+    background-image
+    box-sizing
+    border
+    box-shadow
+    will-change
+    backface-visibility
+    transition
+    pointer-events
+    cursor
+
+hax colors faster then rgba https://jsperf.com/css-color-names-vs-hex-codes/18
+*/
 
 /* @viewport should be inlined in HTML to avoid scaling and native responsive images issues, http://vimeo.com/93347500 21 min */
 @viewport {
     width: device-width;
-    zoom: 1;
+    /* zoom: 1; */ /* Fails scaling on Android */
 }
 
 /* Stabilization
@@ -23,14 +57,6 @@ http://screwlewse.com/2010/08/different-css-techniques-and-their-performance/ */
 html,
 body {
     height: 100%;
-}
-html,
-input,
-select,
-textarea,
-button {
-    color: #222;
-    font-family: Cambria, Georgia, serif;
 }
 html,
 label,
@@ -43,13 +69,13 @@ button,
             user-select: none;
 }
 html {
-    scroll-behavior: smooth; /* Spec http://dev.w3.org/csswg/cssom-view/#propdef-scroll-behavior */
-    font-size: 62.45%; /* Make 1em = 10px = 2.5rem */
-    line-height: 1.5;
+    /* scroll-behavior: smooth; */ /* ISSUE: causes very slow scroll on FFOS 2.6 */ /* Spec http://dev.w3.org/csswg/cssom-view/#propdef-scroll-behavior */
+    color: #333;
+    /* font-size 62.45% = 1em = 10px = 2.5rem */
+    font: 62.45% / 1.65 Cambria, Georgia, serif;
     text-rendering: optimizeSpeed;
     /* -ms-text-size-adjust property will be ignored where the viewport tag is present */
-    background-color: #f8f9fa;
-
+    background-color: #f2f2f2;
     /* Smoother scroll, faster clicks http://updates.html5rocks.com/2013/12/300ms-tap-delay-gone-away */
     touch-action: manipulation;
     cursor: default;
@@ -57,7 +83,6 @@ html {
 body,
 dl,
 dd,
-blockquote,
 figure {
     margin: 0;
 }
@@ -101,21 +126,22 @@ h2:first-line {
 h1 {
     font-size: 1.9em;
 }
-h2 {
-    color: #777;
-    font-size: 1.5em;
-}
+h2,
 h3,
 dt {
+    font-size: 1.45em;
+}
+h3 {
     margin-top: .3em;
     margin-bottom: .3em;
-    font-size: 1.35em;
 }
 h4 {
     margin-top: .4em;
     margin-bottom: .4em;
 }
-p {
+p,
+pre,
+cite {
     margin-top: .8em;
     margin-bottom: .8em;
 }
@@ -126,57 +152,76 @@ small {
     font-size: 70%;
 }
 blockquote {
-    padding-left: 1.2em;
+    margin: 1.2em -3em 1.2em -3em;
+    margin-right: -4.9vw;
+    margin-left: -4.9vw;
+    padding-left: 3.05em;
+    padding-left: calc(3.05em - .4em);
+    padding-left: calc(4.95vw - .4em);
+    padding-right: 3em;
+    padding-right: 4.9vw;
     font-style: italic;
-    border-left: .3em solid #eef0f0;
-    border-color: rgba(125,138,138,.13);
+    background-color: #f6f6f6; /* Firefox issue - doesn't wrap border and background inside "columns" */
+    border-left: .4em solid #aaa;
 }
-blockquote cite {
-    color: #777;
+blockquote:before,
+blockquote:after {
+    content: "";
+    display: table;
 }
-blockquote cite:before {
-    content: "\2014 \00A0";
-    color: #777;
+blockquote > *:not(div):not(span):not(code):first-child {
+    padding-top: .4em;
+}
+blockquote > *:not(div):not(span):not(code):last-child {
+    padding-bottom: .4em;
+}
+blockquote code,
+blockquote pre {
+    background-color: #eee;
 }
 cite {
-    /* Chrome ::selection related issue */
     display: block;
+    color: #666;
+}
+cite:before {
+    content: "\2014\00A0";
+    color: #999;
 }
 br {
     word-spacing: 0;
 }
 hr {
-    position: relative; /* [id]:target:before issue */
+    position: relative; /* :target:before issue */
     margin: 1em -3em;
     margin-right: -4.9vw;
     margin-left: -4.9vw;
     clear: both;
     border: 0;
-    border-top: 1px solid #eef0f0;
-    border-color: rgba(125,138,138,.13);
+    border-top: 1px solid #ddd;
 }
 code,
 pre {
-    padding: .05em .3em;
-    font-style: italic;
-    font-family: Consolas, Liberation Mono, Courier, monospace;
+    font: 80%/1.45 Consolas, Liberation Mono, Courier, monospace;
     white-space: pre-wrap;
-    background-color: rgba(206,209,210,.4);
+    background-color: #f6f6f6;
     -moz-tab-size: 4;
          tab-size: 4;
+}
+code {
+    display: inline-block;
+    padding: 0 .4em .1em;
+}
+pre {
+    padding: .75em 1.05em;
 }
 a,
 input,
 select,
 textarea,
 button {
+    font-family: inherit;
     outline: none;
     pointer-events: auto;
-}
-input,
-select,
-button {
-  vertical-align: middle;
 }
 a img,
 abbr,
@@ -189,17 +234,21 @@ img {
             user-drag: none;
 }
 a[href] {
-    color: #0f4cd5;
+    color: #00d;
     text-decoration: none;
-    /*touch-action: none;*/ /* Chrome Android avoids scroll on touch
-                               Disable double-tap-zoom http://msdn.microsoft.com/en-us/library/windows/apps/Hh767313.aspx */
+    /* touch-action: none; */ /* Chrome Android avoids scroll on touch
+                                 Disable double-tap-zoom http://msdn.microsoft.com/en-us/library/windows/apps/Hh767313.aspx */
     -webkit-box-decoration-break: clone; /* Chrome legacy, demo http://jsbin.com/xojoro/quiet */
             box-decoration-break: clone;
 }
 a[href]:hover,
 a[href]:focus {
-    color: #0e439b;
+    color: #02a;
     text-decoration: underline;
+}
+a[href][target=_blank] {
+    text-decoration: none;
+    border-bottom: 1px dotted;
 }
 img {
     /* Image scaling http://www.456bereastreet.com/lab/scaling-images-proportionally/ */
@@ -207,16 +256,17 @@ img {
     max-width: 100%;
     height: auto;
     vertical-align: top;
+    object-fit: contain;
 
     /* Image scale rendering https://drafts.csswg.org/css-images/#the-image-rendering */
     -ms-interpolation-mode: nearest-neighbor; /* IE8+ */
     image-rendering: -webkit-optimize-contrast; /* Webkit legacy https://code.google.com/p/chromium/issues/detail?id=134040 */
     image-rendering: -moz-crisp-edges; /* Firefox legacy */
     image-rendering:      crisp-edges;
-    image-rendering: pixelated;
+    image-rendering: pixelated; /* Eaquals non standard "optimizeSpeed" */
 }
 abbr {
-    border-bottom: 1px dotted #ccc;
+    border-bottom: 1px dotted #aaa;
 }
 legend {
     /* IE line-wrapping issue */
@@ -224,55 +274,58 @@ legend {
 }
 label {
     display: inline-block;
-    padding-bottom: .2em;
     padding-top: .2em;
+    padding-bottom: .2em;
+    color: #666;
     line-height: 1.2;
     vertical-align: middle;
 }
 ::selection {
+    color: initial;
     text-shadow: none;
-    background-color: rgba(206,209,210,.4);
+    /* Inspired from https://via.hypothes.is/https://www.instapaper.com/ */
+    background-color: rgba(255,255,60,.3);
+
+    /* // https://bugzilla.mozilla.org/show_bug.cgi?id=509958#c9
+    text-shadow: none;
+    color: highlighttext;
+    background-color: highlight;*/
 }
-/*:placeholder-shown {*/
-    /* W3C http://dev.w3.org/csswg/selectors4/#placeholder
-       Chrome 47 approach released with bugs https://code.google.com/p/chromium/issues/detail?id=451120#c13
-       Firefox https://bugzilla.mozilla.org/show_bug.cgi?id=1069012
-       Webkit https://bugs.webkit.org/show_bug.cgi?id=118162
-       Apply Firefox approach http://jsbin.com/fesunu/1/quiet
-       resource://gre-resources/forms.css
-       https://bugzilla.mozilla.org/show_bug.cgi?id=556145 */
-    /*opacity: 0.54;*/
-    /*color: inherit;*/
-/*}*/
+/*:placeholder-shown {
+    // W3C http://dev.w3.org/csswg/selectors4/#placeholder
+    // Firefox https://bugzilla.mozilla.org/show_bug.cgi?id=1069012
+    // Chrome 47 approach released with bugs https://code.google.com/p/chromium/issues/detail?id=451120
+    // Webkit https://bugs.webkit.org/show_bug.cgi?id=118162
+    // Apply Firefox approach http://jsbin.com/fesunu/1/quiet
+    // resource://gre-resources/forms.css
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=556145
+    opacity: .54;
+    color: inherit;
+}*/
 input,
 select,
 textarea,
 button,
 .button {
-    width: 20em;
     max-width: 100%;
-    padding: .6em .7em;
+    padding: .6em .75em;
     margin: .15em 0;
     font-size: 1em;
     line-height: 1.25;
-    background-color: #fff;
-    border: 1px solid #b1b2b2;
     box-sizing: border-box;
 }
-textarea {
-    overflow-x: hidden;
-    overflow-y: scroll;
-    min-height: 4.95em;
-    max-height: 13em;
-    word-wrap: break-word;
-    resize: none;
+input,
+select,
+button {
+    vertical-align: middle;
 }
-input:hover,
-input:focus,
-textarea:hover,
-textarea:focus {
-    border-color: #9f9f9f;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,.15);
+input,
+select,
+textarea {
+    width: 20em;
+    background-color: #f6f6f6;
+    border: 1px solid #f6f6f6;
+    box-shadow: 1px 1px 0 rgba(0,0,0,.14);
 }
 [type=checkbox],
 [type=radio],
@@ -285,6 +338,25 @@ textarea:focus {
     border: 0;
     box-sizing: content-box;
 }
+textarea {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    min-height: 4.95em;
+    max-height: 13em;
+    vertical-align: top;
+    word-wrap: break-word;
+    resize: none;
+}
+[required]:valid {
+    border-color: #aaa;
+}
+input:focus,
+textarea:focus,
+select:focus,
+[required]:focus {
+    background-color: #fff;
+    border-color: #00d;
+}
 select,
 button,
 .button {
@@ -292,58 +364,60 @@ button,
     display: inline-block;
     white-space: nowrap; /* Mobile button text wrapping fix for button */
     word-wrap: normal; /* "nowrap" compatibility for IE9 */
-    text-align: center;
     text-overflow: ellipsis;
-    background-color: #f4f4f4;
-    border: 1px solid #c0c0c1;
     outline: 0;
-    box-shadow: inset 0 0 0 1px #f5f5f5,
-                1px 1px 2px rgba(0,0,0,.1);
     cursor: pointer;
 }
+button,
+.button {
+    min-width: 9.4em;
+    margin-top: .55em;
+    margin-bottom: .55em;
+    color: #fff;
+    text-align: center;
+    background-color: #666;
+    border: 1px solid #666;
+}
 [disabled] {
-    color: #bababa;
+    color: #aaa;
     text-decoration: none;
     text-shadow: 0 1px 1px #fff;
-    border-color: #e3e6e7;
+    border-color: #ddd;
     box-shadow: none;
     transition: none;
     pointer-events: none;
     cursor: default;
 }
 select[disabled],
-button[disabled] {
-    background-color: #f4f4f4;
+button[disabled],
+.button[disabled] {
     background-color: rgba(179,179,179,.08);
-    border-color: transparent; /* If #f4f4f4, then IE10 shows dark gray on :hover */
+    border-color: transparent; /* If color defined, then IE10 shows dark gray on :hover */
 }
-.button {
-    width: auto;
-}
-a[href].button {
-    color: inherit;
-    text-decoration: none;
-}
-select:hover,
-select:focus,
-button:hover,
-button:focus,
-.button:hover,
-.button:focus {
-    background-color: #f8f9fa;
-    border-color: #9f9f9f;
-}
-select:active,
-button:active,
-.button:active {
-    background-color: rgba(206,209,210,.4);
-    box-shadow: none;
+select:focus option {
+    /* Match to parent element width (currently supported only on Firefox) */
+    /* Chrome max-width issue https://code.google.com/p/chromium/issues/detail?id=82253 */
+    min-width: 100%;
+    max-width: 0;
+    background-color: #fff;
 }
 option {
     /* Match to parent element width (currently supported only on Firefox) */
     /* Chrome max-width issue https://code.google.com/p/chromium/issues/detail?id=82253 */
     min-width: 100%;
     max-width: 0;
+}
+button:active,
+.button:active {
+    background-color: #999;
+    border-color: #999;
+}
+.button {
+    width: auto;
+}
+a[href].button {
+    color: #fff;
+    text-decoration: none;
 }
 [tabindex] {
     outline: 0;
@@ -352,24 +426,27 @@ option {
 
 /* Design
 -------------------------------------------------- */
-html {
+html,
+.wrapper,
+.tab {
     /* Avoid content jumping on vertical scrollbar appearing http://jsbin.com/horone/4 */
     width: 100%;
     width: 100vw;
+}
+html {
     max-width: 100%;
 }
 div.noscroll {
     overflow: hidden;
 }
 .wrapper {
-    width: 100%;
-    width: 100vw;
     min-height: 100vh;
 }
-
 .status {
     opacity: 0;
     position: fixed;
+    position: -ms-device-fixed;
+    position:     device-fixed; /* Spec request https://github.com/tabatkins/specs/issues/31 */
     z-index: 999;
     left: 0;
     width: 0; /* IE transition issue */
@@ -424,14 +501,18 @@ div.noscroll {
 /* Navigation */
 .tab {
     position: fixed;
+    position: -ms-device-fixed;
+    position:     device-fixed;
     z-index: 100;
     top: 0;
     right: 0;
     left: 0;
-    width: 100%;
-    width: 100vw;
     line-height: 2.2;
-    font-family: Segoe UI Historic, Segoe UI Symbol, Open Sans, sans-serif; /* "Meiryo" returns ellipsis in middle of text, Windows fonts https://en.wikipedia.org/wiki/List_of_typefaces_included_with_Microsoft_Windows */
+
+    /* In Windows 10 non-Latinic characters are shown as white squares "□" https://code.google.com/p/chromium/issues/detail?id=516209
+    "Meiryo" returns ellipsis in middle of text, Windows fonts https://en.wikipedia.org/wiki/List_of_typefaces_included_with_Microsoft_Windows */
+    font-family: Segoe UI Historic, Segoe UI Symbol, sans-serif;
+
     text-align: center;
     white-space: nowrap;
     word-wrap: normal;
@@ -440,16 +521,14 @@ div.noscroll {
 .header,
 .main,
 .footer {
-    width: 95%;
-    max-width: 900px;
+    min-width: 13.6em;
+    max-width: 47.45em;
     margin: auto;
     box-sizing: border-box;
 }
 .header,
 .main {
     background-color: #fff;
-    border: 0 solid #d9e0e2;
-    border-width: 0 1px;
 }
 .header {
     position: relative;
@@ -465,10 +544,6 @@ div.noscroll {
     pointer-events: none;
 }
 .nav {
-    overflow: hidden; /* IE11 issue */
-    display: inline-block;
-    display: -ms-flexbox; /* IE10 legacy */
-    display: flex;
     width: 100%;
     margin: .1em auto;
     font-size: 1.05em;
@@ -480,6 +555,13 @@ div.noscroll {
     box-shadow: 0 1px 1px rgba(0,0,0,.1),
                 inset 0 0 0 1px rgba(255,255,255,.5);
 }
+.nav .noscroll {
+    overflow: hidden; /* IE11 issue */
+    display: inline-block;
+    display: -ms-flexbox; /* IE10 legacy */
+    display: -webkit-flex; /* Safari 8.4 legacy */
+    display:         flex;
+}
 .nav.nav a,
 .footer a {
     color: inherit;
@@ -488,11 +570,13 @@ div.noscroll {
 .nav a {
     display: block;
     position: relative;
-    -ms-flex: 1;
-        flex: 1;
-    flex-basis: auto;
+    -webkit-flex: 1; /* Safari 8.4 legacy */
+        -ms-flex: 1; /* IE10 legacy */
+            flex: 1;
+    -webkit-flex-basis: auto; /* Safari 8.4 legacy */
+            flex-basis: auto;
     min-width: 1px; /* IE11 ignores min-width: 0; */
-    padding: 0 .43em; /* Firefox flexbox padding percentage issue https://bugzilla.mozilla.org/show_bug.cgi?id=529761 */
+    padding: 0 .63em; /* Firefox flexbox padding percentage issue https://bugzilla.mozilla.org/show_bug.cgi?id=529761 */
     border: 0 solid #d9e0e2;
     border-left-width: 1px;
 }
@@ -513,8 +597,8 @@ div.noscroll {
 }
 .nav a.focus,
 .nav a.error,
-.nav a.active {
-    margin: -1px auto;
+.nav.nav a.active {
+    margin: -1px auto; /* ////////////// Fails for .nav */
     line-height: 2.25;
     border-color: transparent;
 }
@@ -531,10 +615,14 @@ div.noscroll {
     color: #fff;
     background-color: #006cff;
 }
+/*.nav a.active:focus {
+    background-color: #0369f2;
+}*/
 .nav a.error {
     background-color: #f7dad4;
 }
-.nav a > span {
+.nav a > span,
+[data-placeholder] {
     overflow: hidden;
     display: block;
     position: relative;
@@ -561,14 +649,27 @@ div.noscroll {
 }
 .nav .bar {
     display: inline-block;
+    position: relative;
+}
+.nav a[data-version] {
+    line-height: initial;
+    margin: initial;
 }
 [data-version]:before {
     content: attr(data-version);
     position: absolute;
-    bottom: .2em;
-    right: 1.5em;
-    font-weight: bold;
-    font-size: .55em;
+    z-index: 4;
+    right: 50%;
+    bottom: .65em;
+    width: 1.46em;
+    height: 1.46em;
+    margin-right: -1.46em;
+    color: #fff;
+    text-shadow: 1px 1px 0 #f00;
+    font: bold .55em/1.4 Meiryo, Segoe UI, sans-serif;
+    background-color: #f80;
+    border-radius: 100%;
+    box-shadow: 0 0 0 .17em #fff;
     pointer-events: none;
 }
 .bar span,
@@ -587,6 +688,7 @@ div.noscroll {
 }
 .bar span {
     position: relative;
+    z-index: 1;
     margin: 1.07em .65em 1.07em .55em;
     transform: translateY(0); /* Firefox 34 Nightly width fix */
     pointer-events: none; /* IE11 legacy */
@@ -610,7 +712,7 @@ div.noscroll {
 }
 .main,
 .footer {
-    position: relative;
+    /* position: relative; */
     padding: 0 3em;
     padding: 0 4.9vw;
 }
@@ -619,6 +721,7 @@ div.noscroll {
     min-height: 100vh;
     padding-top: 3.8em;
     padding-bottom: 6em;
+    outline: 1px solid #e1e1e1;
     will-change: contents;
 }
 .main :target {
@@ -630,17 +733,14 @@ div.noscroll {
 .main a:target:hover {
     text-decoration: underline;
 }
-.main [id]:target:before {
+.main :target:before {
+    /* Hack used also in https://developer.yahoo.com/performance/rules.html */
     content: "";
-    display: block; /* Bug with anchor element and hover state */
-    padding-top: 3.5em;
-    margin-top: -3.5em;
+    display: block;
+    height: 2.5em;
+    margin-top: -2.5em;
     pointer-events: none;
     background-color: #fff;
-}
-.main h1[id]:target:before {
-    padding-top: 1.3em;
-    margin-top: -1.3em;
 }
 .error ~ .main {
     display: flex;
@@ -648,6 +748,13 @@ div.noscroll {
     align-items: center;
     text-align: center;
     padding-bottom: 8.5em;
+}
+.pubdate {
+    display: block;
+    margin: .5em 0;
+    color: #aaa;
+    font-size: .7em;
+    font-family: tahoma, sans-serif;
 }
 .footer {
     overflow: hidden;
@@ -657,7 +764,7 @@ div.noscroll {
     text-overflow: ellipsis;
     white-space: nowrap;
     word-wrap: normal;
-    border-top: 1px solid #eee;
+    border-top: 1px solid #e1e1e1;
 }
 .footer a {
     display: inline-block;
@@ -698,12 +805,21 @@ option[value=""], /* First element as placeholder, fails on IE */
     .main {
         min-height: 100%;
     }
-    .nav {
+    .nav .noscroll {
         display: table;
+        width: 100%;
         table-layout: fixed;
     }
     .nav a {
         display: table-cell;
+        vertical-align: top;
+    }
+    .nav .bar,
+    [data-version]:before {
+        display: none;
+    }
+    .nav [data-placeholder] {
+        display: inline-block;
     }
 }
 @media (min-width:0\0) and (min-resolution: .001dpcm) { /* IE9 https://github.com/jeffclayton/css_hack_testing */
@@ -712,12 +828,14 @@ option[value=""], /* First element as placeholder, fails on IE */
     .nav a:last-of-type {
         border-radius: 0;
     }
-    .nav {
+    .nav .noscroll {
         display: table;
+        width: 100%;
         table-layout: fixed;
     }
     .nav a {
         display: table-cell;
+        vertical-align: top;
     }
     .nav .bar,
     [data-version]:before {
@@ -736,28 +854,28 @@ option[value=""], /* First element as placeholder, fails on IE */
     }
 } */
 @media (-ms-high-contrast: active), (-ms-high-contrast: none) { /* IE10+ http://www.impressivewebs.com/ie10-css-hacks/ */
-    html,
+    /* html,
     textarea,
     .nav {
-        /* Auto-hide scrollbar */
+        // Auto-hide scrollbar
+        // Causes miscalculation on detecting clicked mobile nav scrollbar
         -ms-overflow-style: -ms-autohiding-scrollbar;
-    }
+    } */
     a {
         /* Remove IE10 :active gray background-color */
         background-color: transparent;
-    }
-    select {
-        /* Disable text highlight on element blur on IE11 */
-        -ms-user-select: none;
-    }
-    :-ms-input-placeholder {
-        /* IE11 "opacity" is applied to parent element input itself */
-        color: #999;
     }
     ::-ms-clear {
         /* Remove input x */
         display: none;
         box-suppress: discard;
+    }
+    :-ms-input-placeholder {
+        color: inherit;
+    }
+    select {
+        /* Disable text highlight on element blur on IE11 */
+        -ms-user-select: none;
     }
     select:focus::-ms-value {
         /* Remove focused element highlight on IE11 */
@@ -771,13 +889,16 @@ option[value=""], /* First element as placeholder, fails on IE */
     }
 }
 @supports (-ms-accelerator: true) { /* Edge http://browserstrangeness.bitbucket.org/css_hacks.html#edge */
-    ::-webkit-input-placeholder {
-        opacity: 0.54;
-    }
     ::-ms-clear {
         /* Remove input x */
         display: none;
         box-suppress: discard;
+    }
+    ::-webkit-input-placeholder {
+        color: #333;
+    }
+    [placeholder]:focus::-webkit-input-placeholder {
+        opacity: .54;
     }
     select:focus::-ms-value {
         /* Remove focused element highlight on IE11 */
@@ -787,11 +908,6 @@ option[value=""], /* First element as placeholder, fails on IE */
 }
 @media (-webkit-min-device-pixel-ratio: 0) {
     @supports (not (-ms-accelerator: true)) { /* Webkit */
-        /* Android/iOS WebView issues
-        --------------------------------------------------
-        all - slow click/hover state on any element except <a>
-        2.3 - @keyframes flicker http://georgehess.com/post/2054803814/css-keyframe-animation-flicker
-        2.3 - unknown appearance of visibility:hidden on new DOM elements on scroll while using -webkit-transform:translate3d(0,0,0), -webkit-backface-visibility:hidden or -webkit-perspective:1000 */
         html,
         textarea,
         .nav {
@@ -802,8 +918,8 @@ option[value=""], /* First element as placeholder, fails on IE */
             /* Old Webkit smooth text rendering issue */
             -webkit-font-smoothing: antialiased;
             -webkit-text-size-adjust: 100%; /* iOS fix */
-            /*-webkit-perspective: 1000;*/ /* Breaks position: fixed
-                                              Android repaint issue on screen orientation change */
+            /* -webkit-perspective: 1000; */ /* Breaks position: fixed
+                                                Android repaint issue on screen orientation change */
         }
         a,
         input,
@@ -813,34 +929,54 @@ option[value=""], /* First element as placeholder, fails on IE */
         [tabindex] {
             /* <select> shadow DOM issue https://code.google.com/p/chromium/issues/detail?id=234871 */
             /* Remove outline and highlight-color from click-able elements on Android and iOS */
-            -webkit-tap-highlight-color: rgba(0,0,0,0);
+            -webkit-tap-highlight-color: rgba(51,51,51,0);
         }
         a {
             /* iOS remove bubble dialog on tap-holding */
             -webkit-touch-callout: none;
         }
-        ::-webkit-input-placeholder {
-            text-overflow: ellipsis!important; /* Chrome 49 input:focus forces "text-overflow: clip" */
-            opacity: 0.54;
-            color: inherit;
+        input {
+            -webkit-hyphens: none; /* Safari 9.1 wraps text to multiple lines */
         }
-        .nav a > span {
+        input[type=search] {
+            -webkit-appearance: textfield; /* Safari 9.1 make filed styleable */
+        }
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=search]::-webkit-search-cancel-button {
+            display: none;
+        }
+        ::-webkit-input-placeholder {
+            color: #333;
+            text-overflow: ellipsis!important; /* Chrome 49 input:focus and Safari 9.1.1 input applies inline "text-overflow: clip" */
+            white-space: nowrap; /* Safari 9.1 wraps text with "-" */
+            -webkit-user-select: none;
+                    user-select: none;
+        }
+        [placeholder]:focus::-webkit-input-placeholder {
+            opacity: .54;
+        }
+        .nav a > span,
+        [data-placeholder] {
             /* Only Webkit currently supports "mask" value "linear-gradient" */
             text-overflow: clip;
-            -webkit-mask: linear-gradient(to left, rgba(0,0,0,0), #000 1.5em, #000); /* Chrome legacy */
-                    mask: linear-gradient(to left, rgba(0,0,0,0), #000 1.5em, #000);
+            -webkit-mask: linear-gradient(to left, rgba(51,51,51,0), #333 1.5em, #333); /* Chrome legacy */
+                    mask: linear-gradient(to left, rgba(51,51,51,0), #333 1.5em, #333);
         }
-        .nav a > span[dir] {
+        .nav a > span[dir],
+        [dir] [data-placeholder] {
             /* "mask" for RTL */
-            -webkit-mask: linear-gradient(to right, rgba(0,0,0,0), #000 1.5em, #000); /* Chrome legacy */
-                    mask: linear-gradient(to right, rgba(0,0,0,0), #000 1.5em, #000);
+            -webkit-mask: linear-gradient(to right, rgba(51,51,51,0), #333 1.5em, #333); /* Chrome legacy */
+                    mask: linear-gradient(to right, rgba(51,51,51,0), #333 1.5em, #333);
         }
     }
+    /* @supports (overflow: -webkit-marquee) and (justify-content: inherit) { // Safari 9+ http://browserstrangeness.bitbucket.org/css_hacks.html#safari } */
 }
 @-moz-document url-prefix() { /* Firefox */
     ::-moz-selection {
+        color: initial;
         text-shadow: none;
-        background-color: rgba(206,209,210,.4);
+        background-color: rgba(255,255,60,.3);
     }
     label:active {
         background-color: transparent;
@@ -858,18 +994,30 @@ option[value=""], /* First element as placeholder, fails on IE */
         border: 0;
         padding: 0;
     }
+    ::-moz-placeholder {
+        color: #333;
+    }
+    [placeholder]:not(:focus)::-moz-placeholder {
+        opacity: 1;
+    }
 }
 
 
 
 /* Device adaptation http://dev.w3.org/csswg/css-device-adapt/
 -------------------------------------------------- */
-@media (max-width: 540px) {
+@media (max-width: 720px) {
     html {
         background-color: #fff;
     }
     html.noscroll {
         overflow: hidden;
+    }
+    blockquote {
+        margin-left: -1.9em;
+        margin-right: -1.9em;
+        padding-left: calc(1.9em - .35em);
+        padding-right: 1.9em;
     }
     hr {
         margin-right: -1.9em;
@@ -880,20 +1028,18 @@ option[value=""], /* First element as placeholder, fails on IE */
     button {
         width: 100%;
     }
+    [type=checkbox],
+    [type=color],
+    [type=image],
+    [type=radio] {
+        width: auto;
+    }
     .footer,
     .nav .bar,
     .expand ~ .tab .header:after,
     [data-version]:before {
         display: none;
         box-suppress: discard;
-    }
-    [type=checkbox],
-    [type=radio],
-    [type=image],
-    [type=file],
-    [type=color] {
-        /* Reset */
-        width: auto;
     }
     .status {
         height: 4px;
@@ -902,7 +1048,7 @@ option[value=""], /* First element as placeholder, fails on IE */
         transition: none;
     }
     .tab {
-        width: 100%;
+        /* width: 100%; */
         padding-bottom: .2em;
         text-align: left; /* IE9 legacy */
         text-align: start;
@@ -912,11 +1058,8 @@ option[value=""], /* First element as placeholder, fails on IE */
     .tab > .bar {
         display: inline-block;
     }
-    .bar,
-    .nav {
-        pointer-events: auto;
-    }
     .bar {
+        pointer-events: auto;
         cursor: pointer;
     }
     .bar span,
@@ -930,7 +1073,7 @@ option[value=""], /* First element as placeholder, fails on IE */
     }
     .bar:hover,
     .bar:focus {
-        background-color: rgba(206,209,210,.4);
+        background-color: rgba(0,0,0,.07);
     }
     .expand ~ .tab .bar span {
         background-color: transparent;
@@ -950,26 +1093,29 @@ option[value=""], /* First element as placeholder, fails on IE */
     .header,
     .expand ~ .tab .nav:before,
     .expand ~ .tab .nav:after {
-        width: 75%;
-        width: 75vw;
-        min-width: 8em;
+        width: 100%;
+        max-width: 76%;
+        max-width: 76vw;
+        min-width: 10em;
     }
     .header {
         position: fixed;
+        position: -ms-device-fixed;
+        position:     device-fixed;
         top: 0;
         left: 0;
         bottom: 0;
         padding: 0;
-        background-color: #f8f9fa;
+        background-color: #f6f6f6;
         border: 0;
         -webkit-transform: translateX(-100%); /* Android 4.4.4 legacy */
             -ms-transform: translateX(-100%); /* IE9 legacy */
                 transform: translateX(-100%);
-        backface-visibility: hidden; /* will-change breaks pseudo-class position: fixed */
+        /* backface-visibility: hidden; */ /* Causes scrollbar appear under the .active link */ /* will-change breaks pseudo-class position: fixed */
     }
     .expand ~ .tab .header {
-        box-shadow: 0 0 4em rgba(0,0,0,.3); /* Webkit legacy */
-        box-shadow: 0 0 4em rgba(0,0,0,.1), 0 0 44vw rgba(0,0,0,.3);
+        box-shadow: 0 0 4em rgba(51,51,51,.3); /* Webkit legacy */
+        box-shadow: 0 0 4em rgba(51,51,51,.11), 0 0 43vw rgba(51,51,51,.3);
         -webkit-transform: none; /* Android 4.4.4 legacy */
             -ms-transform: none; /* IE9 legacy */
                 transform: none;
@@ -991,6 +1137,8 @@ option[value=""], /* First element as placeholder, fails on IE */
     }
     .expand ~ .handler {
         position: fixed;
+        position: -ms-device-fixed;
+        position:     device-fixed;
         z-index: 99;
     }
     .expand ~ .main {
@@ -1005,7 +1153,6 @@ option[value=""], /* First element as placeholder, fails on IE */
     }
     .nav {
         overflow: auto;
-        display: block;
         height: 100%;
         margin: 0;
         background: none;
@@ -1013,51 +1160,59 @@ option[value=""], /* First element as placeholder, fails on IE */
         box-shadow: none;
         box-sizing: border-box;
         backface-visibility: hidden; /* will-change breaks pseudo-class position: fixed */
+        pointer-events: auto; /* Causes scrollbar dislocation on Android */
     }
-    .nav a:first-child {
-        max-width: 100%;
-        margin-top: 2.3em;
-        border-top: 0;
-    }
-    .nav a:last-of-type {
-        margin-bottom: 2.3em;
+    .nav .noscroll {
+        display: block;
     }
     .nav:before,
     .nav:after {
         content: "";
         position: fixed;
+        position: -ms-device-fixed;
+        position:     device-fixed;
         left: 0;
         z-index: 2;
-        width: 0;
         height: 2.35em;
-        pointer-events: none;
+        font-size: 95%;
         will-change: transform;
+        pointer-events: none;
     }
     .nav:before {
         top: 0;
-        background-image: linear-gradient(#f8f9fa, rgba(248,249,250,.9) 50%, rgba(248,249,250,.8) 60%, rgba(248,249,250,0));
+        background-image: linear-gradient(#f8f8f8, rgba(248,248,248,.9) 50%, rgba(248,248,248,.8) 60%, rgba(248,248,248,0));
     }
     .nav:after {
         bottom: 0;
-        right: auto;
-        background-image: linear-gradient(rgba(248,249,250,0), rgba(248,249,250,.8) 50%, rgba(248,249,250,.9) 60%, #f8f9fa);
+        background-image: linear-gradient(rgba(248,248,248,0), rgba(248,248,248,.8) 50%, rgba(248,248,248,.9) 60%, #f8f8f8);
     }
     .nav.nav a { /* Increase selector specificity http://vimeo.com/100264064 minute 03:30 */
         display: block;
-        -ms-flex: 0;
-            flex: 0;
+        -webkit-flex: 0; /* Safari 8.4 legacy */
+                flex: 0;
+        /* min-width: 76vw; */
         padding: 0 1.3em;
         float: none; /* IE legacy */
-        border-color: #eef0f0;
         border-color: rgba(125,138,138,.13);
         border-width: 0;
         border-top-width: 1px;
+        /* box-sizing: border-box; */
+    }
+    .nav a[data-version] {
+        line-height: 2.25;
+    }
+    .nav.nav a:first-child {
+        max-width: 100%;
+        margin-top: 2.25em;
+        border-top: 0;
+    }
+    .nav a:last-of-type {
+        margin-bottom: 2.25em;
     }
     .main {
-        width: auto;
-        min-width: 13.6em;
         padding: 2em 1.9em 3.2em;
-        border: 0;
+        background-color: initial;
+        outline: 0;
     }
     .error ~ .main {
         padding-bottom: 6.7em;
@@ -1067,7 +1222,7 @@ option[value=""], /* First element as placeholder, fails on IE */
         margin-top: -1.8em;
     }
 }
-@media (max-width: 320px) {
+@media (max-width: 480px) {
     html {
         font-size: 58%;
     }
@@ -1075,23 +1230,41 @@ option[value=""], /* First element as placeholder, fails on IE */
         font-size: 1.5em;
     }
     h2 {
-        font-size: 1.2em;
+        font-size: 1.15em;
+    }
+    h3 {
+        font-size: 1.3em;
     }
     h3,
     dt {
         font-size: 1.3em;
+    }
+    button {
+        width: 100%;
+    }
+    .bar {
+        font-size: 102.4%;
+    }
+    .nav span {
+        top: 0;
     }
 }
 @media print {
     @page {
         margin: .5cm;
     }
-    *,
-    h2,
-    h3 {
-        color: #222;
-        text-shadow: none;
-        background: none;
+    html,
+    blockquote,
+    code,
+    pre,
+    .main {
+        background-color: initial;
+    }
+    html,
+    a,
+    cite,
+    .pubdate {
+        color: initial;
     }
     p,
     h2,
@@ -1104,29 +1277,27 @@ option[value=""], /* First element as placeholder, fails on IE */
         page-break-after: avoid;
     }
     a {
-        color: #777;
         text-decoration: underline;
+    }
+    a[target=_blank] {
+        border-bottom: none;
     }
     img {
         page-break-inside: avoid;
     }
-    html,
+    input,
+    select,
+    textarea,
     .main {
-        background: none;
+        box-shadow: none;
+    }
+    .main {
+        padding-top: 0;
+        padding-bottom: 0;
     }
     .tab,
     .footer {
         display: none;
         box-suppress: discard;
-    }
-    .main {
-        padding-top: 1em;
-        padding-bottom: 1em;
-        border: 0;
-    }
-    select,
-    button,
-    .button {
-        box-shadow: none;
     }
 }

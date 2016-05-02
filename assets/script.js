@@ -1,4 +1,5 @@
-/*global define, module, window, document, navigator, history, location, localStorage, ga, setTimeout, clearTimeout, XMLHttpRequest*/
+/*global define, module, window, document, navigator, history, location, Element, localStorage, ga, setTimeout, clearTimeout, XMLHttpRequest*/
+/*eslint no-console: 0*/
 
 // Detect DOM change https://developers.google.com/web/updates/2012/02/Detect-DOM-changes-with-Mutation-Observers
 
@@ -21,37 +22,18 @@
 }(function () {
     "use strict";
 
-    // cached
     var w = window,
         d = document,
         n = navigator,
         h = history,
         l = location,
-        has = {
-            // classList supported since IE10
-            classList: "classList" in d.documentElement,
-            // DOM 2 spec: element.click() defined only for HTMLInputElement http://www.w3.org/TR/DOM-Level-2-HTML/ecma-script-binding.html
-            click: "click" in d.documentElement,
-            // DNT (Do Not Track)
-            dnt: n.doNotTrack === "1" || w.doNotTrack === "1" || n.msDoNotTrack === "1",
-            // addEventListener supported since IE9
-            eventListener: !!d.addEventListener,
-            // Pointer Events vs touch vs click
-            // http://www.stucox.com/blog/you-cant-detect-a-touchscreen/
-            pointer: n.pointerEnabled ? "pointerdown" : (n.maxTouchPoints > 0 || w.matchMedia && w.matchMedia("(pointer: coarse)").matches || "ontouchstart" in w ? "touchstart" : "click"),
-            valid: function (fn) {
-                // V8 optimized try-catch http://stackoverflow.com/questions/19727905/in-javascript-is-it-expensive-to-use-try-catch-blocks-even-if-an-exception-is-n
-                try {
-                    return fn();
-                } catch (e) {
-                    has.valid.error.e = e;
-                    return has.valid.error;
-                }
-            }
-        },
-        layout = {
+        ui = {
+            html: d.documentElement,
+            wrapper: d.getElementById("wrapper"),
+
             // Expandable navigation
             bar: d.getElementById("bar"),
+            collapse: d.getElementById("collapse"),
             focusin: d.getElementById("focusin"),
             focusout: d.getElementById("focusout"),
             reset: d.getElementById("reset"),
@@ -61,55 +43,48 @@
             status: d.getElementById("status"),
             output: d.getElementById("output")
         },
-        nav = {
-            toggleClass: function (el, className) {
-                if (el) {
-                    if (has.classList) {
-                        // IE11 doesn't support multiple classes https://connect.microsoft.com/IE/Feedback/Details/920755
-                        el.classList.toggle(className);
-                    } else {
-                        var classes = el.className.split(" "),
-                            existingIndex = classes.indexOf(className);
-
-                        if (existingIndex >= 0) {
-                            classes.splice(existingIndex, 1);
-                        } else {
-                            classes.push(className);
-                        }
-
-                        el.className = classes.join(" ");
-                    }
-                }
+        has = {
+            // classList supported since IE10
+            classList: "classList" in ui.html,
+            // DOM 2 spec: element.click() defined only for HTMLInputElement http://www.w3.org/TR/DOM-Level-2-HTML/ecma-script-binding.html
+            click: "click" in ui.html,
+            // DNT (Do Not Track)
+            dnt: n.doNotTrack === "1" || w.doNotTrack === "1" || n.msDoNotTrack === "1",
+            // Error handler for Ajax requests
+            error: {
+                e: null
             },
-            toToggle: function (toExpand, avoidFocus) {
-                // Perf http://jsperf.com/document-body-parentelement
-                nav.toggleClass(d.body.parentElement, "noscroll");
-                nav.toggleClass(layout.status, "expand");
-
-                if (!avoidFocus && toExpand && layout.focusin) {
-                    setTimeout(function () {
-                        // Fix twice fired focus on Firefox
-                        layout.focusin.focus();
-                    }, 0);
-                }
-            },
-            toFocus: function (e) {
-                var touchstart = e.type === "touchstart";
-
-                if (d.activeElement !== layout.focusin || touchstart) {
-                    nav.toToggle(true, touchstart);
+            // addEventListener supported since IE9
+            eventListener: !!d.addEventListener,
+            // Pointer Events vs touch vs click
+            // https://bugs.chromium.org/p/chromium/issues/detail?id=152149
+            // http://www.stucox.com/blog/you-cant-detect-a-touchscreen/
+            pointer: n.pointerEnabled ? "pointerdown" : (n.maxTouchPoints > 0 || w.matchMedia && w.matchMedia("(pointer: coarse)").matches || "ontouchstart" in w ? "touchstart" : "mousedown"),
+            valid: function (fn) {
+                // V8 optimized try-catch http://stackoverflow.com/questions/19727905/in-javascript-is-it-expensive-to-use-try-catch-blocks-even-if-an-exception-is-n
+                try {
+                    return fn();
+                } catch (e) {
+                    this.error.e = e;
+                    return this.error;
                 }
             }
         },
-        as = {
-            // Number (Ajax SEO version)
+        api = { // Readable API
+            // Number, semantic versioning http://semver.org (MAJOR.MINOR.PATCH)
             version: 5,
+
+            // Number (maximal width of device adaptation)
+            viewportWidth: 720,
 
             // String (Google Analytics ID "UA-XXXX-Y")
             analytics: undefined,
 
             // Boolean (user agent DNT settings)
             dnt: has.dnt,
+
+            // String
+            domain: undefined,
 
             // String (project root)
             origin: (function () {
@@ -120,14 +95,14 @@
                     origin = currentScript.src.split("#")[1] || "/ajax-seo";
 
                 if (origin === "/") {
-                    return location.origin;
+                    return l.origin;
                 } else {
-                    return d.URL.replace(new RegExp("(" + origin + ")(.*)$"), "$1");
+                    return decodeURIComponent(d.URL).replace(new RegExp("(" + origin + ")(.*)$"), "$1");
                 }
             }()),
 
             // String (current page URL) http://jsperf.com/document-url-vs-window-location-href/2
-            url: d.URL,
+            url: decodeURIComponent(d.URL),
 
             // String (current page title)
             title: d.title,
@@ -135,10 +110,11 @@
             // Element or null (the focused DOM Element based on "url")
             activeElement: (function () {
                 var arr = d.querySelectorAll ? d.querySelectorAll("[href]") : [],
+                    url = decodeURIComponent(d.URL).toUpperCase(),
                     i;
 
                 for (i = 0; i < arr.length; i += 1) {
-                    if (arr[i].href.toUpperCase() === d.URL.toUpperCase()) {
+                    if (arr[i].href.toUpperCase() === url) {
                         // Normalize strings to uppercase https://msdn.microsoft.com/en-us/library/bb386042.aspx
                         return arr[i];
                     }
@@ -148,323 +124,129 @@
             }()),
 
             // Boolean (detect if shown error page)
-            error: layout.status && (has.classList ? layout.status.classList.contains("status-error") : new RegExp("(^|\\s)status-error(\\s|$)").test(layout.status.className))
+            error: undefined
         },
+        console = w.console || {
+            error: function () {}
+        },
+        evnt = {},
         statusTimer,
-        analytics,
         client, // XMLHttpRequest
         root;
 
-    has.valid.error = {
-        e: null
-    };
+    if (!has.eventListener) {
+        // Stop here IE8
+        api.error = "Browser missing EventListener support";
 
-    if (has.eventListener) {
-        // addEventListener and CSS media query supported in IE9+
-        if (layout.bar) {
-            has.touch = has.pointer === "touchstart";
+        console.error(api.error, "http://caniuse.com/#feat=addeventlistener");
+        return api;
+    } else if (!has.dnt && api.analytics) {
+        // Google Analytics
+        // Respect DNT (Do Not Track)
+        evnt.analytics = {
+            listener: function (flag) {
+                flag = flag === true ? "addEventListener" : "removeEventListener";
 
-            nav.toToggle.true = function () {
-                nav.toToggle(true);
-            };
-            nav.toToggle.false = function () {
-                nav.toToggle(false);
-            };
-            nav.toFocus.run = function (e) {
-                nav.toFocus(e);
-            };
-            nav.run = function () {
-                if (d.documentElement.offsetWidth <= 540) {
-                    if (!has.touch) {
-                        layout.bar.addEventListener("focus", nav.toToggle.true, true);
+                ui.analytics[flag]("load", evnt.analytics.load);
+                ui.analytics[flag]("error", evnt.analytics.listener);
+                ui.analytics[flag]("readystatechange", evnt.analytics.readystatechange);
 
-                        if (layout.focusout) {
-                            layout.focusout.addEventListener("focus", nav.toToggle.false, true);
-                        }
-                    }
-
-                    layout.bar.addEventListener(has.pointer, nav.toFocus.run, true);
-
-                    if (layout.nav) {
-                        layout.nav.addEventListener(has.pointer, nav.toToggle.true, true);
-                    }
-                    if (layout.reset) {
-                        layout.reset.addEventListener(has.pointer, nav.toToggle.true, true);
-                    }
-                } else {
-                    if (!has.touch) {
-                        layout.bar.removeEventListener("focus", nav.toToggle.true, true);
-
-                        if (layout.focusout) {
-                            layout.focusout.removeEventListener("focus", nav.toToggle.false, true);
-                        }
-                    }
-
-                    layout.bar.removeEventListener(has.pointer, nav.toFocus.run, true);
-
-                    if (layout.nav) {
-                        layout.nav.removeEventListener(has.pointer, nav.toToggle.true, true);
-                    }
-                    if (layout.reset) {
-                        layout.reset.removeEventListener(has.pointer, nav.toToggle.true, true);
-                    }
+                if (!flag) {
+                    ui.analytics.removeAttribute("id");
                 }
-            };
+            },
+            load: function () {
+                // Disabling cookies https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#disabling_cookies
+                ga("create", api.analytics, api.domain, {
+                    storage: "none",
+                    clientId: localStorage.gaClientId
+                });
 
-            nav.run();
-            w.addEventListener("resize", function () {
-                if (nav.timeoutScale) {
-                    clearTimeout(nav.timeoutScale);
-                }
-
-                // Improve performance
-                nav.timeoutScale = setTimeout(nav.run, 100);
-            }, true);
-        }
-
-        if (!has.dnt && as.analytics) {
-            // Google Analytics
-            // Respect DNT (Do Not Track)
-            analytics = {
-                reset: function () {
-                    layout.analytics.removeEventListener("load", analytics.load);
-                    layout.analytics.removeEventListener("error", analytics.reset);
-                    layout.analytics.removeEventListener("readystatechange", analytics.readystatechange);
-                    layout.analytics.removeAttribute("id");
-                },
-                load: function () {
-                    // Disabling cookies https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#disabling_cookies
-                    ga("create", as.analytics, "auto", {
-                        storage: "none",
-                        clientId: localStorage.gaClientId
-                    });
-
-                    if (!localStorage.gaClientId) {
-                        ga(function (tracker) {
-                            localStorage.gaClientId = tracker.get("clientId");
-                        });
-                    }
-
-                    ga("send", "pageview");
-
-                    analytics.reset();
-                },
-                readystatechange: function () {
-                    if (layout.analytics.readyState === "complete" || layout.analytics.readyState === "loaded") {
-                        if (typeof ga === "function") {
-                            analytics.load();
-                        } else {
-                            analytics.reset();
-                        }
-                    }
-                },
-                timestamp: +new Date + ""
-            };
-
-            layout.analytics = d.createElement("script");
-            layout.analytics.src = "//www.google-analytics.com/analytics.js";
-            layout.analytics.id = analytics.timestamp;
-
-            d.body.appendChild(layout.analytics);
-
-            layout.analytics = d.getElementById(analytics.timestamp);
-
-            if (layout.analytics) {
-                layout.analytics.addEventListener("load", analytics.load);
-                layout.analytics.addEventListener("error", analytics.reset);
-                layout.analytics.addEventListener("readystatechange", analytics.readystatechange);
-            }
-        }
-    }
-
-    if (!h.pushState || !has.classList || !has.eventListener) {
-        // Stop here IE10 and Android 4.3 http://caniuse.com/#feat=history
-        // Browser legacy, stop here if does not support History API
-        throw new Error("Browser legacy: History API not supported");
-    }
-    if (!layout.output) {
-        throw new Error("Layout issue: missing elements");
-    }
-
-    root = {
-        filter: function (srt, noLowerCase) {
-            // Remove hash from URL http://jsperf.com/url-replace-vs-match/2
-            if (srt) {
-                srt = srt.replace(/#.*$/, "");
-                return noLowerCase ? srt : srt.toLowerCase();
-            } else {
-                return undefined;
-            }
-        },
-        reset: function () {
-            if (statusTimer) {
-                clearTimeout(statusTimer);
-            }
-            if (layout.status && layout.status.classList.contains("status-start")) {
-                layout.status.classList.add("status-done");
-            }
-        },
-        click: function (el) {
-            if (el) {
-                if (has.click) {
-                    el.click();
-                } else {
-                    // Old Webkit legacy
-                    var evt = d.createEvent("MouseEvents");
-
-                    evt.initEvent("click", true, true);
-                    el.dispatchEvent(evt);
-                }
-            }
-        },
-        nav: {
-            // Array
-            // Convert NodeList to Array http://jsperf.com/convert-nodelist-to-array http://toddmotto.com/a-comprehensive-dive-into-nodelists-arrays-converting-nodelists-and-understanding-the-dom/
-            nodeList: layout.nav ? (Array.from ? Array.from(layout.nav.querySelectorAll("a")) : [].slice.call(layout.nav.querySelectorAll("a"))) : null,
-            // Element or null
-            activeElement: function() {
-                if (root.nav.nodeList) {
-                    var i;
-
-                    // Loop performance https://www.youtube.com/watch?v=taaEzHI9xyY#t=3042 http://www.impressivewebs.com/javascript-for-loop/ http://jsperf.com/array-length-vs-cached/19
-                    for (i = 0; i < root.nav.nodeList.length; i += 1) {
-                        if (root.filter(root.nav.nodeList[i].href) === as.url) {
-                            return root.nav.nodeList[i];
-                        }
-                    }
-                }
-
-                return null;
-            }
-        },
-        update: function (data, track, activeElement) {
-            if (data) {
-                if (!has.dnt && as.analytics && typeof ga === "function") {
-                    // Track Ajax page requests
-                    ga("send", "pageview", {
-                        page: as.url
+                if (!localStorage.gaClientId) {
+                    ga(function (tracker) {
+                        localStorage.gaClientId = tracker.get("clientId");
                     });
                 }
 
-                if (!track) {
-                    client.abort();
-                } else {
-                    root.reset();
-                }
+                ga("send", "pageview");
 
-                if (root.nav.nodeList) {
-                    layout.focus = layout.nav.querySelector(".focus");
-                    layout.active = layout.nav.querySelector(".active");
-                    layout.error = layout.nav.querySelector(".error");
-
-                    if (layout.focus) {
-                        layout.focus.classList.remove("focus");
-                    }
-                    if (layout.active) {
-                        layout.active.classList.remove("active");
-                    }
-                    if (layout.error) {
-                        layout.error.classList.remove("error");
+                evnt.analytics.listener();
+            },
+            readystatechange: function () {
+                if (ui.analytics.readyState === "complete" || ui.analytics.readyState === "loaded") {
+                    if (typeof ga === "function") {
+                        evnt.analytics.load();
+                    } else {
+                        evnt.analytics.listener();
                     }
                 }
+            },
+            timestamp: +new Date + ""
+        };
 
-                if (d.activeElement && d.activeElement.tagName === "BODY") {
-                    // Browser cached focus bug workaround - leaves menu focused onclick /history and navigating history back http://tjvantoll.com/2013/08/30/bugs-with-document-activeelement-in-internet-explorer/
-                    d.activeElement.blur();
+        ui.analytics = d.createElement("script");
+        ui.analytics.src = "//www.google-analytics.com/analytics.js";
+        ui.analytics.id = evnt.analytics.timestamp;
+
+        d.body.appendChild(ui.analytics);
+
+        ui.analytics = d.getElementById(evnt.analytics.timestamp);
+
+        if (ui.analytics) {
+            evnt.analytics.listener(true);
+        }
+    }
+
+    if (!has.classList && Element.prototype) {
+        // classList polyfill for IE9 https://gist.github.com/devongovett/1381839
+        Object.defineProperty(Element.prototype, "classList", {
+            get: function() {
+                var self = this;
+
+                function classlist() {
+                    return self.className.split(/\s+/);
+                }
+                function update(fn) {
+                    return function(value) {
+                        var classes = classlist(),
+                            index = classes.indexOf(value);
+
+                        fn(classes, index, value);
+                        self.className = classes.join(" ");
+                    };
                 }
 
-                as.url = root.filter(d.URL);
-                as.activeElement = activeElement || root.nav.activeElement();
-
-                if (as.activeElement) {
-                    as.activeElement.focus();
-                    as.activeElement.classList.add(as.error ? "error" : "active");
-
-                    if (as.error) {
-                        as.activeElement.classList.add("x-error");
+                return {
+                    add: update(function (classes, index, value) {
+                        ~index || classes.push(value);
+                    }),
+                    remove: update(function (classes, index) {
+                        ~index && classes.splice(index, 1);
+                    }),
+                    item: function (i) {
+                        return classlist()[i] || null;
+                    },
+                    toggle: update(function(classes, index, value) {
+                        ~index ? classes.splice(index, 1) : classes.push(value);
+                    }),
+                    contains: function(value) {
+                        return !!~classlist().indexOf(value);
                     }
-                }
-
-                if (as.error) {
-                    layout.status.classList.add("error");
-                    layout.status.classList.add("status-error");
-                } else {
-                    layout.status.classList.remove("error");
-                    layout.status.classList.remove("status-error");
-                }
-
-                d.title = as.title = data.title;
-
-                // Fixing scrollTop with Document.scrollingElement https://dev.opera.com/articles/fixing-the-scrolltop-bug/ http://dev.w3.org/csswg/cssom-view/#dom-document-scrollingelement
-                var scrollingElement = d.scrollingElement || d.documentElement.scrollTop || d.body;
-                scrollingElement.scrollTop = 0;
-
-                layout.output.innerHTML = data.content;
-
-                if (l.hash) {
-                    l.replace(as.url + l.hash);
-                }
+                };
             }
-        },
-        retry: false,
-        popstate: function (e) {
-            if (!(l.hash && root.filter(as.url) === root.filter(d.URL) || as.url && as.url.indexOf("#") > -1)) {
-                var state = e.state,
-                    activeElement;
+        });
+    }
 
-                root.reset();
+    if (ui.wrapper && ui.bar && ui.collapse && ui.focusin && ui.focusout && ui.reset && ui.nav && ui.output) {
+        // EventListener and CSS media query supported in IE9
 
-                root.retry = !state;
-                as.error = state && state.error || false;
+        // Convert NodeList to Array http://jsperf.com/convert-nodelist-to-array
+        // https://davidwalsh.name/array-from http://toddmotto.com/a-comprehensive-dive-into-nodelists-arrays-converting-nodelists-and-understanding-the-dom/
+        // ES6 Array spread operator [...ui.nav.querySelectorAll("a")]
+        ui.nodeList = ui.nav && Array.from && Array.from(ui.nav.querySelectorAll("a")) || [].slice.call(ui.nav.querySelectorAll("a"));
+        has.touch = has.pointer === "touchstart";
 
-                if (!state) {
-                    // retry
-                    as.url = root.filter(d.URL);
-                    activeElement = root.nav.activeElement();
-
-                    root.click(activeElement);
-                }
-
-                // Chrome bug: XMLHttpRequest error avoids first popstate cache and recreates XMLHttpRequest (perhaps https://code.google.com/p/chromium/issues/detail?id=371549 will fix it)
-                // 1. Fire XMLHttpRequest by clicking on different links till some of links returns an error
-                // 2. Navigate history back - Chrome will recreate XMLHttpRequest for the first h.go -1. History -2, -3, etc. will return from cache accurately. Firefox correctly returns all from cache.
-                root.update(state, false, activeElement);
-            }
-        },
-        loadstart: function () {
-            if (layout.status) {
-                layout.status.classList.remove("status-done");
-                layout.status.classList.remove("status-start");
-
-                if (statusTimer) {
-                    clearTimeout(statusTimer);
-                }
-
-                statusTimer = setTimeout(function () {
-                    // Will be avoided if content already in cache
-                    layout.status.classList.add("status-start");
-                }, 0);
-            }
-        },
-        callback: function (data) {
-            as.error = data.error || false;
-
-            h.replaceState(data, data.title, null);
-            root.update(data, true);
-        },
-        load: function () {
-            var response = this.response;
-            response = has.valid(function () {
-                return JSON.parse(response);
-            });
-
-            root.callback(response === has.valid.error ? {
-                error: true,
-                title: "Server error",
-                content: "<h1>Whoops...</h1><p>Experienced server error. Try to <a class=x-error href=" + as.url + ">reload</a>" + (as.url === as.origin ? "" : " or head to <a href=" + as.origin + ">home page</a>") + "."
-            } : response);
-        },
-        closest: function (el, selector) {
+        ui.closest = function (el, selector) {
             if (!el || !selector) {
                 return null;
             } else if (el.closest) {
@@ -484,141 +266,511 @@
             }
 
             return null;
+        };
+        ui.anchor = function (el) {
+            if (el) {
+                if (el.tagName !== "A") {
+                    el = ui.closest(el, "a[href]");
+                }
+
+                return el && el.tagName === "A" && el.href && el.target !== "_blank" ? el : null;
+
+            } else {
+                return null;
+            }
+        };
+
+        evnt.nav = {
+            expand: function () {
+                // Perf http://jsperf.com/document-body-parentelement
+                ui.html.classList.add("noscroll");
+                ui.status.classList.add("expand");
+            },
+            toggleReal: function (e) {
+                if (ui.status.classList.contains("expand")) {
+                    // preventDefault is required, otherwise when focused element, click will colapse and expand
+                    e.preventDefault();
+
+                    evnt.nav.preventPassFocus = true;
+
+                    ui.html.classList.remove("noscroll");
+                    ui.collapse.setAttribute("tabindex", 0);
+
+                    setTimeout(function () {
+                        ui.focusout.setAttribute("tabindex", 0);
+                        ui.collapse.focus();
+                        ui.status.classList.remove("expand");
+                    }, 10);
+                } else if (e.type === "touchstart") {
+                    e.preventDefault();
+                    evnt.nav.expand();
+                } else {
+                    setTimeout(function () { // Old Webkit compatibility
+                        if (d.activeElement !== e.target) {
+                            e.target.focus();
+                        }
+                    }, 0);
+                }
+            },
+            focus: function (e) {
+                if (!ui.status.classList.contains("expand")) {
+                    e.target.blur();
+
+                    ui.nav.scrollTop = 0;
+                    evnt.nav.expand();
+
+                    ui.focusin.setAttribute("tabindex", 0);
+                    ui.focusout.removeAttribute("tabindex");
+
+                    setTimeout(function () {
+                        ui.focusin.focus();
+                    }, 10);
+                }
+            },
+            disable: function (e) {
+                e.target.removeAttribute("tabindex");
+            },
+            collapse: function (e) {
+                var pointerdown = e && (e.type === "pointerdown" || e.type === "mousedown"),
+                    el;
+
+                if (pointerdown && e.target === ui.nav && ui.nav.clientWidth <= e.clientX) {
+                    // Prevent collapse onclick on scrollbar
+                    e.preventDefault();
+                } else if (!pointerdown || e.which === 1) {
+                    // Collapse only by mouse left click (not mousewheel or right click)
+                    if (pointerdown) {
+                        el = ui.anchor(e.target);
+
+                        if (el) {
+                            el.click();
+                        }
+                    }
+
+                    ui.html.classList.remove("noscroll");
+                    ui.status.classList.remove("expand");
+
+                    setTimeout(function () {
+                        evnt.nav.preventPassFocus = true;
+                        ui.focusout.setAttribute("tabindex", 0);
+                    }, 10);
+                }
+            },
+            collapseTab: function (e) {
+                if (!e.shiftKey && (e.key === "Tab" || e.keyCode === 9)) {
+                    evnt.nav.collapse(e);
+
+                    setTimeout(function () {
+                        ui.collapse.setAttribute("tabindex", 0);
+
+                        setTimeout(function () {
+                            ui.collapse.focus();
+                        }, 10);
+                    }, 0);
+                }
+            },
+            keydown: function (e) {
+                if (e.target === ui.bar && (e.key === "Enter" || e.keyCode === 13)) {
+                    evnt.nav.toggleReal(e);
+                }
+                if ((e.target === ui.focusout ? !e.shiftKey : e.shiftKey) && (e.key === "Tab" || e.keyCode === 9)) {
+                    evnt.nav.collapse(e);
+
+                    if (e.target === ui.focusout && !e.shiftKey) {
+                        ui.collapse.setAttribute("tabindex", 0);
+
+                        setTimeout(function () {
+                            ui.collapse.focus();
+                        }, 10);
+                    }
+                }
+            },
+            passFocus: function (e) {
+                if (evnt.nav.preventPassFocus) {
+                    delete evnt.nav.preventPassFocus;
+                } else if (!ui.status.classList.contains("expand")) {
+                    ui.focusout.focus();
+                    evnt.nav.disable(e);
+                }
+            },
+            init: function () {
+                if (ui.wrapper.offsetWidth <= api.viewportWidth ? !evnt.nav.events : evnt.nav.events) {
+                    evnt.nav.events = !evnt.nav.events;
+                    evnt.nav.listener = evnt.nav.events ? "addEventListener" : "removeEventListener";
+
+                    ui.bar[evnt.nav.listener](has.pointer, evnt.nav.toggleReal, true);
+
+                    if (!has.touch) {
+                        ui.bar[evnt.nav.listener]("focus", evnt.nav.focus, true);
+                        ui.bar[evnt.nav.listener]("keydown", evnt.nav.keydown, true);
+                        ui.focusin[evnt.nav.listener]("blur", evnt.nav.disable, true);
+
+                        if (ui.nodeList) {
+                            ui.nodeList[ui.nodeList.length - 1][evnt.nav.listener]("keydown", evnt.nav.collapseTab, true);
+                        }
+
+                        ui.focusout[evnt.nav.listener]("focus", evnt.nav.expand, true);
+                        ui.focusout[evnt.nav.listener]("blur", evnt.nav.disable, true);
+                        ui.focusout[evnt.nav.listener]("keydown", evnt.nav.keydown, true);
+                        ui.collapse[evnt.nav.listener]("focus", evnt.nav.passFocus, true);
+                        ui.collapse[evnt.nav.listener]("blur", evnt.nav.disable, true);
+                        ui.reset[evnt.nav.listener]("blur", evnt.nav.disable, true);
+                        ui.nav[evnt.nav.listener](has.pointer, evnt.nav.collapse, true);
+                    } else {
+                        ui.nav[evnt.nav.listener]("click", evnt.nav.collapse, true);
+                    }
+
+                    ui.reset[evnt.nav.listener](has.pointer, evnt.nav.collapse, true);
+                }
+            }
+        };
+
+        evnt.nav.init();
+
+        w.addEventListener("resize", function () {
+            if (evnt.nav.timeoutScale) {
+                clearTimeout(evnt.nav.timeoutScale);
+            }
+
+            // Don't execute too often
+            evnt.nav.timeoutScale = setTimeout(evnt.nav.init, 100);
+        }, true);
+    } else {
+        api.error = "Missing HTML Elements";
+
+        console.error(api.error, "https://github.com/laukstein/ajax-seo");
+        return api;
+    }
+
+    if (!h.pushState) {
+        // Stop here IE10 and Android 4.3
+        api.error = "Browser missing History API support";
+
+        console.error(api.error, "http://caniuse.com/#feat=history");
+        return api;
+    }
+
+    root = {
+        filter: function (srt, noLowerCase) {
+            if (srt) {
+                // Remove hash from URL http://jsperf.com/url-replace-vs-match/2
+                srt = decodeURIComponent(srt).replace(/#.*$/, "");
+                return noLowerCase ? srt : srt.toLowerCase();
+            }
+        },
+        reset: function () {
+            if (statusTimer) {
+                clearTimeout(statusTimer);
+            }
+            if (ui.status && ui.status.classList.contains("status-start")) {
+                ui.status.classList.add("status-done");
+            }
+        },
+        click: function (el) {
+            if (el) {
+                if (has.click) {
+                    el.click();
+                } else {
+                    // Old Webkit legacy, alternative https://developer.mozilla.org/en-US/docs/Web/API/Document/elementsFromPoint
+                    var evt = d.createEvent("MouseEvents");
+
+                    evt.initEvent("click", true, true);
+                    el.dispatchEvent(evt);
+                }
+            }
+        },
+        nav: {
+            nodeList: ui.nodeList,
+            // Element or null
+            activeElement: function () {
+                if (root.nav.nodeList) {
+                    var i;
+
+                    // Loop performance https://www.youtube.com/watch?v=taaEzHI9xyY#t=3042 http://www.impressivewebs.com/javascript-for-loop/ http://jsperf.com/array-length-vs-cached/19
+                    for (i = 0; i < root.nav.nodeList.length; i += 1) {
+                        if (root.filter(root.nav.nodeList[i].href) === api.url) {
+                            return root.nav.nodeList[i];
+                        }
+                    }
+                }
+
+                return null;
+            }
+        },
+        update: function (data, track, activeElement) {
+            if (data) {
+                if (!has.dnt && api.analytics && typeof ga === "function") {
+                    // Track Ajax page requests
+                    ga("send", "pageview", {
+                        page: api.url
+                    });
+                }
+
+                if (!track) {
+                    client.abort();
+                } else {
+                    root.reset();
+                }
+
+                if (root.nav.nodeList) {
+                    ui.focus = ui.nav.querySelector(".focus");
+                    ui.active = ui.nav.querySelector(".active");
+                    ui.error = ui.nav.querySelector(".error");
+
+                    if (ui.focus) {
+                        ui.focus.classList.remove("focus");
+                    }
+                    if (ui.active) {
+                        ui.active.classList.remove("active");
+                    }
+                    if (ui.error) {
+                        ui.error.classList.remove("error");
+                    }
+                }
+
+                api.url = root.filter(d.URL);
+                api.activeElement = activeElement || root.nav.activeElement();
+
+                if (api.activeElement) {
+                    api.activeElement.focus();
+                    api.activeElement.classList.add(api.error ? "error" : "active");
+
+                    if (api.error) {
+                        api.activeElement.classList.add("x-error");
+                    }
+                }
+
+                if (api.error) {
+                    ui.status.classList.add("error");
+                    ui.status.classList.add("status-error");
+                } else {
+                    ui.status.classList.remove("error");
+                    ui.status.classList.remove("status-error");
+                }
+
+                d.title = api.title = data.title;
+
+                // Fixing scrollTop with Document.scrollingElement https://dev.opera.com/articles/fixing-the-scrolltop-bug/ http://dev.w3.org/csswg/cssom-view/#dom-document-scrollingelement
+                var scrollingElement = d.scrollingElement || ui.html.scrollTop || d.body;
+                scrollingElement.scrollTop = 0;
+
+                ui.output.innerHTML = data.content;
+
+                if (l.hash) {
+                    l.replace(api.url + l.hash);
+                }
+
+                delete root.inprogress;
+            }
+        },
+        retry: false,
+        popstate: function (e) {
+            var state = e.state,
+                activeElement;
+
+            root.reset();
+
+            root.retry = !state;
+            api.error = state && state.error || false;
+
+            if (!state && e.srcElement.location.pathname !== e.target.location.pathname) {
+                // retry, prevented on hash change https://gist.github.com/mahemoff/1591495
+                api.url = root.filter(d.URL);
+                activeElement = root.nav.activeElement();
+
+                root.click(activeElement);
+            }
+
+            // Chrome bug: XMLHttpRequest error avoids first popstate cache and recreates XMLHttpRequest (perhaps https://bugs.chromium.org/p/chromium/issues/detail?id=371549 will fix it)
+            // 1. Fire XMLHttpRequest by clicking on different links till some of links returns an error
+            // 2. Navigate history back - Chrome will recreate XMLHttpRequest for the first h.go -1. History -2, -3, etc. will return from cache accurately. Firefox correctly returns all from cache.
+            root.update(state, false, activeElement);
+        },
+        loadstart: function () {
+            if (ui.status) {
+                ui.status.classList.remove("status-done");
+                ui.status.classList.remove("status-start");
+
+                if (statusTimer) {
+                    clearTimeout(statusTimer);
+                }
+
+                statusTimer = setTimeout(function () {
+                    // Will be avoided if content already in cache
+                    ui.status.classList.add("status-start");
+                }, 0);
+            }
+        },
+        callback: function (data) {
+            api.error = data.error || false;
+
+            h.replaceState(data, data.title, null);
+            root.update(data, true, api.activeElement || root.nav.activeElement());
+        },
+        load: function () {
+            var response = this.response;
+            response = has.valid(function () {
+                return JSON.parse(response);
+            });
+
+            root.callback(response === has.error ? {
+                error: true,
+                title: "Server error",
+                content: "<h1>Whoops...</h1><p>Experienced server error. Try to <a class=x-error href=" + api.url + ">reload</a>" + (api.url === api.origin ? "" : " or head to <a href=" + api.origin + ">home page</a>") + "."
+            } : response);
         },
         resetStatus: function (e) {
-            if (layout.status) {
-                if (layout.status.classList.contains("status-error") && (!e || !as.error)) {
-                    layout.status.classList.remove("status-error");
+            if (ui.status) {
+                if (ui.status.classList.contains("status-error") && (!e || !api.error)) {
+                    ui.status.classList.remove("status-error");
                 }
-                if (layout.status.classList.contains("status-done")) {
-                    layout.status.classList.remove("status-start");
-                    layout.status.classList.remove("status-done");
+                if (ui.status.classList.contains("status-done")) {
+                    ui.status.classList.remove("status-start");
+                    ui.status.classList.remove("status-done");
                 }
             }
         },
         listener: function (e) {
             if (e) {
-                var el = e.target,
-                    patt = new RegExp("^" + as.origin + "($|#|/.{1,}).*", "i"),
+                var el = ui.anchor(e.target),
+                    patt = new RegExp("^" + api.origin + "($|#|/.{1,}).*", "i"),
                     url = {};
 
-                // Run script only if has a link and matches "as.origin"
-                if (!el) {
+                // Run script only if has a link and matches "api.origin"
+                if (!el || !patt.test(el.href.replace(/\/$/, ""))) {
+                    // Outside API scope, missing "href" or has "_blank"
                     return;
-                } else if (el.tagName !== "A") {
-                    el = root.closest(el, "a[href]");
                 }
-                if (!el || !(el.tagName === "A" && el.hasAttribute("href")) || !patt.test(el.href.replace(/\/$/, ""))) {
-                    // Stop: outside API scope
+
+                setTimeout(function () {
+                    if (el !== d.activeElement) {
+                        el.focus();
+                    }
+                }, 0);
+
+                if (el.href.toLowerCase() === api.url.toLowerCase()) {
+                    // Is same URL
+                    e.preventDefault();
                     return;
                 }
 
                 // Lowercase URL
                 // Remove multiple trailing slashes except to protocol
                 // Remove trailing slash from URL end
-                as.url = el.href.toLowerCase().replace(/(\/)+(?=\1)/g, "").replace(/(^https?:(\/))/, "$1/").replace(/\/$/, "");
-                url.attr = root.filter(as.url, true);
-                url.address = root.filter(d.URL);
+                api.url = el.href.toLowerCase().replace(/(\/)+(?=\1)/g, "").replace(/(^https?:(\/))/, "$1/").replace(/\/$/, "");
+                url.attr = root.filter(api.url, true);
+                url.url = decodeURIComponent(d.URL);
+                url.address = root.filter(url.url);
 
-                if (url.attr === url.address && as.url.indexOf("#") > -1) {
-                    // stop: same link with hash
+                if (url.attr === url.address && api.url.indexOf("#") > -1) {
+                    // Same link with + hash
+                    setTimeout(function () {
+                        h.replaceState({
+                            error: api.error,
+                            title: api.title,
+                            content: ui.output.innerHTML
+                        }, d.title, decodeURIComponent(api.url));
+                    }, 0);
+
                     return;
                 }
 
                 e.preventDefault();
 
-                if (el !== d.activeElement) {
-                    el.focus();
+                if (evnt.nav.events && ui.status.classList.contains("expand")) {
+                    evnt.nav.collapse();
+                    ui.reset.setAttribute("tabindex", 0);
+
+                    setTimeout(function () {
+                        ui.reset.focus();
+                    }, 10);
                 }
 
-                el.blur();
+                api.activeElement = el;
+                api.activeNav = el.parentNode === ui.nav;
 
-                as.activeElement = el;
-                as.activeNav = el.parentNode === layout.nav;
-
-                if (!root.retry && as.activeNav) {
-                    as.error = as.activeElement.classList.contains("x-error");
+                if (!root.retry && api.activeNav) {
+                    api.error = api.activeElement.classList.contains("x-error");
                 }
 
-                // Node.innerText support status http://kangax.github.io/jstests/innerText/ (Firefox 45 https://bugzilla.mozilla.org/show_bug.cgi?id=264412)
-                // http://www.kellegous.com/j/2013/02/27/innertext-vs-textcontent/
-                // http://stackoverflow.com/questions/1359469/innertext-works-in-ie-but-not-in-firefox
-                // http://jsperf.com/textcontent-and-innertext/3
-                as.title = as.activeElement.innerText ? as.activeElement.innerText.replace(/\n/, "") : as.activeElement.textContent;
+                // Node.textContent performs faster that Node.innerText http://www.kellegous.com/j/2013/02/27/innertext-vs-textcontent/
+                api.title = api.activeElement.textContent;
 
-                if (as.error && url.address === d.URL) {
-                    h.replaceState(null, as.title, as.url);
-                } else if (!as.error && as.url !== d.URL) {
-                    h.pushState(null, as.title, as.url);
+                if (api.error && url.address === url.url) {
+                    h.replaceState(null, api.title, api.url);
+                } else if (api.url !== url.url) {
+                    h.pushState(null, api.title, api.url);
                 }
 
-                if (!as.error && !root.retry && (url.attr === url.address) || as.activeNav && as.activeElement.classList.contains("focus")) {
+                if (!api.error && !root.retry && (url.attr === url.address) || api.activeNav && api.activeElement.classList.contains("focus")) {
                     // Avoid API retry on same link if has not error status
                     return;
                 }
 
-                d.title = as.title;
+                d.title = api.title;
 
                 root.resetStatus();
 
                 if (root.nav.nodeList) {
-                    if (as.error && as.activeNav) {
-                        as.activeElement.classList.remove("x-error");
-                        as.activeElement.classList.remove("error");
+                    if (api.error && api.activeNav) {
+                        api.activeElement.classList.remove("x-error");
+                        api.activeElement.classList.remove("error");
                     }
 
-                    layout.focus = layout.nav.querySelector(".focus");
+                    ui.focus = ui.nav.querySelector(".focus");
 
-                    if (layout.focus) {
-                        layout.focus.classList.remove("focus");
+                    if (ui.focus) {
+                        ui.focus.classList.remove("focus");
                     }
                 }
-                if (as.activeNav) {
-                    as.activeElement.classList.add("focus");
+                if (api.activeNav) {
+                    api.activeElement.classList.add("focus");
+                }
+                if (root.inprogress) {
+                    // Stop awaiting requests
+                    client.abort();
+
+                    if (w.stop) {
+                        w.stop();
+                    } else if (d.execCommand) {
+                        d.execCommand("Stop", false);
+                    }
                 }
 
-                // Stop awaiting requests
-                if (w.stop) {
-                    w.stop();
-                } else if (d.execCommand) {
-                    d.execCommand("Stop", false);
-                }
+                client.open("GET", api.origin + "/api" + url.attr.replace(new RegExp("^" + api.origin, "i"), ""));
 
-                // IE11 issue: client.send() new request doesn't cancel unfinished earlier request
-                client.abort();
-
-                client.open("GET", as.origin + "/api" + url.attr.replace(new RegExp("^" + as.origin, "i"), ""));
-
-                if (as.error) {
+                if (api.error) {
                     // Avoid cache http://stackoverflow.com/questions/1046966/whats-the-difference-between-cache-control-max-age-0-and-no-cache
                     // Firefox bug https://bugzilla.mozilla.org/show_bug.cgi?id=706806 https://bugzilla.mozilla.org/show_bug.cgi?id=428916 https://bugzilla.mozilla.org/show_bug.cgi?id=443098
                     // client.setRequestHeader("Cache-Control", "no-cache");
                     client.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 2000 00:00:00 GMT");
                 }
 
+                root.inprogress = true;
+
                 client.send();
             }
         },
         init: function () {
-            if (layout.status) {
+            if (ui.status) {
                 // Loading status reset
-                layout.status.addEventListener("transitionend", root.resetStatus, true);
+                ui.status.addEventListener("transitionend", root.resetStatus, true);
             }
 
             setTimeout(function () {
-                // Old Webkit initial run popstate bug https://code.google.com/p/chromium/issues/detail?id=63040, fixed on Chrome 34
+                // Old Webkit initial run popstate bug https://bugs.chromium.org/p/chromium/issues/detail?id=63040, fixed on Chrome 34
                 // Chrome popstate bug with hashchange: multiple clicks on same hash URL will save lots of history
-                // Chrome repeatedly repeated same hash URL history/popstate by onclick on same URL https://code.google.com/p/chromium/issues/detail?id=371549 http://jsbin.com/371549/1
+                // Chrome repeatedly repeated same hash URL history/popstate by onclick on same URL https://bugs.chromium.org/p/chromium/issues/detail?id=371549 http://jsbin.com/371549/1
                 // http://jsperf.com/onpopstate-vs-addeventlistener
                 w.onpopstate = root.popstate;
             }, 150);
 
             // Initial popstate state
             h.replaceState({
-                error: as.error,
-                title: as.title,
-                content: layout.output.innerHTML
-            }, as.title, as.url);
+                error: api.error,
+                title: api.title,
+                content: ui.output.innerHTML
+            }, api.title, api.url);
 
             // XMLHttpRequest https://xhr.spec.whatwg.org
             client = new XMLHttpRequest();
@@ -633,17 +785,19 @@
             client.addEventListener("abort", root.reset, true);
 
             // http://jsperf.com/addeventlistener-usecapture-true-vs-false
-            d.documentElement.addEventListener(has.pointer, root.listener, true);
+            ui.html.addEventListener("click", root.listener, true);
         }
     };
 
-    if (!as.analytics) {
-        delete as.analytics;
+    if (!api.analytics) {
+        delete api.analytics;
     }
 
     // Apply events
     root.init();
 
+    api.error = ui.status && ui.status.classList.contains("status-error");
+
     // Return readable API
-    return as;
+    return api;
 }));
