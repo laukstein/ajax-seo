@@ -1,5 +1,29 @@
-/*global define, module, window, document, navigator, history, location, Element, localStorage, ga, setTimeout, clearTimeout, XMLHttpRequest*/
-/*eslint no-console: 0*/
+/*eslint
+indent: 2,
+no-console: 0,
+no-unused-vars: 0,
+no-empty-function: 2,
+no-extend-native:0,
+no-new:0,
+no-new-func:0,
+no-undef: 0,
+key-spacing: [2, {"beforeColon": false, "afterColon": true}],
+comma-spacing: 2,
+no-underscore-dangle:0,
+no-use-before-define: 2,
+eqeqeq: 2,
+semi: 2,
+no-eval: 2,
+no-loop-func: 2,
+no-trailing-spaces: "error",
+no-mixed-spaces-and-tabs: 2,
+no-multi-spaces: 2,
+no-shadow: 2,
+dot-notation: [2, {"allowKeywords": true}],
+quotes: [2, "double"],
+strict: [2, "function"],
+space-before-blocks: 2,
+space-before-function-paren: [2, {"anonymous": "always", "named": "never"}]*/
 
 // Detect DOM change https://developers.google.com/web/updates/2012/02/Detect-DOM-changes-with-Mutation-Observers
 
@@ -127,7 +151,9 @@
             error: undefined
         },
         console = w.console || {
-            error: function () {}
+            error: function () {
+                return;
+            }
         },
         evnt = {},
         statusTimer,
@@ -200,14 +226,14 @@
     if (!has.classList && Element.prototype) {
         // classList polyfill for IE9 https://gist.github.com/devongovett/1381839
         Object.defineProperty(Element.prototype, "classList", {
-            get: function() {
+            get: function () {
                 var self = this;
 
                 function classlist() {
                     return self.className.split(/\s+/);
                 }
                 function update(fn) {
-                    return function(value) {
+                    return function (value) {
                         var classes = classlist(),
                             index = classes.indexOf(value);
 
@@ -223,13 +249,13 @@
                     remove: update(function (classes, index) {
                         ~index && classes.splice(index, 1);
                     }),
-                    item: function (i) {
-                        return classlist()[i] || null;
+                    item: function (index) {
+                        return classlist()[index] || null;
                     },
-                    toggle: update(function(classes, index, value) {
+                    toggle: update(function (classes, index, value) {
                         ~index ? classes.splice(index, 1) : classes.push(value);
                     }),
-                    contains: function(value) {
+                    contains: function (value) {
                         return !!~classlist().indexOf(value);
                     }
                 };
