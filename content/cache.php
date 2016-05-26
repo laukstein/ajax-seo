@@ -21,7 +21,7 @@ class cache {
 
     // Identified URL cache
     public static function url() {
-        self::http(self::$dbcon ? max(date::url(), date::file('php')) : date::file('php'));
+        self::http(self::$dbcon ? max(date::url(), date::files('php')) : date::files('php'));
     }
 
     // The opened file
@@ -36,7 +36,7 @@ class cache {
 
     // Latest update
     public static function all() {
-        self::http(self::$dbcon ? max(date::db(), date::file()) : date::file());
+        self::http(self::$dbcon ? max(date::db(), date::files()) : date::files());
     }
 }
 
@@ -78,23 +78,28 @@ class date {
     }
 
     // Recent file update filtered by type
-    public static function file($type = '') {
+    public static function files($type = '') {
         $directory = new RecursiveDirectoryIterator('.', FilesystemIterator::SKIP_DOTS);
         $filter    = new RecursiveCallbackFilterIterator($directory, function ($current, $key, $iterator) {
-            // 3.5x TTFB improvement by excluding dot files/directories like .htaccess and .git
-            return substr($current->getFilename(), 0, 1) !== '.';
+            if (in_array($current->getPath(), ['.', '.\content'])) {
+                // Excluding non-relevant folders and dot files
+                return substr($current->getFilename(), 0, 1) !== '.';
+            }
         });
         $iterator = new RecursiveIteratorIterator($filter, RecursiveIteratorIterator::SELF_FIRST);
+
+        $iterator->setMaxDepth(1);
+
         $regex    = new RegexIterator($iterator, '/.+\.(' . $type . ')/');
         $date     = array();
 
-        foreach($regex as $fileInfo) $date[] = $fileInfo->getMTime();
+        foreach($regex as $fileInfo) array_push($date, $fileInfo->getMTime());
 
         return max($date);
     }
 
     // Latest update
     public static function all() {
-        return max(self::db(), self::file());
+        return max(self::db(), self::files());
     }
 }
