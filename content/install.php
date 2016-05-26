@@ -80,7 +80,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ) ENGINE=MyISAM DEFAULT ' . $char);
 
                 // Requires TRIGGER global privilege
-                $mysqli->query('CREATE TRIGGER modified BEFORE UPDATE ON `' . $table . '` FOR EACH ROW SET new.modified=NOW()');
+                $mysqli->query('CREATE TRIGGER modified BEFORE UPDATE ON `' . $table . '` FOR EACH ROW IF (NEW.title <> OLD.title OR
+                        NEW.headline <> OLD.headline OR
+                        NEW.description <> OLD.description OR
+                        NEW.content <> OLD.content) THEN
+                        SET NEW.modified = NOW();
+                    END IF');
 
                 if ($mysqli->query('INSERT INTO `' . $table . "` (`order`, permit, url, title, headline, description, content) VALUES
                     (1, 1, '', 'Ajax SEO v5', 'Extend user experience', 'Extend user experience with crawlable webapp framework Ajax SEO', '<p>Ajax SEO is crawlable webapp framework for outstanding UX.</p>\n<a class=button role=button href=https://github.com/laukstein/ajax-seo/zipball/master download>Download recent code</a>\n<ul>\n    <li>Cross-platform\n    <li>W3C cutting-edge standards\n        <ul>\n            <li>Native HTML5.1 APIs, Microdata, JavaScript\n            <li>SEO accessible, crawlable and indexable\n        </ul>\n    </li>\n    <li>Grade-A performance, security and usability\n    <li>Simple, responsive, intuitive, maintainable\n    <li><a href={\$path}/more-features>More features</a>\n</ul>\n<p>Here, <code><a href={\$path}/history>href={\$path}/history</a></code> requests API <code>{\$path}/api/history</code>.</p>\n<p>Legacy browser support in <a href=https://github.com/laukstein/ajax-seo/releases rel=noopener target=_blank>earlier releases</a>.</p>'),
