@@ -25,9 +25,9 @@ if ($conn) {
 <input id=note type=checkbox hidden>
 <label for=note class=note>Congratulations for successful installation</label>
 <!--/noindex-->";
-
         $string = preg_replace("/define\('(connection)', false\);/", "define('$1', true);", file_get_contents($file));
         $fopen  = fopen($file, 'w');
+
         fwrite($fopen, $string);
         fclose($fopen);
     }
@@ -43,7 +43,7 @@ if ($conn) {
     header('X-Robots-Tag: none');
 
     function refresh() {
-        global $path;
+        global $safepath;
         ob_end_clean();
         header('Location: ' . $safepath);
         exit;
@@ -52,6 +52,7 @@ if ($conn) {
     if (connection) {
         $string = preg_replace("/define\('(connection)', true\);/", "define('$1', false);", file_get_contents($file));
         $fopen  = fopen($file, 'w');
+
         fwrite($fopen, $string);
         fclose($fopen);
         refresh();
