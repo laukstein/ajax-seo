@@ -24,9 +24,10 @@ if ($conn) {
         $pagetitle = $ishome ? (!empty($title) ? $title : title) : $title;
         $created   = strtotime($created);
         $modified  = strtotime($modified);
+        $modified  = max($created, $modified);
         $content = "<h1 dir=auto>$title</h1>" . (isset($headline) ? "\n<h2 itemprop=headline dir=auto>$headline</h2>" : null) .
             "\n<meta itemprop=datePublished content=" . date('Y-m-d\TH:i\Z', $created) . '><time class=pubdate itemprop=dateModified datetime=' . date('Y-m-d\TH:i\Z', $modified) . '>' .
-            ($created >= $modified ? 'Posted' : 'Updated') . date(' M j, Y', max($created, $modified)) . "</time>\n" . string($content);
+            ($created >= $modified ? 'Posted' : 'Updated') . date(' M j, Y', $modified) . "</time>\n" . string($content);
     }
 
     $stmt->free_result();
