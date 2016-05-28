@@ -724,6 +724,11 @@ div.noscroll {
     outline: 1px solid #e1e1e1;
     will-change: contents;
 }
+.main > div {
+    /* Containment https://drafts.csswg.org/css-containment-3/
+        https://justmarkup.com/log/2016/04/css-containment/ */
+    contain: layout;
+}
 .main :target {
     background-color: #ff0;
 }
@@ -1152,6 +1157,7 @@ option[value=""], /* First element as placeholder, fails on IE */
         border-radius: 0;
     }
     .nav {
+        contain: layout;
         overflow: auto;
         height: 100%;
         margin: 0;
