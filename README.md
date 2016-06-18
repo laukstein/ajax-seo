@@ -1,7 +1,7 @@
 # [Ajax SEO v5](https://lab.laukstein.com/ajax-seo)
 
-Ajax SEO is crawlable webapp framework for outstanding UX.<br>
-Demo in <https://lab.laukstein.com/ajax-seo>.
+**Ajax SEO** crawlable webapp framework with boosted UX<br>
+Demo <https://lab.laukstein.com/ajax-seo>
 
     as {
         // Ajax SEO version
@@ -28,6 +28,7 @@ Demo in <https://lab.laukstein.com/ajax-seo>.
         // Detect if shown error page
         error: false
     }
+
 
 ## Quick start
 
