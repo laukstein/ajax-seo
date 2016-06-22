@@ -88,8 +88,8 @@ $metadata .= "\n<link rel=mask-icon href=$path/icon.svg color=#0b62bb>";
 // 16px used on all browsers https://github.com/audreyr/favicon-cheat-sheet, http://realfavicongenerator.net/faq#.Vpasouh96Hs
 if (!empty($path)) $metadata .= "\n<link rel=\"shortcut icon\" href=$path/favicon.png>";
 
-// Website copyright license
-$metadata .= "\n<link rel=license href=//creativecommons.org/licenses/by/4.0/>";
+// Copyright license
+$metadata .= "\n<link rel=license href=$path/LICENSE>";
 
 echo "<!doctype html>
 <html lang=en>

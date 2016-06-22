@@ -1,6 +1,6 @@
 # [Ajax SEO v5](https://lab.laukstein.com/ajax-seo)
 
-**Ajax SEO** crawlable webapp framework with boosted UX<br>
+**Ajax SEO** crawlable webapp framework with boosted UX.<br>
 Demo <https://lab.laukstein.com/ajax-seo>
 
     as {
