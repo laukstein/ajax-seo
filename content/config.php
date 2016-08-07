@@ -89,7 +89,7 @@ function string($str) {
 $file   = __FILE__;
 $scheme = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https' ? 'https' : 'http';
 $path   = str_replace($_SERVER['DOCUMENT_ROOT'], '', str_replace('\\', '/', getcwd()));
-$url    = rawurldecode($_SERVER['REQUEST_URI']);
+$url    = strtolower(rawurldecode($_SERVER['REQUEST_URI']));
 $url    = $url === '/' ? '/' : preg_replace('/^' . addcslashes($path, '/') . '\/api/', '', $url);
 $url    = preg_replace('/^' . addcslashes($path, '/') . '/', '', $url);
 $safepath = strlen($path) ? $path : '/';
