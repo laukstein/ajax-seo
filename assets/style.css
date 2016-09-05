@@ -22,6 +22,10 @@ Syntax order:
     position
     display
     flex
+    min-width
+    max-width
+        width
+    height
     padding
     margin
     color
@@ -43,7 +47,7 @@ Syntax order:
     pointer-events
     cursor
 
-hax colors faster then rgba https://jsperf.com/css-color-names-vs-hex-codes/18
+Hex colors faster then rgba https://jsperf.com/css-color-names-vs-hex-codes/18
 */
 
 /* @viewport should be inlined in HTML to avoid scaling and native responsive images issues, http://vimeo.com/93347500 21 min */
@@ -146,23 +150,19 @@ cite {
     margin-bottom: .8em;
 }
 p + p {
-    margin-top: 1.6em;
+    margin-top: 1em;
 }
 small {
     font-size: 70%;
 }
 blockquote {
-    margin: 1.2em -3em 1.2em -3em;
+    margin: 1.3em -3em 1.2em;
     margin-right: -4.9vw;
     margin-left: -4.9vw;
-    padding-left: 3.05em;
-    padding-left: calc(3.05em - .4em);
-    padding-left: calc(4.95vw - .4em);
-    padding-right: 3em;
+    padding: 0 3em;
     padding-right: 4.9vw;
-    font-style: italic;
-    background-color: #f6f6f6; /* Firefox issue - doesn't wrap border and background inside "columns" */
-    border-left: .4em solid #aaa;
+    padding-left: 4.9vw;
+    background-color: #f2f2f2; /* Firefox doesn't overflow background inside "columns" */
 }
 blockquote:before,
 blockquote:after {
@@ -173,7 +173,7 @@ blockquote > *:not(div):not(span):not(code):first-child {
     padding-top: .4em;
 }
 blockquote > *:not(div):not(span):not(code):last-child {
-    padding-bottom: .4em;
+    padding-bottom: .52em;
 }
 blockquote code,
 blockquote pre {
@@ -252,8 +252,8 @@ a[href][target=_blank] {
 }
 img {
     /* Image scaling http://www.456bereastreet.com/lab/scaling-images-proportionally/ */
-    width: auto;
     max-width: 100%;
+        width: auto;
     height: auto;
     vertical-align: top;
     object-fit: contain;
@@ -556,7 +556,7 @@ div.noscroll {
                 inset 0 0 0 1px rgba(255,255,255,.5);
 }
 .nav .noscroll {
-    overflow: hidden; /* IE11 issue */
+    overflow: visible;
     display: inline-block;
     display: -ms-flexbox; /* IE10 legacy */
     display: -webkit-flex; /* Safari 8.4 legacy */
@@ -598,7 +598,6 @@ div.noscroll {
 .nav a.focus,
 .nav a.error,
 .nav.nav a.active {
-    margin: -1px auto; /* ////////////// Fails for .nav */
     line-height: 2.25;
     border-color: transparent;
 }
@@ -631,7 +630,8 @@ div.noscroll {
     text-overflow: ellipsis;
 }
 .bar {
-    width: auto;
+    min-width: 0;
+        width: auto;
     height: 2.35em;
     padding: inherit;
     margin: inherit;
@@ -975,7 +975,7 @@ option[value=""], /* First element as placeholder, fails on IE */
                     mask: linear-gradient(to right, rgba(51,51,51,0), #333 1.5em, #333);
         }
     }
-    /* @supports (overflow: -webkit-marquee) and (justify-content: inherit) { // Safari 9+ http://browserstrangeness.bitbucket.org/css_hacks.html#safari } */
+    /* @supports (-webkit-backdrop-filter: blur()) { // Safari 9+ } */
 }
 @-moz-document url-prefix() { /* Firefox */
     ::-moz-selection {
@@ -1018,15 +1018,14 @@ option[value=""], /* First element as placeholder, fails on IE */
     html.noscroll {
         overflow: hidden;
     }
-    blockquote {
-        margin-left: -1.9em;
-        margin-right: -1.9em;
-        padding-left: calc(1.9em - .35em);
-        padding-right: 1.9em;
-    }
+    blockquote,
     hr {
         margin-right: -1.9em;
         margin-left: -1.9em;
+    }
+    blockquote {
+        padding-right: 1.9em;
+        padding-left: 1.9em;
     }
     input,
     textarea,
@@ -1098,10 +1097,10 @@ option[value=""], /* First element as placeholder, fails on IE */
     .header,
     .expand ~ .tab .nav:before,
     .expand ~ .tab .nav:after {
-        width: 100%;
+        min-width: 10em;
         max-width: 76%;
         max-width: 76vw;
-        min-width: 10em;
+            width: 100%;
     }
     .header {
         position: fixed;
