@@ -1,29 +1,31 @@
 /*eslint
-indent: 2,
-no-console: 0,
-no-unused-vars: 0,
-no-empty-function: 2,
-no-extend-native:0,
-no-new:0,
-no-new-func:0,
-no-undef: 0,
-key-spacing: [2, {"beforeColon": false, "afterColon": true}],
 comma-spacing: 2,
-no-underscore-dangle:0,
-no-use-before-define: 2,
+dot-notation: [2, {"allowKeywords": true}],
 eqeqeq: 2,
-semi: 2,
+indent: 2,
+key-spacing: [2, {"beforeColon": false, "afterColon": true}],
+no-console: 0,
+no-empty-function: 2,
+no-empty: ["error", { "allowEmptyCatch": true }],
 no-eval: 2,
+no-extend-native: 0,
+no-inner-declarations: 2,
 no-loop-func: 2,
-no-trailing-spaces: "error",
 no-mixed-spaces-and-tabs: 2,
 no-multi-spaces: 2,
+no-new-func: 0,
+no-new: 0,
 no-shadow: 2,
-dot-notation: [2, {"allowKeywords": true}],
+no-trailing-spaces: "error",
+no-undef: 0,
+no-underscore-dangle: 0,
+no-unused-vars: 0,
+no-use-before-define: 2,
 quotes: [2, "double"],
-strict: [2, "function"],
+semi: 2,
 space-before-blocks: 2,
-space-before-function-paren: [2, {"anonymous": "always", "named": "never"}]*/
+space-before-function-paren: [2, {"anonymous": "always", "named": "never"}],
+strict: [2, "function"]*/
 
 // Detect DOM change https://developers.google.com/web/updates/2012/02/Detect-DOM-changes-with-Mutation-Observers
 
@@ -95,8 +97,8 @@ space-before-function-paren: [2, {"anonymous": "always", "named": "never"}]*/
             }
         },
         api = { // Readable API
-            // Number, semantic versioning http://semver.org (MAJOR.MINOR.PATCH)
-            version: 5,
+            // String, semantic versioning http://semver.org (MAJOR.MINOR.PATCH)
+            version: "5.1",
 
             // Number (maximal width of device adaptation)
             viewportWidth: 720,
@@ -107,7 +109,7 @@ space-before-function-paren: [2, {"anonymous": "always", "named": "never"}]*/
             // Boolean (user agent DNT settings)
             dnt: has.dnt,
 
-            // String
+            // String (Google Analytics domain)
             domain: undefined,
 
             // String (project root)
@@ -131,9 +133,9 @@ space-before-function-paren: [2, {"anonymous": "always", "named": "never"}]*/
             // String (current page title)
             title: d.title,
 
-            // Element or null (the focused DOM Element based on "url")
+            // Element or null (the focused DOM Element based on as.url)
             activeElement: (function () {
-                var arr = d.querySelectorAll ? d.querySelectorAll("[href]") : [],
+                var arr = d.querySelectorAll ? d.querySelectorAll("[href]:not([target=_blank])") : [],
                     url = decodeURIComponent(d.URL).toUpperCase(),
                     i;
 
@@ -420,33 +422,35 @@ space-before-function-paren: [2, {"anonymous": "always", "named": "never"}]*/
                 }
             },
             init: function () {
-                if (ui.wrapper.offsetWidth <= api.viewportWidth ? !evnt.nav.events : evnt.nav.events) {
-                    evnt.nav.events = !evnt.nav.events;
-                    evnt.nav.listener = evnt.nav.events ? "addEventListener" : "removeEventListener";
+                var self = evnt.nav;
 
-                    ui.bar[evnt.nav.listener](has.pointer, evnt.nav.toggleReal, true);
+                if (ui.wrapper.offsetWidth <= api.viewportWidth ? !self.events : self.events) {
+                    self.events = !self.events;
+                    self.listener = self.events ? "addEventListener" : "removeEventListener";
+
+                    ui.bar[self.listener](has.pointer, self.toggleReal, true);
 
                     if (!has.touch) {
-                        ui.bar[evnt.nav.listener]("focus", evnt.nav.focus, true);
-                        ui.bar[evnt.nav.listener]("keydown", evnt.nav.keydown, true);
-                        ui.focusin[evnt.nav.listener]("blur", evnt.nav.disable, true);
+                        ui.bar[self.listener]("focus", self.focus, true);
+                        ui.bar[self.listener]("keydown", self.keydown, true);
+                        ui.focusin[self.listener]("blur", self.disable, true);
 
                         if (ui.nodeList) {
-                            ui.nodeList[ui.nodeList.length - 1][evnt.nav.listener]("keydown", evnt.nav.collapseTab, true);
+                            ui.nodeList[ui.nodeList.length - 1][self.listener]("keydown", self.collapseTab, true);
                         }
 
-                        ui.focusout[evnt.nav.listener]("focus", evnt.nav.expand, true);
-                        ui.focusout[evnt.nav.listener]("blur", evnt.nav.disable, true);
-                        ui.focusout[evnt.nav.listener]("keydown", evnt.nav.keydown, true);
-                        ui.collapse[evnt.nav.listener]("focus", evnt.nav.passFocus, true);
-                        ui.collapse[evnt.nav.listener]("blur", evnt.nav.disable, true);
-                        ui.reset[evnt.nav.listener]("blur", evnt.nav.disable, true);
-                        ui.nav[evnt.nav.listener](has.pointer, evnt.nav.collapse, true);
+                        ui.focusout[self.listener]("focus", self.expand, true);
+                        ui.focusout[self.listener]("blur", self.disable, true);
+                        ui.focusout[self.listener]("keydown", self.keydown, true);
+                        ui.collapse[self.listener]("focus", self.passFocus, true);
+                        ui.collapse[self.listener]("blur", self.disable, true);
+                        ui.reset[self.listener]("blur", self.disable, true);
+                        ui.nav[self.listener](has.pointer, self.collapse, true);
                     } else {
-                        ui.nav[evnt.nav.listener]("click", evnt.nav.collapse, true);
+                        ui.nav[self.listener]("click", self.collapse, true);
                     }
 
-                    ui.reset[evnt.nav.listener](has.pointer, evnt.nav.collapse, true);
+                    ui.reset[self.listener](has.pointer, self.collapse, true);
                 }
             }
         };
@@ -629,9 +633,10 @@ space-before-function-paren: [2, {"anonymous": "always", "named": "never"}]*/
         },
         callback: function (data) {
             api.error = data.error || false;
+            api.activeElement = root.nav.activeElement() || api.activeElement;
 
             h.replaceState(data, data.title, null);
-            root.update(data, true, api.activeElement || root.nav.activeElement());
+            root.update(data, true, api.activeElement);
         },
         load: function () {
             var response = this.response;
@@ -817,6 +822,9 @@ space-before-function-paren: [2, {"anonymous": "always", "named": "never"}]*/
 
     if (!api.analytics) {
         delete api.analytics;
+    }
+    if (!api.domain) {
+        delete api.domain;
     }
 
     // Apply events
