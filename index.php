@@ -96,7 +96,7 @@ echo "<!doctype html>
 <head prefix=\"og: http://ogp.me/ns#\">
 <meta charset=utf-8>
 $metadata
-" . (!$debug ? '<link rel=stylesheet href=' . assets . "style.css>" : '<style>' . (file_get_contents('assets/style.min.css')) . '</style>') . "
+" . ($debug ? '<link rel=stylesheet href=' . assets . "style.css>" : '<style>' . (file_get_contents('assets/style.min.css')) . '</style>') . "
 <!--[if lt IE 9]><script src=//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js></script><![endif]-->
 <body itemscope itemtype=http://schema.org/WebPage>
 <div class=noscroll>
