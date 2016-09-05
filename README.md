@@ -3,30 +3,36 @@
 **Ajax SEO** crawlable webapp framework with boosted UX.<br>
 Demo <https://lab.laukstein.com/ajax-seo>
 
-    as {
-        // Ajax SEO version
-        version: 5,
+    as { // Readable API
+        // The focused DOM Element based on as.url
+        activeElement: a.active,
 
-        // Google Analytics ID
+        // Google Analytics ID (optional)
         analytics: "UA-XXXX-Y",
 
         // User agent DNT settings
         dnt: true,
 
-        // Project root
-        origin: "https://lab.laukstein.com/ajax-seo"
+        // Google Analytics domain (optional)
+        domain: "laukstein.com",
 
-        // Current page URL
-        url: "https://lab.laukstein.com/ajax-seo/history",
+        // Detect if shown error page
+        error: false,
+
+        // Project root
+        origin: "https://lab.laukstein.com/ajax-seo",
 
         // Current page title
         title: "History",
 
-        // The focused DOM Element based on "url"
-        activeElement: a.active,
+        // Current page URL
+        url: "https://lab.laukstein.com/ajax-seo/history",
 
-        // Detect if shown error page
-        error: false
+        // Ajax SEO version
+        version: "5.1",
+
+        // Maximal width of device adaptation
+        viewportWidth: 720
     }
 
 
@@ -62,7 +68,7 @@ Place robots.txt and humans.txt in website root.
 * Respect DNT (Do Not Track)
 * Protocol-relative URL [RFC 3986](http://tools.ietf.org/html/rfc3986#section-4.2)
 * SEO URLs, lowercasing and gibberish cleanup
-* Performance tuning on front end and back end
+* Performance tuning in front end and back end
 * [Avoid](http://dowebsitesneedtolookexactlythesameineverybrowser.com) outdated browser support
 
 Legacy browser support in [earlier releases](https://github.com/laukstein/ajax-seo/releases).
