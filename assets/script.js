@@ -106,7 +106,7 @@ strict: [2, "function"]*/
             // String (Google Analytics ID "UA-XXXX-Y")
             analytics: undefined,
 
-            // Boolean (user agent DNT settings)
+            // Boolean (user agent DNT)
             dnt: has.dnt,
 
             // String (Google Analytics domain)
@@ -168,7 +168,7 @@ strict: [2, "function"]*/
 
         console.error(api.error, "http://caniuse.com/#feat=addeventlistener");
         return api;
-    } else if (!has.dnt && api.analytics) {
+    } else if (!api.dnt && api.analytics) {
         // Google Analytics
         // Respect DNT (Do Not Track)
         evnt.analytics = {
@@ -333,7 +333,8 @@ strict: [2, "function"]*/
                     e.preventDefault();
                     evnt.nav.expand();
                 } else {
-                    setTimeout(function () { // Old Webkit compatibility
+                    setTimeout(function () {
+                        // Old Webkit compatibility
                         if (d.activeElement !== e.target) {
                             e.target.focus();
                         }
@@ -529,7 +530,7 @@ strict: [2, "function"]*/
         },
         update: function (data, track, activeElement) {
             if (data) {
-                if (!has.dnt && api.analytics && typeof ga === "function") {
+                if (!api.dnt && api.analytics && typeof ga === "function") {
                     // Track Ajax page requests
                     ga("send", "pageview", {
                         page: api.url
