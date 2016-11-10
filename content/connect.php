@@ -4,7 +4,7 @@
 //
 
 $mysqli = @new mysqli(hostname, username, password, database, port);
-$conn   = !!@$mysqli->query('SELECT id FROM `' . table . '` LIMIT 1')->num_rows;
+$conn   = !$mysqli->connect_errno && !!$mysqli->query('SELECT 1 FROM `' . table . '` LIMIT 0');
 $note   = null;
 
 // Path for assets
