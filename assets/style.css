@@ -14,7 +14,6 @@ http://screwlewse.com/2010/08/different-css-techniques-and-their-performance/
 
 Selector priorities https://css-tricks.com/specifics-on-css-specificity/
 Reset form elements http://jsfiddle.net/LHcR8/3/
-currentColor http://blogs.adobe.com/dreamweaver/2015/02/extending-the-color-cascade-with-the-css-currentcolor-variable.html
 
 Syntax order:
     content
@@ -22,13 +21,13 @@ Syntax order:
     position
     display
     flex
+        width
     min-width
     max-width
-        width
     height
     padding
     margin
-    color
+    color: inherit | currentcolor https://drafts.csswg.org/css-color/#currentcolor-color
     font
     text-decoration
     text-align
@@ -252,8 +251,8 @@ a[href][target=_blank] {
 }
 img {
     /* Image scaling http://www.456bereastreet.com/lab/scaling-images-proportionally/ */
-    max-width: 100%;
         width: auto;
+    max-width: 100%;
     height: auto;
     vertical-align: top;
     object-fit: contain;
@@ -630,8 +629,8 @@ div.noscroll {
     text-overflow: ellipsis;
 }
 .bar {
-    min-width: 0;
         width: auto;
+    min-width: 0;
     height: 2.35em;
     padding: inherit;
     margin: inherit;
@@ -827,7 +826,7 @@ option[value=""], /* First element as placeholder, fails on IE */
         display: inline-block;
     }
 }
-@media (min-width:0\0) and (min-resolution: .001dpcm) { /* IE9 https://github.com/jeffclayton/css_hack_testing */
+@media (min-width: 0\0) and (min-resolution: .001dpcm) { /* IE9 https://github.com/jeffclayton/css_hack_testing */
     .nav,
     .nav a:first-of-type,
     .nav a:last-of-type {
@@ -850,7 +849,7 @@ option[value=""], /* First element as placeholder, fails on IE */
         display: inline-block;
     }
 }
-/* @media (min-width:0\0) { // IE9-10
+/* @media (min-width: 0\0) { // IE9-10
     input {
         // IE10 Long text overflowing a padding http://jsbin.com/kabeqixogi/1, https://connect.microsoft.com/IE/Feedback/Details/788605
         border: 0 solid transparent;
@@ -893,7 +892,7 @@ option[value=""], /* First element as placeholder, fails on IE */
         transition: width .35s cubic-bezier(.2,1,.4,1);
     }
 }
-@supports (-ms-accelerator: true) { /* Edge http://browserstrangeness.bitbucket.org/css_hacks.html#edge */
+@supports (-ms-ime-align: auto) and (color: unset) { /* Edge 13+ */
     ::-ms-clear {
         /* Remove input x */
         display: none;
@@ -1097,10 +1096,10 @@ option[value=""], /* First element as placeholder, fails on IE */
     .header,
     .expand ~ .tab .nav:before,
     .expand ~ .tab .nav:after {
+            width: 100%;
         min-width: 10em;
         max-width: 76%;
         max-width: 76vw;
-            width: 100%;
     }
     .header {
         position: fixed;
