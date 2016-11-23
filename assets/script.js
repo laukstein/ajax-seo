@@ -98,7 +98,7 @@ strict: [2, "function"]*/
         },
         api = { // Readable API
             // String, semantic versioning http://semver.org (MAJOR.MINOR.PATCH)
-            version: "5.1",
+            version: "5.1.1",
 
             // Number (maximal width of device adaptation)
             viewportWidth: 720,
@@ -157,7 +157,7 @@ strict: [2, "function"]*/
                 return;
             }
         },
-        evnt = {},
+        event = {},
         statusTimer,
         client, // XMLHttpRequest
         root;
@@ -171,41 +171,43 @@ strict: [2, "function"]*/
     } else if (!api.dnt && api.analytics) {
         // Google Analytics
         // Respect DNT (Do Not Track)
-        evnt.analytics = {
+        event.analytics = {
             listener: function (flag) {
                 flag = flag === true ? "addEventListener" : "removeEventListener";
 
-                ui.analytics[flag]("load", evnt.analytics.load);
-                ui.analytics[flag]("error", evnt.analytics.listener);
-                ui.analytics[flag]("readystatechange", evnt.analytics.readystatechange);
+                ui.analytics[flag]("load", event.analytics.load);
+                ui.analytics[flag]("error", event.analytics.listener);
+                ui.analytics[flag]("readystatechange", event.analytics.readystatechange);
 
                 if (!flag) {
                     ui.analytics.removeAttribute("id");
                 }
             },
             load: function () {
-                // Disabling cookies https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#disabling_cookies
-                ga("create", api.analytics, api.domain, {
-                    storage: "none",
-                    clientId: localStorage.gaClientId
-                });
-
-                if (!localStorage.gaClientId) {
-                    ga(function (tracker) {
-                        localStorage.gaClientId = tracker.get("clientId");
+                if (typeof w.ga === "function") {
+                    // Disabling cookies https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#disabling_cookies
+                    ga("create", api.analytics, api.domain, {
+                        storage: "none",
+                        clientId: localStorage.gaClientId
                     });
+
+                    if (!localStorage.gaClientId) {
+                        ga(function (tracker) {
+                            localStorage.gaClientId = tracker.get("clientId");
+                        });
+                    }
+
+                    ga("send", "pageview");
+
+                    event.analytics.listener();
                 }
-
-                ga("send", "pageview");
-
-                evnt.analytics.listener();
             },
             readystatechange: function () {
                 if (ui.analytics.readyState === "complete" || ui.analytics.readyState === "loaded") {
-                    if (typeof ga === "function") {
-                        evnt.analytics.load();
+                    if (typeof w.ga === "function") {
+                        event.analytics.load();
                     } else {
-                        evnt.analytics.listener();
+                        event.analytics.listener();
                     }
                 }
             },
@@ -214,14 +216,14 @@ strict: [2, "function"]*/
 
         ui.analytics = d.createElement("script");
         ui.analytics.src = "//www.google-analytics.com/analytics.js";
-        ui.analytics.id = evnt.analytics.timestamp;
+        ui.analytics.id = event.analytics.timestamp;
 
         d.body.appendChild(ui.analytics);
 
-        ui.analytics = d.getElementById(evnt.analytics.timestamp);
+        ui.analytics = d.getElementById(event.analytics.timestamp);
 
         if (ui.analytics) {
-            evnt.analytics.listener(true);
+            event.analytics.listener(true);
         }
     }
 
@@ -308,7 +310,7 @@ strict: [2, "function"]*/
             }
         };
 
-        evnt.nav = {
+        event.nav = {
             expand: function () {
                 // Perf http://jsperf.com/document-body-parentelement
                 ui.html.classList.add("noscroll");
@@ -319,7 +321,7 @@ strict: [2, "function"]*/
                     // preventDefault is required, otherwise when focused element, click will colapse and expand
                     e.preventDefault();
 
-                    evnt.nav.preventPassFocus = true;
+                    event.nav.preventPassFocus = true;
 
                     ui.html.classList.remove("noscroll");
                     ui.collapse.setAttribute("tabindex", 0);
@@ -331,7 +333,7 @@ strict: [2, "function"]*/
                     }, 10);
                 } else if (e.type === "touchstart") {
                     e.preventDefault();
-                    evnt.nav.expand();
+                    event.nav.expand();
                 } else {
                     setTimeout(function () {
                         // Old Webkit compatibility
@@ -346,7 +348,7 @@ strict: [2, "function"]*/
                     e.target.blur();
 
                     ui.nav.scrollTop = 0;
-                    evnt.nav.expand();
+                    event.nav.expand();
 
                     ui.focusin.setAttribute("tabindex", 0);
                     ui.focusout.removeAttribute("tabindex");
@@ -380,14 +382,14 @@ strict: [2, "function"]*/
                     ui.status.classList.remove("expand");
 
                     setTimeout(function () {
-                        evnt.nav.preventPassFocus = true;
+                        event.nav.preventPassFocus = true;
                         ui.focusout.setAttribute("tabindex", 0);
                     }, 10);
                 }
             },
             collapseTab: function (e) {
                 if (!e.shiftKey && (e.key === "Tab" || e.keyCode === 9)) {
-                    evnt.nav.collapse(e);
+                    event.nav.collapse(e);
 
                     setTimeout(function () {
                         ui.collapse.setAttribute("tabindex", 0);
@@ -400,10 +402,10 @@ strict: [2, "function"]*/
             },
             keydown: function (e) {
                 if (e.target === ui.bar && (e.key === "Enter" || e.keyCode === 13)) {
-                    evnt.nav.toggleReal(e);
+                    event.nav.toggleReal(e);
                 }
                 if ((e.target === ui.focusout ? !e.shiftKey : e.shiftKey) && (e.key === "Tab" || e.keyCode === 9)) {
-                    evnt.nav.collapse(e);
+                    event.nav.collapse(e);
 
                     if (e.target === ui.focusout && !e.shiftKey) {
                         ui.collapse.setAttribute("tabindex", 0);
@@ -415,15 +417,15 @@ strict: [2, "function"]*/
                 }
             },
             passFocus: function (e) {
-                if (evnt.nav.preventPassFocus) {
-                    delete evnt.nav.preventPassFocus;
+                if (event.nav.preventPassFocus) {
+                    delete event.nav.preventPassFocus;
                 } else if (!ui.status.classList.contains("expand")) {
                     ui.focusout.focus();
-                    evnt.nav.disable(e);
+                    event.nav.disable(e);
                 }
             },
             init: function () {
-                var self = evnt.nav;
+                var self = event.nav;
 
                 if (ui.wrapper.offsetWidth <= api.viewportWidth ? !self.events : self.events) {
                     self.events = !self.events;
@@ -431,6 +433,11 @@ strict: [2, "function"]*/
 
                     ui.bar[self.listener](has.pointer, self.toggleReal, true);
 
+                    if (self.events) {
+                        ui.focusout.setAttribute("tabindex", 0);
+                    } else {
+                        ui.focusout.removeAttribute("tabindex");
+                    }
                     if (!has.touch) {
                         ui.bar[self.listener]("focus", self.focus, true);
                         ui.bar[self.listener]("keydown", self.keydown, true);
@@ -456,15 +463,15 @@ strict: [2, "function"]*/
             }
         };
 
-        evnt.nav.init();
+        event.nav.init();
 
         w.addEventListener("resize", function () {
-            if (evnt.nav.timeoutScale) {
-                clearTimeout(evnt.nav.timeoutScale);
+            if (event.nav.timeoutScale) {
+                clearTimeout(event.nav.timeoutScale);
             }
 
             // Don't execute too often
-            evnt.nav.timeoutScale = setTimeout(evnt.nav.init, 100);
+            event.nav.timeoutScale = setTimeout(event.nav.init, 100);
         }, true);
     } else {
         api.error = "Missing HTML Elements";
@@ -709,8 +716,8 @@ strict: [2, "function"]*/
 
                 e.preventDefault();
 
-                if (evnt.nav.events && ui.status.classList.contains("expand")) {
-                    evnt.nav.collapse();
+                if (event.nav.events && ui.status.classList.contains("expand")) {
+                    event.nav.collapse();
                     ui.reset.setAttribute("tabindex", 0);
 
                     setTimeout(function () {
