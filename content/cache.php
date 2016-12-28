@@ -100,6 +100,7 @@ class date {
 
     // Latest update
     public static function all() {
-        return max(self::db(), self::files());
+        global $dbcon;
+        return $dbcon ? max(self::db(), self::files()) : self::files();
     }
 }
