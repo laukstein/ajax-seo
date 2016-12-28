@@ -4,8 +4,7 @@
 //
 
 include 'content/config.php';
-include 'content/connect.php';
-include 'content/cache.php'; cache::all();
+include 'content/cache.php'; cache::me();
 
 echo '<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html>
@@ -116,15 +115,21 @@ dd > a {
     <xsl:for-each select="sitemap:urlset/sitemap:url">
     <dd>
         <xsl:variable name="lastmod" select="sitemap:lastmod"/>
-        <time datetime="{$lastmod}"><xsl:value-of select="concat(substring($lastmod, 0, 5), concat(\'/\', substring($lastmod, 6, 2)), concat(\'/\', substring($lastmod, 9, 2)), concat(\' \', substring($lastmod, 12, 5)))"/></time>
         <xsl:variable name="url" select="sitemap:loc"/>
         <xsl:variable name="image" select="image:image/image:loc"/>
-        <a href="{$url}" tabindex="-1"></a>
+        <xsl:if test="string($lastmod)">
+            <time datetime="{$lastmod}"><xsl:value-of select="concat(substring($lastmod, 0, 5), concat(\'/\', substring($lastmod, 6, 2)), concat(\'/\', substring($lastmod, 9, 2)), concat(\' \', substring($lastmod, 12, 5)))"/></time>
+        </xsl:if>
+        <xsl:if test="string($url)">
+            <a href="{$url}" tabindex="-1"></a>
+        </xsl:if>
         <div>
             <xsl:if test="string($image)">
-            <div style="background-image:url({$image})"></div>
+                <div style="background-image:url({$image})"></div>
             </xsl:if>
-            <a href="{$url}"><xsl:value-of select="sitemap:loc"/></a>
+            <xsl:if test="string($url)">
+                <a href="{$url}"><xsl:value-of select="sitemap:loc"/></a>
+            </xsl:if>
         </div>
     </dd>
     </xsl:for-each>
