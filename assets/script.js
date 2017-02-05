@@ -2,7 +2,7 @@
 comma-spacing: 2,
 dot-notation: [2, {"allowKeywords": true}],
 eqeqeq: 2,
-indent: 2,
+indent: ["error", 4, { "SwitchCase": 1 }],
 key-spacing: [2, {"beforeColon": false, "afterColon": true}],
 no-console: 0,
 no-empty-function: 2,
