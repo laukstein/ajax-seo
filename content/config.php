@@ -40,18 +40,32 @@ if (function_exists('apache_get_modules') && !in_array('mod_rewrite', apache_get
     $fix .= "\n* enable Apache mod_rewrite";
 }
 
-// PHP 5.2 backward compatibility
+function minify_output($buffer) {
+    $search = ['/ {2,}/', '/<!--(?!\[if).*?-->|\t|<\/(option|li|dt|dd|tr|th|td)>|(?:\r?\n[ \t]*)+/s'];
+    $blocks = preg_split('/(<\/?pre[^>]*>)/', $buffer, null, PREG_SPLIT_DELIM_CAPTURE);
+    $replace = [' ', ''];
+    $buffer = '';
+
+    foreach ($blocks as $i => $block) $buffer .= $i % 4 === 2 ? $block : preg_replace($search, $replace, $block);
+
+    return $buffer;
+}
+
+$toMinify = !$debug && isset($toMinify) && $toMinify;
 $phpv = PHP_VERSION;
 
 // Add http_response_code function
 if (version_compare($phpv, '5.4', '<')) include 'content/function.http-response-code.php';
 if (version_compare($phpv, '5.2', '>=')) {
+    // PHP 5.2 backward compatibility
     // date.timezone settings required since PHP 5.3
     if (version_compare($phpv, '5.3', '>=') && !ini_get('date.timezone')) date_default_timezone_set('UTC');
     if (version_compare($phpv, '5.4', '>') && extension_loaded('zlib')) {
         // Compress output with Gzip, PHP 5.4.4 bug https://bugs.php.net/bug.php?id=55544
         ob_end_clean();
-        ob_start('ob_gzhandler');
+        ob_start($toMinify ? 'minify_output' : 'ob_gzhandler');
+    } else if ($toMinify) {
+        ob_start('minify_output');
     }
 } else {
     $comp = false;

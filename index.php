@@ -1,5 +1,7 @@
 <?php
 
+if (empty($_GET['api'])) $toMinify = true;
+
 include 'content/config.php';
 include 'content/connect.php';
 include 'content/cache.php'; cache::url();
