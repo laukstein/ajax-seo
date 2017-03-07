@@ -1145,8 +1145,8 @@ option[value=""], /* First element as placeholder, fails on IE */
         z-index: 99;
     }
     .expand ~ .main {
-        -webkit-filter: grayscale(100%);
-                filter: grayscale(100%);
+        -webkit-filter: grayscale(20%);
+                filter: grayscale(20%);
         transition: filter .35s cubic-bezier(.2,1,.4,1);
     }
     .nav,
