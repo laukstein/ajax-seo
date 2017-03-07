@@ -10,7 +10,7 @@ Demo <https://lab.laukstein.com/ajax-seo>
         // Google Analytics ID (optional)
         analytics: "UA-XXXX-Y",
 
-        // User agent DNT
+        // Respect user agent DNT
         dnt: true,
 
         // Google Analytics domain (optional)

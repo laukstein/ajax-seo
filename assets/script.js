@@ -98,7 +98,7 @@ strict: [2, "function"]*/
         },
         api = { // Readable API
             // String, semantic versioning http://semver.org (MAJOR.MINOR.PATCH)
-            version: "5.1.1",
+            version: "5.2.0",
 
             // Number (maximal width of device adaptation)
             viewportWidth: 720,
@@ -106,8 +106,8 @@ strict: [2, "function"]*/
             // String (Google Analytics ID "UA-XXXX-Y")
             analytics: undefined,
 
-            // Boolean (user agent DNT)
-            dnt: has.dnt,
+            // Boolean (respect user agent DNT)
+            dnt: true,
 
             // String (Google Analytics domain)
             domain: undefined,
@@ -168,7 +168,7 @@ strict: [2, "function"]*/
 
         console.error(api.error, "http://caniuse.com/#feat=addeventlistener");
         return api;
-    } else if (!api.dnt && api.analytics) {
+    } else if (api.analytics && (!has.dnt || !api.dnt)) {
         // Google Analytics
         // Respect DNT (Do Not Track)
         event.analytics = {
