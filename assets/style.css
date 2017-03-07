@@ -161,7 +161,7 @@ blockquote {
     padding: 0 3em;
     padding-right: 4.9vw;
     padding-left: 4.9vw;
-    background-color: #f2f2f2; /* Firefox doesn't overflow background inside "columns" */
+    background-color: #f2f2f2;
 }
 blockquote:before,
 blockquote:after {
