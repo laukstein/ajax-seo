@@ -87,7 +87,7 @@ if ($conn && $result) $metadata .= "\n<link rel=\"prefetch prerender\" href=$pat
 $metadata .= "\n<link rel=manifest href=$path/manifest.json>";
 
 // SVG favicon https://github.com/whatwg/html/issues/110
-$metadata .= "\n<link rel=mask-icon href=$path/icon.svg color=#0b62bb>";
+$metadata .= "\n<link rel=mask-icon href=$path/icon.svg>";
 // Favicon 16x16 4-bit 16 color favicon.ico in website root http://zoompf.com/2012/04/instagram-and-optimizing-favicons
 // 16px used on all browsers https://github.com/audreyr/favicon-cheat-sheet, http://realfavicongenerator.net/faq#.Vpasouh96Hs
 if (!empty($path)) $metadata .= "\n<link rel=\"shortcut icon\" href=$path/favicon.png>";
