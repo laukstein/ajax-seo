@@ -737,7 +737,7 @@ div.noscroll {
 .main a:target:hover {
     text-decoration: underline;
 }
-.main :target:before {
+.main [id]:target:before {
     /* Hack used also in https://developer.yahoo.com/performance/rules.html */
     content: "";
     display: block;
