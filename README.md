@@ -55,7 +55,7 @@ Place robots.txt and humans.txt in website root.
 * W3C cutting-edge standards
 * Native HTML5.1 APIs, Microdata, JavaScript
 * SEO accessible, crawlable and indexable
-* Grade-A performance, security and usability
+* HTML auto minify, Grade-A performance, security and usability
 * Simple, responsive, intuitive, maintainable
 * [Future plans](https://github.com/laukstein/ajax-seo/wiki/Plans)
 
