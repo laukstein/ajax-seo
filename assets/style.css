@@ -628,6 +628,20 @@ div.noscroll {
     max-height: 2.3em; /* Old Webkit legacy */
     text-overflow: ellipsis;
 }
+@supports ((mask-image: none) or (-webkit-mask-image: none)) and (text-overflow: clip) {
+    .nav a > span,
+    [data-placeholder] {
+        text-overflow: clip;
+        -webkit-mask-image: linear-gradient(to left, rgba(51,51,51,0), #333 1.5em, #333); /* Chrome legacy */
+                mask-image: linear-gradient(to left, rgba(51,51,51,0), #333 1.5em, #333);
+    }
+    .nav a > span[dir],
+    [dir] [data-placeholder] {
+        /* "mask" for RTL */
+        -webkit-mask-image: linear-gradient(to right, rgba(51,51,51,0), #333 1.5em, #333); /* Chrome legacy */
+                mask-image: linear-gradient(to right, rgba(51,51,51,0), #333 1.5em, #333);
+    }
+}
 .bar {
         width: auto;
     min-width: 0;
@@ -892,26 +906,26 @@ option[value=""], /* First element as placeholder, fails on IE */
         transition: width .35s cubic-bezier(.2,1,.4,1);
     }
 }
-@supports (-ms-ime-align: auto) and (color: unset) { /* Edge 13+ */
-    ::-ms-clear {
-        /* Remove input x */
-        display: none;
-        box-suppress: discard;
-    }
-    ::-webkit-input-placeholder {
-        color: #333;
-    }
-    [placeholder]:focus::-webkit-input-placeholder {
-        opacity: .54;
-    }
-    select:focus::-ms-value {
-        /* Remove focused element highlight on IE11 */
-        color: initial;
-        background-color: initial;
-    }
-}
 @media (-webkit-min-device-pixel-ratio: 0) {
-    @supports (not (-ms-accelerator: true)) { /* Webkit */
+    @supports (-ms-ime-align: auto) and (color: unset) { /* Edge 13+ */
+        ::-ms-clear {
+            /* Remove input x */
+            display: none;
+            box-suppress: discard;
+        }
+        ::-webkit-input-placeholder {
+            color: #333;
+        }
+        [placeholder]:focus::-webkit-input-placeholder {
+            opacity: .54;
+        }
+        select:focus::-ms-value {
+            /* Remove focused element highlight on IE11 */
+            color: initial;
+            background-color: initial;
+        }
+    }
+    @supports (not (-ms-accelerator: true)) and (not (-ms-ime-align: auto)) { /* Webkit, Safari 9+ */
         html,
         textarea,
         .nav {
@@ -959,19 +973,6 @@ option[value=""], /* First element as placeholder, fails on IE */
         }
         [placeholder]:focus::-webkit-input-placeholder {
             opacity: .54;
-        }
-        .nav a > span,
-        [data-placeholder] {
-            /* Only Webkit currently supports "mask" value "linear-gradient" */
-            text-overflow: clip;
-            -webkit-mask: linear-gradient(to left, rgba(51,51,51,0), #333 1.5em, #333); /* Chrome legacy */
-                    mask: linear-gradient(to left, rgba(51,51,51,0), #333 1.5em, #333);
-        }
-        .nav a > span[dir],
-        [dir] [data-placeholder] {
-            /* "mask" for RTL */
-            -webkit-mask: linear-gradient(to right, rgba(51,51,51,0), #333 1.5em, #333); /* Chrome legacy */
-                    mask: linear-gradient(to right, rgba(51,51,51,0), #333 1.5em, #333);
         }
     }
     /* @supports (-webkit-backdrop-filter: blur()) { // Safari 9+ } */
