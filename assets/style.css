@@ -742,14 +742,15 @@ div.noscroll {
         https://justmarkup.com/log/2016/04/css-containment/ */
     contain: layout;
 }
-.main :target {
-    background-color: #ff0;
-}
 .main a:target {
     text-decoration: none;
 }
 .main a:target:hover {
     text-decoration: underline;
+}
+.main [id]:target {
+    /* Animated focus style https://css-tricks.com/focus-styles-non-interactive-elements/ */
+    animation: highlight 1s forwards;
 }
 .main [id]:target:before {
     /* Hack used also in https://developer.yahoo.com/performance/rules.html */
@@ -759,6 +760,14 @@ div.noscroll {
     margin-top: -2.5em;
     pointer-events: none;
     background-color: #fff;
+}
+@keyframes highlight {
+    from {
+        background-color: #ff0;
+    }
+    to {
+        background-color: rgba(255,255,0,0);
+    }
 }
 .error ~ .main {
     display: flex;
