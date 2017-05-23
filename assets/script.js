@@ -169,6 +169,19 @@ strict: [2, "function"]*/
         console.error(api.error, "http://caniuse.com/#feat=addeventlistener");
         return api;
     } else if (api.analytics && (!has.dnt || !api.dnt)) {
+        try {
+            // Safari Private Browsing doesn't support localStorage
+            localStorage.localStorage = "1";
+            delete localStorage.localStorage;
+        } catch (e) {
+            if (w.localStorage) {
+                // Required for Safari Private Browsing
+                delete w.localStorage;
+            }
+
+            w.localStorage = {};
+        }
+
         // Google Analytics
         // Respect DNT (Do Not Track)
         event.analytics = {
