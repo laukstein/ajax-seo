@@ -29,7 +29,7 @@ Demo <https://lab.laukstein.com/ajax-seo>
         url: "https://lab.laukstein.com/ajax-seo/history",
 
         // Ajax SEO version
-        version: "5.1",
+        version: "5.3.0",
 
         // Maximal width of device adaptation
         viewportWidth: 720
