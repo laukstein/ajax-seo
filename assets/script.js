@@ -198,7 +198,8 @@ strict: [2, "function"]*/
             },
             load: function () {
                 if (typeof w.ga === "function") {
-                    // Disabling cookies https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#disabling_cookies
+                    // Disabling cookies
+                    // https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#disabling_cookies
                     ga("create", api.analytics, api.domain, {
                         storage: "none",
                         clientId: localStorage.gaClientId
@@ -210,9 +211,8 @@ strict: [2, "function"]*/
                         });
                     }
 
-                    ga("send", "pageview");
-
                     event.analytics.listener();
+                    event.analytics.track();
                 }
             },
             readystatechange: function () {
@@ -224,7 +224,18 @@ strict: [2, "function"]*/
                     }
                 }
             },
-            timestamp: +new Date + ""
+            timestamp: +new Date + "",
+            track: function () {
+                if (typeof w.ga === "function") {
+                    // Page tracking
+                    // https://developers.google.com/analytics/devguides/collection/analyticsjs/pages
+                    ga("send", {
+                        hitType: "pageview",
+                        title: d.title,
+                        page: location.pathname
+                    });
+                }
+            }
         };
 
         ui.analytics = d.createElement("script");
@@ -550,13 +561,6 @@ strict: [2, "function"]*/
         },
         update: function (data, track, activeElement) {
             if (data) {
-                if (!api.dnt && api.analytics && typeof ga === "function") {
-                    // Track Ajax page requests
-                    ga("send", "pageview", {
-                        page: api.url
-                    });
-                }
-
                 if (!track) {
                     client.abort();
                 } else {
@@ -609,6 +613,9 @@ strict: [2, "function"]*/
 
                 if (l.hash) {
                     l.replace(api.url + l.hash);
+                }
+                if (event.analytics) {
+                    event.analytics.track();
                 }
 
                 delete root.inprogress;
