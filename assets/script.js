@@ -98,7 +98,7 @@ strict: [2, "function"]*/
         },
         api = { // Readable API
             // String, semantic versioning http://semver.org (MAJOR.MINOR.PATCH)
-            version: "5.2.0",
+            version: "5.3.0",
 
             // Number (maximal width of device adaptation)
             viewportWidth: 720,
