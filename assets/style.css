@@ -938,7 +938,8 @@ option[value=""], /* First element as placeholder, fails on IE */
         html,
         textarea,
         .nav {
-            /* iOS 7 legacy http://barrow.io/overflow-scrolling */
+            /* iOS 10.3.1 ignores z-index when used -webkit-overflow-scrolling
+               https://github.com/scottjehl/Device-Bugs/issues/14 */
             -webkit-overflow-scrolling: touch;
         }
         html {
