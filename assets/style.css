@@ -950,6 +950,7 @@ option[value=""], /* First element as placeholder, fails on IE */
                                                 Android repaint issue on screen orientation change */
         }
         a,
+        label,
         input,
         select,
         textarea,
