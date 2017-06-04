@@ -1265,6 +1265,14 @@ option[value=""], /* First element as placeholder, fails on IE */
         top: 0;
     }
 }
+@media (prefers-reduced-motion) {
+    /* Reduce motion https://drafts.csswg.org/mediaqueries-5/#prefers-reduced-motion
+       Supported in Safari 10.1 https://webkit.org/blog/7477/new-web-features-in-safari-10-1/ */
+    * {
+        animation: none;
+        transition: none;
+    }
+}
 @media print {
     @page {
         margin: .5cm;
