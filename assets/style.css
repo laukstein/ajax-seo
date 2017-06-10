@@ -66,7 +66,7 @@ label,
 button,
 .button {
     /* Remove user-select for easer debugging */
-    -webkit-user-select: none;
+    -webkit-user-select: none; /* Safari legacy */
        -moz-user-select: none;
         -ms-user-select: none;
             user-select: none;
@@ -82,6 +82,7 @@ html {
     /* Smoother scroll, faster clicks http://updates.html5rocks.com/2013/12/300ms-tap-delay-gone-away */
     touch-action: manipulation;
     cursor: default;
+    caret-color: currentcolor;
 }
 body,
 dl,
@@ -103,7 +104,7 @@ body {
 }
 main {
     display: block; /* IE10, Opera 12.16 and old Webkit legacy */
-    -webkit-user-select: text;
+    -webkit-user-select: text; /* Safari legacy */
        -moz-user-select: text;
         -ms-user-select: text;
             user-select: text;
@@ -290,17 +291,14 @@ label {
     color: highlighttext;
     background-color: highlight;*/
 }
-/*:placeholder-shown {
-    // W3C http://dev.w3.org/csswg/selectors4/#placeholder
-    // Firefox https://bugzilla.mozilla.org/show_bug.cgi?id=1069012
-    // Chrome 47 approach released with bugs https://code.google.com/p/chromium/issues/detail?id=451120
-    // Webkit https://bugs.webkit.org/show_bug.cgi?id=118162
-    // Apply Firefox approach http://jsbin.com/fesunu/1/quiet
-    // resource://gre-resources/forms.css
-    // https://bugzilla.mozilla.org/show_bug.cgi?id=556145
+::placeholder {
+    color: #333;
+    text-overflow: ellipsis!important; /* Chrome and Safari 9.1.1 input applies inline CSS "text-overflow: clip" */
+    user-select: none;
+}
+[placeholder]:focus::placeholder {
     opacity: .54;
-    color: inherit;
-}*/
+}
 input,
 select,
 textarea,
@@ -347,7 +345,8 @@ textarea {
     resize: none;
 }
 [required]:valid {
-    border-color: #aaa;
+    border-color: #0b0;
+    background-color: transparent;
 }
 input:focus,
 textarea:focus,
@@ -916,17 +915,21 @@ option[value=""], /* First element as placeholder, fails on IE */
     }
 }
 @media (-webkit-min-device-pixel-ratio: 0) {
+    ::-webkit-input-placeholder {
+        color: #333;
+        text-overflow: ellipsis!important; /* Chrome 49 input:focus and Safari 9.1.1 input applies inline "text-overflow: clip" */
+        -webkit-user-select: none; /* Safari legacy */
+                user-select: none;
+    }
+    [placeholder]:focus::-webkit-input-placeholder {
+        opacity: .54;
+    }
+
     @supports (-ms-ime-align: auto) and (color: unset) { /* Edge 13+ */
         ::-ms-clear {
             /* Remove input x */
             display: none;
             box-suppress: discard;
-        }
-        ::-webkit-input-placeholder {
-            color: #333;
-        }
-        [placeholder]:focus::-webkit-input-placeholder {
-            opacity: .54;
         }
         select:focus::-ms-value {
             /* Remove focused element highlight on IE11 */
@@ -955,6 +958,7 @@ option[value=""], /* First element as placeholder, fails on IE */
         select,
         textarea,
         button,
+        [onclick],
         [tabindex] {
             /* <select> shadow DOM issue https://code.google.com/p/chromium/issues/detail?id=234871 */
             /* Remove outline and highlight-color from click-able elements on Android and iOS */
@@ -975,16 +979,6 @@ option[value=""], /* First element as placeholder, fails on IE */
         input[type=search]::-webkit-search-cancel-button {
             display: none;
         }
-        ::-webkit-input-placeholder {
-            color: #333;
-            text-overflow: ellipsis!important; /* Chrome 49 input:focus and Safari 9.1.1 input applies inline "text-overflow: clip" */
-            white-space: nowrap; /* Safari 9.1 wraps text with "-" */
-            -webkit-user-select: none;
-                    user-select: none;
-        }
-        [placeholder]:focus::-webkit-input-placeholder {
-            opacity: .54;
-        }
     }
     /* @supports (-webkit-backdrop-filter: blur()) { // Safari 9+ } */
 }
@@ -1004,17 +998,13 @@ option[value=""], /* First element as placeholder, fails on IE */
         background-image: none;
         border-radius: 0;
     }
-    input::-moz-focus-inner,
+    [placeholder]:not(:focus)::placeholder {
+        opacity: 1;
+    }
     button::-moz-focus-inner {
         /* Remove button padding */
         border: 0;
         padding: 0;
-    }
-    ::-moz-placeholder {
-        color: #333;
-    }
-    [placeholder]:not(:focus)::-moz-placeholder {
-        opacity: 1;
     }
 }
 
