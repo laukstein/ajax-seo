@@ -443,8 +443,8 @@ div.noscroll {
 .status {
     opacity: 0;
     position: fixed;
-    position: -ms-device-fixed;
-    position:     device-fixed; /* Spec request https://github.com/tabatkins/specs/issues/31 */
+    /* position: -ms-device-fixed; */ /* Win10 Edge 15 and IE11 causes repaint bug on screen resize */
+    position: device-fixed; /* Spec request https://github.com/tabatkins/specs/issues/31 */
     z-index: 999;
     left: 0;
     width: 0; /* IE transition issue */
