@@ -131,7 +131,7 @@ $content   = '<style scoped>.main{padding-top:1.2em}label{width:30%}input{width:
     <h1>' . $pagetitle . '</h1>
     <dl>
         <dt>MySQL connection
-        <dd><label for=host>Database host</label><input id=host class=n2 name=host placeholder=localhost value="' . $dhost . '" required><input id=port class=n2 name=port placeholder=Port value="' . $port . '">
+        <dd><label for=host>Database host</label><input id=host class=n2 name=host placeholder=localhost value="' . $dhost . '" autofocus required><input id=port class=n2 name=port placeholder=Port value="' . $port . '">
         <dd><label for=user>User name</label><input id=user name=user placeholder=root value="' . $user . '" required>
         <dd><label for=pass>Password</label><input id=pass name=pass placeholder=Password type=password>
         <dd><label for=db>Database name</label><input id=db name=db placeholder=db value="' . $db . '" required>
