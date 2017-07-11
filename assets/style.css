@@ -915,6 +915,23 @@ option[value=""], /* First element as placeholder, fails on IE */
     }
 }
 @media (-webkit-min-device-pixel-ratio: 0) {
+    html {
+        /* iOS 10.3.1 ignores z-index when used -webkit-overflow-scrolling
+           https://github.com/scottjehl/Device-Bugs/issues/14 */
+        -webkit-overflow-scrolling: touch;
+    }
+    a,
+    label,
+    input,
+    select,
+    textarea,
+    button,
+    [onclick],
+    [tabindex] {
+        /* <select> shadow DOM issue https://code.google.com/p/chromium/issues/detail?id=234871 */
+        /* Remove outline and highlight-color from click-able elements on Android and iOS */
+        -webkit-tap-highlight-color: rgba(51,51,51,0);
+    }
     ::-webkit-input-placeholder {
         color: #333;
         text-overflow: ellipsis!important; /* Chrome 49 input:focus and Safari 9.1.1 input applies inline "text-overflow: clip" */
@@ -938,31 +955,12 @@ option[value=""], /* First element as placeholder, fails on IE */
         }
     }
     @supports (not (-ms-accelerator: true)) and (not (-ms-ime-align: auto)) { /* Webkit, Safari 9+ */
-        html,
-        textarea,
-        .nav {
-            /* iOS 10.3.1 ignores z-index when used -webkit-overflow-scrolling
-               https://github.com/scottjehl/Device-Bugs/issues/14 */
-            -webkit-overflow-scrolling: touch;
-        }
         html {
             /* Old Webkit smooth text rendering issue */
             -webkit-font-smoothing: antialiased;
             -webkit-text-size-adjust: 100%; /* iOS fix */
             /* -webkit-perspective: 1000; */ /* Breaks position: fixed
                                                 Android repaint issue on screen orientation change */
-        }
-        a,
-        label,
-        input,
-        select,
-        textarea,
-        button,
-        [onclick],
-        [tabindex] {
-            /* <select> shadow DOM issue https://code.google.com/p/chromium/issues/detail?id=234871 */
-            /* Remove outline and highlight-color from click-able elements on Android and iOS */
-            -webkit-tap-highlight-color: rgba(51,51,51,0);
         }
         a {
             /* iOS remove bubble dialog on tap-holding */
