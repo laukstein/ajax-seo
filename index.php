@@ -72,9 +72,9 @@ $metadata .= "\n<meta property=twitter:card content=summary>";
 
 // Optimize smart device viewport (initial-scale=1 to enable zoom-in, maximum-scale=1 to disable zoom) https://developer.chrome.com/multidevice/webview/pixelperfect#viewport http://io13-high-dpi.appspot.com/#11
 // Avoid tap 350ms delay https://webkit.org/blog/5610/more-responsive-tapping-on-ios/
-// Render fullscreen (out of "safe-area") with viewport-fit=cover http://stephenradford.me/removing-the-white-bars-in-safari-on-iphone-x/
+// Render fullscreen (out of "safe-area") with "viewport-fit=cover" http://stephenradford.me/removing-the-white-bars-in-safari-on-iphone-x/
 //      spec https://drafts.csswg.org/css-round-display/#viewport-fit-descriptor
-$metadata .= "\n<meta name=viewport content=\"width=device-width,initial-scale=1,viewport-fit=cover\">";
+$metadata .= "\n<meta name=viewport content=\"width=device-width,initial-scale=1\">";
 
 // Early handshake DNS https://w3c.github.io/resource-hints/#dns-prefetch
 if ($cdn_host) $metadata .= "\n<link rel=dns-prefetch href=$cdn_scheme$cdn_host/>";
