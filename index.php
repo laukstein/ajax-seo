@@ -116,7 +116,7 @@ if ($conn) {
 
         echo "\n<div id=status class=" . ($result ? 'status' : '"status error status-error"') . ' role=progressbar></div>
 <div class=tab>
-    <button class=bar id=bar tabindex=0 hidden><span></span></button>
+    <button class=bar id=bar aria-controls=nav aria-label="Menu bar" tabindex=0 hidden><span></span></button>
     <span class=focusin id=focusin hidden></span>
     <header class=header>
         <nav class=nav id=nav>
