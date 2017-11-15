@@ -85,8 +85,8 @@ if ($cdn_host) $metadata .= "\n<link rel=dns-prefetch href=$cdn_scheme$cdn_host/
 // Fetch and cache API in background when everything is downloaded https://html.spec.whatwg.org/#link-type-prefetch
 if ($conn && $result) $metadata .= "\n<link rel=\"prefetch prerender\" href=$path/api" . ($url === '/' ? '' : $url) . '>';
 
-// Manifest for a web application https://w3c.github.io/manifest/
-$metadata .= "\n<link rel=manifest href=$path/manifest.json>";
+// Webapp Manifest https://w3c.github.io/manifest/
+$metadata .= "\n<link rel=manifest href=$path/manifest.webmanifest>";
 
 // SVG favicon https://github.com/whatwg/html/issues/110
 $metadata .= "\n<link rel=mask-icon href=$path/icon.svg>";
