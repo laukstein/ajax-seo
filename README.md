@@ -4,7 +4,6 @@
 Demo <https://lab.laukstein.com/ajax-seo>
 
     as { // Readable API
-        // The focused DOM Element based on as.url
         activeElement: a.active,
 
         // Google Analytics ID (optional)
@@ -29,7 +28,7 @@ Demo <https://lab.laukstein.com/ajax-seo>
         url: "https://lab.laukstein.com/ajax-seo/history",
 
         // Ajax SEO version
-        version: "5.3.0",
+        version: "5.4.0",
 
         // Maximal width of device adaptation
         viewportWidth: 720

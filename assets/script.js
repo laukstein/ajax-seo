@@ -1,109 +1,67 @@
-// Detect DOM change https://developers.google.com/web/updates/2012/02/Detect-DOM-changes-with-Mutation-Observers
+"use strict";
 
-(function (factory) {
-    "use strict";
-
-    // Initialize
-
-    // ES6 UMD http://jsrocks.org/2014/07/a-new-syntax-for-modules-in-es6/
-    if (typeof define === "function" && define.amd) {
-        // AMD
-        define(["as"], factory);
-    } else if (typeof module === "object" && module.exports) {
-        // Node.js, CommonJS
-        module.exports = factory();
-    } else {
-        // Browser globals
-        window.as = factory();
-    }
-}(function () {
-    "use strict";
-
-    var w = window,
-        d = document,
+(function (w) {
+    var d = document,
         n = navigator,
         h = history,
         l = location,
         ui = {
-            html: d.documentElement,
-            wrapper: d.getElementById("wrapper"),
-
-            // Expandable navigation
             bar: d.getElementById("bar"),
             collapse: d.getElementById("collapse"),
             focusin: d.getElementById("focusin"),
             focusout: d.getElementById("focusout"),
-            reset: d.getElementById("reset"),
-
-            // Top navigation and content
+            html: d.documentElement,
             nav: d.getElementById("nav"),
+            output: d.getElementById("output"),
+            reset: d.getElementById("reset"),
             status: d.getElementById("status"),
-            output: d.getElementById("output")
+            wrapper: d.getElementById("wrapper")
         },
         has = {
             // classList supported since IE10
             classList: "classList" in ui.html,
-            // DOM 2 spec: element.click() defined only for HTMLInputElement http://www.w3.org/TR/DOM-Level-2-HTML/ecma-script-binding.html
+            // DOM 2 spec: element.click() defined only for HTMLInputElement
+            // http://www.w3.org/TR/DOM-Level-2-HTML/ecma-script-binding.html
             click: "click" in ui.html,
             // DNT (Do Not Track)
             dnt: n.doNotTrack === "1" || w.doNotTrack === "1" || n.msDoNotTrack === "1",
             // Error handler for Ajax requests
-            error: {
-                e: null
-            },
+            error: {e: null},
             // addEventListener supported since IE9
             eventListener: !!d.addEventListener,
+            eventListenerOptions: (function () {
+                // Resource http://tonsky.me/blog/chrome-intervention/
+                // Spec issue https://github.com/whatwg/dom/issues/491
+                var supports = false;
+
+                try {
+                    d.addEventListener && addEventListener("test", null, {
+                        get passive() {
+                            supports = true;
+                        }
+                    });
+                } catch (e) {}
+
+                return supports;
+            }()),
             // Pointer Events vs touch vs click
             // https://bugs.chromium.org/p/chromium/issues/detail?id=152149
             // http://www.stucox.com/blog/you-cant-detect-a-touchscreen/
-            pointer: n.pointerEnabled ? "pointerdown" : (n.maxTouchPoints > 0 || w.matchMedia && w.matchMedia("(pointer: coarse)").matches || "ontouchstart" in w ? "touchstart" : "mousedown"),
+            pointer: n.pointerEnabled ? "pointerdown" : n.maxTouchPoints > 0 || (w.matchMedia ?
+                w.matchMedia("(pointer: coarse)").matches : "ontouchstart" in w) ? "touchstart" : "mousedown",
             valid: function (fn) {
-                // V8 optimized try-catch http://stackoverflow.com/questions/19727905/in-javascript-is-it-expensive-to-use-try-catch-blocks-even-if-an-exception-is-n
+                // V8 optimized try-catch http://stackoverflow.com/questions/19727905
                 try {
                     return fn();
                 } catch (e) {
                     this.error.e = e;
+
                     return this.error;
                 }
             }
         },
-        api = { // Readable API
-            // String, semantic versioning http://semver.org (MAJOR.MINOR.PATCH)
-            version: "5.3.0",
-
-            // Number (maximal width of device adaptation)
-            viewportWidth: 720,
-
-            // String (Google Analytics ID "UA-XXXX-Y")
-            analytics: undefined,
-
-            // Boolean (respect user agent DNT)
-            dnt: true,
-
-            // String (Google Analytics domain)
-            domain: undefined,
-
-            // String (project root)
-            origin: (function () {
-                var currentScript = d.currentScript || (function () {
-                        var script = d.getElementsByTagName("script");
-                        return script[script.length - 1];
-                    }()),
-                    origin = currentScript.src.split("#")[1] || "/ajax-seo";
-
-                if (origin === "/") {
-                    return l.origin;
-                } else {
-                    return decodeURIComponent(d.URL).replace(new RegExp("(" + origin + ")(.*)$"), "$1");
-                }
-            }()),
-
-            // String (current page URL) http://jsperf.com/document-url-vs-window-location-href/2
-            url: decodeURIComponent(d.URL),
-
-            // String (current page title)
-            title: d.title,
-
+        // Readable API
+        api = {
             // Element or null (the focused DOM Element based on as.url)
             activeElement: (function () {
                 var arr = d.querySelectorAll ? d.querySelectorAll("[href]:not([target=_blank])") : [],
@@ -120,17 +78,55 @@
                 return null;
             }()),
 
+            // String (Google Analytics ID "UA-XXXX-Y")
+            // analytics: undefined,
+
+            // Boolean (respect user agent DNT)
+            dnt: false,
+
+            // String (Google Analytics domain)
+            // domain: undefined,
+
             // Boolean (detect if shown error page)
-            error: undefined
+            // error: undefined,
+
+            // String (project root)
+            origin: (function () {
+                var currentScript = d.currentScript || (function () {
+                        var script = d.getElementsByTagName("script");
+
+                        return script[script.length - 1];
+                    }()),
+                    origin = currentScript.src.split("#")[1] || "/ajax-seo";
+
+                if (origin === "/") {
+                    return l.origin;
+                }
+
+                return decodeURIComponent(d.URL).replace(new RegExp("(" + origin + ")(.*)$"), "$1");
+            }()),
+
+            // String (current page title)
+            title: d.title,
+
+            // String (current page URL) http://jsperf.com/document-url-vs-window-location-href/2
+            url: decodeURIComponent(d.URL),
+
+            // String, semantic versioning http://semver.org (MAJOR.MINOR.PATCH)
+            version: "5.4.0",
+
+            // Number (maximal width of device adaptation)
+            viewportWidth: 720
         },
         console = w.console || {
             error: function () {
-                return;
+                return arguments;
             }
         },
         event = {},
         statusTimer,
-        client, // XMLHttpRequest
+        // XMLHttpRequest
+        client,
         root;
 
     if (!has.eventListener) {
@@ -138,6 +134,7 @@
         api.error = "Browser missing EventListener support";
 
         console.error(api.error, "http://caniuse.com/#feat=addeventlistener");
+
         return api;
     } else if (api.analytics && (!has.dnt || !api.dnt)) {
         try {
@@ -170,10 +167,10 @@
             load: function () {
                 if (typeof w.ga === "function") {
                     // Disabling cookies
-                    // https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#disabling_cookies
+                    // https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id
                     ga("create", api.analytics, api.domain, {
-                        storage: "none",
-                        clientId: localStorage.gaClientId
+                        clientId: localStorage.gaClientId,
+                        storage: "none"
                     });
 
                     if (!localStorage.gaClientId) {
@@ -210,7 +207,7 @@
         };
 
         ui.analytics = d.createElement("script");
-        ui.analytics.src = "//www.google-analytics.com/analytics.js";
+        ui.analytics.src = "https://www.google-analytics.com/analytics.js";
         ui.analytics.id = event.analytics.timestamp;
 
         d.body.appendChild(ui.analytics);
@@ -237,6 +234,7 @@
                             index = classes.indexOf(value);
 
                         fn(classes, index, value);
+
                         self.className = classes.join(" ");
                     };
                 }
@@ -245,18 +243,18 @@
                     add: update(function (classes, index, value) {
                         ~index || classes.push(value);
                     }),
-                    remove: update(function (classes, index) {
-                        ~index && classes.splice(index, 1);
-                    }),
+                    contains: function (value) {
+                        return !!~classlist().indexOf(value);
+                    },
                     item: function (index) {
                         return classlist()[index] || null;
                     },
+                    remove: update(function (classes, index) {
+                        ~index && classes.splice(index, 1);
+                    }),
                     toggle: update(function (classes, index, value) {
                         ~index ? classes.splice(index, 1) : classes.push(value);
-                    }),
-                    contains: function (value) {
-                        return !!~classlist().indexOf(value);
-                    }
+                    })
                 };
             }
         });
@@ -266,9 +264,12 @@
         // EventListener and CSS media query supported in IE9
 
         // Convert NodeList to Array http://jsperf.com/convert-nodelist-to-array
-        // https://davidwalsh.name/array-from http://toddmotto.com/a-comprehensive-dive-into-nodelists-arrays-converting-nodelists-and-understanding-the-dom/
+        // https://davidwalsh.name/array-from
+        // http://toddmotto.com/a-comprehensive-dive-into-nodelists-arrays-converting-
+        //     nodelists-and-understanding-the-dom/
         // ES6 Array spread operator [...ui.nav.querySelectorAll("a")]
-        ui.nodeList = ui.nav && Array.from && Array.from(ui.nav.querySelectorAll("a")) || [].slice.call(ui.nav.querySelectorAll("a"));
+        ui.nodeList = ui.nav && ui.nav.querySelectorAll("a");
+        ui.nodeList = ui.nodeList && (Array.from && Array.from(ui.nodeList) || [].slice.call(ui.nodeList));
         has.touch = has.pointer === "touchstart";
 
         ui.closest = function (el, selector) {
@@ -276,7 +277,10 @@
                 return null;
             } else if (el.closest) {
                 // http://jsperf.com/native-vs-jquery-closest/3
-                // Native element.closest(selectors) standard https://dom.spec.whatwg.org/#dom-element-closest and https://developer.mozilla.org/en-US/docs/Web/API/Element.closest similar to $(selector).closest(selector), supported on Chrome 40 http://blog.chromium.org/2014/12/chrome-40-beta-powerful-offline-and.html
+                // Native element.closest(selectors) standard https://dom.spec.whatwg.org/#dom-element-closest
+                // https://developer.mozilla.org/en-US/docs/Web/API/Element.closest
+                // similar to $(selector).closest(selector)
+                // supported on Chrome 40 http://blog.chromium.org/2014/12/chrome-40-beta-powerful-offline-and.html
                 return el.closest(selector);
             }
 
@@ -285,9 +289,9 @@
             while (el && el.nodeType === 1) {
                 if (matches.call(el, selector)) {
                     return el;
-                } else {
-                    el = el.parentNode;
                 }
+
+                el = el.parentNode;
             }
 
             return null;
@@ -299,10 +303,9 @@
                 }
 
                 return el && el.tagName === "A" && el.href && el.target !== "_blank" ? el : null;
-
-            } else {
-                return null;
             }
+
+            return null;
         };
 
         event.nav = {
@@ -313,8 +316,10 @@
             },
             toggleReal: function (e) {
                 if (ui.status.classList.contains("expand")) {
-                    // preventDefault is required, otherwise when focused element, click will colapse and expand
-                    e.preventDefault();
+                    if (e.type !== "touchstart" || !has.eventListenerOptions) {
+                        // preventDefault is required, otherwise when focused element, click will colapse and expand
+                        e.preventDefault();
+                    }
 
                     event.nav.preventPassFocus = true;
 
@@ -327,7 +332,11 @@
                         ui.status.classList.remove("expand");
                     }, 10);
                 } else if (e.type === "touchstart") {
-                    e.preventDefault();
+                    if (!has.eventListenerOptions) {
+                        // Unable to preventDefault inside passive event listener invocation
+                        e.preventDefault();
+                    }
+
                     event.nav.expand();
                 } else {
                     setTimeout(function () {
@@ -419,12 +428,13 @@
                     event.nav.disable(e);
                 }
             },
-            init: function () {
+            init: function (eventName) {
                 var self = event.nav;
 
-                if (ui.wrapper.offsetWidth <= api.viewportWidth ? !self.events : self.events) {
+                if (eventName && eventName !== has.pointer || (ui.wrapper.offsetWidth <= api.viewportWidth ? !self.events : self.events)) {
                     self.events = !self.events;
                     self.listener = self.events ? "addEventListener" : "removeEventListener";
+                    self.options = has.pointer === "touchstart" && has.eventListenerOptions ? {passive: true} : true;
 
                     ui.bar[self.listener](has.pointer, self.toggleReal, true);
 
@@ -433,7 +443,9 @@
                     } else {
                         ui.focusout.removeAttribute("tabindex");
                     }
-                    if (!has.touch) {
+                    if (has.touch) {
+                        ui.nav[self.listener]("click", self.collapse, true);
+                    } else {
                         ui.bar[self.listener]("focus", self.focus, true);
                         ui.bar[self.listener]("keydown", self.keydown, true);
                         ui.focusin[self.listener]("blur", self.disable, true);
@@ -449,16 +461,26 @@
                         ui.collapse[self.listener]("blur", self.disable, true);
                         ui.reset[self.listener]("blur", self.disable, true);
                         ui.nav[self.listener](has.pointer, self.collapse, true);
-                    } else {
-                        ui.nav[self.listener]("click", self.collapse, true);
                     }
 
                     ui.reset[self.listener](has.pointer, self.collapse, true);
+
+                    if (eventName) {
+                        has.pointer = eventName;
+                        has.touch = has.pointer === "touchstart";
+                        event.nav.init();
+                    }
                 }
             }
         };
 
         event.nav.init();
+
+        if (has.pointer !== "pointerdown" && w.matchMedia) {
+            w.matchMedia("(pointer: coarse)").addListener(function (e) {
+                event.nav.init(e.matches ? "touchstart" : "mousedown");
+            });
+        }
 
         w.addEventListener("resize", function () {
             if (event.nav.timeoutScale) {
@@ -472,6 +494,7 @@
         api.error = "Missing HTML Elements";
 
         console.error(api.error, "https://github.com/laukstein/ajax-seo");
+
         return api;
     }
 
@@ -480,156 +503,11 @@
         api.error = "Browser missing History API support";
 
         console.error(api.error, "http://caniuse.com/#feat=history");
+
         return api;
     }
 
     root = {
-        filter: function (srt, noLowerCase) {
-            if (srt) {
-                // Remove hash from URL http://jsperf.com/url-replace-vs-match/2
-                srt = decodeURIComponent(srt).replace(/#.*$/, "");
-                return noLowerCase ? srt : srt.toLowerCase();
-            }
-        },
-        reset: function () {
-            if (statusTimer) {
-                clearTimeout(statusTimer);
-            }
-            if (ui.status && ui.status.classList.contains("status-start")) {
-                ui.status.classList.add("status-done");
-            }
-        },
-        click: function (el) {
-            if (el) {
-                if (has.click) {
-                    el.click();
-                } else {
-                    // Old Webkit legacy, alternative https://developer.mozilla.org/en-US/docs/Web/API/Document/elementsFromPoint
-                    var evt = d.createEvent("MouseEvents");
-
-                    evt.initEvent("click", true, true);
-                    el.dispatchEvent(evt);
-                }
-            }
-        },
-        nav: {
-            nodeList: ui.nodeList,
-            // Element or null
-            activeElement: function () {
-                if (root.nav.nodeList) {
-                    var i;
-
-                    // Loop performance https://www.youtube.com/watch?v=taaEzHI9xyY#t=3042 http://www.impressivewebs.com/javascript-for-loop/ http://jsperf.com/array-length-vs-cached/19
-                    for (i = 0; i < root.nav.nodeList.length; i += 1) {
-                        if (root.filter(root.nav.nodeList[i].href) === api.url) {
-                            return root.nav.nodeList[i];
-                        }
-                    }
-                }
-
-                return null;
-            }
-        },
-        update: function (data, track, activeElement) {
-            if (data) {
-                if (!track) {
-                    client.abort();
-                } else {
-                    root.reset();
-                }
-
-                if (root.nav.nodeList) {
-                    ui.focus = ui.nav.querySelector(".focus");
-                    ui.active = ui.nav.querySelector(".active");
-                    ui.error = ui.nav.querySelector(".error");
-
-                    if (ui.focus) {
-                        ui.focus.classList.remove("focus");
-                    }
-                    if (ui.active) {
-                        ui.active.classList.remove("active");
-                    }
-                    if (ui.error) {
-                        ui.error.classList.remove("error");
-                    }
-                }
-
-                api.url = root.filter(d.URL);
-                api.activeElement = activeElement || root.nav.activeElement();
-
-                if (api.activeElement) {
-                    api.activeElement.focus();
-                    api.activeElement.classList.add(api.error ? "error" : "active");
-
-                    if (api.error) {
-                        api.activeElement.classList.add("x-error");
-                    }
-                }
-
-                if (api.error) {
-                    ui.status.classList.add("error");
-                    ui.status.classList.add("status-error");
-                } else {
-                    ui.status.classList.remove("error");
-                    ui.status.classList.remove("status-error");
-                }
-
-                d.title = api.title = data.title;
-
-                // Fixing scrollTop with Document.scrollingElement https://dev.opera.com/articles/fixing-the-scrolltop-bug/ http://dev.w3.org/csswg/cssom-view/#dom-document-scrollingelement
-                var scrollingElement = d.scrollingElement || ui.html.scrollTop || d.body;
-                scrollingElement.scrollTop = 0;
-
-                ui.output.innerHTML = data.content;
-
-                if (l.hash) {
-                    l.replace(api.url + l.hash);
-                }
-                if (event.analytics) {
-                    event.analytics.track();
-                }
-
-                delete root.inprogress;
-            }
-        },
-        retry: false,
-        popstate: function (e) {
-            var state = e.state,
-                activeElement;
-
-            root.reset();
-
-            root.retry = !state;
-            api.error = state && state.error || false;
-
-            if (!state && e.srcElement.location.pathname !== e.target.location.pathname) {
-                // retry, prevented on hash change https://gist.github.com/mahemoff/1591495
-                api.url = root.filter(d.URL);
-                activeElement = root.nav.activeElement();
-
-                root.click(activeElement);
-            }
-
-            // Chrome bug: XMLHttpRequest error avoids first popstate cache and recreates XMLHttpRequest (perhaps https://bugs.chromium.org/p/chromium/issues/detail?id=371549 will fix it)
-            // 1. Fire XMLHttpRequest by clicking on different links till some of links returns an error
-            // 2. Navigate history back - Chrome will recreate XMLHttpRequest for the first h.go -1. History -2, -3, etc. will return from cache accurately. Firefox correctly returns all from cache.
-            root.update(state, false, activeElement);
-        },
-        loadstart: function () {
-            if (ui.status) {
-                ui.status.classList.remove("status-done");
-                ui.status.classList.remove("status-start");
-
-                if (statusTimer) {
-                    clearTimeout(statusTimer);
-                }
-
-                statusTimer = setTimeout(function () {
-                    // Will be avoided if content already in cache
-                    ui.status.classList.add("status-start");
-                }, 0);
-            }
-        },
         callback: function (data) {
             api.error = data.error || false;
             api.activeElement = root.nav.activeElement() || api.activeElement;
@@ -637,34 +515,77 @@
             h.replaceState(data, data.title, null);
             root.update(data, true, api.activeElement);
         },
-        load: function () {
-            var response = this.response;
-            response = has.valid(function () {
-                return JSON.parse(response);
-            });
+        click: function (el) {
+            var evt;
 
-            root.callback(response === has.error ? {
-                error: true,
-                title: "Server error",
-                content: "<h1>Whoops...</h1><p>Experienced server error. Try to <a class=x-error href=" + api.url + ">reload</a>" + (api.url === api.origin ? "" : " or head to <a href=" + api.origin + ">home page</a>") + "."
-            } : response);
-        },
-        resetStatus: function (e) {
-            if (ui.status) {
-                if (ui.status.classList.contains("status-error") && (!e || !api.error)) {
-                    ui.status.classList.remove("status-error");
-                }
-                if (ui.status.classList.contains("status-done")) {
-                    ui.status.classList.remove("status-start");
-                    ui.status.classList.remove("status-done");
+            if (el) {
+                if (has.click) {
+                    el.click();
+                } else {
+                    // Old Webkit legacy, alternative
+                    // https://developer.mozilla.org/en-US/docs/Web/API/Document/elementsFromPoint
+                    evt = d.createEvent("MouseEvents");
+
+                    evt.initEvent("click", true, true);
+                    el.dispatchEvent(evt);
                 }
             }
         },
+        filter: function (srt, noLowerCase) {
+            if (srt) {
+                // Remove hash from URL http://jsperf.com/url-replace-vs-match/2
+                srt = decodeURIComponent(srt).replace(/#.*$/, "");
+
+                return noLowerCase ? srt : srt.toLowerCase();
+            }
+        },
+        init: function () {
+            if (ui.status) {
+                // Loading status reset
+                ui.status.addEventListener("transitionend", root.resetStatus, true);
+            }
+
+            setTimeout(function () {
+                // Old Webkit initial run popstate bug
+                // https://bugs.chromium.org/p/chromium/issues/detail?id=63040, fixed on Chrome 34
+                //
+                // Chrome popstate bug with hashchange: multiple clicks on same hash URL will save lots of history
+                // Chrome repeatedly repeated same hash URL history/popstate by onclick on same URL
+                // https://bugs.chromium.org/p/chromium/issues/detail?id=371549 http://jsbin.com/371549/1
+                // http://jsperf.com/onpopstate-vs-addeventlistener
+                w.onpopstate = root.popstate;
+            }, 150);
+
+            // Initial popstate state
+            h.replaceState({
+                error: api.error,
+                title: api.title,
+                content: ui.output.innerHTML
+            }, api.title, api.url);
+
+            // XMLHttpRequest https://xhr.spec.whatwg.org
+            client = new XMLHttpRequest();
+            // // IE11: SCRIPT5022: SyntaxError
+            // client.open("GET", null);
+            // // IE11: SCRIPT5022: InvalidStateError https://connect.microsoft.com/IE/feedback/details/794808
+            // client.responseType = "json";
+            // // would loop 4 times
+            // client.addEventListener("readystatechange", root.callback, true);
+            client.addEventListener("loadstart", root.loadstart, true);
+            client.addEventListener("load", root.load, true);
+            client.addEventListener("abort", root.reset, true);
+
+            // http://jsperf.com/addeventlistener-usecapture-true-vs-false
+            ui.html.addEventListener("click", root.listener, true);
+        },
         listener: function (e) {
+            var url = {},
+                patt,
+                el;
+
             if (e) {
-                var el = ui.anchor(e.target),
-                    patt = new RegExp("^" + api.origin + "($|#|/.{1,}).*", "i"),
-                    url = {};
+                el = ui.anchor(e.target);
+                patt = new RegExp("^" + api.origin + "($|#|/.{1,}).*", "i");
 
                 // Run script only if has a link and matches "api.origin"
                 if (!el || !patt.test(el.href.replace(/\/$/, ""))) {
@@ -681,13 +602,17 @@
                 if (el.href.toLowerCase() === api.url.toLowerCase()) {
                     // Is same URL
                     e.preventDefault();
+
                     return;
                 }
 
                 // Lowercase URL
                 // Remove multiple trailing slashes except to protocol
                 // Remove trailing slash from URL end
-                api.url = el.href.toLowerCase().replace(/(\/)+(?=\1)/g, "").replace(/(^https?:(\/))/, "$1/").replace(/\/$/, "");
+                api.url = el.href.toLowerCase()
+                    .replace(/(\/)+(?=\1)/g, "")
+                    .replace(/(^https?:(\/))/, "$1/")
+                    .replace(/\/$/, "");
                 url.attr = root.filter(api.url, true);
                 url.url = decodeURIComponent(d.URL);
                 url.address = root.filter(url.url);
@@ -723,7 +648,8 @@
                     api.error = api.activeElement.classList.contains("x-error");
                 }
 
-                // Node.textContent performs faster that Node.innerText http://www.kellegous.com/j/2013/02/27/innertext-vs-textcontent/
+                // Node.textContent performs faster that Node.innerText
+                // http://www.kellegous.com/j/2013/02/27/innertext-vs-textcontent/
                 api.title = api.activeElement.textContent;
 
                 if (api.error && url.address === url.url) {
@@ -732,7 +658,8 @@
                     h.pushState(null, api.title, api.url);
                 }
 
-                if (!api.error && !root.retry && (url.attr === url.address) || api.activeNav && api.activeElement.classList.contains("focus")) {
+                if (!api.error && !root.retry && (url.attr === url.address) ||
+                    api.activeNav && api.activeElement.classList.contains("focus")) {
                     // Avoid API retry on same link if has not error status
                     return;
                 }
@@ -770,8 +697,11 @@
                 client.open("GET", api.origin + "/api" + url.attr.replace(new RegExp("^" + api.origin, "i"), ""));
 
                 if (api.error) {
-                    // Avoid cache http://stackoverflow.com/questions/1046966/whats-the-difference-between-cache-control-max-age-0-and-no-cache
-                    // Firefox bug https://bugzilla.mozilla.org/show_bug.cgi?id=706806 https://bugzilla.mozilla.org/show_bug.cgi?id=428916 https://bugzilla.mozilla.org/show_bug.cgi?id=443098
+                    // Avoid cache http://stackoverflow.com/questions/1046966
+                    // Firefox bug
+                    // https://bugzilla.mozilla.org/show_bug.cgi?id=706806
+                    // https://bugzilla.mozilla.org/show_bug.cgi?id=428916
+                    // https://bugzilla.mozilla.org/show_bug.cgi?id=443098
                     // client.setRequestHeader("Cache-Control", "no-cache");
                     client.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 2000 00:00:00 GMT");
                 }
@@ -781,41 +711,161 @@
                 client.send();
             }
         },
-        init: function () {
+        load: function () {
+            var response = this.response;
+
+            response = has.valid(function () {
+                return JSON.parse(response);
+            });
+
+            root.callback(response === has.error ? {
+                error: true,
+                title: "Server error",
+                content: "<h1>Whoops...</h1><p>Experienced server error. Try to <a class=x-error href=" +
+                    api.url + ">reload</a>" + (api.url === api.origin ? "" :
+                    " or head to <a href=" + api.origin + ">home page</a>") + "."
+            } : response);
+        },
+        loadstart: function () {
             if (ui.status) {
-                // Loading status reset
-                ui.status.addEventListener("transitionend", root.resetStatus, true);
+                ui.status.classList.remove("status-done");
+                ui.status.classList.remove("status-start");
+
+                if (statusTimer) {
+                    clearTimeout(statusTimer);
+                }
+
+                statusTimer = setTimeout(function () {
+                    // Will be avoided if content already in cache
+                    ui.status.classList.add("status-start");
+                }, 0);
+            }
+        },
+        nav: {
+            // Element or null
+            activeElement: function () {
+                var i;
+
+                if (root.nav.nodeList) {
+                    // Loop performance https://www.youtube.com/watch?v=taaEzHI9xyY#t=3042
+                    // http://www.impressivewebs.com/javascript-for-loop/ http://jsperf.com/array-length-vs-cached/19
+                    for (i = 0; i < root.nav.nodeList.length; i += 1) {
+                        if (root.filter(root.nav.nodeList[i].href) === api.url) {
+                            return root.nav.nodeList[i];
+                        }
+                    }
+                }
+
+                return null;
+            },
+            nodeList: ui.nodeList
+        },
+        popstate: function (e) {
+            var state = e.state,
+                activeElement;
+
+            root.reset();
+
+            root.retry = !state;
+            api.error = state && state.error || false;
+
+            if (!state && e.srcElement.location.pathname !== e.target.location.pathname) {
+                // retry, prevented on hash change https://gist.github.com/mahemoff/1591495
+                api.url = root.filter(d.URL);
+                activeElement = root.nav.activeElement();
+
+                root.click(activeElement);
             }
 
-            setTimeout(function () {
-                // Old Webkit initial run popstate bug https://bugs.chromium.org/p/chromium/issues/detail?id=63040, fixed on Chrome 34
-                // Chrome popstate bug with hashchange: multiple clicks on same hash URL will save lots of history
-                // Chrome repeatedly repeated same hash URL history/popstate by onclick on same URL https://bugs.chromium.org/p/chromium/issues/detail?id=371549 http://jsbin.com/371549/1
-                // http://jsperf.com/onpopstate-vs-addeventlistener
-                w.onpopstate = root.popstate;
-            }, 150);
+            // Chrome bug: XMLHttpRequest error avoids first popstate cache and recreates XMLHttpRequest
+            // (perhaps https://bugs.chromium.org/p/chromium/issues/detail?id=371549 will fix it)
+            // 1. Fire XMLHttpRequest by clicking on different links till some of links returns an error
+            // 2. Navigate history back - Chrome will recreate XMLHttpRequest for the first h.go -1.
+            // History -2, -3, etc. will return from cache accurately. Firefox correctly returns all from cache.
+            root.update(state, false, activeElement);
+        },
+        reset: function () {
+            if (statusTimer) {
+                clearTimeout(statusTimer);
+            }
+            if (ui.status && ui.status.classList.contains("status-start")) {
+                ui.status.classList.add("status-done");
+            }
+        },
+        resetStatus: function (e) {
+            if (ui.status) {
+                if (ui.status.classList.contains("status-error") && (!e || !api.error)) {
+                    ui.status.classList.remove("status-error");
+                }
+                if (ui.status.classList.contains("status-done")) {
+                    ui.status.classList.remove("status-start");
+                    ui.status.classList.remove("status-done");
+                }
+            }
+        },
+        retry: false,
+        update: function (data, track, activeElement) {
+            if (data) {
+                if (track) {
+                    root.reset();
+                } else {
+                    client.abort();
+                }
+                if (root.nav.nodeList) {
+                    ui.focus = ui.nav.querySelector(".focus");
+                    ui.active = ui.nav.querySelector(".active");
+                    ui.error = ui.nav.querySelector(".error");
 
-            // Initial popstate state
-            h.replaceState({
-                error: api.error,
-                title: api.title,
-                content: ui.output.innerHTML
-            }, api.title, api.url);
+                    if (ui.focus) {
+                        ui.focus.classList.remove("focus");
+                    }
+                    if (ui.active) {
+                        ui.active.classList.remove("active");
+                    }
+                    if (ui.error) {
+                        ui.error.classList.remove("error");
+                    }
+                }
 
-            // XMLHttpRequest https://xhr.spec.whatwg.org
-            client = new XMLHttpRequest();
-            // // IE11: SCRIPT5022: SyntaxError
-            // client.open("GET", null);
-            // // IE11: SCRIPT5022: InvalidStateError https://connect.microsoft.com/IE/feedback/details/794808
-            // client.responseType = "json";
-            // // would loop 4 times
-            // client.addEventListener("readystatechange", root.callback, true);
-            client.addEventListener("loadstart", root.loadstart, true);
-            client.addEventListener("load", root.load, true);
-            client.addEventListener("abort", root.reset, true);
+                api.url = root.filter(d.URL);
+                api.activeElement = activeElement || root.nav.activeElement();
 
-            // http://jsperf.com/addeventlistener-usecapture-true-vs-false
-            ui.html.addEventListener("click", root.listener, true);
+                if (api.activeElement) {
+                    api.activeElement.focus();
+                    api.activeElement.classList.add(api.error ? "error" : "active");
+
+                    if (api.error) {
+                        api.activeElement.classList.add("x-error");
+                    }
+                }
+                if (api.error) {
+                    ui.status.classList.add("error");
+                    ui.status.classList.add("status-error");
+                } else {
+                    ui.status.classList.remove("error");
+                    ui.status.classList.remove("status-error");
+                }
+
+                d.title = api.title = data.title;
+
+                var scrollingElement = d.scrollingElement || ui.html.scrollTop || d.body;
+
+                // Fixing scrollTop with Document.scrollingElement
+                // https://dev.opera.com/articles/fixing-the-scrolltop-bug/
+                // http://dev.w3.org/csswg/cssom-view/#dom-document-scrollingelement
+                scrollingElement.scrollTop = 0;
+
+                ui.output.innerHTML = data.content;
+
+                if (l.hash) {
+                    l.replace(api.url + l.hash);
+                }
+                if (event.analytics) {
+                    event.analytics.track();
+                }
+
+                delete root.inprogress;
+            }
         }
     };
 
@@ -832,5 +882,5 @@
     api.error = ui.status && ui.status.classList.contains("status-error");
 
     // Return readable API
-    return api;
-}));
+    w.as = api;
+}(this));
