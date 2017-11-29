@@ -4,6 +4,7 @@
 Demo <https://lab.laukstein.com/ajax-seo>
 
     as { // Readable API
+        // Active link DOM Element
         activeElement: a.active,
 
         // Google Analytics ID (optional)
