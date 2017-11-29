@@ -52,10 +52,11 @@ if ($conn) {
 }
 
 if (empty($_GET['api'])) {
-    // Prevent XSS with CSP https://w3c.github.io/webappsec-csp/ https://content-security-policy.com
+    // Secure with CSP https://w3c.github.io/webappsec-csp/ https://content-security-policy.com
     header("Content-Security-Policy: default-src 'self' 'unsafe-inline'; script-src" .
         ($debug ? null : " 'unsafe-inline'") . ($cdn_host ? " $cdn_host" : " 'self'") .
-        (ga ? " www.google-analytics.com; img-src 'self' www.google-analytics.com" : null));
+        (ga ? " www.google-analytics.com; img-src 'self' www.google-analytics.com" : null) .
+        "; frame-ancestors 'none'");
     // Omit Referrer https://w3c.github.io/webappsec-referrer-policy/
     header('Referrer-Policy: no-referrer');
 }
