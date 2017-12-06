@@ -871,7 +871,7 @@ option[value=""], /* First element as placeholder, fails on IE */
         display: inline-block;
     }
 }
-/* @media (min-width: 0\0) { // IE9-10
+/* @media (min-width: 0\0) { // IE9+
     input {
         // IE10 Long text overflowing a padding http://jsbin.com/kabeqixogi/1, https://connect.microsoft.com/IE/Feedback/Details/788605
         border: 0 solid transparent;
