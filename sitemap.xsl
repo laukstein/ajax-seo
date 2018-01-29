@@ -1,12 +1,4 @@
-<?php
-//
-// Sitemap stylesheet http://www.w3.org/TR/xslt-30/
-//
-
-include 'content/config.php';
-include 'content/cache.php'; cache::me();
-
-echo '<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html>
 <html xsl:version="3.0"
       xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9"
@@ -118,7 +110,7 @@ dd > a {
         <xsl:variable name="url" select="sitemap:loc"/>
         <xsl:variable name="image" select="image:image/image:loc"/>
         <xsl:if test="string($lastmod)">
-            <time datetime="{$lastmod}"><xsl:value-of select="concat(substring($lastmod, 0, 5), concat(\'/\', substring($lastmod, 6, 2)), concat(\'/\', substring($lastmod, 9, 2)), concat(\' \', substring($lastmod, 12, 5)))"/></time>
+            <time datetime="{$lastmod}"><xsl:value-of select="concat(substring($lastmod, 0, 5), concat('/', substring($lastmod, 6, 2)), concat('/', substring($lastmod, 9, 2)), concat(' ', substring($lastmod, 12, 5)))"/></time>
         </xsl:if>
         <xsl:if test="string($url)">
             <a href="{$url}" tabindex="-1"></a>
@@ -134,4 +126,4 @@ dd > a {
     </dd>
     </xsl:for-each>
 </dl>
-</html>';
+</html>

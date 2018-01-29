@@ -1,6 +1,7 @@
 <?php
 //
 // Sitemap https://support.google.com/webmasters/answer/183668
+// Sitemap stylesheet http://www.w3.org/TR/xslt-30/
 // 50,000 URLs or maximum size of 10MB http://googlewebmastercentral.blogspot.com/2014/10/best-practices-for-xml-sitemaps-rssatom.html
 //
 
