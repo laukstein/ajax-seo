@@ -19,7 +19,7 @@ if ($stmt = $mysqli->prepare('SELECT url, GREATEST(modified, created) AS date FR
     $stmt->execute();
     $stmt->bind_result($url, $date);
 
-    while ($stmt->fetch()) echo "\n    <url>\n        <loc>$scheme://$host$path" . (strlen($url) ? "/$url" : null) . "</loc>\n        <lastmod>" . date('Y-m-d\TH:i\Z', strtotime($date)) . "</lastmod>\n    </url>";
+    while ($stmt->fetch()) echo "\n    <url>\n        <loc>$scheme://$host$path" . (strlen($url) ? "/$url" : null) . "</loc>\n        <lastmod>" . gmdate('c', strtotime($date)) . "</lastmod>\n    </url>";
 
     $stmt->free_result();
     $stmt->close();
