@@ -60,7 +60,7 @@ if (empty($_GET['api'])) {
         "; img-src 'self'" . ($cdn_host ? " $cdn_host" : null) .
             (ga ? ' www.google-analytics.com' : null) .
         "; manifest-src 'self'" .
-        "; prefetch-src 'self" .
+        "; prefetch-src 'self'" .
         "; script-src " . ($cdn_host ? " $cdn_host" : " 'self'") .
             ($debug ? null : " 'unsafe-inline'") .
             (ga ? " www.google-analytics.com" : null) .
