@@ -778,7 +778,7 @@ div.noscroll {
 .pubdate {
     display: block;
     margin: .5em 0;
-    color: #aaa;
+    color: #999;
     font-size: .7em;
     font-family: tahoma, sans-serif;
 }
