@@ -53,7 +53,8 @@ if ($conn) {
 
 if (empty($_GET['api'])) {
     // Secure with CSP https://w3c.github.io/webappsec-csp/
-    header("Content-Security-Policy: default-src 'none'" .
+    header("Content-Security-Policy: base-uri 'none'" .
+        "; default-src 'none'" .
         "; connect-src 'self'" .
         "; frame-ancestors 'none'" .
         "; form-action 'none'" .
