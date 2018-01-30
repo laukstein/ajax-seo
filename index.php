@@ -52,11 +52,18 @@ if ($conn) {
 }
 
 if (empty($_GET['api'])) {
-    // Secure with CSP https://w3c.github.io/webappsec-csp/ https://content-security-policy.com
-    header("Content-Security-Policy: default-src 'self' 'unsafe-inline'; script-src" .
-        ($debug ? null : " 'unsafe-inline'") . ($cdn_host ? " $cdn_host" : " 'self'") .
-        (ga ? " www.google-analytics.com; img-src 'self' www.google-analytics.com" : null) .
-        "; frame-ancestors 'none'");
+    // Secure with CSP https://w3c.github.io/webappsec-csp/
+    header("Content-Security-Policy: default-src 'none'" .
+        "; connect-src 'self'" .
+        "; frame-ancestors 'none'" .
+        "; form-action 'none'" .
+        "; img-src 'self'" . ($cdn_host ? " $cdn_host" : null) .
+            (ga ? ' www.google-analytics.com' : null) .
+        "; manifest-src 'self'" .
+        "; script-src " . ($cdn_host ? " $cdn_host" : " 'self'") .
+            ($debug ? null : " 'unsafe-inline'") .
+            (ga ? " www.google-analytics.com" : null) .
+        "; style-src '" . ($debug ? 'self' : 'unsafe-inline') . "'");
     // Omit Referrer https://w3c.github.io/webappsec-referrer-policy/
     header('Referrer-Policy: no-referrer');
 }
