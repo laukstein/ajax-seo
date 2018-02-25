@@ -126,7 +126,7 @@ $adebug    = !empty($xdebug) && $xdebug === 'true' || debug ? ' checked' : null;
 // Content output
 $title     = 'Installation';
 $pagetitle = $gtitle . ' ' . $title;
-$content   = '<style scoped>.main{padding-top:1.2em}label{width:30%}input{width:70%}[type=checkbox]{width:auto}.n2{width:35%}button{width:100%}.reset{margin:1em 0}.reset label{width:auto}.error{color:#ff2121}@media (max-width:540px){label,input,.n2{width:100%}[type=checkbox]{width:auto}}</style>
+$content   = '<style nonce="MN+nJYptMzWJvlkA0FFLXQ==" scoped>.main{padding-top:1.2em}label{width:30%}input{width:70%}[type=checkbox]{width:auto}.n2{width:35%}button{width:100%}.reset{margin:1em 0}.reset label{width:auto}.error{color:#ff2121}@media (max-width:540px){label,input,.n2{width:100%}[type=checkbox]{width:auto}}</style>
 <form method=post>
     <h1>' . $pagetitle . '</h1>
     <dl>
