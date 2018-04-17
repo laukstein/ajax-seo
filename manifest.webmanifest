@@ -10,7 +10,6 @@ echo '{
     "lang": "en",
     "name": "Ajax SEO v5",
     "short_name": "Ajax SEO",
-    "version": "' . date('Y-m-d\TH:i\Z', date::all()) . '",
     "description": "Crawlable webapp framework for outstanding UX",
     "icons": [{
         "src": "' . $path . '/icon.svg",
