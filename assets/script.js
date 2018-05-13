@@ -328,7 +328,7 @@
 
                     setTimeout(function () {
                         ui.focusout.setAttribute("tabindex", 0);
-                        ui.collapse.focus();
+                        ui.collapse.focus({preventScroll: true});
                         ui.status.classList.remove("expand");
                     }, 10);
                 } else if (e.type === "touchstart") {
@@ -358,7 +358,7 @@
                     ui.focusout.removeAttribute("tabindex");
 
                     setTimeout(function () {
-                        ui.focusin.focus();
+                        ui.focusin.focus({preventScroll: true});
                     }, 10);
                 }
             },
@@ -399,7 +399,7 @@
                         ui.collapse.setAttribute("tabindex", 0);
 
                         setTimeout(function () {
-                            ui.collapse.focus();
+                            ui.collapse.focus({preventScroll: true});
                         }, 10);
                     }, 0);
                 }
@@ -415,7 +415,7 @@
                         ui.collapse.setAttribute("tabindex", 0);
 
                         setTimeout(function () {
-                            ui.collapse.focus();
+                            ui.collapse.focus({preventScroll: true});
                         }, 10);
                     }
                 }
@@ -424,7 +424,7 @@
                 if (event.nav.preventPassFocus) {
                     delete event.nav.preventPassFocus;
                 } else if (!ui.status.classList.contains("expand")) {
-                    ui.focusout.focus();
+                    ui.focusout.focus({preventScroll: true});
                     event.nav.disable(e);
                 }
             },
@@ -595,7 +595,7 @@
 
                 setTimeout(function () {
                     if (el !== d.activeElement) {
-                        el.focus();
+                        el.focus({preventScroll: true});
                     }
                 }, 0);
 
@@ -637,7 +637,7 @@
                     ui.reset.setAttribute("tabindex", 0);
 
                     setTimeout(function () {
-                        ui.reset.focus();
+                        ui.reset.focus({preventScroll: true});
                     }, 10);
                 }
 
@@ -831,7 +831,7 @@
                 api.activeElement = activeElement || root.nav.activeElement();
 
                 if (api.activeElement) {
-                    api.activeElement.focus();
+                    api.activeElement.focus({preventScroll: true});
                     api.activeElement.classList.add(api.error ? "error" : "active");
 
                     if (api.error) {
