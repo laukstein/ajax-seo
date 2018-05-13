@@ -29,21 +29,6 @@
             error: {e: null},
             // addEventListener supported since IE9
             eventListener: !!d.addEventListener,
-            eventListenerOptions: (function () {
-                // Resource http://tonsky.me/blog/chrome-intervention/
-                // Spec issue https://github.com/whatwg/dom/issues/491
-                var supports = false;
-
-                try {
-                    d.addEventListener && addEventListener("test", null, {
-                        get passive() {
-                            supports = true;
-                        }
-                    });
-                } catch (e) {}
-
-                return supports;
-            }()),
             // Pointer Events vs touch vs click
             // https://bugs.chromium.org/p/chromium/issues/detail?id=152149
             // http://www.stucox.com/blog/you-cant-detect-a-touchscreen/
@@ -317,7 +302,7 @@
             },
             toggleReal: function (e) {
                 if (ui.status.classList.contains("expand")) {
-                    if (e.type !== "touchstart" || !has.eventListenerOptions) {
+                    if (e.type !== "touchstart") {
                         // preventDefault is required, otherwise when focused element, click will colapse and expand
                         e.preventDefault();
                     }
@@ -333,11 +318,7 @@
                         ui.status.classList.remove("expand");
                     }, 10);
                 } else if (e.type === "touchstart") {
-                    if (!has.eventListenerOptions) {
-                        // Unable to preventDefault inside passive event listener invocation
-                        e.preventDefault();
-                    }
-
+                    e.preventDefault();
                     event.nav.expand();
                 } else {
                     setTimeout(function () {
@@ -435,7 +416,6 @@
                 if (eventName && eventName !== has.pointer || (ui.wrapper.offsetWidth <= api.viewportWidth ? !self.events : self.events)) {
                     self.events = !self.events;
                     self.listener = self.events ? "addEventListener" : "removeEventListener";
-                    self.options = has.pointer === "touchstart" && has.eventListenerOptions ? {passive: true} : true;
 
                     ui.bar[self.listener](has.pointer, self.toggleReal, true);
 
