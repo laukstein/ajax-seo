@@ -166,9 +166,11 @@
             },
             load: function () {
                 if (typeof w.ga === "function") {
-                    // Disabling cookies
-                    // https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id
                     ga("create", api.analytics, api.domain, {
+                        // Anonymize IP https://support.google.com/analytics/answer/2763052
+                        anonymizeIp: true,
+
+                        // No-cookie https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id
                         clientId: localStorage.gaClientId,
                         storage: "none"
                     });
@@ -195,8 +197,7 @@
             timestamp: +new Date + "",
             track: function () {
                 if (typeof w.ga === "function") {
-                    // Page tracking
-                    // https://developers.google.com/analytics/devguides/collection/analyticsjs/pages
+                    // Page tracking https://developers.google.com/analytics/devguides/collection/analyticsjs/pages
                     ga("send", {
                         hitType: "pageview",
                         title: d.title,

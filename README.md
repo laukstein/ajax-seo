@@ -66,6 +66,7 @@ Place robots.txt and humans.txt in website root.
 * [no-www](http://no-www.org) domain
 * [HTTPS-Only Standard](https://https.cio.gov)
 * Respect DNT (Do Not Track)
+* [Anonymize IP](https://support.google.com/analytics/answer/2763052) in Google Analytics
 * Protocol-relative URL [RFC 3986](http://tools.ietf.org/html/rfc3986#section-4.2)
 * SEO URLs, lowercasing and gibberish cleanup
 * Performance tuning in front end and back end
