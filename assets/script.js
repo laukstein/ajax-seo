@@ -44,10 +44,10 @@
 
                 return supports;
             }()),
-            // Pointer Events vs touch vs click
+            // Pointer vs touch vs click event
             // https://bugs.chromium.org/p/chromium/issues/detail?id=152149
             // http://www.stucox.com/blog/you-cant-detect-a-touchscreen/
-            pointer: n.pointerEnabled ? "pointerdown" : n.maxTouchPoints > 0 || (w.matchMedia ?
+            pointer: w.PointerEvent ? "pointerdown" : n.maxTouchPoints > 0 || (w.matchMedia ?
                 w.matchMedia("(pointer: coarse)").matches : "ontouchstart" in w) ? "touchstart" : "mousedown",
             valid: function (fn) {
                 // V8 optimized try-catch http://stackoverflow.com/questions/19727905
