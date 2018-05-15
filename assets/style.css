@@ -980,7 +980,7 @@ option[value=""], /* First element as placeholder, fails on IE */
     }
     /* @supports (-webkit-backdrop-filter: blur()) { // Safari 9+ } */
 }
-@-moz-document url-prefix() { /* Firefox */
+@supports (-moz-appearance: meterbar) { /* Firefox */
     ::-moz-selection {
         color: initial;
         text-shadow: none;
