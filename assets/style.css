@@ -1035,9 +1035,8 @@ option[value=""], /* First element as placeholder, fails on IE */
         transition: none;
     }
     .tab {
-        /* width: 100%; */
         padding-bottom: .2em;
-        text-align: left; /* IE9 legacy */
+        text-align: left; /* Edge and IE legacy */
         text-align: start;
         background-image: linear-gradient(#fff, rgba(255,255,255,.9) 35%, rgba(255,255,255,.8) 50%, rgba(255,255,255,0));
         pointer-events: none;
