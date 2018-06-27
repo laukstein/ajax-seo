@@ -104,6 +104,7 @@ body {
             hyphens: auto;
 }
 main {
+    display: block; /* IE11 legacy */
     -webkit-user-select: text; /* Safari legacy */
        -moz-user-select: text;
         -ms-user-select: text;
