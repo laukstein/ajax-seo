@@ -119,7 +119,6 @@ echo "<!doctype html>
 $metadata
 " . ($debug ? '<link rel=stylesheet href=' . assets . "style.css nonce=\"$nonceCSS\">" : "<style nonce=\"$nonceCSS\">" .
     (file_get_contents('assets/style.min.css')) . '</style>') . "
-<!--[if lt IE 9]><script src=//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js></script><![endif]-->
 <body itemscope itemtype=http://schema.org/WebPage>
 <div class=noscroll>
 <div class=wrapper id=wrapper>$note";
