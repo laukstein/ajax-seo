@@ -18,8 +18,6 @@
             wrapper: d.getElementById("wrapper")
         },
         has = {
-            // classList supported since IE10
-            classList: "classList" in ui.html,
             // DOM 2 spec: element.click() defined only for HTMLInputElement
             // http://www.w3.org/TR/DOM-Level-2-HTML/ecma-script-binding.html
             click: "click" in ui.html,
@@ -27,22 +25,30 @@
             dnt: n.doNotTrack === "1" || w.doNotTrack === "1" || n.msDoNotTrack === "1",
             // Error handler for Ajax requests
             error: {e: null},
-            // addEventListener supported since IE9
-            eventListener: !!d.addEventListener,
+            // Supported since IE11 and Android 4.3
+            isSupported: !!h.pushState && !!d.documentElement.dataset && "classList" in ui.html,
             eventListenerOptions: (function () {
                 // Resource http://tonsky.me/blog/chrome-intervention/
                 // Spec issue https://github.com/whatwg/dom/issues/491
-                var supports = false;
+                var passiveSupported = false,
+                    options;
 
                 try {
-                    d.addEventListener && addEventListener("test", null, {
-                        get passive() {
-                            supports = true;
+                    options = Object.defineProperty({}, "passive", {
+                        get: function () {
+                            passiveSupported = true;
+
+                            return passiveSupported;
                         }
                     });
-                } catch (e) {}
 
-                return supports;
+                    addEventListener("test", options, options);
+                    removeEventListener("test", options, options);
+                } catch (err) {
+                    passiveSupported = false;
+                }
+
+                return passiveSupported;
             }()),
             // Pointer vs touch vs click event
             // https://bugs.chromium.org/p/chromium/issues/detail?id=152149
@@ -113,7 +119,7 @@
             url: decodeURIComponent(d.URL),
 
             // String, semantic versioning http://semver.org (MAJOR.MINOR.PATCH)
-            version: "5.4.0",
+            version: "6.0.0",
 
             // Number (maximal width of device adaptation)
             viewportWidth: 720
@@ -129,11 +135,10 @@
         client,
         root;
 
-    if (!has.eventListener) {
-        // Stop here IE8
-        api.error = "Browser missing EventListener support";
+    if (!has.isSupported) {
+        api.error = "Too old browser, supported since IE11";
 
-        console.error(api.error, "http://caniuse.com/#feat=addeventlistener");
+        console.error(api.error);
 
         return api;
     } else if (api.analytics && (!has.dnt || !api.dnt)) {
@@ -220,50 +225,7 @@
         }
     }
 
-    if (!has.classList && Element.prototype) {
-        // classList polyfill for IE9 https://gist.github.com/devongovett/1381839
-        Object.defineProperty(Element.prototype, "classList", {
-            get: function () {
-                var self = this;
-
-                function classlist() {
-                    return self.className.split(/\s+/);
-                }
-                function update(fn) {
-                    return function (value) {
-                        var classes = classlist(),
-                            index = classes.indexOf(value);
-
-                        fn(classes, index, value);
-
-                        self.className = classes.join(" ");
-                    };
-                }
-
-                return {
-                    add: update(function (classes, index, value) {
-                        ~index || classes.push(value);
-                    }),
-                    contains: function (value) {
-                        return !!~classlist().indexOf(value);
-                    },
-                    item: function (index) {
-                        return classlist()[index] || null;
-                    },
-                    remove: update(function (classes, index) {
-                        ~index && classes.splice(index, 1);
-                    }),
-                    toggle: update(function (classes, index, value) {
-                        ~index ? classes.splice(index, 1) : classes.push(value);
-                    })
-                };
-            }
-        });
-    }
-
     if (ui.wrapper && ui.bar && ui.collapse && ui.focusin && ui.focusout && ui.reset && ui.nav && ui.output) {
-        // EventListener and CSS media query supported in IE9
-
         // Convert NodeList to Array http://jsperf.com/convert-nodelist-to-array
         // https://davidwalsh.name/array-from
         // http://toddmotto.com/a-comprehensive-dive-into-nodelists-arrays-converting-
@@ -495,15 +457,6 @@
         api.error = "Missing HTML Elements";
 
         console.error(api.error, "https://github.com/laukstein/ajax-seo");
-
-        return api;
-    }
-
-    if (!h.pushState) {
-        // Stop here IE10 and Android 4.3
-        api.error = "Browser missing History API support";
-
-        console.error(api.error, "http://caniuse.com/#feat=history");
 
         return api;
     }
