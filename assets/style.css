@@ -42,6 +42,7 @@ Syntax order:
     box-shadow
     will-change
     backface-visibility
+    transform
     transition
     pointer-events
     cursor
@@ -98,7 +99,7 @@ body {
        Chrome issue https://code.google.com/p/chromium/issues/detail?id=47083 */
     -ms-hyphenate-limit-chars: 6 3 2;
         hyphenate-limit-chars: 6 3 2;
-    -webkit-hyphens: auto;
+    -webkit-hyphens: auto; /* Safari legacy */
         -ms-hyphens: auto;
             hyphens: auto;
 }
@@ -156,12 +157,8 @@ small {
     font-size: 70%;
 }
 blockquote {
-    margin: 1.3em -3em 1.2em;
-    margin-right: -4.9vw;
-    margin-left: -4.9vw;
-    padding: 0 3em;
-    padding-right: 4.9vw;
-    padding-left: 4.9vw;
+    margin: 1.3em -4.9vw 1.2em;
+    padding: 0 4.9vw;
     background-color: #f2f2f2;
 }
 blockquote:before,
@@ -192,9 +189,7 @@ br {
 }
 hr {
     position: relative; /* :target:before issue */
-    margin: 1em -3em;
-    margin-right: -4.9vw;
-    margin-left: -4.9vw;
+    margin: 1em -4.9vw;
     clear: both;
     border: 0;
     border-top: 1px solid #ddd;
@@ -236,9 +231,10 @@ img {
 a[href] {
     color: #00d;
     text-decoration: none;
+    text-decoration-skip-ink: none; /* Disable skipping descenders https://www.chromestatus.com/features/5631679087509504 */
     /* touch-action: none; */ /* Chrome Android avoids scroll on touch
                                  Disable double-tap-zoom http://msdn.microsoft.com/en-us/library/windows/apps/Hh767313.aspx */
-    -webkit-box-decoration-break: clone; /* Chrome legacy, demo http://jsbin.com/xojoro/quiet */
+    -webkit-box-decoration-break: clone; /* Chrome and Webkit legacy, demo http://jsbin.com/xojoro/quiet */
             box-decoration-break: clone;
 }
 a[href]:hover,
@@ -428,7 +424,6 @@ html,
 .wrapper,
 .tab {
     /* Avoid content jumping on vertical scrollbar appearing http://jsbin.com/horone/4 */
-    width: 100%;
     width: 100vw;
 }
 html {
@@ -453,13 +448,11 @@ div.noscroll {
     box-shadow: 0 0 0 1px rgba(255,255,255,.8);
 
     /* Enable hardware accelerator */
-    -webkit-transform: translateZ(0); /* Android 4.4.4 legacy */
-        -ms-transform: translateZ(0); /* IE9 legacy */
-            transform: translateZ(0);
-    -webkit-backface-visibility: hidden; /* Android 4.4.4 legacy */
+    -ms-transform: translateZ(0); /* IE9 legacy */
+        transform: translateZ(0);
+    -webkit-backface-visibility: hidden; /* Safari 11 legacy */
             backface-visibility: hidden;
-    -webkit-perspective: 1000; /* Android 4.4.4 legacy */
-            perspective: 1000;
+    perspective: 1000;
 
     will-change: transform; /* will-change http://dev.w3.org/csswg/css-will-change/ */
     pointer-events: none;
@@ -475,19 +468,17 @@ div.noscroll {
 }
 .status-start {
     opacity: 1;
-    width: 70%;
     width: 70vw;
-    transition: opacity .2s, width 5s cubic-bezier(.2,1,.4,1);
+    transition: opacity .2s,
+                width 5s cubic-bezier(.2,1,.4,1);
 }
 .status-done {
     opacity: 0;
-    width: 100%;
     width: 100vw;
     transition-duration: .2s;
 }
 .status-error {
     opacity: 1;
-    width: 100%;
     width: 100vw;
     background-color: #f79c87;
     transition: background .2s cubic-bezier(.2,1,.4,1);
@@ -557,8 +548,7 @@ div.noscroll {
     overflow: visible;
     display: inline-block;
     display: -ms-flexbox; /* IE10 legacy */
-    display: -webkit-flex; /* Safari 8.4 legacy */
-    display:         flex;
+    display: flex;
 }
 .nav.nav a,
 .footer a {
@@ -568,11 +558,9 @@ div.noscroll {
 .nav a {
     display: block;
     position: relative;
-    -webkit-flex: 1; /* Safari 8.4 legacy */
-        -ms-flex: 1; /* IE10 legacy */
-            flex: 1;
-    -webkit-flex-basis: auto; /* Safari 8.4 legacy */
-            flex-basis: auto;
+    -ms-flex: 1; /* IE10 legacy */
+        flex: 1;
+    flex-basis: auto;
     min-width: 1px; /* IE11 ignores min-width: 0; */
     padding: 0 .63em; /* Firefox flexbox padding percentage issue https://bugzilla.mozilla.org/show_bug.cgi?id=529761 */
     border: 0 solid #d9e0e2;
@@ -710,22 +698,18 @@ div.noscroll {
     position: absolute;
     right: 0;
     width: .9em;
-    -webkit-transform: translateY(-.42em); /* Android 4.4.4 legacy */
-        -ms-transform: translateY(-.42em); /* IE9 legacy */
-            transform: translateY(-.42em);
+    -ms-transform: translateY(-.42em); /* IE9 legacy */
+        transform: translateY(-.42em);
 }
 .bar span:after {
     content: "";
     position: absolute;
     width: .5em;
-    -webkit-transform: translateY(.42em); /* Android 4.4.4 legacy */
-        -ms-transform: translateY(.42em); /* IE9 legacy */
-            transform: translateY(.42em);
+    -ms-transform: translateY(.42em); /* IE9 legacy */
+        transform: translateY(.42em);
 }
 .main,
 .footer {
-    /* position: relative; */
-    padding: 0 3em;
     padding: 0 4.9vw;
 }
 .main {
@@ -1068,7 +1052,9 @@ option[value=""], /* First element as placeholder, fails on IE */
     .bar span,
     .bar span:before,
     .bar span:after {
-        transition: width .1s, background-color 1ms, transform .35s cubic-bezier(.2,1,.4,1); /* Simulation http://cubic-bezier.com/#.2,1,.4,1 */
+        transition: width .1s,
+                    background-color 1ms,
+                    transform .35s cubic-bezier(.2,1,.4,1); /* Simulation http://cubic-bezier.com/#.2,1,.4,1 */
         will-change: transform;
     }
     .bar span {
@@ -1083,22 +1069,19 @@ option[value=""], /* First element as placeholder, fails on IE */
     }
     .expand ~ .tab .bar span:before {
         width: 1.3em;
-        -webkit-transform: rotate(45deg); /* Android 4.4.4 legacy */
-            -ms-transform: rotate(45deg); /* IE9 legacy */
-                transform: rotate3d(0,0,1,45deg); /* Chrome rotation offset fix */
+        -ms-transform: rotate(45deg); /* IE9 legacy */
+            transform: rotate3d(0,0,1,45deg); /* Chrome rotation offset fix */
     }
     .expand ~ .tab .bar span:after {
         width: 1.3em;
-        -webkit-transform: rotate(-45deg); /* Android 4.4.4 legacy */
-            -ms-transform: rotate(-45deg); /* IE9 legacy */
-                transform: rotate3d(0,0,1,-45deg); /* Chrome rotation offset fix */
+        -ms-transform: rotate(-45deg); /* IE9 legacy */
+            transform: rotate3d(0,0,1,-45deg); /* Chrome rotation offset fix */
     }
     .header,
     .expand ~ .tab .nav:before,
     .expand ~ .tab .nav:after {
             width: 100%;
         min-width: 10em;
-        max-width: 76%;
         max-width: 76vw;
     }
     .header {
@@ -1111,17 +1094,15 @@ option[value=""], /* First element as placeholder, fails on IE */
         padding: 0;
         background-color: #f6f6f6;
         border: 0;
-        -webkit-transform: translateX(-100%); /* Android 4.4.4 legacy */
-            -ms-transform: translateX(-100%); /* IE9 legacy */
-                transform: translateX(-100%);
+        -ms-transform: translateX(-100%); /* IE9 legacy */
+            transform: translateX(-100%);
         /* backface-visibility: hidden; */ /* Causes scrollbar appear under the .active link */ /* will-change breaks pseudo-class position: fixed */
     }
     .expand ~ .tab .header {
-        box-shadow: 0 0 4em rgba(51,51,51,.3); /* Webkit legacy */
-        box-shadow: 0 0 4em rgba(51,51,51,.11), 0 0 43vw rgba(51,51,51,.3);
-        -webkit-transform: none; /* Android 4.4.4 legacy */
-            -ms-transform: none; /* IE9 legacy */
-                transform: none;
+        box-shadow: 0 0 4em rgba(51,51,51,.11),
+                    0 0 43vw rgba(51,51,51,.3);
+        -ms-transform: none; /* IE9 legacy */
+            transform: none;
         transition: transform .35s cubic-bezier(.2,1,.4,1);
     }
     .focusin,
@@ -1145,9 +1126,10 @@ option[value=""], /* First element as placeholder, fails on IE */
         z-index: 99;
     }
     .expand ~ .main {
-        -webkit-filter: grayscale(20%);
+        -webkit-filter: grayscale(20%); /* Samsung Internet 7.2 legacy */
                 filter: grayscale(20%);
-        transition: filter .35s cubic-bezier(.2,1,.4,1);
+        transition: -webkit-filter .35s cubic-bezier(.2,1,.4,1),
+                            filter .35s cubic-bezier(.2,1,.4,1);
     }
     .nav,
     .nav a:first-of-type,
@@ -1192,15 +1174,12 @@ option[value=""], /* First element as placeholder, fails on IE */
     }
     .nav.nav a { /* Increase selector specificity http://vimeo.com/100264064 minute 03:30 */
         display: block;
-        -webkit-flex: 0; /* Safari 8.4 legacy */
-                flex: 0;
-        /* min-width: 76vw; */
+        flex: 0;
         padding: 0 1.3em;
         float: none; /* IE legacy */
         border-color: rgba(125,138,138,.13);
         border-width: 0;
         border-top-width: 1px;
-        /* box-sizing: border-box; */
     }
     .nav a[data-version] {
         line-height: 2.25;
