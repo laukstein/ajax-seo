@@ -147,7 +147,7 @@ if ($conn) {
             $home = !strlen($data_url);
 
             echo "\n            <a" . ($data_url === $urldb ? ' class=active' : null) .
-                ' href="' . ($home ? $safepath : "$path/$data_url") . '"' . ($home ? ' data-version=5' : null) . '>' .
+                ' href="' . ($home ? $safepath : "$path/$data_url") . '"' . ($home ? ' data-version=6' : null) . '>' .
                 ($home ? '<span><span class=bar><span></span></span>' : null) .
                 '<span' . (is_rtl($data_metatitle) ? ' dir=auto' : '') . ($home ? ' data-placeholder' : null) .
                 ">$data_metatitle</span>" . ($home ? '</span>' : null) . '</a>';
