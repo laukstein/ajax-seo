@@ -778,6 +778,7 @@ div.noscroll {
     text-decoration: underline;
 }
 
+[hidden],
 option[value=""], /* First element as placeholder, fails on IE */
 .nav [data-placeholder] {
     /* <template> element breaks whole layout rendering on old browsers */
