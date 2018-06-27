@@ -1,7 +1,7 @@
 /* References
 --------------------------------------------------
 Google HTML/CSS Style Guide
-http://google-styleguide.googlecode.com/svn/trunk/htmlcssguide.xml
+https://google.github.io/styleguide/htmlcssguide.html
 
 CSS formatting
 http://www.markdotto.com/2011/11/29/css-property-order/
@@ -9,8 +9,8 @@ http://www.markdotto.com/2011/12/12/css-commenting-strategy/
 http://www.markdotto.com/2011/12/06/formatting-vendor-prefixed-css/
 
 Avoid IDs
-http://screwlewse.com/2010/07/dont-use-id-selectors-in-css/
-http://screwlewse.com/2010/08/different-css-techniques-and-their-performance/
+https://web.archive.org/web/20171205012702/http://screwlewse.com/2010/07/dont-use-id-selectors-in-css/
+https://web.archive.org/web/20171020064634/http://screwlewse.com/2010/08/different-css-techniques-and-their-performance/
 
 Selector priorities https://css-tricks.com/specifics-on-css-specificity/
 Reset form elements http://jsfiddle.net/LHcR8/3/
@@ -104,7 +104,6 @@ body {
             hyphens: auto;
 }
 main {
-    display: block; /* IE10, Opera 12.16 and old Webkit legacy */
     -webkit-user-select: text; /* Safari legacy */
        -moz-user-select: text;
         -ms-user-select: text;
@@ -255,7 +254,7 @@ img {
     object-fit: contain;
 
     /* Image scale rendering https://drafts.csswg.org/css-images/#the-image-rendering */
-    -ms-interpolation-mode: nearest-neighbor; /* IE8+ */
+    -ms-interpolation-mode: nearest-neighbor; /* IE8+ legacy */
     image-rendering: -webkit-optimize-contrast; /* Webkit legacy https://code.google.com/p/chromium/issues/detail?id=134040 */
     image-rendering: -moz-crisp-edges; /* Firefox legacy */
     image-rendering:      crisp-edges;
@@ -357,7 +356,6 @@ button,
     overflow: hidden;
     display: inline-block;
     white-space: nowrap; /* Mobile button text wrapping fix for button */
-    word-wrap: normal; /* "nowrap" compatibility for IE9 */
     text-overflow: ellipsis;
     outline: 0;
     cursor: pointer;
@@ -386,7 +384,6 @@ select[disabled],
 button[disabled],
 .button[disabled] {
     background-color: rgba(179,179,179,.08);
-    border-color: transparent; /* If color defined, then IE10 shows dark gray on :hover */
 }
 select:focus option {
     /* Match to parent element width (currently supported only on Firefox) */
@@ -448,8 +445,7 @@ div.noscroll {
     box-shadow: 0 0 0 1px rgba(255,255,255,.8);
 
     /* Enable hardware accelerator */
-    -ms-transform: translateZ(0); /* IE9 legacy */
-        transform: translateZ(0);
+    transform: translateZ(0);
     -webkit-backface-visibility: hidden; /* Safari 11 legacy */
             backface-visibility: hidden;
     perspective: 1000;
@@ -547,7 +543,6 @@ div.noscroll {
 .nav .noscroll {
     overflow: visible;
     display: inline-block;
-    display: -ms-flexbox; /* IE10 legacy */
     display: flex;
 }
 .nav.nav a,
@@ -558,15 +553,14 @@ div.noscroll {
 .nav a {
     display: block;
     position: relative;
-    -ms-flex: 1; /* IE10 legacy */
-        flex: 1;
+    flex: 1;
     flex-basis: auto;
     min-width: 1px; /* IE11 ignores min-width: 0; */
     padding: 0 .63em; /* Firefox flexbox padding percentage issue https://bugzilla.mozilla.org/show_bug.cgi?id=529761 */
     border: 0 solid #d9e0e2;
     border-left-width: 1px;
 }
-.nav a:first-child { /* Selector supported on IE7+ http://kimblim.dk/css-tests/selectors/ */
+.nav a:first-child {
     max-width: 3.2em;
     padding: 0;
     border-left: 0;
@@ -600,9 +594,6 @@ div.noscroll {
     color: #fff;
     background-color: #006cff;
 }
-/*.nav a.active:focus {
-    background-color: #0369f2;
-}*/
 .nav a.error {
     background-color: #f7dad4;
 }
@@ -639,10 +630,10 @@ div.noscroll {
     border: inherit;
     box-shadow: inherit;
 
-    all: unset; /* No support on IE10 and Safari */
+    all: unset;
 
+    /* Edge and IE legacy due to unsupported "all: unset" */
     display: none;
-    box-suppress: discard;
     position: relative;
     z-index: 3;
     vertical-align: top; /* IE11 - remove top margin */
@@ -698,15 +689,13 @@ div.noscroll {
     position: absolute;
     right: 0;
     width: .9em;
-    -ms-transform: translateY(-.42em); /* IE9 legacy */
-        transform: translateY(-.42em);
+    transform: translateY(-.42em);
 }
 .bar span:after {
     content: "";
     position: absolute;
     width: .5em;
-    -ms-transform: translateY(.42em); /* IE9 legacy */
-        transform: translateY(.42em);
+    transform: translateY(.42em);
 }
 .main,
 .footer {
@@ -789,11 +778,6 @@ div.noscroll {
     text-decoration: underline;
 }
 
-
-
-/* Cross-browser compatibility
--------------------------------------------------- */
-[hidden],
 option[value=""], /* First element as placeholder, fails on IE */
 .nav [data-placeholder] {
     /* <template> element breaks whole layout rendering on old browsers */
@@ -803,66 +787,6 @@ option[value=""], /* First element as placeholder, fails on IE */
                               http://dev.w3.org/csswg/css-display/#propdef-box-suppress */
 }
 
-@media \0screen\,screen\9 { /* IE6-8 http://keithclark.co.uk/articles/moving-ie-specific-css-into-media-blocks/media-tests/ */
-    .noscroll,
-    .wrapper {
-        height: 100%;
-    }
-    .noscroll.noscroll,
-    .main {
-        overflow: visible;
-    }
-    .main {
-        min-height: 100%;
-    }
-    .nav .noscroll {
-        display: table;
-        width: 100%;
-        table-layout: fixed;
-    }
-    .nav a {
-        display: table-cell;
-        vertical-align: top;
-    }
-    .nav .bar,
-    [data-version]:before {
-        display: none;
-    }
-    .nav [data-placeholder] {
-        display: inline-block;
-    }
-}
-@media (min-width: 0\0) and (min-resolution: .001dpcm) { /* IE9 https://github.com/jeffclayton/css_hack_testing */
-    .nav,
-    .nav a:first-of-type,
-    .nav a:last-of-type {
-        border-radius: 0;
-    }
-    .nav .noscroll {
-        display: table;
-        width: 100%;
-        table-layout: fixed;
-    }
-    .nav a {
-        display: table-cell;
-        vertical-align: top;
-    }
-    .nav .bar,
-    [data-version]:before {
-        display: none;
-    }
-    .nav [data-placeholder] {
-        display: inline-block;
-    }
-}
-/* @media (min-width: 0\0) { // IE9+
-    input {
-        // IE10 Long text overflowing a padding http://jsbin.com/kabeqixogi/1, https://connect.microsoft.com/IE/Feedback/Details/788605
-        border: 0 solid transparent;
-        border-width: 0 .01em;
-        border-radius: .01em;
-    }
-} */
 @media (-ms-high-contrast: active), (-ms-high-contrast: none) { /* IE10+ http://www.impressivewebs.com/ie10-css-hacks/ */
     /* html,
     textarea,
@@ -871,14 +795,9 @@ option[value=""], /* First element as placeholder, fails on IE */
         // Causes miscalculation on detecting clicked mobile nav scrollbar
         -ms-overflow-style: -ms-autohiding-scrollbar;
     } */
-    a {
-        /* Remove IE10 :active gray background-color */
-        background-color: transparent;
-    }
     ::-ms-clear {
         /* Remove input x */
         display: none;
-        box-suppress: discard;
     }
     :-ms-input-placeholder {
         color: inherit;
@@ -930,7 +849,6 @@ option[value=""], /* First element as placeholder, fails on IE */
         ::-ms-clear {
             /* Remove input x */
             display: none;
-            box-suppress: discard;
         }
         select:focus::-ms-value {
             /* Remove focused element highlight on IE11 */
@@ -1068,13 +986,11 @@ option[value=""], /* First element as placeholder, fails on IE */
     }
     .expand ~ .tab .bar span:before {
         width: 1.3em;
-        -ms-transform: rotate(45deg); /* IE9 legacy */
-            transform: rotate3d(0,0,1,45deg); /* Chrome rotation offset fix */
+        transform: rotate3d(0,0,1,45deg); /* Chrome rotation offset fix */
     }
     .expand ~ .tab .bar span:after {
         width: 1.3em;
-        -ms-transform: rotate(-45deg); /* IE9 legacy */
-            transform: rotate3d(0,0,1,-45deg); /* Chrome rotation offset fix */
+        transform: rotate3d(0,0,1,-45deg); /* Chrome rotation offset fix */
     }
     .header,
     .expand ~ .tab .nav:before,
@@ -1093,15 +1009,13 @@ option[value=""], /* First element as placeholder, fails on IE */
         padding: 0;
         background-color: #f6f6f6;
         border: 0;
-        -ms-transform: translateX(-100%); /* IE9 legacy */
-            transform: translateX(-100%);
+        transform: translateX(-100%);
         /* backface-visibility: hidden; */ /* Causes scrollbar appear under the .active link */ /* will-change breaks pseudo-class position: fixed */
     }
     .expand ~ .tab .header {
         box-shadow: 0 0 4em rgba(51,51,51,.11),
                     0 0 43vw rgba(51,51,51,.3);
-        -ms-transform: none; /* IE9 legacy */
-            transform: none;
+        transform: none;
         transition: transform .35s cubic-bezier(.2,1,.4,1);
     }
     .focusin,
@@ -1288,6 +1202,5 @@ option[value=""], /* First element as placeholder, fails on IE */
     .tab,
     .footer {
         display: none;
-        box-suppress: discard;
     }
 }
