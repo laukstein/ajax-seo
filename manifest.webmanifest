@@ -8,7 +8,7 @@ include 'content/cache.php'; cache::medb();
 
 echo '{
     "lang": "en",
-    "name": "Ajax SEO v5",
+    "name": "Ajax SEO v6",
     "short_name": "Ajax SEO",
     "description": "Crawlable webapp framework for outstanding UX",
     "icons": [{

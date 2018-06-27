@@ -1,4 +1,4 @@
-# [Ajax SEO v5](https://lab.laukstein.com/ajax-seo)
+# [Ajax SEO v6](https://lab.laukstein.com/ajax-seo)
 
 **Ajax SEO** crawlable webapp framework with boosted UX.<br>
 Demo <https://lab.laukstein.com/ajax-seo>
@@ -29,7 +29,7 @@ Demo <https://lab.laukstein.com/ajax-seo>
         url: "https://lab.laukstein.com/ajax-seo/history",
 
         // Ajax SEO version
-        version: "5.4.0",
+        version: "6.0.0",
 
         // Maximal width of device adaptation
         viewportWidth: 720
