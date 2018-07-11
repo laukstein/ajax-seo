@@ -8,7 +8,7 @@ $drop  = true;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dhost     = trim($_POST['host']);
-    $port      = empty($_POST['port']) ? '3306' : trim($_POST['port']);
+    $port      = empty($_POST['port']) ? 3306 : trim($_POST['port']);
     $user      = trim($_POST['user']);
     $pass      = trim($_POST['pass']);
     $db        = trim($_POST['db']);
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         fclose($fopen);
         @chmod($file, 0600);
 
-        $mysqli = @new mysqli($dhost, $user, $pass, $db);
+        $mysqli = @new mysqli($dhost, $user, $pass, $db, $port);
 
         // Add data in database
         if (!$mysqli->connect_errno) {

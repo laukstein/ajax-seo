@@ -60,7 +60,7 @@ if (empty($_GET['api'])) {
         "; default-src 'none'" .
         "; connect-src 'self'" .
         "; frame-ancestors 'none'" .
-        "; form-action 'none'" .
+        ($conn ? "; form-action 'none'" : null) .
         "; img-src 'self'" . ($cdn_host ? " $cdn_host" : null) .
             (ga ? ' www.google-analytics.com' : null) .
         "; manifest-src 'self'" .
