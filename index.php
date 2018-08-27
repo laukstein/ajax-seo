@@ -72,7 +72,7 @@ if (empty($_GET['api'])) {
             " 'self' 'strict-dynamic' 'unsafe-inline' 'nonce-$nonceCSS'") .
             (!$conn || !connection ? " 'nonce-MN+nJYptMzWJvlkA0FFLXQ=='" : null));
     // Omit Referrer https://w3c.github.io/webappsec-referrer-policy/
-    header('Referrer-Policy: no-referrer');
+    // header('Referrer-Policy: no-referrer');
 }
 
 // Max 160 character title http://blogs.msdn.com/b/ie/archive/2012/05/14/sharing-links-from-ie10-on-windows-8.aspx
@@ -90,6 +90,9 @@ $metadata .= "\n<meta property=twitter:card content=summary>";
 // Render fullscreen (out of "safe-area") with "viewport-fit=cover" http://stephenradford.me/removing-the-white-bars-in-safari-on-iphone-x/
 //      spec https://drafts.csswg.org/css-round-display/#viewport-fit-descriptor
 $metadata .= "\n<meta name=viewport content=\"width=device-width,initial-scale=1\">";
+
+// Omit Referrer backwards compatibility https://html.spec.whatwg.org/multipage/semantics.html#meta-referrer
+$metadata .= "\n<meta name=referrer content=never>";
 
 // Early handshake DNS https://w3c.github.io/resource-hints/#dns-prefetch
 if ($cdn_host) $metadata .= "\n<link rel=dns-prefetch href=$cdn_scheme$cdn_host/>";
