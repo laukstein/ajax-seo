@@ -131,20 +131,20 @@ $content   = '<style nonce="MN+nJYptMzWJvlkA0FFLXQ==" scoped>.main{padding-top:1
     <h1>' . $pagetitle . '</h1>
     <dl>
         <dt>MySQL connection
-        <dd><label for=host>Database host</label><input id=host class=n2 name=host placeholder=localhost value="' . $dhost . '" autofocus required><input id=port class=n2 name=port placeholder=Port value="' . $port . '">
+        <dd><label for=host>Database host</label><input id=host class=n2 name=host placeholder=localhost value="' . $dhost . '" autofocus required><input id=port class=n2 name=port placeholder=Port type=number inputmode=numeric value="' . $port . '">
         <dd><label for=user>User name</label><input id=user name=user placeholder=root value="' . $user . '" required>
         <dd><label for=pass>Password</label><input id=pass name=pass placeholder=Password type=password>
         <dd><label for=db>Database name</label><input id=db name=db placeholder=db value="' . $db . '" required>
         <dd><label for=table>Table</label><input id=table class=n2 name=table placeholder=table value="' . $table . '" required> <label><input id=drop name=drop type=checkbox' . $drop . '> drop if exists</label>' . $error . '
         <dt><hr>Page details
         <dd><label for=title>Page title</label><input id=title name=title placeholder=Title value="' . $gtitle . '">
-        <dd><label for=ga>Google Analytics</label><input id=ga class=n2 name=ga placeholder=UA-XXXX-Y value="' . $ga . '"><input id=ga_domain class=n2 name=ga_domain placeholder="Domain" value="' . $ga_domain . '">
+        <dd><label for=ga>Google Analytics</label><input id=ga class=n2 name=ga placeholder=UA-XXXX-Y value="' . $ga . '"><input id=ga_domain class=n2 name=ga_domain placeholder="Domain" type=url inputmode=url value="' . $ga_domain . '">
         <dd class=reset><label><input name=debug type=checkbox' . $adebug . '> Debug in localhost (PHP error_reporting, uncompressed assets)</label>
         <dd><button name=install>Install</button><p>Your configuration will be saved in config.php, after you can open and edit it manually.</p>
     </dl>
 </form>';
 
-// <dd><label for=assets>Full assets URL</label><input id=assets name=assets placeholder="' . $path . '/assets/" value="' . $assets . '">
+// <dd><label for=assets>Full assets URL</label><input id=assets name=assets placeholder="' . $path . '/assets/" type=url inputmode=url value="' . $assets . '">
 
 // Chrome CSS3 transition explode bug when form has three or more input elements
 // #167083 status in http://crbug.com/167083
