@@ -257,9 +257,8 @@ img {
     /* Image scale rendering https://drafts.csswg.org/css-images/#the-image-rendering */
     -ms-interpolation-mode: nearest-neighbor; /* IE8+ legacy */
     image-rendering: -webkit-optimize-contrast; /* Webkit legacy https://code.google.com/p/chromium/issues/detail?id=134040 */
-    image-rendering: -moz-crisp-edges; /* Firefox legacy */
-    image-rendering:      crisp-edges;
-    image-rendering: pixelated; /* Eaquals non standard "optimizeSpeed" */
+    image-rendering: crisp-edges; /* Firefox, Safari legacy */
+    image-rendering: pixelated; /* Chrome; Eaquals non standard "optimizeSpeed" */
 }
 abbr {
     border-bottom: 1px dotted #aaa;
