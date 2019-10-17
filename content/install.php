@@ -126,21 +126,24 @@ $adebug    = !empty($xdebug) && $xdebug === 'true' || debug ? ' checked' : null;
 // Content output
 $title     = 'Installation';
 $pagetitle = $gtitle . ' ' . $title;
-$content   = '<style nonce="MN+nJYptMzWJvlkA0FFLXQ==" scoped>.main{padding-top:1.2em}label{width:30%}input{width:70%}[type=checkbox]{width:auto}.n2{width:35%}button{width:100%}.reset{margin:1em 0}.reset label{width:auto}.error{color:#ff2121}@media (max-width:540px){label,input,.n2{width:100%}[type=checkbox]{width:auto}}</style>
+$content   = '<style nonce="MN+nJYptMzWJvlkA0FFLXQ==" scoped>.main{padding-top:1.2em}dd:not(.reset){text-align:right}label[for]{width:30%;text-align:left}input{width:70%}[type=checkbox]{width:auto}.n3{width:23.33%}button{width:100%}.reset{margin:1em 0;text-align:left}.reset label{width:auto}.error{color:#ff2121}@media (max-width:540px){label[for],input,.n3{width:100%}[type=checkbox]{width:auto}}</style>
 <form method=post>
     <h1>' . $pagetitle . '</h1>
     <dl>
         <dt>MySQL connection
-        <dd><label for=host>Database host</label><input id=host class=n2 name=host placeholder=localhost value="' . $dhost . '" autofocus required><input id=port class=n2 name=port placeholder=Port type=number inputmode=numeric value="' . $port . '">
+        <dd><label for=host>Database host, port and engine</label><input id=host class=n3 name=host placeholder=localhost value="' . $dhost . '" autofocus required><input class=n3 name=port placeholder=Port type=number inputmode=numeric value="' . $port . '"><select class=n3 name=engine>
+            <option>MyISAM</option>
+            <option>TokuDB</option>
+        </select>
         <dd><label for=user>User name</label><input id=user name=user placeholder=root value="' . $user . '" required>
         <dd><label for=pass>Password</label><input id=pass name=pass placeholder=Password type=password>
         <dd><label for=db>Database name</label><input id=db name=db placeholder=db value="' . $db . '" required>
         <dd><label for=table>Table</label><input id=table class=n2 name=table placeholder=table value="' . $table . '" required> <label><input id=drop name=drop type=checkbox' . $drop . '> drop if exists</label>' . $error . '
         <dt><hr>Page details
         <dd><label for=title>Page title</label><input id=title name=title placeholder=Title value="' . $gtitle . '">
-        <dd><label for=ga>Google Analytics</label><input id=ga class=n2 name=ga placeholder=UA-XXXX-Y value="' . $ga . '"><input id=ga_domain class=n2 name=ga_domain placeholder="Domain" type=url inputmode=url value="' . $ga_domain . '">
+        <dd><label for=ga>Google Analytics</label><input id=ga class=n2 name=ga placeholder="e.g. UA-XXXX-Y" value="' . $ga . '"><input id=ga_domain class=n2 name=ga_domain placeholder="Domain" inputmode=url value="' . $ga_domain . '">
         <dd class=reset><label><input name=debug type=checkbox' . $adebug . '> Debug in localhost (PHP error_reporting, uncompressed assets)</label>
-        <dd><button name=install>Install</button><p>Your configuration will be saved in config.php, after you can open and edit it manually.</p>
+        <dd><button name=install>Install</button><p class=reset>Your configuration will be saved in config.php, after you can open and edit it manually.</p>
     </dl>
 </form>';
 
