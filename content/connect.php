@@ -16,7 +16,7 @@ $cdn_scheme = $cdn_scheme ? $cdn_scheme . '://' : '//';
 if ($conn) {
     if (!connection) {
         // Yahoo since 2007 supports content exclude from search engine's index with class=robots-nocontent http://www.ysearchblog.com/2007/05/02/introducing-robots-nocontent-for-page-sections/
-        // Yandex supports content exclude on using non-standard element <noindex></noindex> and conditional comment <!--noindex--><!--/noindex--> http://help.yandex.ru/webmaster/?id=1111858
+        // Yandex supports content exclude on using non-standard element <noindex></noindex> and conditional comment <!--noindex--><!--/noindex--> https://yandex.com/support/webmaster/controlling-robot/html.html#noindex
 
         header('Cache-Control: no-cache, no-store, must-revalidate'); // Chrome issue https://code.google.com/p/chromium/issues/detail?id=2763, requires "no-store" to avoid cache
 
