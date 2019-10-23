@@ -64,6 +64,7 @@ if (empty($_GET['api'])) {
         "; img-src 'self'" . ($cdn_host ? " $cdn_host" : null) .
             (ga ? ' www.google-analytics.com' : null) .
         "; manifest-src 'self'" .
+        // prefetch-src Chrome issue https://bugs.chromium.org/p/chromium/issues/detail?id=801561
         "; prefetch-src 'self'" .
         ($conn ? "; script-src" . ($cdn_host ? " $cdn_host" : " 'self'") .
             " 'strict-dynamic' 'unsafe-inline' 'nonce-$nonceJS'" .
