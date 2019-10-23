@@ -122,7 +122,7 @@ echo "<!doctype html>
 $metadata
 " . ($debug ? '<link rel=stylesheet href=' . assets . "style.css nonce=\"$nonceCSS\">" : "<style nonce=\"$nonceCSS\">" .
     (file_get_contents('assets/style.min.css')) . '</style>') . "
-<body itemscope itemtype=http://schema.org/WebPage>
+<body itemscope itemtype=https://schema.org/WebPage>
 <div class=noscroll>
 <div class=wrapper id=wrapper>$note";
 
@@ -170,7 +170,7 @@ if ($conn) {
     $mysqli->close();
 }
 
-echo "\n<main class=main itemprop=about itemscope itemtype=http://schema.org/Article>
+echo "\n<main class=main itemprop=about itemscope itemtype=https://schema.org/Article>
 <meta itemprop=mainEntityOfPage content=$uri>
 <div id=output>
 $content
