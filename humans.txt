@@ -7,7 +7,6 @@ include 'content/cache.php'; cache::all();
 echo '/* TEAM */
 Author: Binyamin Laukstein
 Site: https://laukstein.com
-Google+: https://plus.google.com/+BinyaminLaukstein
 
 /* SITE */
 Last update: ' . date('Y/m/d', date::all()) . '
