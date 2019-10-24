@@ -806,7 +806,7 @@
 
                 // Fixing scrollTop with Document.scrollingElement
                 // https://dev.opera.com/articles/fixing-the-scrolltop-bug/
-                // http://dev.w3.org/csswg/cssom-view/#dom-document-scrollingelement
+                // https://drafts.csswg.org/cssom-view/#dom-document-scrollingelement
                 scrollingElement.scrollTop = 0;
 
                 ui.output.innerHTML = data.content;

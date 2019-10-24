@@ -4,9 +4,9 @@ Google HTML/CSS Style Guide
 https://google.github.io/styleguide/htmlcssguide.html
 
 CSS formatting
-http://www.markdotto.com/2011/11/29/css-property-order/
-http://www.markdotto.com/2011/12/12/css-commenting-strategy/
-http://www.markdotto.com/2011/12/06/formatting-vendor-prefixed-css/
+https://markdotto.com/2011/11/29/css-property-order/
+https://markdotto.com/2011/12/12/css-commenting-strategy/
+https://markdotto.com/2011/12/06/formatting-vendor-prefixed-css/
 
 Avoid IDs
 https://web.archive.org/web/20171205012702/http://screwlewse.com/2010/07/dont-use-id-selectors-in-css/
@@ -73,15 +73,14 @@ button,
             user-select: none;
 }
 html {
-    /* scroll-behavior: smooth; */ /* ISSUE: causes very slow scroll on FFOS 2.6 */ /* Spec http://dev.w3.org/csswg/cssom-view/#propdef-scroll-behavior */
+    /* scroll-behavior: smooth; */ /* ISSUE: causes very slow scroll on FFOS 2.6 */ /* Spec https://drafts.csswg.org/cssom-view/#smooth-scrolling */
     color: #333;
     /* font-size 62.45% = 1em = 10px = 2.5rem */
     font: 62.45% / 1.65 Cambria, Georgia, serif;
     text-rendering: optimizeSpeed;
     /* -ms-text-size-adjust property will be ignored where the viewport tag is present */
     background-color: #f2f2f2;
-    /* Smoother scroll, faster clicks http://updates.html5rocks.com/2013/12/300ms-tap-delay-gone-away */
-    touch-action: manipulation;
+    /* Smoother scroll, faster clicks https://developers.google.com/web/updates/2013/12/300ms-tap-delay-gone-away */
     cursor: default;
     caret-color: currentcolor;
 }
@@ -92,11 +91,12 @@ figure {
     margin: 0;
 }
 body {
-    font-size: 1.9em; /* rem unit is too buggy https://code.google.com/p/chromium/issues/detail?id=362113 and not so flexible, not standardised in @media query condition */
+    font-size: 1.9em; /* rem unit is too buggy https://bugs.chromium.org/p/chromium/issues/detail?id=362113 and not so flexible, not standardised in @media query condition */
     overflow-wrap: break-word;
     word-wrap: break-word; /* IE11 legacy */
-    /* CSS4 hyphenation http://dev.w3.org/csswg/css-text-4/ http://generatedcontent.org/post/44751461516/finer-grained-control-of-hyphenation-with-css4-text
-       Chrome issue https://code.google.com/p/chromium/issues/detail?id=47083 */
+    /* CSS4 hyphenation https://drafts.csswg.org/css-text-4/ http://clagnut.com/blog/2395
+       https://generatedcontent.org/post/44751461516/finer-grained-control-of-hyphenation-with-css4
+       Chrome issue https://bugs.chromium.org/p/chromium/issues/detail?id=47083 */
     -ms-hyphenate-limit-chars: 6 3 2;
         hyphenate-limit-chars: 6 3 2;
     -webkit-hyphens: auto; /* Safari legacy */
@@ -116,7 +116,7 @@ h3,
 dt {
     line-height: 1.07;
     font-weight: normal;
-    /* IE fallback "Times New Roman", Unquote font-family http://mothereff.in/font-family */
+    /* IE fallback "Times New Roman", Unquote font-family https://mothereff.in/font-family */
     font-family: Times New Roman, serif;
 }
 h1,
@@ -233,8 +233,8 @@ a[href] {
     text-decoration: none;
     text-decoration-skip-ink: none; /* Disable skipping descenders https://www.chromestatus.com/features/5631679087509504 */
     /* touch-action: none; */ /* Chrome Android avoids scroll on touch
-                                 Disable double-tap-zoom http://msdn.microsoft.com/en-us/library/windows/apps/Hh767313.aspx */
-    -webkit-box-decoration-break: clone; /* Chrome and Webkit legacy, demo http://jsbin.com/xojoro/quiet */
+                                 Disable double-tap-zoom https://developer.mozilla.org/en-US/docs/Web/CSS/touch-action */
+    -webkit-box-decoration-break: clone; /* Chrome and Webkit legacy, demo https://output.jsbin.com/xojoro/quiet */
             box-decoration-break: clone;
 }
 a[href]:hover,
@@ -247,7 +247,7 @@ a[href][target=_blank] {
     border-bottom: 1px dotted;
 }
 img {
-    /* Image scaling http://www.456bereastreet.com/lab/scaling-images-proportionally/ */
+    /* Image scaling https://www.456bereastreet.com/lab/scaling-images-proportionally/ */
         width: auto;
     max-width: 100%;
     height: auto;
@@ -256,9 +256,9 @@ img {
 
     /* Image scale rendering https://drafts.csswg.org/css-images/#the-image-rendering */
     -ms-interpolation-mode: nearest-neighbor; /* IE8+ legacy */
-    image-rendering: -webkit-optimize-contrast; /* Webkit legacy https://code.google.com/p/chromium/issues/detail?id=134040 */
+    image-rendering: -webkit-optimize-contrast; /* Webkit legacy https://bugs.chromium.org/p/chromium/issues/detail?id=134040 */
     image-rendering: crisp-edges; /* Firefox, Safari legacy */
-    image-rendering: pixelated; /* Chrome; Eaquals non standard "optimizeSpeed" */
+    image-rendering: pixelated; /* Chrome; Equals non standard "optimizeSpeed" */
 }
 abbr {
     border-bottom: 1px dotted #aaa;
@@ -387,14 +387,14 @@ button[disabled],
 }
 select:focus option {
     /* Match to parent element width (currently supported only on Firefox) */
-    /* Chrome max-width issue https://code.google.com/p/chromium/issues/detail?id=82253 */
+    /* Chrome max-width issue https://bugs.chromium.org/p/chromium/issues/detail?id=82253 */
     min-width: 100%;
     max-width: 0;
     background-color: #fff;
 }
 option {
     /* Match to parent element width (currently supported only on Firefox) */
-    /* Chrome max-width issue https://code.google.com/p/chromium/issues/detail?id=82253 */
+    /* Chrome max-width issue https://bugs.chromium.org/p/chromium/issues/detail?id=82253 */
     min-width: 100%;
     max-width: 0;
 }
@@ -450,7 +450,7 @@ div.noscroll {
             backface-visibility: hidden;
     perspective: 1000;
 
-    will-change: transform; /* will-change http://dev.w3.org/csswg/css-will-change/ */
+    will-change: transform; /* will-change https://drafts.csswg.org/css-will-change/ */
     pointer-events: none;
 }
 .status-start:before {
@@ -494,7 +494,7 @@ div.noscroll {
     left: 0;
     line-height: 2.2;
 
-    /* In Windows 10 non-Latinic characters are shown as white squares "□" https://code.google.com/p/chromium/issues/detail?id=516209
+    /* In Windows 10 non-Latinic characters are shown as white squares "□" https://bugs.chromium.org/p/chromium/issues/detail?id=516209
     "Meiryo" returns ellipsis in middle of text, Windows fonts https://en.wikipedia.org/wiki/List_of_typefaces_included_with_Microsoft_Windows */
     font-family: Segoe UI Historic, Segoe UI Symbol, sans-serif;
 
@@ -785,10 +785,10 @@ option[value=""], /* First element as placeholder, fails on IE */
     display: none;
     box-suppress: discard; /* It is recommended that box-suppress be used instead of display: none,
                               so that the element's display type is automatically preserved for when it's no longer suppressed.
-                              http://dev.w3.org/csswg/css-display/#propdef-box-suppress */
+                              https://drafts.csswg.org/css-display/#propdef-box-suppress */
 }
 
-@media (-ms-high-contrast: active), (-ms-high-contrast: none) { /* IE10+ http://www.impressivewebs.com/ie10-css-hacks/ */
+@media (-ms-high-contrast: active), (-ms-high-contrast: none) { /* IE10+ https://www.impressivewebs.com/ie10-css-hacks/ */
     /* html,
     textarea,
     .nav {
@@ -832,7 +832,7 @@ option[value=""], /* First element as placeholder, fails on IE */
     button,
     [onclick],
     [tabindex] {
-        /* <select> shadow DOM issue https://code.google.com/p/chromium/issues/detail?id=234871 */
+        /* <select> shadow DOM issue https://bugs.chromium.org/p/chromium/issues/detail?id=234871 */
         /* Remove outline and highlight-color from click-able elements on Android and iOS */
         -webkit-tap-highlight-color: rgba(51,51,51,0);
     }
@@ -906,7 +906,7 @@ option[value=""], /* First element as placeholder, fails on IE */
 
 
 
-/* Device adaptation http://dev.w3.org/csswg/css-device-adapt/
+/* Device adaptation https://drafts.csswg.org/css-device-adapt/
 -------------------------------------------------- */
 @media (max-width: 720px) {
     html {
@@ -967,7 +967,7 @@ option[value=""], /* First element as placeholder, fails on IE */
     .bar span:after {
         transition: width .1s,
                     background-color 1ms,
-                    transform .35s cubic-bezier(.2,1,.4,1); /* Simulation http://cubic-bezier.com/#.2,1,.4,1 */
+                    transform .35s cubic-bezier(.2,1,.4,1); /* Simulation https://cubic-bezier.com/#.2,1,.4,1 */
         will-change: transform;
     }
     .bar span {
@@ -1081,7 +1081,7 @@ option[value=""], /* First element as placeholder, fails on IE */
         bottom: 0;
         background-image: linear-gradient(rgba(248,248,248,0), rgba(248,248,248,.8) 50%, rgba(248,248,248,.9) 60%, #f8f8f8);
     }
-    .nav.nav a { /* Increase selector specificity http://vimeo.com/100264064 minute 03:30 */
+    .nav.nav a { /* Increase selector specificity https://vimeo.com/100264064 minute 03:30 */
         display: block;
         flex: 0;
         padding: 0 1.3em;
