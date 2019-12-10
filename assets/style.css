@@ -330,6 +330,10 @@ textarea {
     border: 0;
     box-sizing: content-box;
 }
+select {
+    padding-top: .58em;
+    padding-bottom: .58em;
+}
 textarea {
     overflow-x: hidden;
     overflow-y: scroll;
