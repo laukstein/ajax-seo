@@ -787,9 +787,6 @@ option[value=""], /* First element as placeholder, fails on IE */
 .nav [data-placeholder] {
     /* <template> element breaks whole layout rendering on old browsers */
     display: none;
-    box-suppress: discard; /* It is recommended that box-suppress be used instead of display: none,
-                              so that the element's display type is automatically preserved for when it's no longer suppressed.
-                              https://drafts.csswg.org/css-display/#propdef-box-suppress */
 }
 
 @media (-ms-high-contrast: active), (-ms-high-contrast: none) { /* IE10+ https://www.impressivewebs.com/ie10-css-hacks/ */
@@ -944,7 +941,6 @@ option[value=""], /* First element as placeholder, fails on IE */
     .expand ~ .tab .header:after,
     [data-version]:before {
         display: none;
-        box-suppress: discard;
     }
     .status {
         height: 4px;
