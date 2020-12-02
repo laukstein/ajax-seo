@@ -62,7 +62,10 @@ if (version_compare($phpv, '5.2', '>=')) {
     if (version_compare($phpv, '5.3', '>=') && !ini_get('date.timezone')) date_default_timezone_set('UTC');
     if (version_compare($phpv, '5.4', '>') && extension_loaded('zlib')) {
         // Compress output with Gzip, PHP 5.4.4 bug https://bugs.php.net/bug.php?id=55544
-        ob_end_clean();
+        if (ob_get_length()) {
+            ob_end_clean();
+        }
+        
         ob_start($toMinify ? 'minify_output' : 'ob_gzhandler');
     } else if ($toMinify) {
         ob_start('minify_output');
