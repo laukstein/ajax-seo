@@ -65,7 +65,7 @@ if (version_compare($phpv, '5.2', '>=')) {
         if (ob_get_length()) {
             ob_end_clean();
         }
-        
+
         ob_start($toMinify ? 'minify_output' : 'ob_gzhandler');
     } else if ($toMinify) {
         ob_start('minify_output');

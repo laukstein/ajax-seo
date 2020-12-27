@@ -118,7 +118,7 @@ $metadata .= "\n<link rel=license href=$path/LICENSE>";
 
 echo "<!doctype html>
 <html lang=en>
-<head prefix=\"og: http://ogp.me/ns#\">
+<head prefix=\"og: https://ogp.me/ns#\">
 <meta charset=utf-8>
 $metadata
 " . ($debug ? '<link rel=stylesheet href=' . assets . "style.css nonce=\"$nonceCSS\">" : "<style nonce=\"$nonceCSS\">" .
