@@ -1,0 +1,5 @@
+.idea
+~*
+*.bak
+*.sql
+Thumbs.db
