@@ -18,6 +18,9 @@ Demo <https://lab.laukstein.com/ajax-seo>
 
         // Detect if shown error page
         error: false,
+        
+        // Oldest supported browsers IE11 and Android 4.3
+        isSupported: true,
 
         // Project root
         origin: "https://lab.laukstein.com/ajax-seo",
