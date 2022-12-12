@@ -42,7 +42,7 @@ if (function_exists('apache_get_modules') && !in_array('mod_rewrite', apache_get
 
 function minify_output($buffer) {
     $search = ['/ {2,}/', '/<!--(?!\[if).*?-->|\t|<\/(option|li|dt|dd|tr|th|td)>|(?:\r?\n[ \t]*)+/s'];
-    $blocks = preg_split('/(<\/?pre[^>]*>)/', $buffer, null, PREG_SPLIT_DELIM_CAPTURE);
+    $blocks = preg_split('/(<\/?pre[^>]*>)/', $buffer, 0, PREG_SPLIT_DELIM_CAPTURE);
     $replace = [' ', ''];
     $buffer = '';
 
