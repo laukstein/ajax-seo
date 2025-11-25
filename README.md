@@ -1,7 +1,6 @@
-# [Ajax SEO v6](https://lab.laukstein.com/ajax-seo)
+# Ajax SEO v6
 
 **Ajax SEO** crawlable webapp framework with boosted UX.<br>
-Demo <https://lab.laukstein.com/ajax-seo>
 
     as { // Readable API
         // Active link DOM Element
@@ -14,7 +13,7 @@ Demo <https://lab.laukstein.com/ajax-seo>
         dnt: true,
 
         // Google Analytics domain (optional)
-        domain: "laukstein.com",
+        domain: "domain.com",
 
         // Detect if shown error page
         error: false,
@@ -23,13 +22,13 @@ Demo <https://lab.laukstein.com/ajax-seo>
         isSupported: true,
 
         // Project root
-        origin: "https://lab.laukstein.com/ajax-seo",
+        origin: "https://domain.com/ajax-seo",
 
         // Current page title
         title: "History",
 
         // Current page URL
-        url: "https://lab.laukstein.com/ajax-seo/history",
+        url: "https://domain.com/ajax-seo/history",
 
         // Ajax SEO version
         version: "6.0.0",
@@ -66,14 +65,14 @@ Place robots.txt and humans.txt in website root.
 ## Techniques
 
 * No-dependency
-* [no-www](http://no-www.org) domain
+* [no-www](https://no-www.org) domain
 * [HTTPS-Only Standard](https://https.cio.gov)
 * Respect DNT (Do Not Track)
 * [Anonymize IP](https://support.google.com/analytics/answer/2763052) in Google Analytics
-* Protocol-relative URL [RFC 3986](http://tools.ietf.org/html/rfc3986#section-4.2)
+* Protocol-relative URL [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986#section-4.2)
 * SEO URLs, lowercasing and gibberish cleanup
 * Performance tuning in front end and back end
-* [Avoid](http://dowebsitesneedtolookexactlythesameineverybrowser.com) outdated browser support
+* [Avoid](https://web.archive.org/web/20230316082206/http://dowebsitesneedtolookexactlythesameineverybrowser.com/) outdated browser support
 
 Legacy browser support in [earlier releases](https://github.com/laukstein/ajax-seo/releases).
 
