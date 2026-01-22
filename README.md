@@ -1,3 +1,6 @@
+> **Status:** This project is no longer actively maintained.  
+> Thanks to everyone who used and contributed to it. ✨
+
 # Ajax SEO v6
 
 **Ajax SEO** crawlable webapp framework with boosted UX.<br>
